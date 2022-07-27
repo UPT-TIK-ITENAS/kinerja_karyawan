@@ -29,6 +29,12 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['name' => 'admin'], function () {
         Route::get('/admin',[AdminController::Class,'index'])->name('admin.admin_v');
+        Route::get('/datapresensi',[AdminController::Class,'datapresensi'])->name('admin.datapresensi');
+        Route::get('/listkaryawan',[AdminController::Class,'listkaryawan'])->name('admin.listkaryawan');
+        Route::get('/rekapitulasi',[AdminController::Class,'rekapitulasi'])->name('admin.rekapitulasi');
+        Route::get('/rekapitulasikaryawan',[AdminController::Class,'rekapitulasikaryawan'])->name('admin.rekapitulasikaryawan');
+        Route::get('/listrekapkaryawan',[AdminController::Class,'listrekapkaryawan'])->name('admin.listrekapkaryawan');
+        
     });
 
    

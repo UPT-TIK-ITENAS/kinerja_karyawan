@@ -3,7 +3,15 @@
 use Illuminate\Support\Facades\Facade;
 
 return [
-
+    'days' => [
+        '1' => 'SENIN',
+        '2' => 'SELASA',
+        '3' => 'RABU',
+        '4' => 'KAMIS',
+        '5' => 'JUMAT',
+        '6' => 'SABTU',
+        '7' => 'MINGGU',
+    ],
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -195,6 +203,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
     ],
 
     /*
@@ -210,6 +219,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
     ])->toArray(),
 
 ];
