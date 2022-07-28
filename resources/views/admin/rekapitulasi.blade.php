@@ -30,6 +30,7 @@
                                 <thead>
                                     <th>No.</th>
                                     <th>NIP</th>
+
                                     <th>Durasi</th>
                                 </thead>
                                 <tbody>
@@ -70,6 +71,7 @@
                     data: 'nip',
                     name: 'nip'
                 },
+ 
                 {
                     data: 'duration',
                     name: 'duration'

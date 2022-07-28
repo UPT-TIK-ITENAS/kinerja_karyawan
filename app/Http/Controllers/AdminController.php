@@ -27,13 +27,33 @@ class AdminController extends Controller
 
     public function rekapitulasi()
     {
+        $data = Attendance::where('nip',1472)->get();
+        $durasitelatmasuk =1;
+        $durasitelatsiang =1;
 
-        return view('admin.rekapitulasi');
-    }
+        foreach($data as $a){
+            if(!empty($a->jam_masuk) && !empty($a->jam_siang)){
+                if(date("H:i:s",strtotime($a->jam_masuk)) > '08:00:00' ){
+                    $durasitelatmasuk = strtotime($a->jam_masuk) - strtotime('08:00:00');
+                    $durasi = date("H:i:s", $durasitelatmasuk);
+                }
+                 
+                if(date("H:i:s",strtotime($a->jam_siang)) > '13:00:00' ){
+                    $durasitelatsiang = strtotime($a->jam_siang) - strtotime('13:00:00');
+                    $durasi = date("H:i:s", $durasitelatsiang);
+                }
+        
+                $total = $durasitelatsiang + $durasitelatmasuk;
+                $totaljam = date("H:i:s", $total);
+                
+                return $totaljam;
+            }else{
+                return $totaljam = '';
+            }
+        }
 
-    public function rekapitulasikaryawan()
-    {
-
+        dd($totaljam);
+                        
 
         return view('admin.rekapitulasi');
     }
@@ -45,7 +65,7 @@ class AdminController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('duration', function ($row) {
-                    if($row->jam_pulang == NULL){
+                    if($row->jam_pulang == NULL || $row->jam_masuk == NULL){
                         return $durationwork = '';
                     }else{
                         $time_awalreal =  strtotime($row->jam_masuk);
@@ -86,34 +106,39 @@ class AdminController extends Controller
 
     public function listrekapkaryawan(Request $request)
     {
-        $data = Attendance::groupBy('nip');
+
+        
+        $data = Attendance::where('nip',1008)->groupby('nip');
+        
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
+               
                 ->addColumn('duration', function ($row) {
 
                     $durasitelatmasuk =1;
                     $durasitelatsiang =1;
 
-                    if(!empty($row->jam_masuk) && !empty($row->jam_siang)){
-                        if(date("H:i:s",strtotime($row->jam_masuk)) > '08:00:00' ){
-                            $durasitelatmasuk = strtotime($row->jam_masuk) - strtotime('08:00:00');
-                            $durasi = date("H:i:s", $durasitelatmasuk);
-                        }
-                         
-                        if(date("H:i:s",strtotime($row->jam_siang)) > '13:00:00' ){
-                            $durasitelatsiang = strtotime($row->jam_siang) - strtotime('13:00:00');
-                            $durasi = date("H:i:s", $durasitelatsiang);
-                        }
-                
-                        $total = $durasitelatsiang + $durasitelatmasuk;
-                        $totaljam = date("H:i:s", $total);
-                        
-                        return $totaljam;
-                    }else{
-                        return $totaljam = '';
-                    }
+                    foreach($row as $a){
+                        if(!empty($a->jam_masuk) && !empty($a->jam_siang)){
+                            if(date("H:i:s",strtotime($a->jam_masuk)) > '08:00:00' ){
+                                $durasitelatmasuk = strtotime($a->jam_masuk) - strtotime('08:00:00');
+                                $durasi = date("H:i:s", $durasitelatmasuk);
+                            }
+                             
+                            if(date("H:i:s",strtotime($a->jam_siang)) > '13:00:00' ){
+                                $durasitelatsiang = strtotime($a->jam_siang) - strtotime('13:00:00');
+                                $durasi = date("H:i:s", $durasitelatsiang);
+                            }
                     
+                            $total = $durasitelatsiang + $durasitelatmasuk;
+                            $totaljam = date("H:i:s", $total);
+                            
+                            return $totaljam;
+                        }else{
+                            return $totaljam = '';
+                        }
+                    }
                     
                 })
                 ->rawColumns(['duration'])
