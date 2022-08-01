@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    
+
     <div class="container-fluid">
         <div class="row">
             <!-- Zero Configuration  Starts-->
@@ -22,19 +22,19 @@
                 <div class="card">
                     <div class="card-header">
                         <h5>Daftar Hasil Rekapitulasi Presensi Karyawan</h5>
-                        <span>Daftar hasil rekapitulasi presensi karyawan terhitung dari tanggal 01 July 2021</span>
+                        <span>Daftar hasil rekapitulasi presensi karyawan terhitung dari tanggal 01 Juli 2022</span>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive"> 
+                        <div class="table-responsive">
                             <table class="dataTable" id="table-admin">
                                 <thead>
-                                    <th>No.</th>
+                                    <th width="5%">No.</th>
                                     <th>NIP</th>
-
-                                    <th>Durasi</th>
+                                    <th>Nama</th>
+                                    <th>Total Keterlambatan</th>
                                 </thead>
                                 <tbody>
-                 
+
                                 </tbody>
                             </table>
                         </div>
@@ -60,31 +60,33 @@
                 width: "200px !important",
             }, ],
             ajax: "{{ route('admin.listrekapkaryawan') }}",
-            columns: [
-                {    data: 'DT_RowIndex',
-                            name: 'DT_RowIndex',
-                            className: 'text-center',
-                            orderable: false,
-                            searchable: false,
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    className: 'text-center',
+                    orderable: false,
+                    searchable: false,
                 },
                 {
-                    data: 'nip',
-                    name: 'nip'
+                    data: 'nopeg',
+                    name: 'nopeg',
+                    class: 'text-center',
                 },
- 
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+
                 {
                     data: 'duration',
                     name: 'duration'
                 },
 
-                ],
+            ],
             dom: 'Bfrtip',
             buttons: [
                 'copy', 'csv', 'print'
             ]
         });
-    
-
     </script>
 @endsection
-
