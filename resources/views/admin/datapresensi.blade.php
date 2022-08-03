@@ -31,12 +31,15 @@
                                     <th>No.</th>
                                     <th>NIP</th>
                                     <th>Hari</th>
+                                    <th>Awal Tugas</th>
+                                    <th>Akhir Tugas</th>
                                     <th>Jam Masuk</th>
                                     <th>Jam Siang</th>
                                     <th>Jam Keluar</th>
                                     <th>Durasi</th>
                                     <th>Telat Masuk</th>
                                     <th>Telat Siang</th>
+                                    <th>Action</th>
                                 </thead>
                                 <tbody>
                  
@@ -48,6 +51,7 @@
             </div>
         </div>
     </div>
+
 @endsection
 
 @section('scripts')
@@ -72,46 +76,25 @@
                             orderable: false,
                             searchable: false,
                 },
-                {
-                    data: 'nip',
-                    name: 'nip'
-                },
-                {
-                    data: 'hari',
-                    name: 'hari'
-                },
-               
-                {
-                    data: 'jam_masuk',
-                    name: 'jam_masuk'
-                },
-                {
-                    data: 'jam_siang',
-                    name: 'jam_siang'
-                },
-                {
-                    data: 'jam_pulang',
-                    name: 'jam_pulang'
-                },
-                {
-                    data: 'duration',
-                    name: 'duration'
-                },
-                {
-                    data: 'latemasuk',
-                    name: 'latemasuk'
-                },
-                {
-                    data: 'latesiang',
-                    name: 'latesiang'
-                },
-                ],
+                { data: 'nip',  name: 'nip'},
+                { data: 'hari', name: 'hari'},
+                { data: 'awal_tugas', name: 'awal_tugas'},
+                { data: 'akhir_tugas', name: 'akhir_tugas'},
+                { data: 'jam_masuk', name: 'jam_masuk'},
+                { data: 'jam_siang', name: 'jam_siang'},
+                { data: 'jam_pulang', name: 'jam_pulang'},
+                { data: 'duration', name: 'duration'},
+                { data: 'latemasuk', name: 'latemasuk'},
+                { data: 'latesiang', name: 'latesiang'},
+                { data: 'action', name: 'action'},
+            ],
             dom: 'Bfrtip',
             buttons: [
                 'copy', 'csv', 'print'
             ]
         });
-    
+
+
 
     </script>
 @endsection
