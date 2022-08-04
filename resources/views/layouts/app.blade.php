@@ -37,6 +37,9 @@
     <!-- Plugins css start-->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/prism.css') }}">
     <!-- Plugins css Ends-->
+     <!-- Plugins css start-->
+     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}">
+     <!-- Plugins css Ends-->
     <!-- Bootstrap css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
     <!-- App css-->
@@ -151,6 +154,12 @@
         <script src="{{ asset('assets/js/prism/prism.min.js') }}"></script>
         <script src="{{ asset('assets/js/clipboard/clipboard.min.js') }}"></script>
         <script src="{{ asset('assets/js/custom-card/custom-card.js') }}"></script>
+        <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
+        <!-- Plugins JS Ends-->
+        <!-- Plugins JS start-->
+        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.js') }}"></script>
+        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.en.js') }}"></script>
+        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.custom.js') }}"></script>
         <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
         <!-- Plugins JS Ends-->
         <!-- Plugins JS start-->

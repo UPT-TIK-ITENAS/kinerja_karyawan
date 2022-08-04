@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BiometricController;
+use App\Http\Controllers\PengajuanIzinController;
+use App\Http\Controllers\PengajuanCutiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,13 +38,17 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/rekapitulasikaryawan',[AdminController::Class,'rekapitulasikaryawan'])->name('admin.rekapitulasikaryawan');
         Route::get('/listrekapkaryawan',[AdminController::Class,'listrekapkaryawan'])->name('admin.listrekapkaryawan');
 
-        Route::get('createsurat/{id}',[AdminController::Class,'createsurat'])->name('admin.createsurat');
-        Route::post('storesurat',[AdminController::Class,'storesurat'])->name('admin.storesurat');
+        Route::get('createizinkehadiran/{id}',[AdminController::Class,'createizinkehadiran'])->name('admin.createizinkehadiran');
+        Route::post('storeizinkehadiran',[AdminController::Class,'storeizinkehadiran'])->name('admin.storeizinkehadiran');
         Route::get('/biometric', [BiometricController::Class,'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
         Route::get('printizin/{id}',[AdminController::Class,'printizin'])->name('admin.printizin');
         
+        Route::get('createizin',[AdminController::Class,'createizin'])->name('admin.createizin');
+        Route::post('storeizin',[AdminController::Class,'storeizin'])->name('admin.storeizin');
 
-        
+        Route::get('createcuti',[AdminController::Class,'createcuti'])->name('admin.createcuti');
+        Route::post('storecuti',[AdminController::Class,'storecuti'])->name('admin.storecuti');
+
     });
  
    

@@ -29,6 +29,17 @@
                         </li>
                     </ul>
                 </li>
+                <li class="dropdown">
+                    <a class="nav-link menu-title"><i data-feather="edit-3"></i><span>Pengajuan</span>
+                        <div class="according-menu"><i class="fa fa-angle-right"></i></div>
+                    </a>
+                    <ul class="nav-submenu menu-content" style="display: none;">
+                        <li><a href="{{ route('admin.createizin') }}" class="">Pengajuan Izin</a>
+                        </li>
+                        <li><a href="{{ route('admin.createcuti') }}" class="">Pengajuan Cuti</a>
+                        </li>
+                    </ul>
+                </li>
                 @endif
 
             </ul>

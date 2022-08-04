@@ -4,11 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
-class JenisCuti extends Model
+class Cuti extends Model
 {
     // use HasFactory;
-    protected $table = 'jenis_cuti';
+    protected $table = 'cuti';
     protected $guarded = [];
 }

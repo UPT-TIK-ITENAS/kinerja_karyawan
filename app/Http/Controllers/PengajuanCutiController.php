@@ -5,30 +5,27 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\Izin;
-use App\Models\QR;
-use PDF;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Models\Cuti;
 use App\Models\Attendance;
 use App\Models\User;
-
-
-class PengajuanIzinController extends Controller
+use Carbon\Carbon;
+use PDF;
+class PengajuanCutiController extends Controller
 {
-    public function createizin()
+    public function createcuti()
     {
         $datauser = User::groupby('nopeg')->get();
         $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas')->join('users','attendance.nip','=','users.nopeg')->get();
         return view('admin.createizin',compact('data','datauser'));
     }
 
-    public function storeizin(Request $request)
+    public function storecuti(Request $request)
     {
         $tanggal = explode('-',$request->tanggal);
         $tanggal_awal_izin = date('d-m-Y', strtotime($tanggal[0]));
         $tanggal_akhir_izin = date('d-m-Y', strtotime($tanggal[1]));
 
-        Izin::insert([
+        Cuti::insert([
             'nopeg' => $request->nopeg,
             'name' => $request->name,
             'unit' => $request->unit,

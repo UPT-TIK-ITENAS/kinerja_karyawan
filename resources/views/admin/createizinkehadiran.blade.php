@@ -7,7 +7,7 @@
                     <h3>Dashboard</h3>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">Sistem Laporan Presensi Karyawan</li>
-                        <li class="breadcrumb-item active">Dashboard</li>
+                        <li class="breadcrumb-item active">Data Izin</li>
                     </ol>
                 </div>
             </div>
@@ -16,9 +16,9 @@
 
     <div class="card">
         <div class="card-header pb-0">
-          <h5>Data File Upload</h5>
+          <h5>Data Izin</h5>
         </div>
-        <form action="{{ route('admin.storesurat', $data->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.storeizinkehadiran', $data->id) }}" method="POST" enctype="multipart/form-data">
           @csrf
       <div class="card-body">
           <div class="row">
@@ -80,7 +80,7 @@
           </div>
 
           <button class="btn btn-primary" type="submit">Simpan</button>
-          </div>
+        </div>
       <form>
       </div>
 @endsection
