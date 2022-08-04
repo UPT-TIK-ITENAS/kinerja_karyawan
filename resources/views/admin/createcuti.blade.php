@@ -1,4 +1,7 @@
 @extends('layouts.app')
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<link href="https://repo.rachmat.id/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet">
+
 @section('content')
     <div class="container-fluid">
         <div class="page-header">
@@ -126,8 +129,11 @@
             });
     });
 </script>
+<script src="{{ asset('assets/js/jquery.ui.min.js') }}"></script>
+
 
 <script>
+    
     function calcBusinessDays(start, end) {
             // This makes no effort to account for holidays
             // Counts end day, does not count start day
@@ -161,12 +167,28 @@
 
         $("#endDate").on('change', function() {
             var total = calcBusinessDays(
-                    $("#startDate").datepicker("getDate"), 
-                    $("#endDate").datepicker("getDate")
+                $("#startDate").datepicker("getDate"), 
+                $("#endDate").datepicker("getDate")
             );
-            $("#total").html(total);
-                
+
+            $("#total").val(total);
+            console.log($("#endDate").val());
         });
+
+        // $(document).ready(function() {
+        //     $("#endDate").datepicker({
+        //         onSelect : function (dateText) {
+        //             var total = calcBusinessDays(
+        //                 $("#startDate").datepicker("getDate"), 
+        //                 dateText
+        //             );
+        //             $("#total").val(total);
+        //             console.log(total);
+        //         }
+                
+        //     });
+        // });
+
 </script>
 
 @endsection
