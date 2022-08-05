@@ -91,7 +91,7 @@
 
     .ttd {
         bottom: 250;
-        margin-left: 23em;
+        margin-left: 19em;
         margin-right: 0;
         /* position:fixed; */
     }
@@ -105,6 +105,11 @@
         /* position:fixed; */
     }
 
+    .ttd3 {
+        position:absolute;
+        left:12%;
+        margin-left:-120px; /* (300/2) */
+        }
 
     .paddingttd {
 
@@ -142,7 +147,7 @@
         <center>
             <!-- <p style="font-size: 14px;"><u>FORM PEMBIMBINGAN PELAKSANAAN PRAKTIK KERJA / TUGAS AKHIR (TA) *) -->
             <br>
-            <p style="font-size: 24px;"> <b> Form Izin Tidak Masuk Kerja </b></p>
+            <p style="font-size: 24px;"> <b> FORM PENGAJUAN CUTI </b></p>
             {{-- <hr style="border-top:1px;color:#ffffff00;margin-top: -40px;background-color:white"> --}}
         </center>
     </div>
@@ -150,10 +155,9 @@
     <br>
     <br>
     <br>
+    <br>
     <div class="isi">
-        <p style="font-size: 14x;"> Yang bertanda tangan di bawah ini :</p>
-
-        <table class="table">
+        <table class="table1">
             <tr>
                 <td style="width:10%;font-size: 15px;">
                     Nama
@@ -177,60 +181,31 @@
                 <td style="width:2%;text-align: center">:</td>
                 <td style="width:2%;font-size: 15px;"></td>
             </tr>
-        </table>
-        <p style="font-size: 14x;"> Mengajukan permohonan tidak masuk kerja selama ............</p>
-        <table class="table1" border="1">
             <tr>
                 <td style="width:10%;font-size: 15px;">
-                    <b> 1. Sakit </b>
+                    Jenis Cuti
                 </td>
+                
+                <td style="width:2%;text-align: center">:</td>
+                <td style="width:2%;font-size: 15px;"></td>
             </tr>
             <tr>
                 <td style="width:10%;font-size: 15px;">
-                   <center> Tanggal Sakit : ......................... s/d ...................... </center>
+                    Tanggal Cuti
                 </td>
-            </tr>
-        </table>
-        <br>
-        <table class="table1">
-            <tr>
-                <td style="width:10%;font-size: 15px;">
-                    a.  Bila sakit sampai dengan 1 (satu) hari, harus mengisi form ini.
-                </td>
+                
+                <td style="width:2%;text-align: center">:</td>
+                <td style="width:2%;font-size: 15px;"></td>
             </tr>
             <tr>
                 <td style="width:10%;font-size: 15px;">
-                    b.  Bila sakit 2 s/d 14 hari, harus mengisi form ini dan melampirkan surat keterangan sakit dari dokter.
+                    Alamat & No Tlp yang dapat dihubungi selama cuti 
                 </td>
-               
-            </tr>
-            <tr>
-                <td style="width:10%;font-size: 15px;">
-                    c.  Bila sakit lebih dari > 14 hari, harus mengisi form ini dan dilampiri surat keterangan sakit dari dokter spesialis.
-                </td>
-             
+                
+                <td style="width:2%;text-align: center">:</td>
+                <td style="width:2%;font-size: 15px;"></td>
             </tr>
         </table>
-
-         <table class="table1" border="1">
-            <tr>
-                <td style="width:10%;font-size: 15px;"colspan="4">
-                    2. Izin karena kegiatan
-                </td>
-            </tr>
-            <tr>
-                    <td style="width:1%;font-size: 15px;">
-                        No
-                    </td>
-                    <td style="width:2%;font-size: 15px;">Alasan Izin</td>
-                    <td style="width:2%;font-size: 15px;"> Lamanya Hari yang diizinkan </td>
-                    <td style="width:2%;font-size: 15px;">Periode Tanggal Izin yang diambil </td>
-                </td>
-               
-            </tr>
-            
-        </table>
-
     </div>
     <div class="isi">
         <br>
@@ -247,7 +222,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>Yang bersangkutan, 
+                        <b>Disetujui/Tidak Disetujui oleh,
                     </td>
                 </tr>
                 <tr>
@@ -268,12 +243,39 @@
             <table style="float:left">
                 <tr>
                     <td>
-                        Mengetahui
+                        <b style="color:white">D
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <b>Pimpinan Unit Kerja 
+                        <b>Diajukan oleh,
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{-- <img src="data:image/png;base64, {!! $qrcode !!}"> --}}
+                        <img src="">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <u><b>Epih Haryanti, A.Md.</u></b>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        
+        <div class="ttd3">
+            <table style="float:left">
+                <tr>
+                    <td>
+                        <b style="color:white">Disetujui/Tidak Disetujui oleh,
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Disetujui/Tidak Disetujui oleh,
                     </td>
                 </tr>
                 <tr>
@@ -290,31 +292,7 @@
             </table>
         </div>
     
-        {{-- <div class="ttd2">
-            <table style="float:right">
-                <tr>
-                    <td>
-                        Menyetujui,
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>Pimpinan Unit Kerja
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        
-                        <img src="">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <u><b></u></b>
-                    </td>
-                </tr>
-            </table>
-        </div> --}}
+       
     </div>
     <footer>
         

@@ -262,6 +262,14 @@ class AdminController extends Controller
         return redirect()->route('admin.dataizin')->with('success', 'Pengajuan Izin Berhasil!');
     }
 
+    public function printizinkerja()
+    {
+        $data = IzinKerja::get();
+
+        $pdf = PDF::loadview('admin.printizinkerja', compact('data'))->setPaper('potrait');
+        return $pdf->stream();
+    }
+
     //END DATA IZIN KARYAWAN
 
 
@@ -310,6 +318,14 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('admin.datacuti')->with('success', 'Pengajuan cuti Berhasil!');
+    }
+
+    public function printcuti()
+    {
+        $data = Cuti::get();
+
+        $pdf = PDF::loadview('admin.printcuti', compact('data'))->setPaper('potrait');
+        return $pdf->stream();
     }
    
     //ENDDATA CUTI KARYAWAN

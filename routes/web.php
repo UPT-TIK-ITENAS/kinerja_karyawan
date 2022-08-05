@@ -47,12 +47,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/listizin',[AdminController::Class,'listizin'])->name('admin.listizin');
         Route::get('createizin',[AdminController::Class,'createizin'])->name('admin.createizin');
         Route::post('storeizin',[AdminController::Class,'storeizin'])->name('admin.storeizin');
-        Route::get('printizinkerja/{id}',[AdminController::Class,'printizinkerja'])->name('admin.printizinkerja');
+        Route::get('printizinkerja',[AdminController::Class,'printizinkerja'])->name('admin.printizinkerja');
 
         Route::get('/datacuti',[AdminController::Class,'datacuti'])->name('admin.datacuti');
         Route::get('/listcuti',[AdminController::Class,'listcuti'])->name('admin.listcuti');
         Route::get('createcuti',[AdminController::Class,'createcuti'])->name('admin.createcuti');
         Route::post('storecuti',[AdminController::Class,'storecuti'])->name('admin.storecuti');
+        Route::get('printcuti',[AdminController::Class,'printcuti'])->name('admin.printcuti');
+
 
     });
  
