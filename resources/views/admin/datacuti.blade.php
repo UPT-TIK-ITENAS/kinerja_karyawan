@@ -38,6 +38,7 @@
                                     <th>Tanggal Awal Cuti</th>
                                     <th>Tanggal Akhir Cuti</th>
                                     <th>Total Hari Cuti</th>
+                                    <th>Keterangan</th>
                                 </thead>
                                 <tbody>
                  
@@ -81,6 +82,7 @@
                 { data: 'tgl_awal_cuti', name: 'tgl_awal_cuti'},
                 { data: 'tgl_akhir_cuti', name: 'tgl_akhir_cuti'},
                 { data: 'total_cuti', name: 'total_cuti'},
+                { data: 'alasan_tolak', name: 'alasan_tolak'},
             ],
             dom: 'Bfrtip',
             buttons: [

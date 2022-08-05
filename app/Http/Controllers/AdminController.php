@@ -18,6 +18,7 @@ use App\Models\cuti;
 use App\Models\IzinKerja;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
+use Carbon\Carbon;
 use App\Models\QR;
 use PDF;
 
@@ -242,6 +243,7 @@ class AdminController extends Controller
     public function storeizin(Request $request)
     {
 
+        // dd(date('d-m-Y', strtotime($request->startDate)) );
         if($request->total > $request->lama_izin && $request->jenis_izin != 'Sakit'){
             return redirect()->route('admin.dataizin')->with('error', 'Pengajuan Izin Tidak Berhasil, Total lama izin melebihi ketentuan hari yang diizinkan!');
         }else{
@@ -251,8 +253,8 @@ class AdminController extends Controller
                 'unit' => $request->unit,
                 'jenis_izin' => $request->jenis_izin,
                 'total_izin' => $request->total,
-                'tgl_awal_izin' => $request->startDate,
-                'tgl_akhir_izin' => $request->endDate,
+                'tgl_awal_izin' => date('Y-m-d', strtotime($request->startDate)) ,
+                'tgl_akhir_izin' => date('Y-m-d', strtotime($request->endDate)),
                 'validasi' => $request->validasi,
             ]);
         }
@@ -298,8 +300,9 @@ class AdminController extends Controller
             'name' => $request->name,
             'unit' => $request->unit,
             'jenis_cuti' => $request->jenis_cuti,
-            'tgl_awal_cuti' => $tanggal_awal_cuti,
-            'tgl_akhir_cuti' => $tanggal_akhir_cuti,
+            'tgl_awal_cuti' => date('Y-m-d', strtotime($request->startDate)) ,
+            'tgl_akhir_cuti' => date('Y-m-d', strtotime($request->endDate)),
+            'total_cuti' => $request->total,
             'alamat' => $request->alamat,
             'no_hp' => $request->no_hp,
             'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
