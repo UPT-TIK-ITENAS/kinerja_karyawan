@@ -15,17 +15,24 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\Attendance;
 use App\Models\izin;
 use App\Models\cuti;
+use App\Models\IzinKerja;
 use App\Models\JenisCuti;
+use App\Models\JenisIzin;
 use App\Models\QR;
 use PDF;
 
 class AdminController extends Controller
 {
+
+    //DASHBOARD
     public function index()
     {
         return view('admin.admin_v');
     }
 
+    //END DASHBOARD
+
+    //DATA PRESENSI
     public function datapresensi()
     {
         return view('admin.datapresensi');
@@ -112,49 +119,6 @@ class AdminController extends Controller
         return DataTables::queryBuilder($data)->toJson();
     }
 
-
-    public function rekapitulasi()
-    {
-        return view('admin.rekapitulasi');
-    }
-
-    public function listrekapkaryawan(Request $request)
-    {
-        $data = DB::table('users');
-
-        if ($request->ajax()) {
-            return DataTables::of($data)
-                ->addIndexColumn()
-
-                ->addColumn('duration', function ($datauser) {
-
-                    $durasi_telat = strtotime('00:00:00');
-                    $data_att     = Attendance::where('nip', $datauser->nopeg)->get();
-                    foreach ($data_att as $row) {
-                        if (date("H:i:s", strtotime($row->jam_masuk)) > $datauser->awal_tugas && $row->hari != '6') {
-                            $durasitelat = strtotime($row->jam_masuk) - strtotime($datauser->awal_tugas);
-                            $durasi_telat += $durasitelat;
-                        }
-                        if ($row->hari == '5') {
-                            if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
-                                $durasitelat = strtotime($row->jam_siang) - strtotime('13:30:00');
-                                $durasi_telat += $durasitelat;
-                            }
-                        } else {
-                            if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
-                                $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
-                                $durasi_telat += $durasitelat;
-                            }
-                        }
-                    }
-                    return date("H:i:s", $durasi_telat);
-                })
-                ->rawColumns(['duration'])
-                ->make(true);
-        }
-        return DataTables::queryBuilder($data)->toJson();
-    }
-
     public function createizinkehadiran($id)
     {
 
@@ -199,32 +163,125 @@ class AdminController extends Controller
         $pdf = PDF::loadview('admin.printizin', compact('data','dataqr'))->setPaper('potrait');
         return $pdf->stream();
     }
+    //END DATA PRESENSI
+
+
+    //DATA REKAPITULASI
+    public function rekapitulasi()
+    {
+        return view('admin.rekapitulasi');
+    }
+
+    public function listrekapkaryawan(Request $request)
+    {
+        $data = DB::table('users');
+
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+
+                ->addColumn('duration', function ($datauser) {
+
+                    $durasi_telat = strtotime('00:00:00');
+                    $data_att     = Attendance::where('nip', $datauser->nopeg)->get();
+                    foreach ($data_att as $row) {
+                        if (date("H:i:s", strtotime($row->jam_masuk)) > $datauser->awal_tugas && $row->hari != '6') {
+                            $durasitelat = strtotime($row->jam_masuk) - strtotime($datauser->awal_tugas);
+                            $durasi_telat += $durasitelat;
+                        }
+                        if ($row->hari == '5') {
+                            if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
+                                $durasitelat = strtotime($row->jam_siang) - strtotime('13:30:00');
+                                $durasi_telat += $durasitelat;
+                            }
+                        } else {
+                            if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
+                                $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
+                                $durasi_telat += $durasitelat;
+                            }
+                        }
+                    }
+                    return date("H:i:s", $durasi_telat);
+                })
+                ->rawColumns(['duration'])
+                ->make(true);
+        }
+        return DataTables::queryBuilder($data)->toJson();
+    }
+
+    //END DATA REKAPITULASI
+    
+
+    //DATA IZIN KARYAWAN
+
+    public function dataizin()
+    {
+        return view('admin.dataizin');
+    }
+
+    public function listizin(Request $request)
+    {
+        $data = DB::table('izin_kerja');
+
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->make(true);
+        }
+        return DataTables::queryBuilder($data)->toJson();
+    }
     
     public function createizin()
     {
         $datauser = User::groupby('nopeg')->get();
+        $jenisizin = JenisIzin::get();
         $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas')->join('users','attendance.nip','=','users.nopeg')->get();
-        return view('admin.createizin',compact('data','datauser'));
+        return view('admin.createizin',compact('data','datauser','jenisizin'));
     }
 
     public function storeizin(Request $request)
     {
-        $tanggal = explode('-',$request->tanggal);
-        $tanggal_awal_izin = date('d-m-Y', strtotime($tanggal[0]));
-        $tanggal_akhir_izin = date('d-m-Y', strtotime($tanggal[1]));
 
-        Izin::insert([
-            'nopeg' => $request->nopeg,
-            'name' => $request->name,
-            'unit' => $request->unit,
-            'tgl_awal_izin' => $tanggal_awal_izin,
-            'tgl_akhir_izin' => $tanggal_akhir_izin,
-            'alasan' => $request->alasan,
-            'validasi' => $request->validasi,
-        ]);
+        if($request->total > $request->lama_izin && $request->jenis_izin != 'Sakit'){
+            return redirect()->route('admin.dataizin')->with('error', 'Pengajuan Izin Tidak Berhasil, Total lama izin melebihi ketentuan hari yang diizinkan!');
+        }else{
+            IzinKerja::insert([
+                'nopeg' => $request->nopeg,
+                'name' => $request->name,
+                'unit' => $request->unit,
+                'jenis_izin' => $request->jenis_izin,
+                'total_izin' => $request->total,
+                'tgl_awal_izin' => $request->startDate,
+                'tgl_akhir_izin' => $request->endDate,
+                'validasi' => $request->validasi,
+            ]);
+        }
 
-        return redirect()->route('admin.createizin')->with('success', 'Pengajuan Izin Berhasil!');
+        return redirect()->route('admin.dataizin')->with('success', 'Pengajuan Izin Berhasil!');
     }
+
+    //END DATA IZIN KARYAWAN
+
+
+    //DATA CUTI KARYAWAN
+
+    public function datacuti()
+    {
+        return view('admin.datacuti');
+    }
+
+    public function listcuti(Request $request)
+    {
+        $data = DB::table('cuti');
+
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->make(true);
+        }
+        return DataTables::queryBuilder($data)->toJson();
+    }
+    
 
     public function createcuti()
     {
@@ -236,26 +293,23 @@ class AdminController extends Controller
 
     public function storecuti(Request $request)
     {
+        Cuti::insert([
+            'nopeg' => $request->nopeg,
+            'name' => $request->name,
+            'unit' => $request->unit,
+            'jenis_cuti' => $request->jenis_cuti,
+            'tgl_awal_cuti' => $tanggal_awal_cuti,
+            'tgl_akhir_cuti' => $tanggal_akhir_cuti,
+            'alamat' => $request->alamat,
+            'no_hp' => $request->no_hp,
+            'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+            'validasi' => $request->validasi,
+        ]);
 
-        // dd($request->startDate);
-        // $tanggal = explode('-',$request->tanggal);
-        // $tanggal_awal_cuti = date('d-m-Y', strtotime($tanggal[0]));
-        // $tanggal_akhir_cuti = date('d-m-Y', strtotime($tanggal[1]));
-
-        // Cuti::insert([
-        //     'nopeg' => $request->nopeg,
-        //     'name' => $request->name,
-        //     'unit' => $request->unit,
-        //     'tgl_awal_cuti' => $tanggal_awal_cuti,
-        //     'tgl_akhir_cuti' => $tanggal_akhir_cuti,
-        //     'alasan' => $request->alasan,
-        //     'validasi' => $request->validasi,
-        // ]);
-
-        return redirect()->route('admin.createcuti')->with('success', 'Pengajuan cuti Berhasil!');
+        return redirect()->route('admin.datacuti')->with('success', 'Pengajuan cuti Berhasil!');
     }
    
-
+    //ENDDATA CUTI KARYAWAN
     
 
     

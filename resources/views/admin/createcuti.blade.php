@@ -65,44 +65,41 @@
                   </select>
                 </div>
             </div>
-              <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
+            <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
                   <label class="form-label" for="disabledInput">Tanggal Awal</label>
                   <input class="datepicker-here form-control digits" id="startDate" name="startDate" type="text" data-language="en">
-              </div>
-              <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
+            </div>
+            <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
                 <label class="form-label" for="disabledInput">Tanggal Akhir</label>
                 <input class="datepicker-here form-control digits" id="endDate" name="endDate" type="text"  data-language="en">
             </div>
             
             <div class="col-xl-3 col-md-6 col-12">
                 <div class="mb-1">
-                    <label class="form-label" for="basicInput">Total</label>
+                    <label class="form-label" for="basicInput">Total Lama Cuti</label>
                     <input type="text" class="form-control" id="total" name="total"
                         readonly value="" />
                 </div>
             </div>
-            
-            <div class="col-xl-3 col-md-6 col-12">
-                <div class="mb-1">
-                    <label class="form-label" for="basicInput">Total</label>
-                    <input type="text" class="form-control" id="str" name="str"
-                        readonly value="" />
-                </div>
-            </div>
-              
               <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
                   <div class="mb-1">
                       <label class="form-label"
-                          for="exampleFormControlTextarea1">Alasan</label>
-                      <textarea class="form-control" id="alasan" name="alasan" rows="3" placeholder="Alasan" required></textarea>
+                          for="exampleFormControlTextarea1">Alamat</label>
+                      <textarea class="form-control" id="alamat" name="alamat" rows="3" placeholder="Alamat" required></textarea>
                   </div>
               </div>
+              <div class="col-xl-3 col-md-6 col-12">
+                <div class="mb-1">
+                    <label class="form-label" for="basicInput">No Telp</label>
+                    <input type="text" class="form-control" id="no_hp" name="no_hp"/>
+                </div>
+            </div>
               <div class="col-12">
                   <div class="mb-1">
                       <div class="form-check form-check-success">
                           <input type="checkbox" class="form-check-input"
                               id="validasi" name="validasi" value="1">
-                          <label class="form-check-label" for="colorCheck3" required>Dengan ini saya menyatakan dengan benar bahwa saya izin</label>
+                          <label class="form-check-label" for="colorCheck3" required>Dengan ini saya menyatakan dengan benar bahwa saya cuti</label>
                       </div>
                   </div>
               </div>
@@ -130,10 +127,7 @@
     });
 </script>
 <script src="{{ asset('assets/js/jquery.ui.min.js') }}"></script>
-
-
 <script>
-    
     function calcBusinessDays(start, end) {
             // This makes no effort to account for holidays
             // Counts end day, does not count start day
@@ -174,21 +168,6 @@
             $("#total").val(total);
             console.log($("#endDate").val());
         });
-
-        // $(document).ready(function() {
-        //     $("#endDate").datepicker({
-        //         onSelect : function (dateText) {
-        //             var total = calcBusinessDays(
-        //                 $("#startDate").datepicker("getDate"), 
-        //                 dateText
-        //             );
-        //             $("#total").val(total);
-        //             console.log(total);
-        //         }
-                
-        //     });
-        // });
-
 </script>
 
 @endsection
