@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SK Pengunduran Diri</title>
+    <title>Form Izin</title>
     <link rel="icon" type="image/png" href="{{ url('templates/img/logo.png') }}">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -187,7 +187,7 @@
             </tr>
             <tr>
                 <td style="width:10%;font-size: 15px;">
-                   <center> Tanggal Sakit : ......................... s/d ...................... </center>
+                   <center> Tanggal Sakit : {!! getCheck($data->jenis_izin, $data->id_izinkerja,'sakit') !!} </center>
                 </td>
             </tr>
         </table>
@@ -213,21 +213,29 @@
         </table>
 
          <table class="table1" border="1">
-            <tr>
-                <td style="width:10%;font-size: 15px;"colspan="4">
-                    2. Izin karena kegiatan
-                </td>
-            </tr>
-            <tr>
-                    <td style="width:1%;font-size: 15px;">
-                        No
+            <thead class="text-center">
+                <tr>
+                    <td style="width:10%;font-size: 15px;"colspan="4">
+                        2. Izin karena kegiatan
                     </td>
+                </tr>
+                <tr>
+                    <td style="width:1%;font-size: 15px;">No</td>
                     <td style="width:2%;font-size: 15px;">Alasan Izin</td>
-                    <td style="width:2%;font-size: 15px;"> Lamanya Hari yang diizinkan </td>
+                    <td style="width:2%;font-size: 15px;">Lamanya Hari yang diizinkan </td>
                     <td style="width:2%;font-size: 15px;">Periode Tanggal Izin yang diambil </td>
-                </td>
-               
             </tr>
+            </thead>
+            <tbody>
+                @foreach ($jenisizin as $no => $p)
+                    <tr>
+                        <td class="text-center">{{ $no + 1 }}</td>
+                        <td>{{ $p->jenis_izin }}</td>
+                        <td>{{ $p->lama_izin }}</td>
+                        <td> {!! getCheck($p->jenis_izin, $data->id_izinkerja,'check') !!} </td>
+                    </tr>
+                @endforeach
+            </tbody>
             
         </table>
 

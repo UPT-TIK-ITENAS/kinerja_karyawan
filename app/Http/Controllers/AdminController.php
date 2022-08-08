@@ -262,11 +262,12 @@ class AdminController extends Controller
         return redirect()->route('admin.dataizin')->with('success', 'Pengajuan Izin Berhasil!');
     }
 
-    public function printizinkerja()
+    public function printizinkerja($id)
     {
-        $data = IzinKerja::get();
+        $data = IzinKerja::where('id_izinkerja', $id)->first();
+        $jenisizin = JenisIzin::where('jenis_izin','!=', 'sakit')->get();
 
-        $pdf = PDF::loadview('admin.printizinkerja', compact('data'))->setPaper('potrait');
+        $pdf = PDF::loadview('admin.printizinkerja', compact('data','jenisizin'))->setPaper('potrait');
         return $pdf->stream();
     }
 
