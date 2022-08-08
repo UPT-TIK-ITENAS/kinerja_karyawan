@@ -129,31 +129,37 @@ class AdminController extends Controller
 
     public function storeizinkehadiran(Request $request)
     {
-        Izin::insert([
-            'id_attendance' => $request->id_attendance,
-            'nopeg' => $request->nopeg,
-            'name' => $request->name,
-            'unit' => $request->unit,
-            'tgl_awal_izin' => $request->tgl_awal_izin,
-            'tgl_akhir_izin' => $request->tgl_akhir_izin,
-            'jam_awal_izin' => $request->jam_awal_izin,
-            'jam_akhir_izin' => $request->jam_akhir_izin,
-            'alasan' => $request->alasan,
-            'validasi' => $request->validasi,
-        ]);
 
-        $dataqr = Izin::where('nopeg', $request->nopeg)->first();
-        $qrcode_filename = 'qr-' . base64_encode($request->nopeg . date('Y-m-d H:i:s')) . '.svg';
-        // dd($qrcode_filename);
-        QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nopeg .'-'. $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
-
-        QR::where('nopeg', $request->nopeg)->insert([
-            'id_attendance' => $request->id_attendance,
-            'nopeg' => $request->nopeg,
-            'qr_peg' => $qrcode_filename,
-        ]);
-
-        return redirect()->route('admin.datapresensi')->with('success', 'Pengajuan Izin Berhasil!');
+        if($request->validasi == NULL){
+            return redirect()->route('admin.createizinkehadiran',$request->id_izin)->with('error', 'Validasi Tidak diisi!');
+        }else{
+            Izin::insert([
+                'id_attendance' => $request->id_attendance,
+                'nopeg' => $request->nopeg,
+                'name' => $request->name,
+                'unit' => $request->unit,
+                'tgl_awal_izin' => $request->tgl_awal_izin,
+                'tgl_akhir_izin' => $request->tgl_akhir_izin,
+                'jam_awal_izin' => $request->jam_awal_izin,
+                'jam_akhir_izin' => $request->jam_akhir_izin,
+                'alasan' => $request->alasan,
+                'validasi' => $request->validasi,
+            ]);
+    
+            $dataqr = Izin::where('nopeg', $request->nopeg)->first();
+            $qrcode_filename = 'qr-' . base64_encode($request->nopeg . date('Y-m-d H:i:s')) . '.svg';
+            // dd($qrcode_filename);
+            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nopeg .'-'. $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
+    
+            QR::where('nopeg', $request->nopeg)->insert([
+                'id_attendance' => $request->id_attendance,
+                'nopeg' => $request->nopeg,
+                'qr_peg' => $qrcode_filename,
+            ]);
+    
+            return redirect()->route('admin.datapresensi')->with('success', 'Pengajuan Izin Berhasil!');
+        }
+     
     }
 
     public function printizin($id)
@@ -256,6 +262,8 @@ class AdminController extends Controller
         // dd(date('d-m-Y', strtotime($request->startDate)) );
         if($request->total > $request->lama_izin && $request->jenis_izin != 'Sakit'){
             return redirect()->route('admin.dataizin')->with('error', 'Pengajuan Izin Tidak Berhasil, Total lama izin melebihi ketentuan hari yang diizinkan!');
+        }elseif($request->validasi == NULL){
+            return redirect()->route('admin.createizin')->with('error', 'Validasi Tidak diisi!');
         }else{
             IzinKerja::insert([
                 'nopeg' => $request->nopeg,
