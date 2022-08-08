@@ -306,7 +306,16 @@ class AdminController extends Controller
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
-
+                ->addColumn('action', function ($row) {
+                    $printsurat =  route('admin.printcuti', $row->id_cuti);
+                    $actionBtn = "
+                    <div class='d-block text-center'>
+                        <a href='$printsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-download-alt'></i></a>
+                    </div>
+                    ";
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
                 ->make(true);
         }
         return DataTables::queryBuilder($data)->toJson();
@@ -340,9 +349,9 @@ class AdminController extends Controller
         return redirect()->route('admin.datacuti')->with('success', 'Pengajuan cuti Berhasil!');
     }
 
-    public function printcuti()
+    public function printcuti($id)
     {
-        $data = Cuti::get();
+        $data = Cuti::where('id_cuti',$id)->first();
 
         $pdf = PDF::loadview('admin.printcuti', compact('data'))->setPaper('potrait');
         return $pdf->stream();

@@ -53,7 +53,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/listcuti',[AdminController::Class,'listcuti'])->name('admin.listcuti');
         Route::get('createcuti',[AdminController::Class,'createcuti'])->name('admin.createcuti');
         Route::post('storecuti',[AdminController::Class,'storecuti'])->name('admin.storecuti');
-        Route::get('printcuti',[AdminController::Class,'printcuti'])->name('admin.printcuti');
+        Route::get('printcuti/{id}',[AdminController::Class,'printcuti'])->name('admin.printcuti');
 
 
     });

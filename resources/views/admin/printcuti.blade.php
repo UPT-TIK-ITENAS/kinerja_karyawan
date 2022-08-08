@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SK Pengunduran Diri</title>
+    <title>Form Pengajuan Cuti</title>
     <link rel="icon" type="image/png" href="{{ url('templates/img/logo.png') }}">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -147,7 +147,7 @@
         <center>
             <!-- <p style="font-size: 14px;"><u>FORM PEMBIMBINGAN PELAKSANAAN PRAKTIK KERJA / TUGAS AKHIR (TA) *) -->
             <br>
-            <p style="font-size: 24px;"> <b> FORM PENGAJUAN CUTI </b></p>
+            <p style="font-size: 20px;"> <b> FORM PENGAJUAN CUTI </b></p>
             {{-- <hr style="border-top:1px;color:#ffffff00;margin-top: -40px;background-color:white"> --}}
         </center>
     </div>
@@ -163,7 +163,7 @@
                     Nama
                 </td>
                 <td style="width:2%;text-align: center">:</td>
-                <td style="width:20%;font-size: 15px;"> </td>
+                <td style="width:20%;font-size: 15px;"> {{ $data->name }}</td>
 
             </tr>
             <tr>
@@ -171,7 +171,7 @@
                     Nomor Pegawai
                 </td>
                 <td style="width:2%;text-align: center">:</td>
-                <td style="width:2%;font-size: 15px;"> </td>
+                <td style="width:2%;font-size: 15px;"> {{ $data->nopeg }} </td>
             </tr>
             <tr>
                 <td style="width:10%;font-size: 15px;">
@@ -179,7 +179,7 @@
                 </td>
                 
                 <td style="width:2%;text-align: center">:</td>
-                <td style="width:2%;font-size: 15px;"></td>
+                <td style="width:2%;font-size: 15px;">{{ $data->unit }}</td>
             </tr>
             <tr>
                 <td style="width:10%;font-size: 15px;">
@@ -187,7 +187,7 @@
                 </td>
                 
                 <td style="width:2%;text-align: center">:</td>
-                <td style="width:2%;font-size: 15px;"></td>
+                <td style="width:2%;font-size: 15px;">{{ $data->jenis_cuti }}</td>
             </tr>
             <tr>
                 <td style="width:10%;font-size: 15px;">
@@ -195,7 +195,7 @@
                 </td>
                 
                 <td style="width:2%;text-align: center">:</td>
-                <td style="width:2%;font-size: 15px;"></td>
+                <td style="width:2%;font-size: 15px;">{{ $data->tgl_awal_cuti }} s/d {{ $data->tgl_akhir_cuti }}</td>
             </tr>
             <tr>
                 <td style="width:10%;font-size: 15px;">
@@ -203,7 +203,7 @@
                 </td>
                 
                 <td style="width:2%;text-align: center">:</td>
-                <td style="width:2%;font-size: 15px;"></td>
+                <td style="width:2%;font-size: 15px;">{{ $data->alamat }}. <b> No telpon </b> {{ $data->no_hp }}</td>
             </tr>
         </table>
     </div>
@@ -294,10 +294,57 @@
     
        
     </div>
+
     <footer>
         
 
     </footer>
+    <br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="isi">
+    <p style="font-size: 14.5px;"> Alasan tidak disetujui : </p>
+
+    <br>
+    <br>
+    <br>
+    <p style="font-size: 14.5px;"> <b>Keterangan : </b> </p>
+    <table class="table1">
+        <tr>
+            <td style="width:10%;font-size: 15px;">
+                1. Jumlah hak cuti tahunan selama tahun 2022 adalah 12 hari
+            </td>
+        </tr>
+        <tr>
+            <td style="width:10%;font-size: 15px;">
+                2. Jumllah hak cuti besar adalah 2 bulan per 6 tahun-an
+            </td>
+        </tr>
+        <tr>
+            <td style="width:10%;font-size: 15px;">
+                3. Jumllah hak cuti melahirkan adalah 3 bulan dan berlaku untuk anak pertama sampai anak ke-tiga
+            </td>
+        </tr>
+        <tr>
+            <td style="width:10%;font-size: 15px;">
+                4. Cuti Ibadah Haji diberikan selama 40 (empat puluh) hari kalender dan tidak memotong cuti tahunan yang bersangkutan dapat menggunakan Cuti Besar. 
+                (Cuti ibah haji hanya berlaku hanya untuk satu  kali kesempatan ibadah haji, untuk ibdah haji berikutnya menggunakan cuti besar)
+            </td>
+        </tr>
+        <tr>
+            <td style="width:10%;font-size: 15px;">
+                5. Cuti Umroh dapat diberikan dengan mengambil cuti tahunan (menggunakan hak cuti tahunan yang bersangkutan)
+            </td>
+        </tr>
+    </table>
+</div>
+
 </body>
 
 </html>
