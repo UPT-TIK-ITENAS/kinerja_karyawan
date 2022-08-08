@@ -140,9 +140,9 @@
 
     <div class="isi">
         <center>
-            <!-- <p style="font-size: 14px;"><u>FORM PEMBIMBINGAN PELAKSANAAN PRAKTIK KERJA / TUGAS AKHIR (TA) *) -->
+            <!-- <p style="font-size: 14.5px;"><u>FORM PEMBIMBINGAN PELAKSANAAN PRAKTIK KERJA / TUGAS AKHIR (TA) *) -->
             <br>
-            <p style="font-size: 24px;"> <b> Form Izin Tidak Masuk Kerja </b></p>
+            <p style="font-size: 20px;"> <b> Form Izin Tidak Masuk Kerja </b></p>
             {{-- <hr style="border-top:1px;color:#ffffff00;margin-top: -40px;background-color:white"> --}}
         </center>
     </div>
@@ -151,61 +151,60 @@
     <br>
     <br>
     <div class="isi">
-        <p style="font-size: 14x;"> Yang bertanda tangan di bawah ini :</p>
+        <p style="font-size: 14.5px;"> Yang bertanda tangan di bawah ini :</p>
 
         <table class="table">
             <tr>
-                <td style="width:10%;font-size: 15px;">
+                <td style="width:10%;font-size: 14.5px;">
                     Nama
                 </td>
                 <td style="width:2%;text-align: center">:</td>
-                <td style="width:20%;font-size: 15px;"> </td>
+                <td style="width:20%;font-size: 14.5px;">{{ $data->name }} </td>
 
             </tr>
             <tr>
-                <td style="width:10%;font-size: 15px;">
+                <td style="width:10%;font-size: 14.5px;">
                     Nomor Pegawai
                 </td>
                 <td style="width:2%;text-align: center">:</td>
-                <td style="width:2%;font-size: 15px;"> </td>
+                <td style="width:2%;font-size: 14.5px;"> {{ $data->nopeg }} </td>
             </tr>
             <tr>
-                <td style="width:10%;font-size: 15px;">
+                <td style="width:10%;font-size: 14.5px;">
                     Unit Kerja
                 </td>
                 
                 <td style="width:2%;text-align: center">:</td>
-                <td style="width:2%;font-size: 15px;"></td>
+                <td style="width:2%;font-size: 14.5px;">{{ $data->unit }}</td>
             </tr>
         </table>
-        <p style="font-size: 14x;"> Mengajukan permohonan tidak masuk kerja selama ............</p>
+        <p style="font-size: 14.5px;"> Mengajukan permohonan tidak masuk kerja selama {{ $data->total_izin }} hari</p>
         <table class="table1" border="1">
             <tr>
-                <td style="width:10%;font-size: 15px;">
+                <td style="width:10%;font-size: 14.5px;">
                     <b> 1. Sakit </b>
                 </td>
             </tr>
             <tr>
-                <td style="width:10%;font-size: 15px;">
+                <td style="width:10%;font-size: 14.5px;">
                    <center> Tanggal Sakit : {!! getCheck($data->jenis_izin, $data->id_izinkerja,'sakit') !!} </center>
                 </td>
             </tr>
         </table>
-        <br>
         <table class="table1">
             <tr>
-                <td style="width:10%;font-size: 15px;">
+                <td style="width:10%;font-size: 14.5px;">
                     a.  Bila sakit sampai dengan 1 (satu) hari, harus mengisi form ini.
                 </td>
             </tr>
             <tr>
-                <td style="width:10%;font-size: 15px;">
+                <td style="width:10%;font-size: 14.5px;">
                     b.  Bila sakit 2 s/d 14 hari, harus mengisi form ini dan melampirkan surat keterangan sakit dari dokter.
                 </td>
                
             </tr>
             <tr>
-                <td style="width:10%;font-size: 15px;">
+                <td style="width:10%;font-size: 14.5px;">
                     c.  Bila sakit lebih dari > 14 hari, harus mengisi form ini dan dilampiri surat keterangan sakit dari dokter spesialis.
                 </td>
              
@@ -215,24 +214,24 @@
          <table class="table1" border="1">
             <thead class="text-center">
                 <tr>
-                    <td style="width:10%;font-size: 15px;"colspan="4">
+                    <td style="font-size: 14.5px;"colspan="4">
                         2. Izin karena kegiatan
                     </td>
                 </tr>
                 <tr>
-                    <td style="width:1%;font-size: 15px;">No</td>
-                    <td style="width:2%;font-size: 15px;">Alasan Izin</td>
-                    <td style="width:2%;font-size: 15px;">Lamanya Hari yang diizinkan </td>
-                    <td style="width:2%;font-size: 15px;">Periode Tanggal Izin yang diambil </td>
+                    <td style="width:1%;font-size: 14.5px;">No</td>
+                    <td style="width:3%;font-size: 14.5px;">Alasan Izin</td>
+                    <td style="width:1%;font-size: 14.5px;">Lamanya Hari yang diizinkan </td>
+                    <td style="width:2%;font-size: 14.5px;">Periode Tanggal Izin yang diambil </td>
             </tr>
             </thead>
             <tbody>
                 @foreach ($jenisizin as $no => $p)
                     <tr>
-                        <td class="text-center">{{ $no + 1 }}</td>
-                        <td>{{ $p->jenis_izin }}</td>
-                        <td>{{ $p->lama_izin }}</td>
-                        <td> {!! getCheck($p->jenis_izin, $data->id_izinkerja,'check') !!} </td>
+                        <td style="width:1%;font-size: 14.5px;">{{ $no + 1 }}</td>
+                        <td style="width:2%;font-size: 14.5px;">{{ $p->jenis_izin }}  </td>
+                        <td style="width:1%;font-size: 14.5px;">{{ $p->lama_izin }} hari kerja</td>
+                        <td style="width:2%;font-size: 14.5px;"> {!! getCheck($p->jenis_izin, $data->id_izinkerja,'check') !!} </td>
                     </tr>
                 @endforeach
             </tbody>
@@ -249,12 +248,12 @@
         <div class="ttd">
             <table style="float:right">
                 <tr>
-                    <td>
+                    <td style="font-size: 14.5px;">
                         Bandung, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td style="font-size: 14.5px;">
                         <b>Yang bersangkutan, 
                     </td>
                 </tr>
@@ -265,7 +264,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td  style="font-size: 14.5px;">
                         <u><b>Epih Haryanti, A.Md.</u></b>
                     </td>
                 </tr>
@@ -275,12 +274,12 @@
         <div class="ttd2">
             <table style="float:left">
                 <tr>
-                    <td>
+                    <td  style="font-size: 14.5px;">
                         Mengetahui
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td  style="font-size: 14.5px;">
                         <b>Pimpinan Unit Kerja 
                     </td>
                 </tr>
@@ -291,7 +290,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td  style="font-size: 14.5px;">
                         <u><b>Epih Haryanti, A.Md.</u></b>
                     </td>
                 </tr>

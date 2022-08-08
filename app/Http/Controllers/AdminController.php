@@ -227,6 +227,16 @@ class AdminController extends Controller
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $printsurat =  route('admin.printizinkerja', $row->id_izinkerja);
+                    $actionBtn = "
+                    <div class='d-block text-center'>
+                        <a href='$printsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-download-alt'></i></a>
+                    </div>
+                    ";
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
                 ->make(true);
         }
         return DataTables::queryBuilder($data)->toJson();
@@ -288,6 +298,7 @@ class AdminController extends Controller
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
+
                 ->make(true);
         }
         return DataTables::queryBuilder($data)->toJson();
