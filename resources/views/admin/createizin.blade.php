@@ -1,4 +1,7 @@
 @extends('layouts.app')
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<link href="https://repo.rachmat.id/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet">
+
 @section('content')
     <div class="container-fluid">
         <div class="page-header">
@@ -16,13 +19,15 @@
 
     <div class="card">
         <div class="card-header pb-0">
-          <h5>Data Izin</h5>
+          <h5>Form Izin Tidak Masuk Kerja</h5>
         </div>
         <form action="{{ route('admin.storeizin') }}" method="POST" enctype="multipart/form-data">
           @csrf
       <div class="card-body">
           <div class="row">
-
+            <input type="text" id="id_izin" name="id_izin"
+            hidden value="{{ $data->id_izin }}" />
+            
             <div class="col-xl-2 col-md-6 col-12">
                 <div class="mb-1">
                     <label class="form-label" for="helpInputTop">No. Pegawai</label>
@@ -49,12 +54,47 @@
                           readonly value="" />
                   </div>
               </div>
+              <div class="col-xl-3 col-md-6 col-12">
+                <div class="mb-1">
+                    <label class="form-label" for="basicInput">Jenis Izin</label>
+                    <select class="form-select" id="jenis_izin" name="jenis_izin">
+                      <option value="" selected disabled>-- Pilih Jenis Izin--</option>
+                      @foreach ($jenisizin as $k)
+                          <option value="{{ $k->jenis_izin }}" data-lama_izin="{{ $k->lama_izin }}"> {{ $k->jenis_izin }}</option>
+                      @endforeach
+                  </select>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 col-12">
+                <div class="mb-1">
+                    <label class="form-label" for="basicInput">Lamanya Hari yang di-izinkan</label>
+                    <input type="text" class="form-control" id="lama_izin" name="lama_izin"
+                        readonly value="" />
+                </div>
+            </div>
 
-              <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
+              {{-- <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
                   <label class="form-label" for="disabledInput">Tanggal</label>
                   <input class="datepicker-here form-control digits" id="tanggal" name="tanggal" type="text" data-range="true" data-multiple-dates-separator=" - " data-language="en">
-              </div>
-              
+              </div> --}}
+
+              <div class="col-xl-3 col-md-6 col-12 mb-1 mb-md-0">
+                <label class="form-label" for="disabledInput">Tanggal Awal</label>
+                <input class="datepicker-here form-control digits" id="startDate" name="startDate" type="text" data-language="en">
+            </div>
+            <div class="col-xl-3 col-md-6 col-12 mb-1 mb-md-0">
+                <label class="form-label" for="disabledInput">Tanggal Akhir</label>
+                <input class="datepicker-here form-control digits" id="endDate" name="endDate" type="text"  data-language="en">
+            </div>
+            
+            <div class="col-xl-3 col-md-6 col-12">
+                <div class="mb-1">
+                    <label class="form-label" for="basicInput">Total Lama Izin</label>
+                    <input type="text" class="form-control" id="total" name="total"
+                        readonly value="" />
+                </div>
+            </div>
+{{--               
               
               <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
                   <div class="mb-1">
@@ -62,7 +102,7 @@
                           for="exampleFormControlTextarea1">Alasan</label>
                       <textarea class="form-control" id="alasan" name="alasan" rows="3" placeholder="Alasan" required></textarea>
                   </div>
-              </div>
+              </div> --}}
               <div class="col-12">
                   <div class="mb-1">
                       <div class="form-check form-check-success">
@@ -93,8 +133,59 @@
                 $("#name").val(name);
                 $("#unit").val(unit);
             });
+
+            $('#jenis_izin').on('change', function() {
+                const selected = $(this).find('option:selected');
+                const lama_izin = selected.data('lama_izin');
+
+                $("#lama_izin").val(lama_izin);
+            });
     });
 </script>
+<script src="{{ asset('assets/js/jquery.ui.min.js') }}"></script>
+<script>
+    function calcBusinessDays(start, end) {
+            // This makes no effort to account for holidays
+            // Counts end day, does not count start day
+
+            // make copies we can normalize without changing passed in objects    
+            var start = new Date(start);
+            var end = new Date(end);
+            
+            // initial total
+            var totalBusinessDays = 0;
+            
+            // normalize both start and end to beginning of the day
+            start.setHours(0,0,0,0);
+            end.setHours(0,0,0,0);
+            
+            var current = new Date(start);
+            current.setDate(current.getDate() + 1);
+            var day;
+            // loop through each day, checking
+            while (current <= end) {
+                day = current.getDay();
+                if (day >= 1 && day <= 5) {
+                    ++totalBusinessDays;
+                }
+                current.setDate(current.getDate() + 1);
+            }
+            return totalBusinessDays;
+        }
+
+        $("#startDate, #endDate").datepicker();
+
+        $("#endDate").on('change', function() {
+            var total = calcBusinessDays(
+                $("#startDate").datepicker("getDate"), 
+                $("#endDate").datepicker("getDate")
+            );
+
+            $("#total").val(total);
+            console.log($("#endDate").val());
+        });
+</script>
+
 
 @endsection
 

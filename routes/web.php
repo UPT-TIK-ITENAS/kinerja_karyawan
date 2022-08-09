@@ -44,6 +44,30 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/biometric', [BiometricController::Class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
         Route::get('printizin/{id}', [AdminController::Class, 'printizin'])->name('admin.printizin');
 
+        Route::get('/dataizin', [AdminController::Class, 'dataizin'])->name('admin.dataizin');
+        Route::get('/listizin', [AdminController::Class, 'listizin'])->name('admin.listizin');
+        Route::get('createizin', [AdminController::Class, 'createizin'])->name('admin.createizin');
+        Route::post('storeizin', [AdminController::Class, 'storeizin'])->name('admin.storeizin');
+        Route::get('printizinkerja/{id}', [AdminController::Class, 'printizinkerja'])->name('admin.printizinkerja');
+
+        Route::get('/datacuti', [AdminController::Class, 'datacuti'])->name('admin.datacuti');
+        Route::get('/listcuti', [AdminController::Class, 'listcuti'])->name('admin.listcuti');
+        Route::get('createcuti', [AdminController::Class, 'createcuti'])->name('admin.createcuti');
+        Route::post('storecuti', [AdminController::Class, 'storecuti'])->name('admin.storecuti');
+        Route::get('printcuti/{id}', [AdminController::Class, 'printcuti'])->name('admin.printcuti');
+
+
+        Route::get('/datapresensi', [AdminController::Class, 'datapresensi'])->name('admin.datapresensi');
+        Route::get('/listkaryawan', [AdminController::Class, 'listkaryawan'])->name('admin.listkaryawan');
+        Route::get('/rekapitulasi', [AdminController::Class, 'rekapitulasi'])->name('admin.rekapitulasi');
+        Route::get('/rekapitulasikaryawan', [AdminController::Class, 'rekapitulasikaryawan'])->name('admin.rekapitulasikaryawan');
+        Route::get('/listrekapkaryawan', [AdminController::Class, 'listrekapkaryawan'])->name('admin.listrekapkaryawan');
+
+        Route::get('createizinkehadiran/{id}', [AdminController::Class, 'createizinkehadiran'])->name('admin.createizinkehadiran');
+        Route::post('storeizinkehadiran', [AdminController::Class, 'storeizinkehadiran'])->name('admin.storeizinkehadiran');
+        Route::get('/biometric', [BiometricController::Class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
+        Route::get('printizin/{id}', [AdminController::Class, 'printizin'])->name('admin.printizin');
+
         Route::get('createizin', [AdminController::Class, 'createizin'])->name('admin.createizin');
         Route::post('storeizin', [AdminController::Class, 'storeizin'])->name('admin.storeizin');
 
