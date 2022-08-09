@@ -31,10 +31,10 @@ class AdminController extends Controller
         return view('admin.datapresensi');
     }
 
-    
+
     public function listkaryawan(Request $request)
     {
-        $data =Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users','attendance.nip','=','users.nopeg');
+        $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg');
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -85,18 +85,18 @@ class AdminController extends Controller
 
                 ->addColumn('action', function ($row) {
 
-                    $dataizin = Attendance::join('izin','izin.id_attendance','=','attendance.id')->first();
+                    $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->first();
                     $addsurat = route('admin.createizinkehadiran', $row->id);
                     $printsurat =  route('admin.printizin', $dataizin->id);
 
-                    if($row->id != $dataizin->id_attendance){
+                    if ($row->id != $dataizin->id_attendance) {
                         $actionBtn = "
                         <div class='d-block text-center'>
                             <a href='$addsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-ui-add'></i></a>
                         </div>
                         ";
                         return $actionBtn;
-                    }else{
+                    } else {
                         $actionBtn = "
                         <div class='d-block text-center'>
                             <a href='$addsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-ui-add'></i></a>
@@ -106,7 +106,7 @@ class AdminController extends Controller
                         return $actionBtn;
                     }
                 })
-                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang','action'])
+                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'action'])
                 ->make(true);
         }
         return DataTables::queryBuilder($data)->toJson();
@@ -158,8 +158,8 @@ class AdminController extends Controller
     public function createizinkehadiran($id)
     {
 
-        $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas')->join('users','attendance.nip','=','users.nopeg')->where('attendance.id',$id)->first();
-        return view('admin.createizinkehadiran',compact('data'));
+        $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('attendance.id', $id)->first();
+        return view('admin.createizinkehadiran', compact('data'));
     }
 
     public function storeizinkehadiran(Request $request)
@@ -180,7 +180,7 @@ class AdminController extends Controller
         $dataqr = Izin::where('nopeg', $request->nopeg)->first();
         $qrcode_filename = 'qr-' . base64_encode($request->nopeg . date('Y-m-d H:i:s')) . '.svg';
         // dd($qrcode_filename);
-        QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nopeg .'-'. $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
+        QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nopeg . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
 
         QR::where('nopeg', $request->nopeg)->insert([
             'id_attendance' => $request->id_attendance,
@@ -196,20 +196,20 @@ class AdminController extends Controller
         $data = Izin::where('id_attendance', $id)->first();
         $dataqr = QR::where('id_attendance', $id)->first();
 
-        $pdf = PDF::loadview('admin.printizin', compact('data','dataqr'))->setPaper('potrait');
+        $pdf = PDF::loadview('admin.printizin', compact('data', 'dataqr'))->setPaper('potrait');
         return $pdf->stream();
     }
-    
+
     public function createizin()
     {
         $datauser = User::groupby('nopeg')->get();
-        $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas')->join('users','attendance.nip','=','users.nopeg')->get();
-        return view('admin.createizin',compact('data','datauser'));
+        $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->get();
+        return view('admin.createizin', compact('data', 'datauser'));
     }
 
     public function storeizin(Request $request)
     {
-        $tanggal = explode('-',$request->tanggal);
+        $tanggal = explode('-', $request->tanggal);
         $tanggal_awal_izin = date('d-m-Y', strtotime($tanggal[0]));
         $tanggal_akhir_izin = date('d-m-Y', strtotime($tanggal[1]));
 
@@ -231,7 +231,7 @@ class AdminController extends Controller
         $datauser = User::groupby('nopeg')->get();
         $jeniscuti = JenisCuti::get();
         // $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas')->join('users','attendance.nip','=','users.nopeg')->get();
-        return view('admin.createcuti',compact('datauser','jeniscuti'));
+        return view('admin.createcuti', compact('datauser', 'jeniscuti'));
     }
 
     public function storecuti(Request $request)
@@ -254,9 +254,4 @@ class AdminController extends Controller
 
         return redirect()->route('admin.createcuti')->with('success', 'Pengajuan cuti Berhasil!');
     }
-   
-
-    
-
-    
 }

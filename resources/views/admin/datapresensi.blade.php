@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    
+
     <div class="container-fluid">
         <div class="row">
             <!-- Zero Configuration  Starts-->
@@ -25,7 +25,7 @@
                         <span>Daftar hasil monitoring kehadiran karyawan terhitung dari tanggal 01 July 2021</span>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive"> 
+                        <div class="table-responsive">
                             <table class="dataTable" id="table-admin">
                                 <thead>
                                     <th>No.</th>
@@ -42,7 +42,7 @@
                                     <th>Action</th>
                                 </thead>
                                 <tbody>
-                 
+
                                 </tbody>
                             </table>
                         </div>
@@ -51,7 +51,6 @@
             </div>
         </div>
     </div>
-
 @endsection
 
 @section('scripts')
@@ -69,33 +68,62 @@
                 width: "200px !important",
             }, ],
             ajax: "{{ route('admin.listkaryawan') }}",
-            columns: [
-                {    data: 'DT_RowIndex',
-                            name: 'DT_RowIndex',
-                            className: 'text-center',
-                            orderable: false,
-                            searchable: false,
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    className: 'text-center',
+                    orderable: false,
+                    searchable: false,
                 },
-                { data: 'nip',  name: 'nip'},
-                { data: 'hari', name: 'hari'},
-                { data: 'awal_tugas', name: 'awal_tugas'},
-                { data: 'akhir_tugas', name: 'akhir_tugas'},
-                { data: 'jam_masuk', name: 'jam_masuk'},
-                { data: 'jam_siang', name: 'jam_siang'},
-                { data: 'jam_pulang', name: 'jam_pulang'},
-                { data: 'duration', name: 'duration'},
-                { data: 'latemasuk', name: 'latemasuk'},
-                { data: 'latesiang', name: 'latesiang'},
-                { data: 'action', name: 'action'},
+                {
+                    data: 'nip',
+                    name: 'nip'
+                },
+                {
+                    data: 'hari',
+                    name: 'hari'
+                },
+                {
+                    data: 'awal_tugas',
+                    name: 'awal_tugas'
+                },
+                {
+                    data: 'akhir_tugas',
+                    name: 'akhir_tugas'
+                },
+                {
+                    data: 'jam_masuk',
+                    name: 'jam_masuk'
+                },
+                {
+                    data: 'jam_siang',
+                    name: 'jam_siang'
+                },
+                {
+                    data: 'jam_pulang',
+                    name: 'jam_pulang'
+                },
+                {
+                    data: 'duration',
+                    name: 'duration'
+                },
+                {
+                    data: 'latemasuk',
+                    name: 'latemasuk'
+                },
+                {
+                    data: 'latesiang',
+                    name: 'latesiang'
+                },
+                {
+                    data: 'action',
+                    name: 'action'
+                },
             ],
             dom: 'Bfrtip',
             buttons: [
                 'copy', 'csv', 'print'
             ]
         });
-
-
-
     </script>
 @endsection
-

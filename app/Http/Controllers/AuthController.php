@@ -30,12 +30,9 @@ class AuthController extends Controller
             if ($data->role == "admin") {
                 $request->session()->regenerate();
                 return redirect()->intended('admin')->with('success', 'Berhasil Login');
-            } else if ($data->role == "dosen") {
+            } else if ($data->role == "karyawan") {
                 $request->session()->regenerate();
-                return redirect()->intended('dosen')->with('success', 'Berhasil Login');
-            } else if ($data->role == "kaprodi") {
-                $request->session()->regenerate();
-                return redirect()->intended('kaprodi')->with('success', 'Berhasil Login');
+                return redirect()->intended('karyawan')->with('success', 'Berhasil Login');
             }
         } else {
             return redirect()->back()->with('error', 'Username / Password Salah');
