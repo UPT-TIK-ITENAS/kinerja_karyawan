@@ -77,8 +77,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::prefix('karyawan')->name('karyawan.')->group(function () {
         Route::get('/', [KaryawanController::Class, 'index'])->name('index');
         Route::get('/datapresensi', [KaryawanController::Class, 'index_datapresensi'])->name('datapresensi');
+        Route::get('/datarekapitulasi', [KaryawanController::Class, 'index_datarekapitulasi'])->name('datarekapitulasi');
         Route::get('/listdatapresensi', [KaryawanController::Class, 'listdatapresensi'])->name('listdatapresensi');
         Route::get('/rekapitulasi', [KaryawanController::Class, 'rekapitulasi'])->name('rekapitulasi');
+        Route::get('/listdatarekapitulasi', [KaryawanController::Class, 'listdatarekapitulasi'])->name('listdatarekapitulasi');
         Route::get('/izin/index', [KaryawanController::Class, 'izin_index'])->name('izin_index');
         Route::get('/cuti/index', [KaryawanController::Class, 'cuti_index'])->name('cuti_index');
     });

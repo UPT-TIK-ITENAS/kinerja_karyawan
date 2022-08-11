@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class KaryawanController extends Controller
@@ -83,31 +84,42 @@ class KaryawanController extends Controller
     }
 
 
-    public function index_rekapitulasi()
+    public function index_datarekapitulasi()
     {
-        return view('karyawan.k_rekapitulasi');
+        return view('karyawan.k_datarekapitulasi');
     }
 
-    public function listrekapitulasi()
+    public function listdatarekapitulasi(Request $request)
     {
-        $data_att     = Attendance::where('nip', auth()->user()->nopeg)->get();
-        $durasi_telat = strtotime('00:00:00');
-        foreach ($data_att as $row) {
-            if (date("H:i:s", strtotime($row->jam_masuk)) > auth()->user()->awal_tugas && $row->hari != '6') {
-                $durasitelat = strtotime($row->jam_masuk) - strtotime(auth()->user()->awal_tugas);
-                $durasi_telat += $durasitelat;
-            }
-            if ($row->hari == '5') {
-                if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
-                    $durasitelat = strtotime($row->jam_siang) - strtotime('13:30:00');
-                    $durasi_telat += $durasitelat;
-                }
-            } else {
-                if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
-                    $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
-                    $durasi_telat += $durasitelat;
-                }
-            }
+        $data = DB::table('users')->where('nopeg', auth()->user()->nopeg);
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('duration', function ($datauser) {
+                    $durasi_telat = strtotime('00:00:00');
+                    $data_att     = Attendance::where('nip', $datauser->nopeg)->get();
+                    foreach ($data_att as $row) {
+                        if (date("H:i:s", strtotime($row->jam_masuk)) > $datauser->awal_tugas && $row->hari != '6') {
+                            $durasitelat = strtotime($row->jam_masuk) - strtotime($datauser->awal_tugas);
+                            $durasi_telat += $durasitelat;
+                        }
+                        if ($row->hari == '5') {
+                            if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
+                                $durasitelat = strtotime($row->jam_siang) - strtotime('13:30:00');
+                                $durasi_telat += $durasitelat;
+                            }
+                        } else {
+                            if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
+                                $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
+                                $durasi_telat += $durasitelat;
+                            }
+                        }
+                    }
+                    return date("H:i:s", $durasi_telat);
+                })
+                ->rawColumns(['duration'])
+                ->make(true);
         }
+        return DataTables::queryBuilder($data)->toJson();
     }
 }

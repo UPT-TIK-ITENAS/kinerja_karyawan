@@ -62,7 +62,7 @@
                         <ul class="nav-submenu menu-content" style="display: none;">
                             <li><a href="{{ route('karyawan.datapresensi') }}" class="">Data Presensi</a>
                             </li>
-                            <li><a href="{{ route('karyawan.rekapitulasi') }}" class="">Rekapitulasi</a>
+                            <li><a href="{{ route('karyawan.datarekapitulasi') }}" class="">Data Rekapitulasi</a>
                             </li>
                         </ul>
                     </li>
