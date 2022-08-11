@@ -35,9 +35,9 @@
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
                         <ul class="nav-submenu menu-content" style="display: none;">
-                            <li><a href="{{ route('admin.dataizin') }}" class="">Izin</a>
+                            <li><a href="{{ route('admin.dataizin') }}" class="">Pengajuan Izin</a>
                             </li>
-                            <li><a href="{{ route('admin.datacuti') }}" class="">Cuti</a>
+                            <li><a href="{{ route('admin.datacuti') }}" class="">Pengajuan Cuti</a>
                             </li>
                         </ul>
                     </li>
