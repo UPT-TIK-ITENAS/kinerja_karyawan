@@ -25,8 +25,7 @@
           @csrf
       <div class="card-body">
           <div class="row">
-            <input type="text" id="id_izin" name="id_izin"
-            hidden value="{{ $data->id_izin }}" />
+
             
             <div class="col-xl-2 col-md-6 col-12">
                 <div class="mb-1">

@@ -250,8 +250,9 @@ class AdminController extends Controller
     public function createizin()
     {
         $datauser = User::groupby('nopeg')->get();
+        $jenisizin = JenisIzin::get();
         $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->get();
-        return view('admin.createizin', compact('data', 'datauser'));
+        return view('admin.createizin', compact('data', 'datauser','jenisizin'));
     }
 
     public function storeizin(Request $request)
