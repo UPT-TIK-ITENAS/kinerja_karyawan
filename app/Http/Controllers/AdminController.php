@@ -93,26 +93,31 @@ class AdminController extends Controller
 
                 ->addColumn('action', function ($row) {
 
-                    $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->first();
-                    $addsurat = route('admin.createizinkehadiran', $row->id);
-                    $printsurat =  route('admin.printizin', $dataizin->id);
+                    $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id',$row->id)->get();
 
-                    if ($row->id != $dataizin->id_attendance) {
-                        $actionBtn = "
-                        <div class='d-block text-center'>
-                            <a href='$addsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-ui-add'></i></a>
-                        </div>
-                        ";
-                        return $actionBtn;
-                    } else {
-                        $actionBtn = "
-                        <div class='d-block text-center'>
-                            <a href='$addsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-ui-add'></i></a>
-                            <a href='$printsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-download-alt'></i></a>
-                        </div>
-                        ";
-                        return $actionBtn;
+                    foreach($dataizin as $izin){
+                        $addsurat = route('admin.createizinkehadiran', $row->id);
+                        $printsurat =  route('admin.printizin', $izin->id);
+
+                        if ($row->id == $izin->id_attendance) {
+                            $actionBtn = "
+                            <div class='d-block text-center'>
+                                <a href='$addsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-ui-add'></i></a>
+                                <a href='$printsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-download-alt'></i></a>
+                            </div>
+                            ";
+                            return $actionBtn;
+                           
+                        } else {
+                            $actionBtn = "
+                            <div class='d-block text-center'>
+                                <a href='$addsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-ui-add'></i></a>
+                            </div>
+                            ";
+                            return $actionBtn;
+                        }
                     }
+                   
                 })
                 ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'action'])
                 ->make(true);
