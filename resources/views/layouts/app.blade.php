@@ -37,16 +37,17 @@
     <!-- Plugins css start-->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/prism.css') }}">
     <!-- Plugins css Ends-->
-     <!-- Plugins css start-->
-     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}">
-     <!-- Plugins css Ends-->
+    <!-- Plugins css start-->
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}">
+    <!-- Plugins css Ends-->
     <!-- Bootstrap css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
     <!-- App css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
-    {{-- <link id="color" rel="stylesheet" href="{{ asset('assets/css/color-1.css"') }} media=" screen"> --}}
+    {{--
+    <link id="color" rel="stylesheet" href="{{ asset('assets/css/color-1.css"') }} media=" screen"> --}}
     <!-- Responsive css-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset(' assets/css/responsive.css') }}">
     <!-- datatable -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.css') }}">
 </head>
@@ -78,8 +79,8 @@
                     <ul class="nav-menus">
                         </li>
                         <li class="onhover-dropdown p-0">
-                            <button class="btn btn-primary-light" type="button"><a
-                                    href="{{ route('auth.logout') }}"><i data-feather="log-out"></i>Log
+                            <button class="btn btn-primary-light" type="button"><a href="{{ route('auth.logout') }}"><i
+                                        data-feather="log-out"></i>Log
                                     out</a></button>
                         </li>
                     </ul>
@@ -94,10 +95,10 @@
             <header class="main-nav">
                 <div class="sidebar-user text-center"><img class="img-90 rounded-circle"
                         src="{{ asset('assets/images/dashboard/1.png') }}" alt="">
-                        <a href="#">
-                            <h6 class="mt-3 f-14 f-w-600">{{ auth()->user()->nopeg }}</h6>
-                        </a>
-                        <p class="mb-0 font-roboto">{{ auth()->user()->name }}</p>
+                    <a href="#">
+                        <h6 class="mt-3 f-14 f-w-600">{{ auth()->user()->nopeg }}</h6>
+                    </a>
+                    <p class="mb-0 font-roboto">{{ auth()->user()->name }}</p>
                 </div>
                 @include('layouts.sidebar')
             </header>
@@ -108,9 +109,9 @@
                     <div class="row starter-main">
                         <div class="row">
                             @if (session('success'))
-                                <div class="success-session" data-flashdata="{{ session('success') }}"></div>
+                            <div class="success-session" data-flashdata="{{ session('success') }}"></div>
                             @elseif (session('danger'))
-                                <div class="danger-session" data-flashdata="{{ session('danger') }}"></div>
+                            <div class="danger-session" data-flashdata="{{ session('danger') }}"></div>
                             @endif
                         </div>
                         @yield('content')
@@ -136,120 +137,120 @@
         </div>
     </div>
 
-    
+
     @section('scripts')
 
-        <!-- latest jquery-->
-        <script src="{{ asset('assets/js/jquery-3.5.1.min.js') }}"></script>
-        <!-- feather icon js-->
-        <script src="{{ asset('assets/js/icons/feather-icon/feather.min.js') }}"></script>
-        <script src="{{ asset('assets/js/icons/feather-icon/feather-icon.js') }}"></script>
-        <!-- Sidebar jquery-->
-        <script src="{{ asset('assets/js/sidebar-menu.js') }}"></script>
-        <script src="{{ asset('assets/js/config.js') }}"></script>
-        <!-- Bootstrap js-->
-        <script src="{{ asset('assets/js/bootstrap/popper.min.js') }}"></script>
-        <script src="{{ asset('assets/js/bootstrap/bootstrap.min.js') }}"></script>
-        <!-- Plugins JS start-->
-        <script src="{{ asset('assets/js/prism/prism.min.js') }}"></script>
-        <script src="{{ asset('assets/js/clipboard/clipboard.min.js') }}"></script>
-        <script src="{{ asset('assets/js/custom-card/custom-card.js') }}"></script>
-        <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
-        <!-- Plugins JS Ends-->
-        <!-- Plugins JS start-->
-        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.en.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.custom.js') }}"></script>
-        <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
-        <!-- Plugins JS Ends-->
-        <!-- Plugins JS start-->
-        <script src="{{ asset('assets/js/editor/ckeditor/ckeditor.js') }}"></script>
-        <script src="{{ asset('assets/js/editor/ckeditor/adapters/jquery.js') }}"></script>
-        <script src="{{ asset('assets/js/editor/ckeditor/styles.js') }}"></script>
-        <script src="{{ asset('assets/js/editor/ckeditor/ckeditor.custom.js') }}"></script>
-        <!-- Plugins JS Ends-->
-        <!-- Plugins JS start-->
-        <script src="{{ asset('assets/js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
-        <script src="{{ asset('assets/js/datatable/datatables/datatable.custom.js') }}"></script>
-        <!-- Theme js-->
-        <script src="{{ asset('assets/js/script.js') }}"></script>
+    <!-- latest jquery-->
+    <script src="{{ asset('assets/js/jquery-3.5.1.min.js') }}"></script>
+    <!-- feather icon js-->
+    <script src="{{ asset('assets/js/icons/feather-icon/feather.min.js') }}"></script>
+    <script src="{{ asset('assets/js/icons/feather-icon/feather-icon.js') }}"></script>
+    <!-- Sidebar jquery-->
+    <script src="{{ asset('assets/js/sidebar-menu.js') }}"></script>
+    <script src="{{ asset('assets/js/config.js') }}"></script>
+    <!-- Bootstrap js-->
+    <script src="{{ asset('assets/js/bootstrap/popper.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap/bootstrap.min.js') }}"></script>
+    <!-- Plugins JS start-->
+    <script src="{{ asset('assets/js/prism/prism.min.js') }}"></script>
+    <script src="{{ asset('assets/js/clipboard/clipboard.min.js') }}"></script>
+    <script src="{{ asset('assets/js/custom-card/custom-card.js') }}"></script>
+    <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
+    <!-- Plugins JS Ends-->
+    <!-- Plugins JS start-->
+    <script src="{{ asset('assets/js/datepicker/date-time-picker/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/js/datepicker/date-time-picker/tempusdominus-bootstrap-4.min.js') }}"></script>
+    <script src="{{ asset('assets/js/datepicker/date-time-picker/datetimepicker.custom.js') }}"></script>
+    <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
+    <!-- Plugins JS Ends-->
+    <!-- Plugins JS start-->
+    <script src="{{ asset('assets/js/editor/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('assets/js/editor/ckeditor/adapters/jquery.js') }}"></script>
+    <script src="{{ asset('assets/js/editor/ckeditor/styles.js') }}"></script>
+    <script src="{{ asset('assets/js/editor/ckeditor/ckeditor.custom.js') }}"></script>
+    <!-- Plugins JS Ends-->
+    <!-- Plugins JS start-->
+    <script src="{{ asset('assets/js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/js/datatable/datatables/datatable.custom.js') }}"></script>
+    <!-- Theme js-->
+    <script src="{{ asset('assets/js/script.js') }}"></script>
 
 
-        <script src="{{ asset('assets/js/notify/bootstrap-notify.min.js') }}"></script>
-        <script src="{{ asset('assets/js/notify/notify-script.js') }}"></script>
-        <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
-        <!-- login js-->
-        <!-- Plugin used-->
+    <script src="{{ asset('assets/js/notify/bootstrap-notify.min.js') }}"></script>
+    <script src="{{ asset('assets/js/notify/notify-script.js') }}"></script>
+    <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
+    <!-- login js-->
+    <!-- Plugin used-->
 
-        <script type="text/javascript">
-            $(window).on('load', function() {
-                $('#informasi').modal('show');
-            });
-        </script>
+    <script type="text/javascript">
+        $(window).on('load', function () {
+            $('#informasi').modal('show');
+        });
+    </script>
 
-        <script>
-            $("document").ready(function() {
-                let flashdatasukses = $('.success-session').data('flashdata');
-                let flashdatagagal = $('.warning-session').data('flashdata');
-                if (flashdatasukses) {
-                    $.notify({
-                        title: 'Success',
-                        message: flashdatasukses
-                    }, {
-                        type: 'primary',
-                        allow_dismiss: true,
-                        newest_on_top: false,
-                        mouse_over: true,
-                        showProgressbar: false,
-                        spacing: 10,
-                        timer: 1700,
-                        placement: {
-                            from: 'top',
-                            align: 'center'
-                        },
-                        offset: {
-                            x: 30,
-                            y: 30
-                        },
-                        delay: 1000,
-                        z_index: 10000,
-                        animate: {
-                            enter: 'animated bounce',
-                            exit: 'animated bounce'
-                        }
-                    });
-                }
-                if (flashdatagagal) {
-                    $.notify({
-                        title: 'Error',
-                        message: flashdatagagal
-                    }, {
-                        type: 'danger',
-                        allow_dismiss: true,
-                        newest_on_top: false,
-                        mouse_over: true,
-                        showProgressbar: false,
-                        spacing: 10,
-                        timer: 1700,
-                        placement: {
-                            from: 'top',
-                            align: 'center'
-                        },
-                        offset: {
-                            x: 30,
-                            y: 30
-                        },
-                        delay: 1000,
-                        z_index: 10000,
-                        animate: {
-                            enter: 'animated bounce',
-                            exit: 'animated bounce'
-                        }
-                    });
-                }
-                $('#maintable').DataTable();
-            });
-        </script>
+    <script>
+        $("document").ready(function () {
+            let flashdatasukses = $('.success-session').data('flashdata');
+            let flashdatagagal = $('.warning-session').data('flashdata');
+            if (flashdatasukses) {
+                $.notify({
+                    title: 'Success',
+                    message: flashdatasukses
+                }, {
+                    type: 'primary',
+                    allow_dismiss: true,
+                    newest_on_top: false,
+                    mouse_over: true,
+                    showProgressbar: false,
+                    spacing: 10,
+                    timer: 1700,
+                    placement: {
+                        from: 'top',
+                        align: 'center'
+                    },
+                    offset: {
+                        x: 30,
+                        y: 30
+                    },
+                    delay: 1000,
+                    z_index: 10000,
+                    animate: {
+                        enter: 'animated bounce',
+                        exit: 'animated bounce'
+                    }
+                });
+            }
+            if (flashdatagagal) {
+                $.notify({
+                    title: 'Error',
+                    message: flashdatagagal
+                }, {
+                    type: 'danger',
+                    allow_dismiss: true,
+                    newest_on_top: false,
+                    mouse_over: true,
+                    showProgressbar: false,
+                    spacing: 10,
+                    timer: 1700,
+                    placement: {
+                        from: 'top',
+                        align: 'center'
+                    },
+                    offset: {
+                        x: 30,
+                        y: 30
+                    },
+                    delay: 1000,
+                    z_index: 10000,
+                    animate: {
+                        enter: 'animated bounce',
+                        exit: 'animated bounce'
+                    }
+                });
+            }
+            $('#maintable').DataTable();
+        });
+    </script>
     @show
     @stack('scripts')
 </body>

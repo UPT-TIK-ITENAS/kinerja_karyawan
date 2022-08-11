@@ -28,7 +28,13 @@ class KaryawanController extends Controller
 
     public function listdatapresensi(Request $request)
     {
-        $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg);
+        if ($request->bulan) {
+            $month =  explode('-', $request->bulan);
+            $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg)->whereMonth('attendance.tanggal', $month[0])->whereYear('attendance.tanggal', $month[1]);
+        } else {
+            $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg);
+        }
+        // $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg);
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
