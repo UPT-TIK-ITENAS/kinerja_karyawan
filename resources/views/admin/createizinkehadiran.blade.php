@@ -51,14 +51,19 @@
 
               <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
                   <label class="form-label" for="disabledInput">Jam Masuk</label>
-                  <input type="text" id="tgl_awal_izin" name="tgl_awal_izin"
-                      class="form-control datetimepicker-input digits"  readonly value="{{ $data->jam_masuk }}">
+                  <div class="input-group date" id="dt-minimum" data-target-input="nearest">
+                    <input class="form-control datetimepicker-input digits" type="text" id="tgl_awal_izin" name="tgl_awal_izin" data-target="#dt-minimum">
+                    <div class="input-group-text" data-target="#dt-minimum" data-toggle="datetimepicker"><i class="fa fa-calendar"> </i></div>
+                  </div>
               </div>
               
               <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
                 <label class="form-label" for="disabledInput">Jam Keluar</label>
-                <input type="text" id="tgl_akhir_izin" name="tgl_akhir_izin"
-                    class="form-control datetimepicker-input digits"  readonly value="{{ $data->jam_pulang }}">
+                <div class="input-group date" id="dt-min" data-target-input="nearest">
+                    <input class="form-control datetimepicker-input digits" type="text" id="tgl_akhir_izin" name="tgl_akhir_izin" data-target="#dt-min">
+                    <div class="input-group-text" data-target="#dt-min" data-toggle="datetimepicker"><i class="fa fa-calendar"> </i></div>
+                  </div>
+
             </div>
               <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
                   <div class="mb-1">

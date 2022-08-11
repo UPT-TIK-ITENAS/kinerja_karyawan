@@ -37,9 +37,7 @@
     <!-- Plugins css start-->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/prism.css') }}">
     <!-- Plugins css Ends-->
-    <!-- Plugins css start-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}">
-    <!-- Plugins css Ends-->
+
     <!-- Bootstrap css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
     <!-- App css-->

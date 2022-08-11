@@ -138,10 +138,9 @@ class AdminController extends Controller
                 'nopeg' => $request->nopeg,
                 'name' => $request->name,
                 'unit' => $request->unit,
-                'tgl_awal_izin' => $request->tgl_awal_izin,
-                'tgl_akhir_izin' => $request->tgl_akhir_izin,
-                'jam_awal_izin' => $request->jam_awal_izin,
-                'jam_akhir_izin' => $request->jam_akhir_izin,
+                'tgl_awal_izin' => date('Y-m-d H:i:s', strtotime($request->tgl_awal_izin)),
+                'tgl_akhir_izin' => date('Y-m-d H:i:s', strtotime($request->tgl_akhir_izin)),
+
                 'alasan' => $request->alasan,
                 'validasi' => $request->validasi,
             ]);
