@@ -81,7 +81,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/listdatapresensi', [KaryawanController::Class, 'listdatapresensi'])->name('listdatapresensi');
         Route::get('/rekapitulasi', [KaryawanController::Class, 'rekapitulasi'])->name('rekapitulasi');
         Route::get('/listdatarekapitulasi', [KaryawanController::Class, 'listdatarekapitulasi'])->name('listdatarekapitulasi');
-        Route::get('/izin/index', [KaryawanController::Class, 'izin_index'])->name('izin_index');
-        Route::get('/cuti/index', [KaryawanController::Class, 'cuti_index'])->name('cuti_index');
+        Route::get('/izin/index', [KaryawanController::Class, 'index_izin'])->name('izin');
+        Route::post('/izin/store', [KaryawanController::Class, 'store_izin'])->name('store_izin');
+        Route::get('/cuti/index', [KaryawanController::Class, 'index_cuti'])->name('cuti');
+        Route::post('/cuti/store', [KaryawanController::Class, 'store_cuti'])->name('store_cuti');
     });
 });

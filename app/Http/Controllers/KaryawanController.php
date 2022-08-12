@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Models\Cuti;
+use App\Models\IzinKerja;
+use App\Models\JenisCuti;
+use App\Models\JenisIzin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
@@ -127,5 +131,79 @@ class KaryawanController extends Controller
                 ->make(true);
         }
         return DataTables::queryBuilder($data)->toJson();
+    }
+
+    public function index_cuti()
+    {
+        $cuti = Cuti::select('cuti.*', 'jenis_cuti.jenis_cuti as nama_cuti')->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')->where('nopeg', auth()->user()->nopeg)->get();
+        $jeniscuti = JenisCuti::all();
+
+        $data = [
+            'jeniscuti' => $jeniscuti,
+            'cuti'      => $cuti
+        ];
+
+        return view('karyawan.k_index_cuti', compact('data'));
+    }
+
+    public function store_cuti(Request $request)
+    {
+        $this->validate($request, [
+            'jenis_cuti' => 'required',
+            'tgl_awal_cuti' => 'required',
+            'tgl_akhir_cuti' => 'required',
+            'total_cuti' => 'required',
+            'alamat' => 'required',
+            'no_hp' => 'required',
+        ]);
+        $data = new Cuti();
+        $data->nopeg = auth()->user()->nopeg;
+        $data->unit = auth()->user()->unit;
+        $data->name = auth()->user()->name;
+        $data->jenis_cuti = $request->jenis_cuti;
+        $data->tgl_awal_cuti = $request->tgl_awal_cuti;
+        $data->tgl_akhir_cuti = $request->tgl_akhir_cuti;
+        $data->total_cuti = $request->total_cuti;
+        $data->alamat = $request->alamat;
+        $data->no_hp = '0' . str_replace('-', '', $request->no_hp);
+        $data->validasi = 1;
+        $data->tgl_pengajuan = date('Y-m-d H:i:s');
+        $data->save();
+        return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
+    }
+
+    public function index_izin()
+    {
+        $izinkerja = IzinKerja::select('izin_kerja.*', 'jenis_izin.jenis_izin as nama_izin')->join('jenis_izin', 'jenis_izin.id_izin', '=', 'izin_kerja.jenis_izin')->where('nopeg', auth()->user()->nopeg)->get();
+        $jenisizin = JenisIzin::all();
+
+        $data = [
+            'jenisizin' => $jenisizin,
+            'izinkerja' => $izinkerja
+        ];
+
+        return view('karyawan.k_index_izin', compact('data'));
+    }
+
+    public function store_izin(Request $request)
+    {
+        $this->validate($request, [
+            'jenis_izin' => 'required',
+            'tgl_awal_izin' => 'required',
+            'tgl_akhir_izin' => 'required',
+            'total_izin' => 'required',
+        ]);
+        $data = new IzinKerja();
+        $data->nopeg = auth()->user()->nopeg;
+        $data->unit = auth()->user()->unit;
+        $data->name = auth()->user()->name;
+        $data->jenis_izin = explode('|', $request->jenis_izin)[0];
+        $data->tgl_awal_izin = $request->tgl_awal_izin;
+        $data->tgl_akhir_izin = $request->tgl_akhir_izin;
+        $data->total_izin = $request->total_izin;
+        $data->validasi = 1;
+        $data->tgl_pengajuan = date('Y-m-d H:i:s');
+        $data->save();
+        return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
     }
 }
