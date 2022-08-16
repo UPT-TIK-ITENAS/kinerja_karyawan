@@ -32,6 +32,7 @@
                                     <th>NIP</th>
                                     <th>Nama</th>
                                     <th>Total Keterlambatan</th>
+                                    <th>Total Izin</th>
                                 </thead>
                                 <tbody>
 
@@ -80,6 +81,10 @@
                 {
                     data: 'duration',
                     name: 'duration'
+                },
+                {
+                    data: 'izin',
+                    name: 'izin'
                 },
 
             ],

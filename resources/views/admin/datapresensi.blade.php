@@ -39,7 +39,8 @@
                                     <th>Durasi</th>
                                     <th>Telat Masuk</th>
                                     <th>Telat Siang</th>
-                                    <th>Action</th>
+                                    <th>Aksi</th>
+                                    <th>File</th>
                                 </thead>
                                 <tbody>
 
@@ -119,6 +120,8 @@
                     data: 'action',
                     name: 'action'
                 },
+                
+                { data: 'file', name: 'file'},
             ],
             dom: 'Bfrtip',
             buttons: [

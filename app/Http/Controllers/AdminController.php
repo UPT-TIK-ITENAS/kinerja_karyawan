@@ -92,34 +92,35 @@ class AdminController extends Controller
                 })
 
                 ->addColumn('action', function ($row) {
-
+                    $addsurat = route('admin.createizinkehadiran', $row->id);
+                    $actionBtn = "
+                    <div class='d-block text-center'>
+                        <a href='$addsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-ui-add'></i></a>
+                    </div>
+                    ";
+                    return $actionBtn;      
+                })
+                ->addColumn('file', function ($row) {
                     $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id',$row->id)->get();
 
                     foreach($dataizin as $izin){
-                        $addsurat = route('admin.createizinkehadiran', $row->id);
                         $printsurat =  route('admin.printizin', $izin->id);
-
+                    
                         if ($row->id == $izin->id_attendance) {
                             $actionBtn = "
                             <div class='d-block text-center'>
-                                <a href='$addsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-ui-add'></i></a>
                                 <a href='$printsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-download-alt'></i></a>
                             </div>
                             ";
                             return $actionBtn;
                            
                         } else {
-                            $actionBtn = "
-                            <div class='d-block text-center'>
-                                <a href='$addsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-ui-add'></i></a>
-                            </div>
-                            ";
+                            $actionBtn = "";
                             return $actionBtn;
                         }
-                    }
-                   
+                    }    
                 })
-                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'action'])
+                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'action','file'])
                 ->make(true);
         }
         return DataTables::queryBuilder($data)->toJson();
@@ -190,13 +191,13 @@ class AdminController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
 
-                ->addColumn('duration', function ($datauser) {
+                ->addColumn('duration', function ($data) {
 
                     $durasi_telat = strtotime('00:00:00');
-                    $data_att     = Attendance::where('nip', $datauser->nopeg)->get();
+                    $data_att     = Attendance::where('nip', $data->nopeg)->get();
                     foreach ($data_att as $row) {
-                        if (date("H:i:s", strtotime($row->jam_masuk)) > $datauser->awal_tugas && $row->hari != '6') {
-                            $durasitelat = strtotime($row->jam_masuk) - strtotime($datauser->awal_tugas);
+                        if (date("H:i:s", strtotime($row->jam_masuk)) > $data->awal_tugas && $row->hari != '6') {
+                            $durasitelat = strtotime($row->jam_masuk) - strtotime($data->awal_tugas);
                             $durasi_telat += $durasitelat;
                         }
                         if ($row->hari == '5') {
@@ -213,7 +214,17 @@ class AdminController extends Controller
                     }
                     return date("H:i:s", $durasi_telat);
                 })
-                ->rawColumns(['duration'])
+                
+                ->addColumn('izin',function($data){
+                    $izin = IzinKerja::selectRaw('SUM(total_izin)*8 AS total, nopeg')->where('nopeg',$data->nopeg)->get();
+
+                    if($row->nopeg != NULL){
+                        return $row->total.' Jam';
+                    }else{
+                        return '';
+                    }
+                })
+                ->rawColumns(['duration','izin'])
                 ->make(true);
         }
         return DataTables::queryBuilder($data)->toJson();
