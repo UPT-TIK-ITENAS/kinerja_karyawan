@@ -31,24 +31,29 @@
                             <div class="table-responsive">
                                 <table class="dataTable" id="table-izin">
                                     <thead>
-                                        <th width="5%">No.</th>
-                                        <th>Jenis Izin</th>
-                                        <th>Tanggal Awal</th>
-                                        <th>Tanggal Akhir</th>
-                                        <th>Total Hari</th>
-                                        <th>Tanggal Pengajuan</th>
-                                        <th>Status</th>
+                                        <tr align="center">
+                                            <th width="5%">No.</th>
+                                            <th>Jenis Izin</th>
+                                            <th>Tanggal Awal</th>
+                                            <th>Tanggal Akhir</th>
+                                            <th>Total Hari</th>
+                                            <th>Tanggal Pengajuan</th>
+                                            <th>Status</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($data['izinkerja'] as $no => $r)
                                             <tr>
-                                                <td>{{ $no + 1 }}</td>
+                                                <td align="center">{{ $no + 1 }}</td>
                                                 <td>{{ $r->nama_izin }}</td>
-                                                <td>{{ $r->tgl_awal_izin }}</td>
-                                                <td>{{ $r->tgl_akhir_izin }}</td>
-                                                <td>{{ $r->total_izin }}</td>
-                                                <td>{{ $r->tgl_pengajuan }}</td>
-                                                <td>{{ $r->validasi }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($r->tgl_awal_izin)->isoFormat('D MMMM Y') }}
+                                                </td>
+                                                <td>{{ \Carbon\Carbon::parse($r->tgl_akhir_izin)->isoFormat('D MMMM Y') }}
+                                                </td>
+                                                <td align="center">{{ $r->total_izin }}</td>
+                                                <td align="center">{{ $r->tgl_pengajuan }}</td>
+                                                <td align="center">{!! getApproval($r->id_izinkerja, 'izin') !!}
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>

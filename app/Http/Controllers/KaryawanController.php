@@ -39,7 +39,6 @@ class KaryawanController extends Controller
         } else {
             $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg);
         }
-        // $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg);
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -96,38 +95,31 @@ class KaryawanController extends Controller
 
     public function index_datarekapitulasi()
     {
+        // dd(DB::select("exec getTotalTelatPerBulan('" . auth()->user()->nopeg . "')"));
         return view('karyawan.k_datarekapitulasi');
     }
 
     public function listdatarekapitulasi(Request $request)
     {
-        $data = DB::table('users')->where('nopeg', auth()->user()->nopeg);
+        $data = DB::select('CALL getTotalTelatPerBulan(' . auth()->user()->nopeg . ')');
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('duration', function ($datauser) {
-                    $durasi_telat = strtotime('00:00:00');
-                    $data_att     = Attendance::where('nip', $datauser->nopeg)->get();
-                    foreach ($data_att as $row) {
-                        if (date("H:i:s", strtotime($row->jam_masuk)) > $datauser->awal_tugas && $row->hari != '6') {
-                            $durasitelat = strtotime($row->jam_masuk) - strtotime($datauser->awal_tugas);
-                            $durasi_telat += $durasitelat;
-                        }
-                        if ($row->hari == '5') {
-                            if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
-                                $durasitelat = strtotime($row->jam_siang) - strtotime('13:30:00');
-                                $durasi_telat += $durasitelat;
-                            }
-                        } else {
-                            if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
-                                $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
-                                $durasi_telat += $durasitelat;
-                            }
-                        }
-                    }
-                    return date("H:i:s", $durasi_telat);
+                ->addColumn('bulan', function ($row) {
+                    return getNamaBulan($row->bulan);
                 })
-                ->rawColumns(['duration'])
+                ->addColumn('tahun', function ($row) {
+                    return $row->tahun;
+                })
+                ->addColumn('total_telat_pagi', function ($row) {
+                    return date('H:i:s', strtotime($row->total_telat_pagi));
+                })
+                ->addColumn('total_telat_siang', function ($row) {
+                    return date('H:i:s', strtotime($row->total_telat_siang));
+                })
+                ->addColumn('total_telat', function ($row) {
+                    return date('H:i:s', strtotime($row->total_telat_siang) + strtotime($row->total_telat_pagi));
+                })
                 ->make(true);
         }
         return DataTables::queryBuilder($data)->toJson();

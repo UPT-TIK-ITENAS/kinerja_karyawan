@@ -29,9 +29,11 @@
                             <table class="dataTable" id="table-rekapitulasi">
                                 <thead>
                                     <th width="5%">No.</th>
-                                    <th>NIP</th>
-                                    <th>Nama</th>
-                                    <th>Total Keterlambatan</th>
+                                    <th>Bulan</th>
+                                    <th>Tahun</th>
+                                    <th>Total Telat Pagi</th>
+                                    <th>Total Telat Siang</th>
+                                    <th>Total Telat Keseluruhan</th>
                                 </thead>
                                 <tbody>
 
@@ -68,18 +70,29 @@
                     searchable: false,
                 },
                 {
-                    data: 'nopeg',
-                    name: 'nopeg',
-                    class: 'text-center',
+                    data: 'bulan',
+                    name: 'bulan',
                 },
                 {
-                    data: 'name',
-                    name: 'name'
+                    data: 'tahun',
+                    name: 'tahun',
+                    class: 'text-center',
                 },
 
                 {
-                    data: 'duration',
-                    name: 'duration'
+                    data: 'total_telat_pagi',
+                    name: 'total_telat_pagi',
+                    class: 'text-center',
+                },
+                {
+                    data: 'total_telat_siang',
+                    name: 'total_telat_siang',
+                    class: 'text-center',
+                },
+                {
+                    data: 'total_telat',
+                    name: 'total_telat',
+                    class: 'text-center',
                 },
 
             ],

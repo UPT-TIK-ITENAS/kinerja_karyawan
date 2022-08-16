@@ -29,28 +29,32 @@
                             <div class="table-responsive">
                                 <table class="dataTable" id="table-cuti">
                                     <thead>
-                                        <th width="5%">No.</th>
-                                        <th>Jenis Cuti</th>
-                                        <th>Tanggal Awal</th>
-                                        <th>Tanggal Akhir</th>
-                                        <th>Total Hari</th>
-                                        <th>Alamat</th>
-                                        <th>No. Telp</th>
-                                        <th>Tanggal Pengajuan</th>
-                                        <th>Status</th>
+                                        <tr align="center">
+                                            <th width="5%">No.</th>
+                                            <th>Jenis Cuti</th>
+                                            <th>Tanggal Awal</th>
+                                            <th>Tanggal Akhir</th>
+                                            <th>Total Hari</th>
+                                            <th>Alamat</th>
+                                            <th>No. Telp</th>
+                                            <th>Tanggal Pengajuan</th>
+                                            <th>Status</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($data['cuti'] as $no => $r)
                                             <tr>
-                                                <td>{{ $no + 1 }}</td>
+                                                <td align="center">{{ $no + 1 }}</td>
                                                 <td>{{ $r->nama_cuti }}</td>
-                                                <td>{{ $r->tgl_awal_cuti }}</td>
-                                                <td>{{ $r->tgl_akhir_cuti }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($r->tgl_awal_cuti)->isoFormat('D MMMM Y') }}
+                                                </td>
+                                                <td>{{ \Carbon\Carbon::parse($r->tgl_akhir_cuti)->isoFormat('D MMMM Y') }}
+                                                </td>
                                                 <td>{{ $r->total_cuti }}</td>
                                                 <td>{{ $r->alamat }}</td>
                                                 <td>{{ $r->no_hp }}</td>
                                                 <td>{{ $r->tgl_pengajuan }}</td>
-                                                <td>{{ $r->validasi }}</td>
+                                                <td align="center">{!! getApproval($r->id_cuti, 'cuti') !!}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
