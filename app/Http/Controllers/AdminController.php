@@ -288,6 +288,7 @@ class AdminController extends Controller
                 'tgl_awal_izin' => date('Y-m-d', strtotime($request->startDate)),
                 'tgl_akhir_izin' => date('Y-m-d', strtotime($request->endDate)),
                 'validasi' => $request->validasi,
+                'approval' => '0',
             ]);
         }
 
