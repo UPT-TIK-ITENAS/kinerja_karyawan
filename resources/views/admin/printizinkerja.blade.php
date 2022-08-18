@@ -179,7 +179,7 @@
             </tr>
         </table>
         <p style="font-size: 14.5px;"> Mengajukan permohonan tidak masuk kerja selama {{ $data->total_izin }} hari</p>
-        <table class="table1" border="1">
+        <table class="table1" border="1" cellpadding="0" cellspacing="0">
             <tr>
                 <td style="width:10%;font-size: 14.5px;">
                     <b> 1. Sakit </b>
@@ -191,6 +191,7 @@
                 </td>
             </tr>
         </table>
+        <br>
         <table class="table1">
             <tr>
                 <td style="width:10%;font-size: 14.5px;">
@@ -210,28 +211,29 @@
              
             </tr>
         </table>
+        <br>
 
-         <table class="table1" border="1">
+         <table class="table1" border="1" cellpadding="0" cellspacing="0">
             <thead class="text-center">
                 <tr>
                     <td style="font-size: 14.5px;"colspan="4">
-                        2. Izin karena kegiatan
+                        <b> 2. Izin karena kegiatan</b>
                     </td>
                 </tr>
                 <tr>
-                    <td style="width:1%;font-size: 14.5px;">No</td>
-                    <td style="width:3%;font-size: 14.5px;">Alasan Izin</td>
-                    <td style="width:1%;font-size: 14.5px;">Lamanya Hari yang diizinkan </td>
-                    <td style="width:2%;font-size: 14.5px;">Periode Tanggal Izin yang diambil </td>
+                    <th style="width:4%;font-size: 14.5px;">No</th>
+                    <th style="font-size: 14.5px;">Alasan Izin</th>
+                    <th style="font-size: 14.5px;">Lamanya Hari yang diizinkan </th>
+                    <th style="font-size: 14.5px;">Periode Tanggal Izin yang diambil </th>
             </tr>
             </thead>
             <tbody>
                 @foreach ($jenisizin as $no => $p)
                     <tr>
                         <td style="width:1%;font-size: 14.5px;">{{ $no + 1 }}</td>
-                        <td style="width:2%;font-size: 14.5px;">{{ $p->jenis_izin }}  </td>
-                        <td style="width:1%;font-size: 14.5px;">{{ $p->lama_izin }} hari kerja</td>
-                        <td style="width:2%;font-size: 14.5px;"> {!! getCheck($p->jenis_izin, $data->id_izinkerja,'check') !!} </td>
+                        <td style="font-size: 14.5px;">{{ $p->jenis_izin }}  </td>
+                        <td style="font-size: 14.5px;">{{ $p->lama_izin }} hari kerja</td>
+                        <td style="font-size: 14.5px;"> {!! getCheck($p->jenis_izin, $data->id_izinkerja,'check') !!} </td>
                     </tr>
                 @endforeach
             </tbody>
