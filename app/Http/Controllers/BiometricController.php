@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
     {
     public function SyncAndInsertBiometric()
     {
-        $listmesinabsensi = DB::table('biometricmachine')->where('status', 'enable')->where('id', 2)->get();
+        $listmesinabsensi = DB::table('biometricmachine')->where('status', 'enable')->where('id', 25)->get();
         if (empty($listmesinabsensi)) {
             return "Finger Print Machine not register or not enable";
         }

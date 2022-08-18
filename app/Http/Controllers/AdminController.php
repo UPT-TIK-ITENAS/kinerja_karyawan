@@ -218,11 +218,14 @@ class AdminController extends Controller
                 ->addColumn('izin',function($data){
                     $izin = IzinKerja::selectRaw('SUM(total_izin)*8 AS total, nopeg')->where('nopeg',$data->nopeg)->get();
 
-                    if($row->nopeg != NULL){
-                        return $row->total.' Jam';
-                    }else{
-                        return '';
+                    foreach($izin as $row){
+                        if($row->nopeg != NULL){
+                            return $row->total.' Jam';
+                        }else{
+                            return '';
+                        }
                     }
+                    
                 })
                 ->rawColumns(['duration','izin'])
                 ->make(true);
