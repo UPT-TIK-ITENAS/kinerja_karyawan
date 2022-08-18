@@ -9,4 +9,16 @@
             </div>
         </div>
     </div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Zero Configuration  Starts-->
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="cal-date-widget card-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

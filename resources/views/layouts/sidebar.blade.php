@@ -62,7 +62,7 @@
                         <ul class="nav-submenu menu-content" style="display: none;">
                             <li><a href="{{ route('karyawan.datapresensi') }}" class="">Data Presensi</a>
                             </li>
-                            <li><a href="{{ route('karyawan.rekapitulasi') }}" class="">Rekapitulasi</a>
+                            <li><a href="{{ route('karyawan.datarekapitulasi') }}" class="">Data Rekapitulasi</a>
                             </li>
                         </ul>
                     </li>
@@ -71,9 +71,9 @@
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
                         <ul class="nav-submenu menu-content" style="display: none;">
-                            <li><a href="{{ route('karyawan.izin_index') }}" class="">Pengajuan Izin</a>
+                            <li><a href="{{ route('karyawan.izin') }}" class="">Izin</a>
                             </li>
-                            <li><a href="{{ route('karyawan.cuti_index') }}" class="">Pengajuan Cuti</a>
+                            <li><a href="{{ route('karyawan.cuti') }}" class="">Cuti</a>
                             </li>
                         </ul>
                     </li>
