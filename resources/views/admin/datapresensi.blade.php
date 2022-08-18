@@ -41,6 +41,7 @@
                                     <th>Telat Siang</th>
                                     <th>Aksi</th>
                                     <th>File</th>
+                                    <th>Status</th>
                                 </thead>
                                 <tbody>
 
@@ -55,6 +56,7 @@
 @endsection
 
 @section('scripts')
+
     @parent
     <script>
         let table = $('#table-admin').DataTable({
@@ -76,52 +78,20 @@
                     orderable: false,
                     searchable: false,
                 },
-                {
-                    data: 'nip',
-                    name: 'nip'
-                },
-                {
-                    data: 'hari',
-                    name: 'hari'
-                },
-                {
-                    data: 'awal_tugas',
-                    name: 'awal_tugas'
-                },
-                {
-                    data: 'akhir_tugas',
-                    name: 'akhir_tugas'
-                },
-                {
-                    data: 'jam_masuk',
-                    name: 'jam_masuk'
-                },
-                {
-                    data: 'jam_siang',
-                    name: 'jam_siang'
-                },
-                {
-                    data: 'jam_pulang',
-                    name: 'jam_pulang'
-                },
-                {
-                    data: 'duration',
-                    name: 'duration'
-                },
-                {
-                    data: 'latemasuk',
-                    name: 'latemasuk'
-                },
-                {
-                    data: 'latesiang',
-                    name: 'latesiang'
-                },
-                {
-                    data: 'action',
-                    name: 'action'
-                },
+                {   data: 'nip', name: 'nip' },
+                {   data: 'hari', name: 'hari' },
+                {   data: 'awal_tugas', name: 'awal_tugas' },
+                {   data: 'akhir_tugas', name: 'akhir_tugas' },
+                {   data: 'jam_masuk', name: 'jam_masuk' },
+                {   data: 'jam_siang', name: 'jam_siang' },
+                {   data: 'jam_pulang', name: 'jam_pulang' },
+                {   data: 'duration', name: 'duration' },
+                {   data: 'latemasuk', name: 'latemasuk'},
+                {   data: 'latesiang', name: 'latesiang'},
+                {   data: 'action', name: 'action'},
                 
                 { data: 'file', name: 'file'},
+                { data: 'status', name: 'status'},
             ],
             dom: 'Bfrtip',
             buttons: [

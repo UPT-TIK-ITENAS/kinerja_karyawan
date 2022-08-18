@@ -93,12 +93,11 @@ class AdminController extends Controller
 
                 ->addColumn('action', function ($row) {
                     $addsurat = route('admin.createizinkehadiran', $row->id);
-                    $actionBtn = "
-                    <div class='d-block text-center'>
-                        <a href='$addsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-ui-add'></i></a>
-                    </div>
-                    ";
-                    return $actionBtn;      
+                    return $actionBtn = "
+                        <div class='d-block text-center'>
+                            <a href='$addsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-ui-add'></i></a>
+                        </div>
+                        ";
                 })
                 ->addColumn('file', function ($row) {
                     $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id',$row->id)->get();
@@ -109,7 +108,7 @@ class AdminController extends Controller
                         if ($row->id == $izin->id_attendance) {
                             $actionBtn = "
                             <div class='d-block text-center'>
-                                <a href='$printsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-download-alt'></i></a>
+                                <a href='$printsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-download-alt'></i></a>
                             </div>
                             ";
                             return $actionBtn;
@@ -120,7 +119,26 @@ class AdminController extends Controller
                         }
                     }    
                 })
-                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'action','file'])
+
+                ->addColumn('status', function ($row) {
+                    $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id',$row->id)->get();
+
+                    foreach($dataizin as $izin){
+                        if ($row->id == $izin->id_attendance) {
+                            if ($row->approval == 1) {
+                                $apprv = '<span class="badge badge-success">Disetujui</span>';
+                            } else {
+                                $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                            }
+                            return $apprv;
+                        }else{
+                            return $apprv ='';
+                        }
+                    }
+
+                    
+                })
+                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'action','file','status'])
                 ->make(true);
         }
         return DataTables::queryBuilder($data)->toJson();
@@ -171,7 +189,7 @@ class AdminController extends Controller
         $data = Izin::where('id_attendance', $id)->first();
         $dataqr = QR::where('id_attendance', $id)->first();
 
-        $pdf = PDF::loadview('admin.printizin', compact('data', 'dataqr'))->setPaper('potrait');
+        $pdf = PDF::loadview('admin.printizin', compact('data', 'dataqr'))->setPaper('A5','landscape');
         return $pdf->stream();
     }
     //END DATA PRESENSI

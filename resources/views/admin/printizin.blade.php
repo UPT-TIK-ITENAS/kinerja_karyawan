@@ -128,14 +128,12 @@
         <p style="font-size: 20px;align:left;"> INSTITUT TEKNOLOGI NASIONAL <br> JL. PHH MUSTAPA 23 BANDUNG <br> ------------------------------------------------</p>
     </header>
     <br>
-    <br>
     <div class="isi">
         <table class="table1">
             <tr>
                 <td style="vertical-align:top;font-size: 16px;">Yang bertanda tangan dibawah ini:</td>
             </tr>
         </table>
-        <br>
         <table class="table2">
             <tr>
                 <td style="vertical-align:top;width:150px;font-size: 16px;">Nama</td>
@@ -156,12 +154,10 @@
     </div>
     
     <div class="isi">
-        <br>
         <p style="font-size: 16px;align:left;"> Dengan ini menyatakan bahwa saya tidak hadir pada tanggal dan jam <b> {{ $data->tgl_awal_izin }} </b> sampai dengan tanggal dan jam <b> {{ $data->tgl_akhir_izin }} </b> dikarenakan <b> {{ $data->alasan }} </b> </p>
 
     </div>
     <div class="isi">
-        <br>
         <br>
         <br>
         <br>
