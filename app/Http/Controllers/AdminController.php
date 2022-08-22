@@ -243,12 +243,28 @@ class AdminController extends Controller
                             return '';
                         }
                     }
-                    
                 })
-                ->rawColumns(['duration','izin'])
+
+                ->addColumn('detail',function($data){
+                    $rekap =  route('admin.detailrekap', $data->nopeg);
+                    $actionBtn = "
+                        <div class='d-block text-center'>
+                            <a href='$rekap' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-eye-alt'></i></a>
+                        </div>";
+                    return $actionBtn;
+                })
+                ->rawColumns(['duration','izin','detail'])
                 ->make(true);
         }
         return DataTables::queryBuilder($data)->toJson();
+    }
+
+    public function detailrekap($nip)
+    {
+
+        $data = DB::select('CALL getTotalTelatPerBulan(' . $nip . ')');
+
+        return view('admin.detailrekap',compact('data'));
     }
 
     //END DATA REKAPITULASI
@@ -263,7 +279,7 @@ class AdminController extends Controller
 
     public function listizin(Request $request)
     {
-        $data = DB::table('izin_kerja');
+        $data = DB::table('izin_kerja')->join('jenis_izin','jenis_izin.id_izin','=','izin_kerja.jenis_izin');
 
         if ($request->ajax()) {
             return DataTables::of($data)

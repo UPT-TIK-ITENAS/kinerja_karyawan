@@ -98,5 +98,7 @@
                 'copy', 'csv', 'print'
             ]
         });
+
+        
     </script>
 @endsection

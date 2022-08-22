@@ -59,7 +59,7 @@
                     <select class="form-select" id="jenis_izin" name="jenis_izin">
                       <option value="" selected disabled>-- Pilih Jenis Izin--</option>
                       @foreach ($jenisizin as $k)
-                          <option value="{{ $k->jenis_izin }}" data-lama_izin="{{ $k->lama_izin }}"> {{ $k->jenis_izin }}</option>
+                          <option value="{{ $k->id_izin }}" data-lama_izin="{{ $k->lama_izin }}"> {{ $k->jenis_izin }}</option>
                       @endforeach
                   </select>
                 </div>

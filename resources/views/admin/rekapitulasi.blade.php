@@ -33,6 +33,7 @@
                                     <th>Nama</th>
                                     <th>Total Keterlambatan</th>
                                     <th>Total Izin</th>
+                                    <th>Detail</th>
                                 </thead>
                                 <tbody>
 
@@ -86,6 +87,11 @@
                     data: 'izin',
                     name: 'izin'
                 },
+                {
+                    data: 'detail',
+                    name: 'detail'
+                },
+                
 
             ],
             dom: 'Bfrtip',

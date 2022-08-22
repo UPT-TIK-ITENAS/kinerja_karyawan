@@ -233,7 +233,7 @@
                         <td style="width:1%;font-size: 14.5px;">{{ $no + 1 }}</td>
                         <td style="font-size: 14.5px;">{{ $p->jenis_izin }}  </td>
                         <td style="font-size: 14.5px;">{{ $p->lama_izin }} hari kerja</td>
-                        <td style="font-size: 14.5px;"> {!! getCheck($p->jenis_izin, $data->id_izinkerja,'check') !!} </td>
+                        <td style="font-size: 14.5px;"> {!! getCheck($p->id_izin, $data->id_izinkerja,'check') !!} </td>
                     </tr>
                 @endforeach
             </tbody>
