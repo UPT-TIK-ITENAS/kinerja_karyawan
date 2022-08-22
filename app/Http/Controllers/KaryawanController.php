@@ -24,7 +24,33 @@ class KaryawanController extends Controller
     }
     public function index()
     {
-        return view('karyawan.k_index');
+        $durasi_telat = strtotime('00:00:00');
+        $durasi_kerja = strtotime('00:00:00');
+        $data_att     = Attendance::where('nip', auth()->user()->nopeg)->whereMonth('tanggal', '=', date('m'))->get();
+        foreach ($data_att as $row) {
+            if (date("H:i:s", strtotime($row->jam_masuk)) > auth()->user()->awal_tugas && $row->hari != '6') {
+                $durasitelat = strtotime($row->jam_masuk) - strtotime(auth()->user()->awal_tugas);
+                $durasi_telat += $durasitelat;
+            }
+            if ($row->hari == '5') {
+                if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
+                    $durasitelat = strtotime($row->jam_siang) - strtotime('13:30:00');
+                    $durasi_telat += $durasitelat;
+                }
+            } else {
+                if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
+                    $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
+                    $durasi_telat += $durasitelat;
+                }
+            }
+            $durasi_kerja += strtotime($row->jam_keluar) - strtotime($row->jam_pulang);
+        }
+
+        $data = [
+            'terlambat' =>  date("H:i:s", $durasi_telat),
+            'durasi_kerja' => date("H:i:s", $durasi_kerja),
+        ];
+        return view('karyawan.k_index', compact('data'));
     }
     public function index_datapresensi()
     {

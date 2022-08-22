@@ -90,3 +90,10 @@ if (!function_exists('getNamaBulan')) {
         return $bulan;
     }
 }
+
+if (!function_exists('routeActive')) {
+    function routeActive($routeName)
+    {
+        return    request()->routeIs($routeName) ? 'active' : '';
+    }
+}
