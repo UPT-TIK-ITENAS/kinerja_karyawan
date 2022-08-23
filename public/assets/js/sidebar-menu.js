@@ -42,7 +42,7 @@
                   jQuery(this).find('div').replaceWith('<div class="according-menu"><i class="fa fa-angle-right"></i></div>');
               }
           });
-          jQuery('.menu-content').hide();
+        //   jQuery('.menu-content').hide();
     } else if ($('#pageWrapper').hasClass('horizontal-wrapper')) {
         var contentwidth = jQuery(window).width();
         if ((contentwidth) < '992') {
@@ -76,7 +76,7 @@
                   jQuery(this).find('div').replaceWith('<div class="according-menu"><i class="fa fa-angle-right"></i></div>');
               }
           });
-          jQuery('.menu-content').hide();
+        //   jQuery('.menu-content').hide();
         }
 
     }
@@ -181,24 +181,30 @@ $("#left-arrow").click(function () {
 });
 
 // page active
-    $( ".main-navbar" ).find( "a" ).removeClass("active");
-    $( ".main-navbar" ).find( "li" ).removeClass("active");
+    // $( ".main-navbar" ).find( "a" ).removeClass("active");
+    // $( ".main-navbar" ).find( "li" ).removeClass("active");
 
-    var current = window.location.pathname
-    $(".main-navbar ul>li a").filter(function() {
+    // var current = window.location.pathname;
+    // $(".main-navbar ul>li a").filter(function() {
 
-        var link = $(this).attr("href");
-        if(link){
-            if (current.indexOf(link) != -1) {
-                $(this).parents().children('a').addClass('active');
-                $(this).parents().parents().children('ul').css('display', 'block');
-                $(this).addClass('active');
-                $(this).parent().parent().parent().children('a').find('div').replaceWith('<div class="according-menu"><i class="fa fa-angle-down"></i></div>');
-                $(this).parent().parent().parent().parent().parent().children('a').find('div').replaceWith('<div class="according-menu"><i class="fa fa-angle-down"></i></div>');
-                return false;
-            }
-        }
-    });
+    //     var link = $(this).attr("href");
+    //     console.log('============');
+    //     console.log('link a ' + link);
+    //     if(link){
+    //         console.log('inside if');
+    //         if (current.indexOf(link) == 0) {
+    //             $(this).parents().children('a').addClass('active');
+    //             $(this).parents().parents().children('ul').css('display', 'block');
+    //             $(this).addClass('active');
+    //             $(this).parent().parent().parent().children('a').find('div').replaceWith('<div class="according-menu"><i class="fa fa-angle-down"></i></div>');
+    //             $(this).parent().parent().parent().parent().parent().children('a').find('div').replaceWith('<div class="according-menu"><i class="fa fa-angle-down"></i></div>');
+    //             console.log('inside if if');
+    //             console.log('test');
+    //             console.log('============');
+    //             return false;
+    //         }
+    //     }
+    // });
 
     $('.custom-scrollbar').animate({
         scrollTop: $('a.nav-link.menu-title.active').offset().top - 500
