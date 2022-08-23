@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
     {
     public function SyncAndInsertBiometric()
     {
-        $listmesinabsensi = DB::table('biometricmachine')->where('status', 'enable')->where('id', 25)->get();
+        $listmesinabsensi = DB::table('biometricmachine')->where('status', 'enable')->get();
         if (empty($listmesinabsensi)) {
             return "Finger Print Machine not register or not enable";
         }
@@ -61,6 +61,7 @@ use Illuminate\Support\Facades\DB;
                     if ($date < date("2022-07-01")) {
                         continue;
                     }
+            
 
                     // array_push($for_array, [
                     //     'nip' => $employee_id,
@@ -70,46 +71,57 @@ use Illuminate\Support\Facades\DB;
                     //     'jam_siang' => $datetime,
                     //     'jam_pulang' => $datetime,
                     // ]);
+                    // ->join('users','users.nopeg','=','attendance_baru.nip')
 
+                    
                     $cek_data_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->first();
-                    if (empty($cek_data_att)) {
-                        if ($time < '12:45:00') {
-                            $insert_att = DB::table('attendance_baru')->insert([
-                                'nip' => $employee_id,
-                                'tanggal' => $date,
-                                'hari' => $day,
-                                'jam_masuk' => $datetime,
-                            ]);
-                        } else if ($time >= '12:45:00' && $time < '15:30:00') {
-                            $insert_att = DB::table('attendance_baru')->insert([
-                                'nip' => $employee_id,
-                                'tanggal' => $date,
-                                'hari' => $day,
-                                'jam_siang' => $datetime,
-                            ]);
-                        } else if ($time >= '15:30:00' && $time <= '23:59:00') {
-                            $insert_att = DB::table('attendance_baru')->insert([
-                                'nip' => $employee_id,
-                                'tanggal' => $date,
-                                'hari' => $day,
-                                'jam_pulang' => $datetime,
-                            ]);
+                    $users = DB::table('users')->get();
+                    foreach($users as $user){
+                        if($user->nopeg == $employee_id){
+                            if (empty($cek_data_att)) {
+                                if ($time < '12:45:00') {
+                                    $insert_att = DB::table('attendance_baru')->insert([
+                                        'nip' => $employee_id,
+                                        'tanggal' => $date,
+                                        'hari' => $day,
+                                        'jam_masuk' => $datetime,
+                                    ]);
+                                } else if ($time >= '12:45:00' && $time < '15:30:00') {
+                                    $insert_att = DB::table('attendance_baru')->insert([
+                                        'nip' => $employee_id,
+                                        'tanggal' => $date,
+                                        'hari' => $day,
+                                        'jam_siang' => $datetime,
+                                    ]);
+                                } else if ($time >= '15:30:00' && $time <= '23:59:00') {
+                                    $insert_att = DB::table('attendance_baru')->insert([
+                                        'nip' => $employee_id,
+                                        'tanggal' => $date,
+                                        'hari' => $day,
+                                        'jam_pulang' => $datetime,
+                                    ]);
+                                }
+                            } else {
+                                if ($time < '12:45:00') {
+                                    $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
+                                        'jam_masuk' => $datetime,
+                                    ]);
+                                } else if ($time >= '12:45:00' && $time < '15:30:00') {
+                                    $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
+                                        'jam_siang' => $datetime,
+                                    ]);
+                                } else if ($time >= '15:30:00' && $time <= '23:59:00') {
+                                    $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
+                                        'jam_pulang' => $datetime,
+                                    ]);
+                                }
+                            }
                         }
-                    } else {
-                        if ($time < '12:45:00') {
-                            $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
-                                'jam_masuk' => $datetime,
-                            ]);
-                        } else if ($time >= '12:45:00' && $time < '15:30:00') {
-                            $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
-                                'jam_siang' => $datetime,
-                            ]);
-                        } else if ($time >= '15:30:00' && $time <= '23:59:00') {
-                            $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
-                                'jam_pulang' => $datetime,
-                            ]);
-                        }
+                        
                     }
+
+
+                    
                 }
             } else {
                 $msg .= "\n FAILED connect machine: " . $errno . " " . $errstr;

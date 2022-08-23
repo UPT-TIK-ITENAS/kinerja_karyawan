@@ -263,8 +263,21 @@ class AdminController extends Controller
     {
 
         $data = DB::select('CALL getTotalTelatPerBulan(' . $nip . ')');
+        $dataizinkerja = Attendance::selectRaw('attendance.id, attendance.nip, MONTH(izin_kerja.tgl_awal_izin) AS bulan,  YEAR(izin_kerja.tgl_awal_izin) AS tahun, izin_kerja.total_izin AS total')
+        ->join('izin_kerja','attendance.nip','=','izin_kerja.nopeg')
+        ->whereIn('attendance.nip',[$nip])
+        ->whereNotIn('izin_kerja.jenis_izin',['9'])
+        ->groupBy('bulan', 'tahun')
+        ->get();
 
-        return view('admin.detailrekap',compact('data'));
+        $datasakit = Attendance::selectRaw('attendance.id, attendance.nip, MONTH(izin_kerja.tgl_awal_izin) AS bulan,  YEAR(izin_kerja.tgl_awal_izin) AS tahun, izin_kerja.total_izin AS total')
+        ->join('izin_kerja','attendance.nip','=','izin_kerja.nopeg')
+        ->where('attendance.nip',$nip)
+        ->where('izin_kerja.jenis_izin','9')
+        ->groupBy('bulan', 'tahun')
+        ->get();
+
+        return view('admin.detailrekap',compact('data','dataizinkerja','datasakit'));
     }
 
     //END DATA REKAPITULASI
