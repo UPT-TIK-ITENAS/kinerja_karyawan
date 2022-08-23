@@ -224,4 +224,23 @@ class KaryawanController extends Controller
         $data->save();
         return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
     }
+
+    public function batal_izin($id)
+    {
+        $delete = IzinKerja::where('id_izinkerja', $id)->delete();
+        if ($delete) {
+            return redirect()->back()->with('success', 'Berhasil membatalkan izin');
+        } else {
+            return redirect()->back()->with('error', 'Gagal membatalkan izin');
+        }
+    }
+    public function batal_cuti($id)
+    {
+        $delete = Cuti::where('id_cuti', $id)->delete();
+        if ($delete) {
+            return redirect()->back()->with('success', 'Berhasil membatalkan izin');
+        } else {
+            return redirect()->back()->with('error', 'Gagal membatalkan izin');
+        }
+    }
 }
