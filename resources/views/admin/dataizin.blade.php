@@ -39,7 +39,8 @@
                                     <th>Tanggal Awal Izin</th>
                                     <th>Tanggal Akhir Izin</th>
                                     <th>Total Hari Izin</th>
-                                    <th>Aksi</th>
+                                    <th>File</th>
+                                    <th>Status</th>
                                 </thead>
                                 <tbody>
                  
@@ -83,7 +84,8 @@
                 { data: 'tgl_awal_izin', name: 'tgl_awal_izin'},
                 { data: 'tgl_akhir_izin', name: 'tgl_akhir_izin'},
                 { data: 'total_izin', name: 'total_izin'},
-                { data: 'action', name: 'action'},
+                { data: 'print', name: 'print'},
+                { data: 'status', name: 'status'},
             ],
             dom: 'Bfrtip',
             buttons: [

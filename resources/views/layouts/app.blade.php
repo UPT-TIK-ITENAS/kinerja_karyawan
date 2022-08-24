@@ -193,6 +193,13 @@
         </script>
 
         <script>
+            $(document).ready(function() {
+                $('.select2').select2({
+                    theme: "bootstrap4",
+                })
+            });
+
+
             $("document").ready(function() {
                 let flashdatasukses = $('.success-session').data('flashdata');
                 let flashdatagagal = $('.warning-session').data('flashdata');

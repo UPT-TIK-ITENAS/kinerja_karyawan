@@ -25,34 +25,17 @@
           @csrf
       <div class="card-body">
           <div class="row">
-
-            
-            <div class="col-xl-2 col-md-6 col-12">
+            <div class="col-xl-3 col-md-6 col-12">
                 <div class="mb-1">
                     <label class="form-label" for="helpInputTop">No. Pegawai</label>
-                    <select class="form-select digits" id="nopeg" name="nopeg">
+                    <select class="js-example-basic-single" id="nopeg" name="nopeg">
                         <option value="" disabled selected>Pilih Karyawan</option>
                         @foreach($datauser as $p)
-                            <option value="{{ $p->nopeg }}" data-name="{{ $p->name }}" data-unit="{{ $p->unit }}">{{ $p->nopeg }}</option>
+                            <option value="{{ $p->nopeg }}-{{ $p->name }}-{{ $p->unit }}">{{ $p->nopeg }} - {{ $p->name }} - {{ $p->unit }}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
-              <div class="col-xl-3 col-md-6 col-12">
-                  <div class="mb-1">
-                      <label class="form-label" for="basicInput">Nama Karyawan</label>
-                      <input type="text" class="form-control" id="name" name="name"
-                          readonly value="" />
-                  </div>
-              </div>
-            
-              <div class="col-xl-3 col-md-6 col-12">
-                  <div class="mb-1">
-                      <label class="form-label" for="disabledInput">Unit Kerja</label>
-                      <input type="text" class="form-control" id="unit" name="unit"
-                          readonly value="" />
-                  </div>
-              </div>
               <div class="col-xl-3 col-md-6 col-12">
                 <div class="mb-1">
                     <label class="form-label" for="basicInput">Jenis Izin</label>
@@ -71,12 +54,8 @@
                         readonly value="" />
                 </div>
             </div>
-
-              {{-- <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
-                  <label class="form-label" for="disabledInput">Tanggal</label>
-                  <input class="datepicker-here form-control digits" id="tanggal" name="tanggal" type="text" data-range="true" data-multiple-dates-separator=" - " data-language="en">
-              </div> --}}
-
+          </div>
+          <div class="row">
               <div class="col-xl-3 col-md-6 col-12 mb-1 mb-md-0">
                 <label class="form-label" for="disabledInput">Tanggal Awal</label>
                 <input class="datepicker-here form-control digits" id="startDate" name="startDate" type="text" data-language="en">
@@ -93,27 +72,17 @@
                         readonly value="" />
                 </div>
             </div>
-{{--               
-              
-              <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
-                  <div class="mb-1">
-                      <label class="form-label"
-                          for="exampleFormControlTextarea1">Alasan</label>
-                      <textarea class="form-control" id="alasan" name="alasan" rows="3" placeholder="Alasan" required></textarea>
-                  </div>
-              </div> --}}
-              <div class="col-12">
-                  <div class="mb-1">
-                      <div class="form-check form-check-success">
-                          <input type="checkbox" class="form-check-input"
-                              id="validasi" name="validasi" value="1">
-                          <label class="form-check-label" for="colorCheck3" required>Dengan ini saya menyatakan dengan benar bahwa saya izin</label>
-                      </div>
-                  </div>
-              </div>
-            
-          </div>
 
+            <div class="col-12">
+                <div class="mb-1">
+                    <div class="form-check form-check-success">
+                        <input type="checkbox" class="form-check-input"
+                            id="validasi" name="validasi" value="1">
+                        <label class="form-check-label" for="colorCheck3" required>Pengajuan izin dilakukan oleh diri sendiri dan secara sadar sesuai dengan ketentuan yang berlaku</label>
+                    </div>
+                </div>
+            </div>
+        </div>
           <button class="btn btn-primary" type="submit">Simpan</button>
         </div>
       <form>
@@ -124,14 +93,14 @@
 @parent
 <script>
     $(document).ready(function() {
-            $('#nopeg').on('change', function() {
-                const selected = $(this).find('option:selected');
-                const name = selected.data('name');
-                const unit = selected.data('unit');
+            // $('#nopeg').on('change', function() {
+            //     const selected = $(this).find('option:selected');
+            //     const name = selected.data('name');
+            //     const unit = selected.data('unit');
 
-                $("#name").val(name);
-                $("#unit").val(unit);
-            });
+            //     $("#name").val(name);
+            //     $("#unit").val(unit);
+            // });
 
             $('#jenis_izin').on('change', function() {
                 const selected = $(this).find('option:selected');

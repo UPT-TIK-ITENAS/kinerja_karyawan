@@ -44,7 +44,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($data as $no => $r)
-                                    $data
+     
                                     <tr>
                                         <td align="center">{{ $no + 1 }}</td>
                                         <td>{{ $r->nip }}</td>

@@ -297,7 +297,7 @@ class AdminController extends Controller
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('action', function ($row) {
+                ->addColumn('print', function ($row) {
                     $printsurat =  route('admin.printizinkerja', $row->id_izinkerja);
                     $actionBtn = "
                     <div class='d-block text-center'>
@@ -306,7 +306,15 @@ class AdminController extends Controller
                     ";
                     return $actionBtn;
                 })
-                ->rawColumns(['action'])
+                ->addColumn('status', function ($row) {
+                    if ($row->approval == 1) {
+                        $apprv = '<span class="badge badge-success">Disetujui</span>';
+                    } else {
+                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                    }
+                    return $apprv;
+                })
+                ->rawColumns(['print','status'])
                 ->make(true);
         }
         return DataTables::queryBuilder($data)->toJson();
@@ -322,7 +330,6 @@ class AdminController extends Controller
 
     public function storeizin(Request $request)
     {
-
         // dd(date('d-m-Y', strtotime($request->startDate)) );
         if ($request->total > $request->lama_izin && $request->jenis_izin != 'Sakit') {
             return redirect()->route('admin.dataizin')->with('error', 'Pengajuan Izin Tidak Berhasil, Total lama izin melebihi ketentuan hari yang diizinkan!');
@@ -330,9 +337,9 @@ class AdminController extends Controller
             return redirect()->route('admin.createizin')->with('error', 'Validasi Tidak diisi!');
         } else {
             IzinKerja::insert([
-                'nopeg' => $request->nopeg,
-                'name' => $request->name,
-                'unit' => $request->unit,
+                'nopeg' => explode('-', $request->nopeg)[0] ,
+                'name' =>  explode('-', $request->nopeg)[1],
+                'unit' =>  explode('-', $request->nopeg)[2],
                 'jenis_izin' => $request->jenis_izin,
                 'total_izin' => $request->total,
                 'tgl_awal_izin' => date('Y-m-d', strtotime($request->startDate)),
