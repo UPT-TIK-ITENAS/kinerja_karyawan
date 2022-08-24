@@ -4,30 +4,24 @@
         <div class="page-header">
             <div class="row">
                 <div class="col-lg-6">
-                    <h3>Rekap Data Izin-Cuti</h3>
+                    <h3>Data Pengajuan Izin</h3>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item">Rekap Data Izin-Cuti</li>
-                        <li class="breadcrumb-item active">Rekap Izin</li>
+                        <li class="breadcrumb-item">Data Pengajuan Izin</li>
+                        <li class="breadcrumb-item active">Data Izin</li>
                     </ol>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card-body d-flex">
-        <a href="{{ route('admin.createizin') }}" class="btn btn-primary"><i class="icofont icofont-plus-square"></i> Add</a>
-    </div>
-    
+
     <div class="container-fluid">
         <div class="row">
             <!-- Zero Configuration  Starts-->
             <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Daftar Izin </h5>
-                        <span>Daftar Izin Karyawan</span>
-                    </div>
+                <div class="card"> 
                     <div class="card-body">
+                        <a href="{{ route('admin.createizin') }}" class="btn btn-primary"><i class="icofont icofont-plus-square"></i> Add</a>
                         <div class="table-responsive"> 
                             <table class="dataTable" id="table-izin">
                                 <thead>

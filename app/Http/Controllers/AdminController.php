@@ -387,7 +387,15 @@ class AdminController extends Controller
                     ";
                     return $actionBtn;
                 })
-                ->rawColumns(['action'])
+                ->addColumn('status', function ($row) {
+                    if ($row->approval == 1) {
+                        $apprv = '<span class="badge badge-success">Disetujui</span>';
+                    } else {
+                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                    }
+                    return $apprv;
+                })
+                ->rawColumns(['action','status'])
                 ->make(true);
         }
         return DataTables::queryBuilder($data)->toJson();
