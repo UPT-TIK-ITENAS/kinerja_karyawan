@@ -37,9 +37,9 @@ if (!function_exists('getApproval')) {
             $getDataIzin = IzinKerja::where('id_izinkerja', $id)->first();
             if ($getDataIzin) {
                 if ($getDataIzin->approval == 1) {
-                    $for_html = '<span class="badge badge-success">Disetujui</span>';
+                    $for_html = '<span class="badge badge-primary">Disetujui</span>';
                 } elseif ($getDataIzin->approval == 2) {
-                    $for_html = '<span class="badge badge-danger">Disetujui Atasan dari Atasan Langsung</span>';
+                    $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
                 } else {
                     $for_html = '<span class="badge badge-warning">Menunggu</span> <a class="btn btn-danger btn-xs" href="' . $url_batal_izin . '" id="btnBatal">X</a>';
                 }
