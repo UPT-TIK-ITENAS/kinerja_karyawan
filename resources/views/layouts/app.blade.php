@@ -37,9 +37,7 @@
     <!-- Plugins css start-->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/prism.css') }}">
     <!-- Plugins css Ends-->
-    <!-- Plugins css start-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}">
-    <!-- Plugins css Ends-->
+
     <!-- Bootstrap css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
     <!-- App css-->
@@ -160,6 +158,11 @@
         <script src="{{ asset('assets/js/datepicker/date-time-picker/moment.min.js') }}"></script>
         <script src="{{ asset('assets/js/datepicker/date-time-picker/tempusdominus-bootstrap-4.min.js') }}"></script>
         <script src="{{ asset('assets/js/datepicker/date-time-picker/datetimepicker.custom.js') }}"></script>
+
+        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.js') }}"></script>
+        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.en.js') }}"></script>
+        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.custom.js') }}"></script>
+
         <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
         <!-- Plugins JS Ends-->
         <!-- Plugins JS start-->
@@ -195,7 +198,7 @@
         <script>
             $(document).ready(function() {
                 $('.select2').select2({
-                    theme: "bootstrap4",
+                    theme: "bootstrap5",
                 })
             });
 

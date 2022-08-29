@@ -42,7 +42,7 @@ class AdminController extends Controller
 
     public function listkaryawan(Request $request)
     {
-        $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg');
+        $data = Attendance::selectRaw('attendance.*, users.name, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg');
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -263,14 +263,15 @@ class AdminController extends Controller
     {
 
         $data = DB::select('CALL getTotalTelatPerBulan(' . $nip . ')');
-        $dataizinkerja = Attendance::selectRaw('attendance.id, attendance.nip, MONTH(izin_kerja.tgl_awal_izin) AS bulan,  YEAR(izin_kerja.tgl_awal_izin) AS tahun, izin_kerja.total_izin AS total')
+        
+        $dataizinkerja = Attendance::selectRaw('izin_kerja.*,attendance.id, attendance.nip, MONTH(izin_kerja.tgl_awal_izin) AS bulan,  YEAR(izin_kerja.tgl_awal_izin) AS tahun, izin_kerja.total_izin AS total')
         ->join('izin_kerja','attendance.nip','=','izin_kerja.nopeg')
         ->whereIn('attendance.nip',[$nip])
         ->whereNotIn('izin_kerja.jenis_izin',['9'])
         ->groupBy('bulan', 'tahun')
         ->get();
 
-        $datasakit = Attendance::selectRaw('attendance.id, attendance.nip, MONTH(izin_kerja.tgl_awal_izin) AS bulan,  YEAR(izin_kerja.tgl_awal_izin) AS tahun, izin_kerja.total_izin AS total')
+        $datasakit = Attendance::selectRaw('izin_kerja.*, attendance.id, attendance.nip, MONTH(izin_kerja.tgl_awal_izin) AS bulan,  YEAR(izin_kerja.tgl_awal_izin) AS tahun, izin_kerja.total_izin AS total')
         ->join('izin_kerja','attendance.nip','=','izin_kerja.nopeg')
         ->where('attendance.nip',$nip)
         ->where('izin_kerja.jenis_izin','9')
@@ -413,9 +414,9 @@ class AdminController extends Controller
     public function storecuti(Request $request)
     {
         Cuti::insert([
-            'nopeg' => $request->nopeg,
-            'name' => $request->name,
-            'unit' => $request->unit,
+            'nopeg' => explode('-', $request->nopeg)[0] ,
+            'name' =>  explode('-', $request->nopeg)[1],
+            'unit' =>  explode('-', $request->nopeg)[2],
             'jenis_cuti' => $request->jenis_cuti,
             'tgl_awal_cuti' => date('Y-m-d', strtotime($request->startDate)),
             'tgl_akhir_cuti' => date('Y-m-d', strtotime($request->endDate)),

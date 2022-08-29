@@ -21,7 +21,7 @@
             <div class="col-sm-12">
                 <div class="card"> 
                     <div class="card-body">
-                        <a href="{{ route('admin.createizin') }}" class="btn btn-primary"><i class="icofont icofont-plus-square"></i> Add</a>
+                        <a href="{{ route('admin.createizin') }}" class="btn btn-primary"><i class="icofont icofont-plus-square"></i> Tambah</a>
                         <div class="table-responsive"> 
                             <table class="dataTable" id="table-izin">
                                 <thead>

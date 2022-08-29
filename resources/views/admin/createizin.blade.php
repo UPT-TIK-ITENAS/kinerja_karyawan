@@ -5,21 +5,14 @@
 @section('content')
     <div class="container-fluid">
         <div class="page-header">
-            <div class="row">
-                <div class="col-lg-6">
-                    <h3>Dashboard</h3>
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">Sistem Laporan Presensi Karyawan</li>
-                        <li class="breadcrumb-item active">Data Izin</li>
-                    </ol>
-                </div>
+            <div class="row">    
             </div>
         </div>
     </div>
 
     <div class="card">
         <div class="card-header pb-0">
-          <h5>Form Izin Tidak Masuk Kerja</h5>
+          <h5>Form Izin Kerja</h5>
         </div>
         <form action="{{ route('admin.storeizin') }}" method="POST" enctype="multipart/form-data">
           @csrf
