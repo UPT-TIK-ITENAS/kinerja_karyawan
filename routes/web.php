@@ -44,7 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('createizinkehadiran/{id}', [AdminController::Class, 'createizinkehadiran'])->name('admin.createizinkehadiran');
         Route::post('storeizinkehadiran', [AdminController::Class, 'storeizinkehadiran'])->name('admin.storeizinkehadiran');
-        Route::get('/biometric', [BiometricController::Class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
+        Route::post('/biometric', [BiometricController::Class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
         Route::get('printizin/{id}', [AdminController::Class, 'printizin'])->name('admin.printizin');
 
         Route::get('/dataizin', [AdminController::Class, 'dataizin'])->name('admin.dataizin');
