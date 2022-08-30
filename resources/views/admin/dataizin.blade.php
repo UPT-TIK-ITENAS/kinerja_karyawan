@@ -33,7 +33,7 @@
                                     <th>Tanggal Awal Izin</th>
                                     <th>Tanggal Akhir Izin</th>
                                     <th>Total Hari Izin</th>
-                                    <th>File</th>
+                                    <th>Aksi</th>
                                     <th>Status</th>
                                 </thead>
                                 <tbody>

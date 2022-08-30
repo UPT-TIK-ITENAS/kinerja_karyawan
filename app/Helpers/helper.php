@@ -101,3 +101,24 @@ if (!function_exists('routeActive')) {
 }
 
 
+if (!function_exists('getAksi')) {
+    function getAksi($id, $tipe)
+    {
+        $printizin =  route('admin.printizinkerja', $id);
+        $printcuti =  route('admin.printcuti', $id);
+        $batal_cuti = route('admin.batal_cuti', $id);
+        $batal_izin = route('admin.batal_izin', $id);
+
+        $for_html = "";
+        if ($tipe == 'izin') {
+            $for_html = '<a class="btn btn-success btn-xs" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a> 
+            <a class="btn btn-danger btn-xs batalizin" href="' . $batal_izin . '">X</a>';
+        }elseif($tipe == 'cuti'){
+            $for_html = '<a class="btn btn-success btn-xs" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a> 
+            <a class="btn btn-danger btn-xs batalcuti" href="' . $batal_cuti . '">X</a>';
+        }
+
+        return $for_html;
+    }
+}
+

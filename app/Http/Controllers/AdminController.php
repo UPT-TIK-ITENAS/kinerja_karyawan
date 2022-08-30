@@ -299,13 +299,7 @@ class AdminController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('print', function ($row) {
-                    $printsurat =  route('admin.printizinkerja', $row->id_izinkerja);
-                    $actionBtn = "
-                    <div class='d-block text-center'>
-                        <a href='$printsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-download-alt'></i></a>
-                    </div>
-                    ";
-                    return $actionBtn;
+                    return getAksi($row->id_izinkerja, 'izin');
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->approval == 1) {
@@ -362,6 +356,17 @@ class AdminController extends Controller
         return $pdf->stream();
     }
 
+    public function batal_izin($id)
+    {
+        $delete = IzinKerja::where('id_izinkerja', $id)->delete();
+        if ($delete) {
+            return redirect()->back()->with('success', 'Berhasil membatalkan izin');
+        } else {
+            return redirect()->back()->with('error', 'Gagal membatalkan izin');
+        }
+    }
+
+
     //END DATA IZIN KARYAWAN
 
 
@@ -380,13 +385,7 @@ class AdminController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $printsurat =  route('admin.printcuti', $row->id_cuti);
-                    $actionBtn = "
-                    <div class='d-block text-center'>
-                        <a href='$printsurat' class='btn btn btn-success align-items-center'><i class='icofont icofont-download-alt'></i></a>
-                    </div>
-                    ";
-                    return $actionBtn;
+                    return getAksi($row->id_cuti, 'cuti');
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->approval == 1) {
@@ -436,6 +435,16 @@ class AdminController extends Controller
 
         $pdf = PDF::loadview('admin.printcuti', compact('data'))->setPaper('potrait');
         return $pdf->stream();
+    }
+    
+    public function batal_cuti($id)
+    {
+        $delete = Cuti::where('id_cuti', $id)->delete();
+        if ($delete) {
+            return redirect()->back()->with('success', 'Berhasil membatalkan izin');
+        } else {
+            return redirect()->back()->with('error', 'Gagal membatalkan izin');
+        }
     }
 
     //ENDDATA CUTI KARYAWAN
