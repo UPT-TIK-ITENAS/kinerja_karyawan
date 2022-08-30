@@ -155,11 +155,15 @@ class KaryawanController extends Controller
     {
         $cuti = Cuti::select('cuti.*', 'jenis_cuti.jenis_cuti as nama_cuti')->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')->where('nopeg', auth()->user()->nopeg)->get();
         $jeniscuti = JenisCuti::all();
+        $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
+        FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . auth()->user()->nopeg . "' GROUP BY cuti.jenis_cuti");
 
         $data = [
             'jeniscuti' => $jeniscuti,
-            'cuti'      => $cuti
+            'cuti'      => $cuti,
+            'history'   => $history_cuti
         ];
+        // dd($data);
 
         return view('karyawan.k_index_cuti', compact('data'));
     }
@@ -174,6 +178,7 @@ class KaryawanController extends Controller
             'alamat' => 'required',
             'no_hp' => 'required',
         ]);
+
         $data = new Cuti();
         $data->nopeg = auth()->user()->nopeg;
         $data->unit = auth()->user()->unit;
@@ -211,6 +216,7 @@ class KaryawanController extends Controller
             'tgl_akhir_izin' => 'required',
             'total_izin' => 'required',
         ]);
+
         $data = new IzinKerja();
         $data->nopeg = auth()->user()->nopeg;
         $data->unit = auth()->user()->unit;
@@ -223,5 +229,24 @@ class KaryawanController extends Controller
         $data->tgl_pengajuan = date('Y-m-d H:i:s');
         $data->save();
         return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
+    }
+
+    public function batal_izin($id)
+    {
+        $delete = IzinKerja::where('id_izinkerja', $id)->delete();
+        if ($delete) {
+            return redirect()->back()->with('success', 'Berhasil membatalkan izin');
+        } else {
+            return redirect()->back()->with('error', 'Gagal membatalkan izin');
+        }
+    }
+    public function batal_cuti($id)
+    {
+        $delete = Cuti::where('id_cuti', $id)->delete();
+        if ($delete) {
+            return redirect()->back()->with('success', 'Berhasil membatalkan izin');
+        } else {
+            return redirect()->back()->with('error', 'Gagal membatalkan izin');
+        }
     }
 }

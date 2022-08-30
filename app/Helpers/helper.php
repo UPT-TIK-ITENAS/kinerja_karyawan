@@ -30,16 +30,18 @@ if (!function_exists('getCheck')) {
 if (!function_exists('getApproval')) {
     function getApproval($id, $tipe)
     {
+        $url_batal_cuti = route('karyawan.batal_cuti', $id);
+        $url_batal_izin = route('karyawan.batal_izin', $id);
         $for_html = "";
         if ($tipe == 'izin') {
             $getDataIzin = IzinKerja::where('id_izinkerja', $id)->first();
             if ($getDataIzin) {
                 if ($getDataIzin->approval == 1) {
-                    $for_html = '<span class="badge badge-success">Disetujui</span>';
+                    $for_html = '<span class="badge badge-primary">Disetujui</span>';
                 } elseif ($getDataIzin->approval == 2) {
-                    $for_html = '<span class="badge badge-danger">Disetujui Atasan dari Atasan Langsung</span>';
+                    $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
                 } else {
-                    $for_html = '<span class="badge badge-warning">Menunggu</span>';
+                    $for_html = '<span class="badge badge-warning">Menunggu</span> <a class="btn btn-danger btn-xs" href="' . $url_batal_izin . '" id="btnBatal">X</a>';
                 }
             }
         } elseif ($tipe == 'cuti') {
@@ -50,7 +52,7 @@ if (!function_exists('getApproval')) {
                 } elseif ($getDataCuti->approval == 2) {
                     $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
                 } else {
-                    $for_html = '<span class="badge badge-warning">Menunggu</span>';
+                    $for_html = '<span class="badge badge-warning">Menunggu</span> <a class="btn btn-danger btn-xs" href="' . $url_batal_cuti . '" id="btnBatal">X</a>';
                 }
             }
         }
