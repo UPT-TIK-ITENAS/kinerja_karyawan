@@ -35,7 +35,7 @@
                                 <label class="col-sm-1 col-form-label">Tanggal</label>
                                 <div class="col-xl-2">
                                 <div class="input-group">
-                                    <input class="datepicker-here form-control digits" id="tanggal" name="tanggal" type="text" data-language="en">
+                                    <input class="datepicker-here form-control digits" id="tanggal" name="tanggal" type="text" data-language="en" required>
                                 </div>
                                 </div>
                                 <div class="col-sm-12 col-md-12 col-lg-6">
