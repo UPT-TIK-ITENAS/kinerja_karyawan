@@ -7,6 +7,7 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\BiometricController;
 use App\Http\Controllers\PengajuanIzinController;
 use App\Http\Controllers\PengajuanCutiController;
+use App\Http\Controllers\KepalaUnitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,7 @@ Route::group(['name' => 'auth'], function () {
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin', [AdminController::Class, 'index'])->name('admin.admin_v');
+    Route::get('/kepalaunit', [KepalaUnitController::Class, 'index'])->name('kepalaunit.kepalaunit_v');
     Route::group(['prefix' => 'admin'], function () {
 
         Route::get('/datapresensi', [AdminController::Class, 'datapresensi'])->name('admin.datapresensi');
@@ -60,8 +62,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('storecuti', [AdminController::Class, 'storecuti'])->name('admin.storecuti');
         Route::get('/batal_cuti/{id}', [AdminController::Class, 'batal_cuti'])->name('admin.batal_cuti');
         Route::get('printcuti/{id}', [AdminController::Class, 'printcuti'])->name('admin.printcuti');
-
-
     });
     Route::prefix('karyawan')->name('karyawan.')->group(function () {
         Route::get('/', [KaryawanController::Class, 'index'])->name('index');
@@ -77,4 +77,15 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/cuti/store', [KaryawanController::Class, 'store_cuti'])->name('store_cuti');
         Route::get('/cuti/batal/{id}', [KaryawanController::Class, 'batal_cuti'])->name('batal_cuti');
     });
+
+    Route::group(['prefix' => 'kepalaunit'], function () {
+
+        Route::get('/kepalaunit', [KepalaUnitController::Class, 'kepalaunit'])->name('kepalaunit.kepalaunit');
+        Route::get('/dataizin', [KepalaUnitController::Class, 'dataizin'])->name('kepalaunit.dataizin');
+        Route::get('/editizin/{id_izinkerja}', [KepalaUnitController::Class, 'editizin'])->name('kepalaunit.editizin');
+        Route::post('/updateizin', [KepalaUnitController::Class, 'updateizin'])->name('kepalaunit.updateizin');
+        Route::get('/datacuti', [KepalaUnitController::Class, 'datacuti'])->name('kepalaunit.datacuti');
+      
+    });
+
 });

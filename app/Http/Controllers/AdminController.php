@@ -24,6 +24,11 @@ use PDF;
 
 class AdminController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
 
     //DASHBOARD
     public function index()
