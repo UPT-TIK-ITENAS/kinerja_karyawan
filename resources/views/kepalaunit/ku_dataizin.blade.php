@@ -39,6 +39,7 @@
                                             <th>Tanggal Akhir</th>
                                             <th>Total Hari</th>
                                             <th>Tanggal Pengajuan</th>
+                                            <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -55,8 +56,12 @@
                                                 </td>
                                                 <td align="center">{{ $r->total_izin }}</td>
                                                 <td align="center">{{ $r->tgl_pengajuan }}</td>
+                                                @if ( $r->approval == 1)
+                                                <td><span class="badge badge-primary">Disetujui</span> </td>
+                                                @elseif ($r->approval == 2 )
+                                                <td><span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span></td>  
+                                                @endif
                                                 <td align="center">{!! getAksi($r->id_izinkerja, 'izin') !!} <span class="jumlah" data-id="{{ $r->id_izinkerja }}"></span></td>
-                                        
                                             </tr>
                                         @endforeach
                                     </tbody>

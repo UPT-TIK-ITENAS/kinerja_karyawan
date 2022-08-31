@@ -111,22 +111,14 @@ if (!function_exists('getAksi')) {
         $for_html = "";
         if ($tipe == 'izin') {
             if(auth()->user()->role =="admin"){
-
-              
                 $for_html = '<a class="btn btn-success btn-xs" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a> 
                 <a class="btn btn-danger btn-xs batalizin" href="' . $batal_izin . '">X</a>';
             }elseif(auth()->user()->role =="kepalaunit"){
-
-                $data = IzinKerja::get();
-                foreach($data as $i){
+                $data = IzinKerja::where('id_izinkerja', $id)->first();
                     $for_html = '
-                <a href="#" class="btn btn-primary btn-xs apprvIzin" data-bs-target="#apprvIzin" data-bs-toggle="modal" data-id="'.$i->id_izinkerja.'"><i class="icofont icofont-pencil-alt-2"></i></a>
-                <a class="btn btn-secondary btn-xs" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a> 
-                <a class="btn btn-danger btn-xs batalizin" href="' . $batal_izin . '">X</a> ';
-                }
-
-
-                
+                        <a href="#" class="btn btn-primary btn-xs apprvIzin" data-bs-target="#apprvIzin" data-bs-toggle="modal" data-id="'.$data->id_izinkerja.'"><i class="icofont icofont-pencil-alt-2"></i></a>
+                        <a class="btn btn-secondary btn-xs" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a> 
+                        <a class="btn btn-danger btn-xs batalizin" href="' . $batal_izin . '">X</a> ';
             }
            
         }elseif($tipe == 'cuti'){
