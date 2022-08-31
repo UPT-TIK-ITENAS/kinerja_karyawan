@@ -60,7 +60,31 @@ class KepalaUnitController extends Controller
 
     public function datacuti()
     {
-        return view('kepalaunit.ku_datacuti');
+        $data = Cuti::select('cuti.*', 'jenis_cuti.jenis_cuti as nama_cuti')
+        ->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
+        ->join('users','cuti.nopeg','=','users.nopeg')
+        ->where('users.atasan',auth()->user()->nopeg)->get();
+        
+        return view('kepalaunit.ku_datacuti', compact('data'));
+    }
+
+    public function editcuti($id_cuti)
+    {
+        $c = Cuti::select('cuti.*', 'jenis_cuti.jenis_cuti as nama_cuti')->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')->where('cuti.id_cuti',$id_cuti)->first(); 
+        return response()->json($c);
+    }
+
+    public function updatecuti(Request $request)
+    {
+        $request->validate([
+            'approval' => 'required',
+        ]);
+        $data = [
+            'approval' => $request->approval,
+        ];
+
+        Cuti::where('id_cuti', $request->id_cuti)->update($data);
+        return redirect()->route('kepalaunit.datacuti')->with('success', 'Approval berhasil!');
     }
 
 }

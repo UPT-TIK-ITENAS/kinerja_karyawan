@@ -130,7 +130,7 @@
                 <ul class="nav-submenu menu-content" style="display: none;">
                     <li><a href="{{ route('kepalaunit.dataizin') }}" class="">Pengajuan Izin</a>
                     </li>
-                    <li><a href="" class="">Pengajuan Cuti</a>
+                    <li><a href="{{ route('kepalaunit.datacuti') }}" class="">Pengajuan Cuti</a>
                     </li>
                 </ul>
             </li>

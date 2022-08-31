@@ -84,8 +84,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/dataizin', [KepalaUnitController::Class, 'dataizin'])->name('kepalaunit.dataizin');
         Route::get('/editizin/{id_izinkerja}', [KepalaUnitController::Class, 'editizin'])->name('kepalaunit.editizin');
         Route::post('/updateizin', [KepalaUnitController::Class, 'updateizin'])->name('kepalaunit.updateizin');
+
         Route::get('/datacuti', [KepalaUnitController::Class, 'datacuti'])->name('kepalaunit.datacuti');
-      
+        Route::get('/editcuti/{id_cuti}', [KepalaUnitController::Class, 'editcuti'])->name('kepalaunit.editcuti');
+        Route::post('/updatecuti', [KepalaUnitController::Class, 'updatecuti'])->name('kepalaunit.updatecuti');
+
     });
 
 });
