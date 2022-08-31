@@ -21,12 +21,6 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col">
-                                <a href="#" class="btn btn-primary" data-bs-target="#tambahIzin"
-                                    data-bs-toggle="modal" style="float: right">+ Tambah</a>
-                            </div>
-                        </div>
                         <div class="row">
                             <div class="table-responsive">
                                 <table class="dataTable" id="table-izinKU">
