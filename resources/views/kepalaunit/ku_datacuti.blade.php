@@ -93,10 +93,12 @@ role="dialog">
                         <span class="form-label" for="name">Nama</span>
                         <input class="form-control" id="name" name="name" type="text" readonly>
                     </div>
+                    <input id="id_cuti" name="id_cuti" type="hidden">
                     <div class="col-md-4">
                         <span class="form-label" for="nama_cuti">Jenis Cuti</span>
                         <input class="form-control" id="nama_cuti" name="nama_cuti" type="text" readonly>
                     </div>
+                    
                     <div class="col-md-4">
                         <span class="form-label" for="tgl_awal_cuti">Tanggal Awal</span>
                         <input class="form-control" id="tgl_awal_cuti" name="tgl_awal_cuti" type="text" readonly>
