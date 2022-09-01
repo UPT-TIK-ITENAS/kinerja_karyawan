@@ -261,7 +261,7 @@
                 </tr>
                 <tr>
                     <td>
-                        {{-- <img src="data:image/png;base64, {!! $qrcode !!}"> --}}
+                        <img src="{{ url('qrcode/' . $dataqr->qr_peg) }}" width="80" height="80" alt="">
                         <img src="">
                     </td>
                 </tr>
@@ -287,13 +287,13 @@
                 </tr>
                 <tr>
                     <td>
-                        {{-- <img src="data:image/png;base64, {!! $qrcode !!}"> --}}
+                        <img src="{{ url('qrcode/' . $dataqr->qr_kepalaunit) }}" width="80" height="80" alt="">
                         <img src="">
                     </td>
                 </tr>
                 <tr>
                     <td  style="font-size: 14.5px;">
-                        <u><b>Epih Haryanti, A.Md.</u></b>
+                        <u><b>{{ $kepala->name }}</u></b>
                     </td>
                 </tr>
             </table>

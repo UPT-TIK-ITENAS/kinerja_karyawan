@@ -24,7 +24,7 @@
                     <select class="js-example-basic-single" id="nopeg" name="nopeg">
                         <option value="" disabled selected>Pilih Karyawan</option>
                         @foreach($datauser as $p)
-                            <option value="{{ $p->nopeg }}-{{ $p->name }}-{{ $p->unit }}">{{ $p->nopeg }} - {{ $p->name }} - {{ $p->unit }}</option>
+                            <option value="{{ $p->nopeg }}-{{ $p->name }}-{{ $p->unit }} ">{{ $p->nopeg }} - {{ $p->name }} - {{ $p->unit }}</option>
                         @endforeach
                     </select>
                 </div>

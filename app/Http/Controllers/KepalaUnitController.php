@@ -7,9 +7,11 @@ use App\Models\Cuti;
 use App\Models\IzinKerja;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
+use App\Models\QR;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class KepalaUnitController extends Controller
 {
@@ -52,6 +54,17 @@ class KepalaUnitController extends Controller
         ];
 
         IzinKerja::where('id_izinkerja', $request->id_izinkerja)->update($data);
+
+        $dataqr = IzinKerja::where('id_izinkerja', $request->id_izinkerja)->first();
+        $qrcode_filename = 'qr-' . base64_encode(auth()->user()->nopeg . date('Y-m-d H:i:s')) . '.svg';
+        // dd($qrcode_filename);
+        QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . auth()->user()->nopeg . '-' . auth()->user()->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
+
+        QR::where('id_izinkerja', $request->id_izinkerja)->update([
+            'qr_kepalaunit' => $qrcode_filename,
+        ]);
+
+
         return redirect()->route('kepalaunit.dataizin')->with('success', 'Approval berhasil!');
     }
 

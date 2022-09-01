@@ -324,7 +324,7 @@ class AdminController extends Controller
     {
         $datauser = User::groupby('nopeg')->get();
         $jenisizin = JenisIzin::get();
-        $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->get();
+        $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas, users.atasan')->join('users', 'attendance.nip', '=', 'users.nopeg')->get();
         return view('admin.createizin', compact('data', 'datauser','jenisizin'));
     }
 
@@ -347,6 +347,16 @@ class AdminController extends Controller
                 'validasi' => $request->validasi,
                 'approval' => '0',
             ]);
+            
+            $dataqr = IzinKerja::where('id_izinkerja', $request->id_izinkerja)->first();
+            $qrcode_filename = 'qr-' . base64_encode(explode('-', $request->nopeg)[0] . date('Y-m-d H:i:s')) . '.svg';
+            // dd($qrcode_filename);
+            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
+    
+            QR::where('id_izinkerja', $request->id_izinkerja)->update([
+                'qr_peg' => $qrcode_filename,
+            ]);
+    
         }
 
         return redirect()->route('admin.dataizin')->with('success', 'Pengajuan Izin Berhasil!');
@@ -354,10 +364,13 @@ class AdminController extends Controller
 
     public function printizinkerja($id)
     {
-        $data = IzinKerja::where('id_izinkerja', $id)->first();
+        $data = IzinKerja::join('users','izin_kerja.nopeg','=','users.nopeg')->where('id_izinkerja', $id)->first();
+        $kepala = User::select('name')->where('nopeg', $data->atasan)->first();
         $jenisizin = JenisIzin::where('jenis_izin', '!=', 'sakit')->get();
+        $dataqr = QR::where('id_izinkerja', $id)->first();
 
-        $pdf = PDF::loadview('admin.printizinkerja', compact('data', 'jenisizin'))->setPaper('potrait');
+
+        $pdf = PDF::loadview('admin.printizinkerja', compact('data', 'jenisizin','dataqr','kepala'))->setPaper('potrait');
         return $pdf->stream();
     }
 

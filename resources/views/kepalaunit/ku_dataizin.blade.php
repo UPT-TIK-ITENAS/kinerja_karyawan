@@ -53,7 +53,9 @@
                                                 @if ( $r->approval == 1)
                                                 <td><span class="badge badge-primary">Disetujui</span> </td>
                                                 @elseif ($r->approval == 2 )
-                                                <td><span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span></td>  
+                                                <td><span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span></td> 
+                                                @else
+                                                <td><span class="badge badge-warning">Menunggu</span></td> 
                                                 @endif
                                                 <td align="center">{!! getAksi($r->id_izinkerja, 'izin') !!} <span class="jumlah" data-id="{{ $r->id_izinkerja }}"></span></td>
                                             </tr>
