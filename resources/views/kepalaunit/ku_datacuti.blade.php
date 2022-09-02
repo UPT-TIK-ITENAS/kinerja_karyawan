@@ -131,6 +131,7 @@ role="dialog">
                             <option selected="" disabled="" value="">-- Pilih ---</option>
                             <option value="1">Disetujui</option>
                             <option value="2">Disetujui Atasan dari Atasan Langsung</option>
+                            <option value="3">Ditolak</option>
                         </select>
                     </div>
                 </div>
