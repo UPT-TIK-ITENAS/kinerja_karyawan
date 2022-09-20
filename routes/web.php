@@ -88,6 +88,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/datacuti', [KepalaUnitController::Class, 'datacuti'])->name('kepalaunit.datacuti');
         Route::get('/editcuti/{id_cuti}', [KepalaUnitController::Class, 'editcuti'])->name('kepalaunit.editcuti');
         Route::post('/updatecuti', [KepalaUnitController::Class, 'updatecuti'])->name('kepalaunit.updatecuti');
+        Route::get('/batal_cuti/{id}', [KepalaUnitController::Class, 'batal_cuti'])->name('kepalaunit.batal_cuti');
 
     });
 

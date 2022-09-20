@@ -57,6 +57,8 @@
                                                 <td><span class="badge badge-primary">Disetujui</span> </td>
                                             @elseif ($r->approval == 2 )
                                                 <td><span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span></td>  
+                                            @elseif($r->approval == 3)
+                                                <td><span class="badge badge-danger">Ditolak</span></td>  
                                             @else
                                                 <td><span class="badge badge-warning">Menunggu</span></td>  
                                             @endif
@@ -174,5 +176,25 @@ role="dialog">
                 console.log(data);
             })
         });
+
+        $('#table-cutiKU').on('click', '.batalcuti', function(e) {
+        let id = $(this).data('id');
+        const href = $(this).attr('href');
+        e.preventDefault();
+        Swal.fire({
+            title: 'Apakah Yakin?',
+            text: `Apakah Anda yakin ingin menghapus?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Hapus'
+        }).then((result) => {
+            if (result.value == true) {
+                document.location.href = href;
+            }
+        });
+    })
+
     </script>
 @endsection

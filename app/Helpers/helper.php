@@ -108,6 +108,7 @@ if (!function_exists('getAksi')) {
         $printcuti =  route('admin.printcuti', $id);
         $batal_cuti = route('admin.batal_cuti', $id);
         $batal_izin = route('admin.batal_izin', $id);
+
         $for_html = "";
         if ($tipe == 'izin') {
             if(auth()->user()->role =="admin"){
@@ -129,8 +130,7 @@ if (!function_exists('getAksi')) {
                 $data = Cuti::where('id_cuti', $id)->first();
                 $for_html = '
                 <a href="#" class="btn btn-primary btn-xs apprvCuti" data-bs-target="#apprvCuti" data-bs-toggle="modal" data-id="'.$data->id_cuti.'"><i class="icofont icofont-pencil-alt-2"></i></a>
-                <a class="btn btn-success btn-xs" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a> 
-                <a class="btn btn-danger btn-xs batalcuti" href="' . $batal_cuti . '">X</a>';
+                <a class="btn btn-success btn-xs" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a> ';
             }
         }
 

@@ -106,7 +106,7 @@
 
             @if (auth()->user()->role == 'kepalaunit')
             <li class="dropdown">
-                <a class="nav-link menu-title link-nav active" href="{{ route('kepalaunit.kepalaunit') }}"><i
+                <a class="nav-link menu-title link-nav active" href="{{ route('kepalaunit') }}"><i
                         data-feather="users"></i><span>Dashboard</span>
                     <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                 </a>
