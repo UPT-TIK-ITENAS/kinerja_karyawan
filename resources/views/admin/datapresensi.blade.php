@@ -46,7 +46,6 @@
                     </div>
 
                     <div class="card-body">
-                       
                         <div class="table-responsive">
                             <table class="dataTable" id="table-admin">
                                 <thead class="text-center">

@@ -41,6 +41,12 @@ class AdminController extends Controller
     //DATA PRESENSI
     public function datapresensi()
     {
+        // $workingdays = getWorkingDays('2022-09-21', date('Y-m-d'));
+        // if($workingdays > 3){
+        //     return 'lebih';
+        //  }else{
+        //     return 'tidak';
+        //  }
         return view('admin.datapresensi');
     }
 
@@ -67,28 +73,41 @@ class AdminController extends Controller
                 })
 
                 ->addColumn('latemasuk', function ($row) {
-
-                    if (date("H:i:s", strtotime($row->jam_masuk)) <= '08:00:00') {
+                    if ($row->jam_masuk == NULL){
+                        $durasitelat = strtotime('13:15:00') - strtotime('08:00:00');
+                        $durasi = date("H:i:s", $durasitelat);
+                        return $durasi;
+                    
+                    } else if ($row->hari != 6 && $row->hari != 0 && date("H:i:s", strtotime($row->jam_masuk)) <= '08:00:00') {
                         return '';
-                    } else if (date("H:i:s", strtotime($row->jam_masuk)) > '08:00:00' && $row->hari != '6') {
+
+                    } else if ($row->hari != 6 && $row->hari != 0 && date("H:i:s", strtotime($row->jam_masuk)) > '08:00:00') {
                         $durasitelat = strtotime($row->jam_masuk) - strtotime('08:00:00');
                         $durasi = date("H:i:s", $durasitelat);
                         return $durasi;
-                    }
+                    } 
                 })
                 ->addColumn('latesiang', function ($row) {
                     if ($row->hari == 5) {
-                        if (date("H:i:s", strtotime($row->jam_siang)) <= '13:15:00') {
+                        if ($row->jam_siang == NULL){
+                            $durasitelat = strtotime('17:00:00') - strtotime('13:30:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                            return $durasi;
+                        } else if (date("H:i:s", strtotime($row->jam_siang)) <= '13:15:00') {
                             return '';
                         } else if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
                             $durasitelat = strtotime($row->jam_siang) - strtotime('13:30:00');
                             $durasi = date("H:i:s", $durasitelat);
                             return $durasi;
-                        }
+                        } 
                     } else {
-                        if ($row->hari != 6 && date("H:i:s", strtotime($row->jam_siang)) <= '12:45:00') {
+                        if ($row->hari != 6 && $row->hari != 0 && $row->jam_siang == NULL){
+                            $durasitelat = strtotime('17:00:00') - strtotime('13:00:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                            return $durasi;
+                        } else if ($row->hari != 6 && $row->hari != 0 && date("H:i:s", strtotime($row->jam_siang)) <= '12:45:00') {
                             return '';
-                        } else if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
+                        } else if ($row->hari != 6 && $row->hari != 0 && date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
                             $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
                             $durasi = date("H:i:s", $durasitelat);
                             return $durasi;
@@ -97,12 +116,17 @@ class AdminController extends Controller
                 })
 
                 ->addColumn('action', function ($row) {
-                    $addsurat = route('admin.createizinkehadiran', $row->id);
-                    return $actionBtn = "
+                    $workingdays = getWorkingDays($row->tanggal,date('Y-m-d'));
+                    if($workingdays < 3 ){
+                        $addsurat = route('admin.createizinkehadiran', $row->id);
+                        return $actionBtn = "
                         <div class='d-block text-center'>
-                            <a href='$addsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-ui-add'></i></a>
+                        <a href='$addsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-ui-add'></i></a>
                         </div>
                         ";
+                    }else{
+                        return '';
+                    }
                 })
                 ->addColumn('file', function ($row) {
                     $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id',$row->id)->get();
@@ -152,7 +176,10 @@ class AdminController extends Controller
     public function createizinkehadiran($id)
     {
 
-        $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('attendance.id', $id)->first();
+        $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas, unit.nama_unit')
+        ->join('users', 'attendance.nip', '=', 'users.nopeg')
+        ->join('unit', 'unit.id', '=', 'users.unit')
+        ->where('attendance.id', $id)->first();
         return view('admin.createizinkehadiran', compact('data'));
     }
 
@@ -166,10 +193,10 @@ class AdminController extends Controller
                 'id_attendance' => $request->id_attendance,
                 'nopeg' => $request->nopeg,
                 'name' => $request->name,
-                'unit' => $request->unit,
-                'tgl_awal_izin' => date('Y-m-d H:i:s', strtotime($request->tgl_awal_izin)),
-                'tgl_akhir_izin' => date('Y-m-d H:i:s', strtotime($request->tgl_akhir_izin)),
-
+                'unit' => $request->idunit,
+                'tanggal' => $request->tgl,
+                'jam_awal' => date('H:i:s', strtotime($request->jam_awal)),
+                'jam_akhir' => date('H:i:s', strtotime($request->jam_akhir)),
                 'alasan' => $request->alasan,
                 'validasi' => $request->validasi,
             ]);
@@ -219,7 +246,7 @@ class AdminController extends Controller
                     $durasi_telat = strtotime('00:00:00');
                     $data_att     = Attendance::where('nip', $data->nopeg)->get();
                     foreach ($data_att as $row) {
-                        if (date("H:i:s", strtotime($row->jam_masuk)) > $data->awal_tugas && $row->hari != '6') {
+                        if (date("H:i:s", strtotime($row->jam_masuk)) > $data->awal_tugas && $row->hari != '6' && $row->hari != '0'  ) {
                             $durasitelat = strtotime($row->jam_masuk) - strtotime($data->awal_tugas);
                             $durasi_telat += $durasitelat;
                         }

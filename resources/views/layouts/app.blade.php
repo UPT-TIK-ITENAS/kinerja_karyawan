@@ -48,6 +48,9 @@
     <!-- datatable -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/select2.css') }}">
+    <!-- Plugins css start-->
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/timepicker.css') }}">
+    <!-- Plugins css Ends-->
 </head>
 
 <body>
@@ -162,7 +165,11 @@
         <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.js') }}"></script>
         <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.en.js') }}"></script>
         <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.custom.js') }}"></script>
-
+        <!-- Plugins JS start-->
+        <script src="{{ asset('assets/js/time-picker/jquery-clockpicker.min.js') }}"></script>
+        <script src="{{ asset('assets/js/time-picker/highlight.min.js') }}"></script>
+        <script src="{{ asset('assets/js/time-picker/clockpicker.js') }}"></script>
+        <!-- Plugins JS Ends-->
         <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
         <!-- Plugins JS Ends-->
         <!-- Plugins JS start-->
