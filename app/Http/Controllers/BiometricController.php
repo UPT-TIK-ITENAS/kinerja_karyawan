@@ -8,9 +8,14 @@ use Illuminate\Support\Facades\DB;
 
     class BiometricController extends Controller
     {
-    public function SyncAndInsertBiometric()
+    public function SyncAndInsertBiometric(Request $request)
     {
-        $listmesinabsensi = DB::table('biometricmachine')->where('status', 'enable')->where('id', 2)->get();
+
+        $this->validate($request,[
+            'tanggal' => 'required',
+        ]);
+
+        $listmesinabsensi = DB::table('biometricmachine')->where('status', 'enable')->get();
         if (empty($listmesinabsensi)) {
             return "Finger Print Machine not register or not enable";
         }
@@ -58,56 +63,50 @@ use Illuminate\Support\Facades\DB;
                     $time = date("H:i:s", strtotime($datetime));
                     $day = date("w", strtotime($datetime));
 
-                    if ($date < date("2022-07-01")) {
-                        continue;
-                    }
-
-                    // array_push($for_array, [
-                    //     'nip' => $employee_id,
-                    //     'tanggal' => $date,
-                    //     'hari' => $day,
-                    //     'jam_masuk' => $datetime,
-                    //     'jam_siang' => $datetime,
-                    //     'jam_pulang' => $datetime,
-                    // ]);
-
-                    $cek_data_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->first();
-                    if (empty($cek_data_att)) {
-                        if ($time < '12:45:00') {
-                            $insert_att = DB::table('attendance_baru')->insert([
-                                'nip' => $employee_id,
-                                'tanggal' => $date,
-                                'hari' => $day,
-                                'jam_masuk' => $datetime,
-                            ]);
-                        } else if ($time >= '12:45:00' && $time < '15:30:00') {
-                            $insert_att = DB::table('attendance_baru')->insert([
-                                'nip' => $employee_id,
-                                'tanggal' => $date,
-                                'hari' => $day,
-                                'jam_siang' => $datetime,
-                            ]);
-                        } else if ($time >= '15:30:00' && $time <= '23:59:00') {
-                            $insert_att = DB::table('attendance_baru')->insert([
-                                'nip' => $employee_id,
-                                'tanggal' => $date,
-                                'hari' => $day,
-                                'jam_pulang' => $datetime,
-                            ]);
-                        }
-                    } else {
-                        if ($time < '12:45:00') {
-                            $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
-                                'jam_masuk' => $datetime,
-                            ]);
-                        } else if ($time >= '12:45:00' && $time < '15:30:00') {
-                            $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
-                                'jam_siang' => $datetime,
-                            ]);
-                        } else if ($time >= '15:30:00' && $time <= '23:59:00') {
-                            $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
-                                'jam_pulang' => $datetime,
-                            ]);
+                    if ($date == date("Y-m-d", strtotime($request->tanggal))) {
+                        $cek_data_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', date("Y-m-d", strtotime($request->tanggal)))->first();
+                        $users = DB::table('users')->get();
+                        foreach($users as $user){
+                            if($user->nopeg == $employee_id){
+                                if (empty($cek_data_att)) {
+                                    if ($time < '12:45:00') {
+                                        $insert_att = DB::table('attendance_baru')->insert([
+                                            'nip' => $employee_id,
+                                            'tanggal' => $date,
+                                            'hari' => $day,
+                                            'jam_masuk' => $datetime,
+                                        ]);
+                                    } else if ($time >= '12:45:00' && $time < '15:30:00') {
+                                        $insert_att = DB::table('attendance_baru')->insert([
+                                            'nip' => $employee_id,
+                                            'tanggal' => $date,
+                                            'hari' => $day,
+                                            'jam_siang' => $datetime,
+                                        ]);
+                                    } else if ($time >= '15:30:00' && $time <= '23:59:00') {
+                                        $insert_att = DB::table('attendance_baru')->insert([
+                                            'nip' => $employee_id,
+                                            'tanggal' => $date,
+                                            'hari' => $day,
+                                            'jam_pulang' => $datetime,
+                                        ]);
+                                    }
+                                } else {
+                                    if ($time < '12:45:00') {
+                                        $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
+                                            'jam_masuk' => $datetime,
+                                        ]);
+                                    } else if ($time >= '12:45:00' && $time < '15:30:00') {
+                                        $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
+                                            'jam_siang' => $datetime,
+                                        ]);
+                                    } else if ($time >= '15:30:00' && $time <= '23:59:00') {
+                                        $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
+                                            'jam_pulang' => $datetime,
+                                        ]);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -123,7 +122,7 @@ use Illuminate\Support\Facades\DB;
                 'last_response' => $last_response,
             ]);
         }
-        // return 'success';
+        return redirect()->route('admin.datapresensi')->with('success', 'Sinkronisasi Berhasil!');
     }
 
     public function Parse_Data($data, $p1, $p2)

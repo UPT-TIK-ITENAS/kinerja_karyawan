@@ -103,3 +103,68 @@ if (!function_exists('routeActive')) {
         return    request()->routeIs($routeName) ? 'active' : '';
     }
 }
+
+
+if (!function_exists('getAksi')) {
+    function getAksi($id, $tipe)
+    {
+        $printizin =  route('admin.printizinkerja', $id);
+        $printcuti =  route('admin.printcuti', $id);
+        $batal_cuti = route('admin.batal_cuti', $id);
+        $batal_izin = route('admin.batal_izin', $id);
+
+        $for_html = "";
+        if ($tipe == 'izin') {
+            if(auth()->user()->role =="admin"){
+                $for_html = '<a class="btn btn-success btn-xs" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a> 
+                <a class="btn btn-danger btn-xs batalizin" href="' . $batal_izin . '">X</a>';
+            }elseif(auth()->user()->role =="kepalaunit"){
+                $data = IzinKerja::where('id_izinkerja', $id)->first();
+                $for_html = '
+                    <a href="#" class="btn btn-primary btn-xs apprvIzin" data-bs-target="#apprvIzin" data-bs-toggle="modal" data-id="'.$data->id_izinkerja.'"><i class="icofont icofont-pencil-alt-2"></i></a>
+                    <a class="btn btn-secondary btn-xs" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a> 
+                    <a class="btn btn-danger btn-xs batalizin" href="' . $batal_izin . '">X</a> ';
+            }
+           
+        }elseif($tipe == 'cuti'){
+            if(auth()->user()->role =="admin"){
+                $for_html = '<a class="btn btn-success btn-xs" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a> 
+                <a class="btn btn-danger btn-xs batalcuti" href="' . $batal_cuti . '">X</a>';
+            }elseif(auth()->user()->role =="kepalaunit"){
+                $data = Cuti::where('id_cuti', $id)->first();
+                $for_html = '
+                <a href="#" class="btn btn-primary btn-xs apprvCuti" data-bs-target="#apprvCuti" data-bs-toggle="modal" data-id="'.$data->id_cuti.'"><i class="icofont icofont-pencil-alt-2"></i></a>
+                <a class="btn btn-success btn-xs" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a> ';
+            }
+        }
+
+        return $for_html;
+    }
+
+    if (!function_exists('getWorkingDays')) {
+        function getWorkingDays($startDate, $endDate)
+        {
+            $begin = strtotime($startDate);
+            $end   = strtotime($endDate);
+
+            if ($begin > $end) {
+                return 0;
+            } else {
+                $no_days  = 0;
+                $weekends = 0;
+                while ($begin <= $end) {
+                    $no_days++; // no of days in the given interval
+                    $what_day = date("N", $begin);
+                    if ($what_day > 5) { // 6 and 7 are weekend days
+                        $weekends++;
+                    };
+                    $begin += 86400; // +1 day
+                };
+                $working_days = $no_days - $weekends;
+        
+                return $working_days;
+            }
+        }
+    }
+}
+

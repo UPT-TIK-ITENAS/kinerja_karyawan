@@ -18,13 +18,12 @@
         <div class="card-header pb-0">
           <h5>Data Izin</h5>
         </div>
-        <form action="{{ route('admin.storeizinkehadiran', $data->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.storeizinkehadiran', $data->id) }}" method="POST" name="tmbh" enctype="multipart/form-data">
           @csrf
       <div class="card-body">
           <div class="row">
 
             <input type="text" id="id_attendance" name="id_attendance" hidden value="{{ $data->id }}" />
-
               <div class="col-xl-1 col-md-6 col-12">
                   <div class="mb-1">
                       <label class="form-label" for="helpInputTop">No. Pegawai</label>
@@ -41,24 +40,39 @@
                   </div>
               </div>
             
-              <div class="col-xl-3 col-md-6 col-12">
+            <div class="col-xl-3 col-md-6 col-12">
                   <div class="mb-1">
                       <label class="form-label" for="disabledInput">Unit Kerja</label>
                       <input type="text" class="form-control" id="unit" name="unit"
-                          readonly value="{{ $data->unit }}" />
+                          readonly value="{{ $data->nama_unit }}" />
+                      <input type="hidden" id="idunit" name="idunit" value="{{ $data->unit }}" />
                   </div>
-              </div>
+            </div>
 
-              <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
-                  <label class="form-label" for="disabledInput">Jam Masuk</label>
-                  <input type="text" id="tgl_awal_izin" name="tgl_awal_izin"
-                      class="form-control datetimepicker-input digits"  readonly value="{{ $data->jam_masuk }}">
-              </div>
-              
-              <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
-                <label class="form-label" for="disabledInput">Jam Keluar</label>
-                <input type="text" id="tgl_akhir_izin" name="tgl_akhir_izin"
-                    class="form-control datetimepicker-input digits"  readonly value="{{ $data->jam_pulang }}">
+            <div class="col-xl-2 col-md-6 col-12">
+                <div class="mb-1">
+                    <label class="form-label" for="disabledInput">Tanggal</label>
+                    <input type="text" class="form-control" id="tgl" name="tgl"
+                        readonly value="{{ $data->tanggal }}" />
+                </div>
+            </div>
+        
+            <div class="col-xl-2 col-md-6 col-12">
+                <div class="mb-1">
+                    <label class="form-label" for="disabledInput">Jam Awal</label>
+                    <div class="input-group clockpicker">
+                        <input class="form-control" type="text" id="jam_awal" name="jam_awal"><span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                      </div>
+                </div>
+            </div>
+                
+            <div class="col-xl-2 col-md-6 col-12">
+                <div class="mb-1">
+                    <label class="form-label" for="disabledInput">Jam Akhir</label>
+                    <div class="input-group clockpicker">
+                        <input class="form-control" type="text" id="jam_akhir" name="jam_akhir"><span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                      </div>
+                </div>
             </div>
               <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
                   <div class="mb-1">
@@ -79,7 +93,7 @@
             
           </div>
 
-          <button class="btn btn-primary" type="submit">Simpan</button>
+          <button class="btn btn-primary" type="submit" id="btnSubmit" name="btnSubmit">Simpan</button>
         </div>
       <form>
       </div>

@@ -5,167 +5,155 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="viho admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+    <meta name="keywords" content="admin template, viho admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="pixelstrap">
     <link rel="icon" href="{{ asset('assets/images/favicon.png') }}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{ asset('assets/images/goodstart_w.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" type="image/x-icon">
     <title>ITENAS - PENILAIAN KINERJA</title>
-    <!-- Google font-->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap"
-        rel="stylesheet">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
-        rel="stylesheet">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap"
-        rel="stylesheet">
-    <!-- Font Awesome-->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/fontawesome.css') }}">
-    <!-- ico-font-->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/icofont.css') }}">
-    <!-- Themify icon-->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/themify.css') }}">
-    <!-- Flag icon-->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/flag-icon.css') }}">
-    <!-- Feather icon-->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/feather-icon.css') }}">
-    <!-- Plugins css start-->
-    @stack('css')
-    <!-- Plugins css Ends-->
-    <!-- Bootstrap css-->
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/animate.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/chartist.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/prism.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vector-map.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
-    <!-- App css-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
-    <link id="color" rel="stylesheet" href="{{ asset('assets/css/color-1.css') }}" media="screen">
-    <!-- Responsive css-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/select2.css') }}">
-</head>
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/timepicker.css') }}">
 
-<body>
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
+    <link id="color" rel="stylesheet" href="{{ asset('assets/css/color-1.css') }}" media="screen">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive.css') }}">
+</head>
+  <body>
     <!-- Loader starts-->
     <div class="loader-wrapper">
-        <div class="theme-loader"></div>
+      <div class="theme-loader">    
+        <div class="loader-p"></div>
+      </div>
     </div>
-    <div class="success-session" data-flashdata="{{ session('success') }}"></div>
-    <div class="warning-session" data-flashdata="{{ session('error') }}"></div>
     <!-- Loader ends-->
-    <!-- page-wrapper Start-->
-    <div class="page-wrapper compact-sidebar" id="pageWrapper">
-        <!-- Page Header Start-->
-
-        {{-- @includeIf('layouts.admin.partials.header') --}}
-        <div class="page-main-header">
-            <div class="main-header-right row m-0">
-                <div class="main-header-left">
-                    <div class="logo-wrapper"><a href=""><img class="img-fluid"
-                                src="{{ asset('assets/images/logo2.png') }}" alt=""></a></div>
-                    <div class="toggle-sidebar"><i class="status_toggle middle" data-feather="align-center"
-                            id="sidebar-toggle"> </i></div>
-                </div>
-                <div class="left-menu-header col">
-                    <ul>
-                        <li>
-                            <form class="form-inline search-form">
-                                <div class="search-bg"><i class="fa fa-search"></i>
-                                    <input class="form-control-plaintext" placeholder="Search here.....">
-                                </div>
-                            </form>
-                            <span class="d-sm-none mobile-search search-bg"><i class="fa fa-search"></i></span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="nav-right col pull-right right-menu p-0">
-                    <ul class="nav-menus">
-                        <li class="onhover-dropdown p-0">
-                            <a class="btn btn-primary-light" role="button" href="{{ route('auth.logout') }}"><i
-                                    data-feather="log-out"></i>Log
-                                out</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="d-lg-none mobile-toggle pull-right w-auto"><i data-feather="more-horizontal"></i></div>
+    <!-- page-wrapper Start       -->
+    <div class="page-wrapper compact-wrapper" id="pageWrapper">
+      <!-- Page Header Start-->
+      <div class="page-main-header">
+        <div class="main-header-right row m-0">
+            <div class="main-header-left">
+                <div class="logo-wrapper"><a href="index.html"><img class="img-fluid"
+                            src="{{ asset('assets/images/logo2.png') }}" alt=""></a></div>
+                {{-- <div class="dark-logo-wrapper"><a href="index.html"><img class="img-fluid"
+                            src="../assets/images/logo/dark-logo.png" alt=""></a></div> --}}
+                <div class="toggle-sidebar"><i class="status_toggle middle" data-feather="align-center"
+                        id="sidebar-toggle"></i></div>
             </div>
+          <div class="left-menu-header col">
+            {{-- <ul>
+              <li>
+                <form class="form-inline search-form">
+                  <div class="search-bg"><i class="fa fa-search"></i>
+                    <input class="form-control-plaintext" placeholder="Search here.....">
+                  </div>
+                </form><span class="d-sm-none mobile-search search-bg"><i class="fa fa-search"></i></span>
+              </li>
+            </ul> --}}
+          </div>
+          <div class="nav-right col pull-right right-menu p-0">
+            <ul class="nav-menus">              
+                <li class="onhover-dropdown p-0">
+                    <button class="btn btn-primary-light" type="button"><a
+                            href="{{ route('auth.logout') }}"><i data-feather="log-out"></i>Log
+                            out</a></button>
+                </li>
+            </ul>
+          </div>
+          <div class="d-lg-none mobile-toggle pull-right w-auto"><i data-feather="more-horizontal"></i></div>
         </div>
-
-        <!-- Page Header Ends -->
-        <!-- Page Body Start-->
-        <div class="page-body-wrapper sidebar-icon">
-            <!-- Page Sidebar Start-->
-
-            @include('layouts.sidebar')
-
-            <!-- Page Sidebar Ends-->
-            <div class="page-body">
-                <!-- Container-fluid starts-->
-                @yield('content')
-                <!-- Container-fluid Ends-->
+      </div>
+      <!-- Page Header Ends                              -->
+      <!-- Page Body Start-->
+      <div class="page-body-wrapper sidebar-icon">
+        <!-- Page Sidebar Start-->
+        <header class="main-nav">
+            <div class="sidebar-user text-center"><img class="img-90 rounded-circle"
+                    src="{{ asset('assets/images/dashboard/1.png') }}" alt="">
+                <a href="#">
+                    <h6 class="mt-3 f-14 f-w-600">{{ auth()->user()->nopeg }}</h6>
+                </a>
+                <p class="mb-0 font-roboto">{{ auth()->user()->name }}</p>
             </div>
-            <!-- footer start-->
-            <footer class="footer">
-                <div class="container-fluid">
+            @include('layouts.sidebar')
+        </header>
+        <!-- Page Sidebar Ends-->
+        <div class="page-body">
+            <!-- Container-fluid starts-->
+            <div class="container-fluid">
+                <div class="row starter-main">
                     <div class="row">
-                        <div class="col-md-6 footer-copyright">
-                            <strong>Copyright &copy; 2022 <a target="_blank" href="https://tik.itenas.ac.id">UPT-TIK
-                                    ITENAS</a>.</strong>
-                        </div>
-                        <div class="col-md-6">
-                            <p class="pull-right mb-0">All rights reserved.</p>
-                        </div>
+                        @if (session('success'))
+                            <div class="success-session" data-flashdata="{{ session('success') }}"></div>
+                        @elseif (session('danger'))
+                            <div class="danger-session" data-flashdata="{{ session('danger') }}"></div>
+                        @endif
+                    </div>
+                    @yield('content')
+
+                </div>
+            </div>
+            <!-- Container-fluid Ends-->
+        </div>
+        <!-- footer start-->
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6 footer-copyright">
+                        <strong>Copyright &copy; 2022 <a target="_blank" href="https://tik.itenas.ac.id">UPT-TIK
+                                ITENAS</a>.</strong>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="pull-right mb-0">All rights reserved.</p>
                     </div>
                 </div>
-            </footer>
-        </div>
+            </div>
+        </footer>
+      </div>
     </div>
-    <!-- latest jquery-->
+
     @section('scripts')
         <script src="{{ asset('assets/js/jquery-3.5.1.min.js') }}"></script>
-        <!-- feather icon js-->
         <script src="{{ asset('assets/js/icons/feather-icon/feather.min.js') }}"></script>
         <script src="{{ asset('assets/js/icons/feather-icon/feather-icon.js') }}"></script>
-        <!-- Sidebar jquery-->
         <script src="{{ asset('assets/js/sidebar-menu.js') }}"></script>
         <script src="{{ asset('assets/js/config.js') }}"></script>
-        <!-- Bootstrap js-->
         <script src="{{ asset('assets/js/bootstrap/popper.min.js') }}"></script>
         <script src="{{ asset('assets/js/bootstrap/bootstrap.min.js') }}"></script>
-        <!-- Plugins JS start-->
         <script src="{{ asset('assets/js/prism/prism.min.js') }}"></script>
         <script src="{{ asset('assets/js/clipboard/clipboard.min.js') }}"></script>
         <script src="{{ asset('assets/js/custom-card/custom-card.js') }}"></script>
-        <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
-        <!-- Plugins JS Ends-->
-        <!-- Plugins JS start-->
-        <script src="{{ asset('assets/js/datepicker/date-time-picker/moment.min.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-time-picker/tempusdominus-bootstrap-4.min.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-time-picker/datetimepicker.custom.js') }}"></script>
-        <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
-        <!-- Plugins JS Ends-->
-        <!-- Plugins JS start-->
+        <script src="{{ asset('assets/js/notify/bootstrap-notify.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.js') }}"></script>
+        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.en.js') }}"></script>
+        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.custom.js') }}"></script>
         <script src="{{ asset('assets/js/editor/ckeditor/ckeditor.js') }}"></script>
         <script src="{{ asset('assets/js/editor/ckeditor/adapters/jquery.js') }}"></script>
         <script src="{{ asset('assets/js/editor/ckeditor/styles.js') }}"></script>
         <script src="{{ asset('assets/js/editor/ckeditor/ckeditor.custom.js') }}"></script>
         <script src="{{ asset('assets/js/form-validation-custom.js') }}"></script>
-        <!-- Plugins JS Ends-->
-        <!-- Plugins JS start-->
         <script src="{{ asset('assets/js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
         <script src="{{ asset('assets/js/datatable/datatables/datatable.custom.js') }}"></script>
-        <!-- Plugins JS Ends-->
-        <!-- Theme js-->
-        <script src="{{ asset('assets/js/script.js') }}"></script>
-        {{-- <script src="{{ asset('assets/js/theme-customizer/customizer.js') }}"></script> --}}
-        <!-- Plugin used-->
-        <script src="{{ asset('assets/js/notify/bootstrap-notify.min.js') }}"></script>
-        <script src="{{ asset('assets/js/notify/notify-script.js') }}"></script>
-        <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
-
         <script src="{{ asset('assets/js/select2/select2.full.min.js') }}"></script>
         <script src="{{ asset('assets/js/select2/select2-custom.js') }}"></script>
-        <!-- login js-->
-        <!-- Plugin used-->
+        <script src="{{ asset('assets/js/script.js') }}"></script>
+        <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
+        <script src="{{ asset('assets/js/theme-customizer/customizer.js') }}"></script>
 
         <script type="text/javascript">
             $(window).on('load', function() {
@@ -174,6 +162,13 @@
         </script>
 
         <script>
+            $(document).ready(function() {
+                $('.select2').select2({
+                    theme: "bootstrap5",
+                })
+            });
+
+
             $("document").ready(function() {
                 let flashdatasukses = $('.success-session').data('flashdata');
                 let flashdatagagal = $('.warning-session').data('flashdata');
@@ -238,6 +233,6 @@
         </script>
     @show
     @stack('scripts')
-</body>
 
+  </body>
 </html>
