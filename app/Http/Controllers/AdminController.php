@@ -41,12 +41,12 @@ class AdminController extends Controller
     //DATA PRESENSI
     public function datapresensi()
     {
-        // $workingdays = getWorkingDays('2022-09-21', date('Y-m-d'));
-        // if($workingdays > 3){
-        //     return 'lebih';
-        //  }else{
-        //     return 'tidak';
-        //  }
+        // $history_cuti = Cuti::select('cuti.*, users.sisacuti, sum(cuti.total_cuti) AS total_cuti')
+        // ->join('users','users.nopeg','=','cuti.nopeg')
+        // ->join('jenis_cuti','cuti.jenis_cuti', 'jenis_cuti.jenis_cuti')
+        // ->where('cuti.nopeg',1803)->first();
+        // // $test = getWorkingDays('2022-08-12', '2022-08-18');
+        // dd($history_cuti);
         return view('admin.datapresensi');
     }
 
@@ -58,8 +58,10 @@ class AdminController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('duration', function ($row) {
-                    if ($row->jam_pulang == NULL || $row->jam_masuk == NULL) {
-                        return $durationwork = '';
+                    if ($row->jam_pulang == NULL) {
+                        $duration = strtotime('13:00:00') - strtotime($row->jam_masuk);
+                        $durationwork = date("H:i:s", $duration);
+                        return $durationwork;
                     } else {
                         $time_awalreal =  strtotime($row->jam_masuk);
                         $time_akhirreal = strtotime($row->jam_pulang);
@@ -470,15 +472,15 @@ class AdminController extends Controller
     public function storecuti(Request $request)
     {
 
-        // $history_cuti = Cuti::select('cuti.*, users.sisacuti, sum(total_cuti) AS total_cuti')
-        
-        // ->join('users','users.nopeg','=','cuti.nopeg')->where('cuti.nopeg',$request->nopeg)->first();
+        $history_cuti = Cuti::select('cuti.*, users.sisacuti, sum(total_cuti) AS total_cuti')
+        ->join('users','users.nopeg','=','cuti.nopeg')
+        ->join('jenis_cuti','cuti.jenis_cuti', 'jenis_cuti.jenis_cuti')
+        ->where('cuti.nopeg',$request->nopeg)->first();
 
         
         // // DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
         // // FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . auth()->user()->nopeg . "' GROUP BY cuti.jenis_cuti");
 
-        if($history_cuti-)
 
         Cuti::insert([
             'nopeg' => explode('-', $request->nopeg)[0] ,
