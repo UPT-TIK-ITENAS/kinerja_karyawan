@@ -114,6 +114,18 @@ class AdminController extends Controller
                         }
                     }
                 })
+                ->addColumn('latesore',function($row) {
+                    if ($row->hari != 6 && $row->hari != 0 && $row->jam_pulang == NULL){
+                        $durasitelat = strtotime('17:00:00') - strtotime('15:00:00');
+                        $durasi = date("H:i:s", $durasitelat);
+                        return $durasi;
+                    } else if($row->jam_pulang < strtotime('17:00:00') && $row->hari != 6 && $row->hari != 7 ){
+                        $durasiplg = strtotime($row->jam_pulang) - strtotime('17:00:00');
+                        $durasi = date("H:i:s", $durasiplg);
+                        return $durasi;
+                    }
+
+                })
 
                 ->addColumn('action', function ($row) {
                     $workingdays = getWorkingDays($row->tanggal,date('Y-m-d'));
@@ -125,7 +137,7 @@ class AdminController extends Controller
                         </div>
                         ";
                     }else{
-                        return '';
+                        return '-';
                     }
                 })
                 ->addColumn('file', function ($row) {
@@ -167,7 +179,7 @@ class AdminController extends Controller
 
                     
                 })
-                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'action','file','status'])
+                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang','latesore', 'action','file','status'])
                 ->make(true);
         }
         return DataTables::queryBuilder($data)->toJson();

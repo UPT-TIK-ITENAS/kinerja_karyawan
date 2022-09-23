@@ -58,6 +58,7 @@
                                     <th>Durasi</th>
                                     <th>Telat Masuk</th>
                                     <th>Telat Siang</th>
+                                    <th>Telat Sore</th>
                                     <th>Aksi</th>
                                     <th>File</th>
                                     <th>Status</th>
@@ -105,6 +106,7 @@
                 {   data: 'duration', name: 'duration' },
                 {   data: 'latemasuk', name: 'latemasuk'},
                 {   data: 'latesiang', name: 'latesiang'},
+                {   data: 'latesore', name: 'latesore'},
                 {   data: 'action', name: 'action'},
                 
                 { data: 'file', name: 'file'},
