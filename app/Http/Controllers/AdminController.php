@@ -469,11 +469,22 @@ class AdminController extends Controller
 
     public function storecuti(Request $request)
     {
+
+        // $history_cuti = Cuti::select('cuti.*, users.sisacuti, sum(total_cuti) AS total_cuti')
+        
+        // ->join('users','users.nopeg','=','cuti.nopeg')->where('cuti.nopeg',$request->nopeg)->first();
+
+        
+        // // DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
+        // // FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . auth()->user()->nopeg . "' GROUP BY cuti.jenis_cuti");
+
+        if($history_cuti-)
+
         Cuti::insert([
             'nopeg' => explode('-', $request->nopeg)[0] ,
             'name' =>  explode('-', $request->nopeg)[1],
             'unit' =>  explode('-', $request->nopeg)[2],
-            'jenis_cuti' => $request->jenis_cuti,
+            'jenis_cuti' => explode('-', $request->jenis_cuti)[0],
             'tgl_awal_cuti' => date('Y-m-d', strtotime($request->startDate)),
             'tgl_akhir_cuti' => date('Y-m-d', strtotime($request->endDate)),
             'total_cuti' => $request->total,

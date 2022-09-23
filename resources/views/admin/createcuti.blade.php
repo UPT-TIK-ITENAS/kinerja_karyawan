@@ -40,7 +40,7 @@
                                 Cuti--</option>
                             @foreach ($jeniscuti as $item)
                             <option value="{{ $item->id_jeniscuti }}">
-                                {{ $item->jenis_cuti }}</option>
+                                {{ $item->jenis_cuti }} - {{ $item->max_hari }} Hari</option>
                             @endforeach
                         </select>
                     </div>
@@ -108,14 +108,9 @@
 </script>
 <script src="{{ asset('assets/js/jquery.ui.min.js') }}"></script>
 <script>
-    function calcBusinessDays(start, end) {
-        // This makes no effort to account for holidays
-        // Counts end day, does not count start day
-
-        // make copies we can normalize without changing passed in objects    
+    function calcBusinessDays(start, end) {  
         var start = new Date(start);
         var end = new Date(end);
-
         // initial total
         var totalBusinessDays = 0;
 
