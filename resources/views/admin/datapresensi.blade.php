@@ -78,44 +78,48 @@
 
     @parent
     <script>
-        let table = $('#table-admin').DataTable({
-            fixedHeader: true,
-            pageLength: 10,
-            responsive: true,
-            processing: true,
-            autoWidth: false,
-            serverSide: true,
-            columnDefs: [{
-                targets: 1,
-                width: "200px !important",
-            }, ],
-            ajax: "{{ route('admin.listkaryawan') }}",
-            columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    className: 'text-center',
-                    orderable: false,
-                    searchable: false,
-                },
-                {   data: 'name', name: 'name' },
-                {   data: 'hari', name: 'hari' },
-                {   data: 'jam_masuk', name: 'jam_masuk' },
-                {   data: 'jam_siang', name: 'jam_siang' },
-                {   data: 'jam_pulang', name: 'jam_pulang' },
-                {   data: 'duration', name: 'duration' },
-                {   data: 'latemasuk', name: 'latemasuk'},
-                {   data: 'latesiang', name: 'latesiang'},
-                {   data: 'action', name: 'action'},
-                
-                { data: 'file', name: 'file'},
-                { data: 'status', name: 'status'},
-            ],
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'print'
-            ]
+        $().ready(function() {
+            let table = $('#table-admin').DataTable({
+                fixedHeader: true,
+                pageLength: 10,
+                responsive: true,
+                processing: true,
+                autoWidth: false,
+                serverSide: true,
+                columnDefs: [{
+                    targets: 1,
+                    width: "200px !important",
+                }, ],
+                ajax: "{{ route('admin.listkaryawan') }}",
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        className: 'text-center',
+                        orderable: false,
+                        searchable: false,
+                    },
+                    {   data: 'name', name: 'name' },
+                    {   data: 'hari', name: 'hari' },
+                    {   data: 'jam_masuk', name: 'jam_masuk' },
+                    {   data: 'jam_siang', name: 'jam_siang' },
+                    {   data: 'jam_pulang', name: 'jam_pulang' },
+                    {   data: 'duration', name: 'duration' },
+                    {   data: 'latemasuk', name: 'latemasuk'},
+                    {   data: 'latesiang', name: 'latesiang'},
+                    {   data: 'action', name: 'action'},
+                    
+                    { data: 'file', name: 'file'},
+                    { data: 'status', name: 'status'},
+                ],
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'print'
+                ]
+            });
+            $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
+                    console.log(message);
+            };
         });
-
         
     </script>
 @endsection
