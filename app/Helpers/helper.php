@@ -28,7 +28,7 @@ if (!function_exists('getCheck')) {
 }
 
 if (!function_exists('getApproval')) {
-    function getApproval($id, $tipe)
+    function getApproval($id, $tipe, $alasan = "")
     {
         $url_batal_cuti = route('karyawan.batal_cuti', $id);
         $url_batal_izin = route('karyawan.batal_izin', $id);
@@ -40,6 +40,8 @@ if (!function_exists('getApproval')) {
                     $for_html = '<span class="badge badge-primary">Disetujui</span>';
                 } elseif ($getDataIzin->approval == 2) {
                     $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
+                } elseif ($getDataIzin->approval == 3) {
+                    $for_html = '<span class="badge badge-danger">Ditolak</span><br><span> | "' . $alasan . '"</span>';
                 } else {
                     $for_html = '<span class="badge badge-warning">Menunggu</span> <a class="btn btn-danger btn-xs" href="' . $url_batal_izin . '" id="btnBatal">X</a>';
                 }
@@ -51,6 +53,8 @@ if (!function_exists('getApproval')) {
                     $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
                 } elseif ($getDataCuti->approval == 2) {
                     $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
+                } elseif ($getDataCuti->approval == 3) {
+                    $for_html = '<span class="badge badge-danger">Ditolak</span><br><span><b>note</b> : ' . $alasan . '</span>';
                 } else {
                     $for_html = '<span class="badge badge-warning">Menunggu</span> <a class="btn btn-danger btn-xs" href="' . $url_batal_cuti . '" id="btnBatal">X</a>';
                 }

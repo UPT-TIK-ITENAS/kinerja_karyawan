@@ -28,7 +28,7 @@ class KaryawanController extends Controller
         $durasi_kerja = strtotime('00:00:00');
         $data_att     = Attendance::where('nip', auth()->user()->nopeg)->whereMonth('tanggal', '=', date('m'))->get();
         foreach ($data_att as $row) {
-            if (date("H:i:s", strtotime($row->jam_masuk)) > auth()->user()->awal_tugas && $row->hari != '6') {
+            if (date("H:i:s", strtotime($row->jam_masuk)) > auth()->user()->awal_tugas && $row->hari != '6' && $row->hari != 0) {
                 $durasitelat = strtotime($row->jam_masuk) - strtotime(auth()->user()->awal_tugas);
                 $durasi_telat += $durasitelat;
             }
@@ -61,9 +61,9 @@ class KaryawanController extends Controller
     {
         if ($request->bulan) {
             $month =  explode('-', $request->bulan);
-            $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg)->whereMonth('attendance.tanggal', $month[0])->whereYear('attendance.tanggal', $month[1]);
+            $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg)->whereNotIn('hari', array('6', '0'))->whereMonth('attendance.tanggal', $month[0])->whereYear('attendance.tanggal', $month[1]);
         } else {
-            $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg);
+            $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg)->whereNotIn('hari', array('6', '0'));
         }
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -155,8 +155,9 @@ class KaryawanController extends Controller
     {
         $cuti = Cuti::select('cuti.*', 'jenis_cuti.jenis_cuti as nama_cuti')->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')->where('nopeg', auth()->user()->nopeg)->get();
         $jeniscuti = JenisCuti::all();
-        $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
-        FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . auth()->user()->nopeg . "' GROUP BY cuti.jenis_cuti");
+        $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(cuti.total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
+        FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti 
+        WHERE cuti.nopeg='" . auth()->user()->nopeg . "' AND cuti.approval != 3 AND cuti.approval != 0 GROUP BY cuti.jenis_cuti");
 
         $data = [
             'jeniscuti' => $jeniscuti,
@@ -170,6 +171,7 @@ class KaryawanController extends Controller
 
     public function store_cuti(Request $request)
     {
+        $is_valid = 0;
         $this->validate($request, [
             'jenis_cuti' => 'required',
             'tgl_awal_cuti' => 'required',
@@ -179,19 +181,38 @@ class KaryawanController extends Controller
             'no_hp' => 'required',
         ]);
 
-        $data = new Cuti();
-        $data->nopeg = auth()->user()->nopeg;
-        $data->unit = auth()->user()->unit;
-        $data->name = auth()->user()->name;
-        $data->jenis_cuti = $request->jenis_cuti;
-        $data->tgl_awal_cuti = $request->tgl_awal_cuti;
-        $data->tgl_akhir_cuti = $request->tgl_akhir_cuti;
-        $data->total_cuti = $request->total_cuti;
-        $data->alamat = $request->alamat;
-        $data->no_hp = '0' . str_replace('-', '', $request->no_hp);
-        $data->validasi = 1;
-        $data->tgl_pengajuan = date('Y-m-d H:i:s');
-        $data->save();
+        $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
+        FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . auth()->user()->nopeg . "' GROUP BY cuti.jenis_cuti");
+
+        foreach ($history_cuti as $r) {
+            if ($r->id_cuti == $request->jenis_cuti) {
+                if ($r->total_harinya == $r->max_hari) {
+                    $is_valid = 0;
+                } else if (($r->total_harinya + $request->total_cuti) > $r->max_hari) {
+                    $is_valid = 1;
+                }
+            } else {
+                $is_valid = 1;
+            }
+        }
+
+        if ($is_valid == 1) {
+            $data = new Cuti();
+            $data->nopeg = auth()->user()->nopeg;
+            $data->unit = auth()->user()->unit;
+            $data->name = auth()->user()->name;
+            $data->jenis_cuti = $request->jenis_cuti;
+            $data->tgl_awal_cuti = $request->tgl_awal_cuti;
+            $data->tgl_akhir_cuti = $request->tgl_akhir_cuti;
+            $data->total_cuti = $request->total_cuti;
+            $data->alamat = $request->alamat;
+            $data->no_hp = '0' . str_replace('-', '', $request->no_hp);
+            $data->validasi = 1;
+            $data->tgl_pengajuan = date('Y-m-d H:i:s');
+            $data->save();
+        } else {
+            return redirect()->back()->with('error', 'Sudah Melebihi Batas Hari Cuti');
+        }
         return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
     }
 
