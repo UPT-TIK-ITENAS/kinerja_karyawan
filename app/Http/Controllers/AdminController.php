@@ -472,31 +472,42 @@ class AdminController extends Controller
     public function storecuti(Request $request)
     {
 
-        $history_cuti = Cuti::select('cuti.*, users.sisacuti, sum(total_cuti) AS total_cuti')
-        ->join('users','users.nopeg','=','cuti.nopeg')
-        ->join('jenis_cuti','cuti.jenis_cuti', 'jenis_cuti.jenis_cuti')
-        ->where('cuti.nopeg',$request->nopeg)->first();
+        $is_valid = 0;
+       
+        $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
+        FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . auth()->user()->nopeg . "' GROUP BY cuti.jenis_cuti");
 
-        
-        // // DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
-        // // FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . auth()->user()->nopeg . "' GROUP BY cuti.jenis_cuti");
+        foreach ($history_cuti as $r) {
+            if ($r->id_cuti == $request->jenis_cuti) {
+                if ($r->total_harinya == $r->max_hari) {
+                    $is_valid = 0;
+                } else if (($r->total_harinya + $request->total_cuti) > $r->max_hari) {
+                    $is_valid = 1;
+                }
+            } else {
+                $is_valid = 1;
+            }
+        }
 
+        if ($is_valid == 1) {
+            Cuti::insert([
+                'nopeg' => explode('-', $request->nopeg)[0] ,
+                'name' =>  explode('-', $request->nopeg)[1],
+                'unit' =>  explode('-', $request->nopeg)[2],
+                'jenis_cuti' => explode('-', $request->jenis_cuti)[0],
+                'tgl_awal_cuti' => date('Y-m-d', strtotime($request->startDate)),
+                'tgl_akhir_cuti' => date('Y-m-d', strtotime($request->endDate)),
+                'total_cuti' => $request->total,
+                'alamat' => $request->alamat,
+                'no_hp' => $request->no_hp,
+                'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+                'validasi' => $request->validasi,
+            ]);
+        } else {
+            return redirect()->back()->with('error', 'Sudah Melebihi Batas Hari Cuti');
+        }
+        return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
 
-        Cuti::insert([
-            'nopeg' => explode('-', $request->nopeg)[0] ,
-            'name' =>  explode('-', $request->nopeg)[1],
-            'unit' =>  explode('-', $request->nopeg)[2],
-            'jenis_cuti' => explode('-', $request->jenis_cuti)[0],
-            'tgl_awal_cuti' => date('Y-m-d', strtotime($request->startDate)),
-            'tgl_akhir_cuti' => date('Y-m-d', strtotime($request->endDate)),
-            'total_cuti' => $request->total,
-            'alamat' => $request->alamat,
-            'no_hp' => $request->no_hp,
-            'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
-            'validasi' => $request->validasi,
-        ]);
-
-        return redirect()->route('admin.datacuti')->with('success', 'Pengajuan cuti Berhasil!');
     }
 
     public function printcuti($id)
