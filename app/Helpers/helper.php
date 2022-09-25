@@ -115,25 +115,24 @@ if (!function_exists('getAksi')) {
 
         $for_html = "";
         if ($tipe == 'izin') {
-            if(auth()->user()->role =="admin"){
+            if (auth()->user()->role == "admin") {
                 $for_html = '<a class="btn btn-success btn-xs" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a> 
                 <a class="btn btn-danger btn-xs batalizin" href="' . $batal_izin . '">X</a>';
-            }elseif(auth()->user()->role =="kepalaunit"){
+            } elseif (auth()->user()->role == "kepalaunit") {
                 $data = IzinKerja::where('id_izinkerja', $id)->first();
                 $for_html = '
-                    <a href="#" class="btn btn-primary btn-xs apprvIzin" data-bs-target="#apprvIzin" data-bs-toggle="modal" data-id="'.$data->id_izinkerja.'"><i class="icofont icofont-pencil-alt-2"></i></a>
+                    <a href="#" class="btn btn-primary btn-xs apprvIzin" data-bs-target="#apprvIzin" data-bs-toggle="modal" data-id="' . $data->id_izinkerja . '"><i class="icofont icofont-pencil-alt-2"></i></a>
                     <a class="btn btn-secondary btn-xs" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a> 
                     <a class="btn btn-danger btn-xs batalizin" href="' . $batal_izin . '">X</a> ';
             }
-           
-        }elseif($tipe == 'cuti'){
-            if(auth()->user()->role =="admin"){
+        } elseif ($tipe == 'cuti') {
+            if (auth()->user()->role == "admin") {
                 $for_html = '<a class="btn btn-success btn-xs" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a> 
                 <a class="btn btn-danger btn-xs batalcuti" href="' . $batal_cuti . '">X</a>';
-            }elseif(auth()->user()->role =="kepalaunit"){
+            } elseif (auth()->user()->role == "kepalaunit") {
                 $data = Cuti::where('id_cuti', $id)->first();
                 $for_html = '
-                <a href="#" class="btn btn-primary btn-xs apprvCuti" data-bs-target="#apprvCuti" data-bs-toggle="modal" data-id="'.$data->id_cuti.'"><i class="icofont icofont-pencil-alt-2"></i></a>
+                <a href="#" class="btn btn-primary btn-xs apprvCuti" data-bs-target="#apprvCuti" data-bs-toggle="modal" data-id="' . $data->id_cuti . '"><i class="icofont icofont-pencil-alt-2"></i></a>
                 <a class="btn btn-success btn-xs" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a> ';
             }
         }
@@ -146,7 +145,9 @@ if (!function_exists('getAksi')) {
         {
             $begin = strtotime($startDate);
             $end   = strtotime($endDate);
-
+            $curentYear = date('Y', $begin);
+            $endYear = date('Y', $end);
+            $libur_nasional = DB::table('libur_nasional')->whereYear('tanggal', '=', $curentYear)->whereYear('tanggal', '=', $endYear)->get();
             if ($begin > $end) {
                 return 0;
             } else {
@@ -157,14 +158,19 @@ if (!function_exists('getAksi')) {
                     $what_day = date("N", $begin);
                     if ($what_day > 5) { // 6 and 7 are weekend days
                         $weekends++;
-                    };
+                    }
+                    // cek libur nasional
+                    foreach ($libur_nasional as $key => $value) {
+                        if (date('Y-m-d', $begin) == $value->tanggal) {
+                            $weekends++;
+                        }
+                    }
                     $begin += 86400; // +1 day
                 };
                 $working_days = $no_days - $weekends;
-        
+
                 return $working_days;
             }
         }
     }
 }
-
