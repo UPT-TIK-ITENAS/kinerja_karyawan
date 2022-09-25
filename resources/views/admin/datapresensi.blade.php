@@ -132,6 +132,10 @@
                         name: 'latesiang'
                     },
                     {
+                        data: 'latesore',
+                        name: 'latesore'
+                    },
+                    {
                         data: 'action',
                         name: 'action'
                     },

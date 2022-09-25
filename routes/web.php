@@ -63,6 +63,15 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('storecuti', [AdminController::class, 'storecuti'])->name('admin.storecuti');
         Route::get('/batal_cuti/{id}', [AdminController::class, 'batal_cuti'])->name('admin.batal_cuti');
         Route::get('printcuti/{id}', [AdminController::class, 'printcuti'])->name('admin.printcuti');
+
+        Route::get('/liburnasional', [AdminController::class, 'liburnasional'])->name('admin.liburnasional');
+        Route::get('/listlibur', [AdminController::class, 'listlibur'])->name('admin.listlibur');
+        Route::get('/editlibur/{id}', [AdminController::class, 'editlibur'])->name('admin.editlibur');
+        Route::post('/updatelibur', [AdminController::class, 'updatelibur'])->name('admin.updatelibur');
+        Route::post('/createlibur', [AdminController::class, 'createlibur'])->name('admin.createlibur');
+        Route::get('/destroylibur/{id}', [AdminController::class, 'destroylibur'])->name('admin.destroylibur');
+
+        
     });
     Route::prefix('karyawan')->name('karyawan.')->group(function () {
         Route::get('/', [KaryawanController::class, 'index'])->name('index');

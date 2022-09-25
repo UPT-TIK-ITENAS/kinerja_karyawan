@@ -18,6 +18,7 @@ use App\Models\cuti;
 use App\Models\IzinKerja;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
+use App\Models\LiburNasional;
 use Carbon\Carbon;
 use App\Models\QR;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -57,6 +58,9 @@ class AdminController extends Controller
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->editColumn('name', function ($row){
+                    return $row->nip.'-'.$row->name;
+                })
                 ->addColumn('duration', function ($row) {
                     if ($row->jam_pulang == NULL) {
                         $duration = strtotime('13:00:00') - strtotime($row->jam_masuk);
@@ -241,6 +245,7 @@ class AdminController extends Controller
     //DATA REKAPITULASI
     public function rekapitulasi()
     {
+
         return view('admin.rekapitulasi');
     }
 
@@ -254,26 +259,15 @@ class AdminController extends Controller
 
                 ->addColumn('duration', function ($data) {
 
-                    $durasi_telat = strtotime('00:00:00');
-                    $data_att     = Attendance::where('nip', $data->nopeg)->get();
+                    $data_att     = DB::select('CALL getTotalTelatPerBulan('.$data->nopeg.')');
+                    $pagi = 0;
+                    $siang = 0;
                     foreach ($data_att as $row) {
-                        if (date("H:i:s", strtotime($row->jam_masuk)) > $data->awal_tugas && $row->hari != '6' && $row->hari != '0') {
-                            $durasitelat = strtotime($row->jam_masuk) - strtotime($data->awal_tugas);
-                            $durasi_telat += $durasitelat;
-                        }
-                        if ($row->hari == '5') {
-                            if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
-                                $durasitelat = strtotime($row->jam_siang) - strtotime('13:30:00');
-                                $durasi_telat += $durasitelat;
-                            }
-                        } else {
-                            if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
-                                $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
-                                $durasi_telat += $durasitelat;
-                            }
-                        }
+                        $pagi += strtotime($row->total_telat_pagi);
+                        $siang += strtotime($row->total_telat_siang);
+                        $total = $pagi + $siang;
                     }
-                    return date("H:i:s", $durasi_telat);
+                    return (date("H:i:s", $total));
                 })
 
                 ->addColumn('izin', function ($data) {
@@ -429,6 +423,12 @@ class AdminController extends Controller
 
     public function datacuti()
     {
+        // $history_cuti = DB::table('jenis_cuti')->select("jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari")
+        // ->leftjoin('cuti','jenis_cuti.id_jeniscuti','=','cuti.jenis_cuti')
+        // ->where('cuti.nopeg','1803')
+        // ->groupby('cuti.jenis_cuti')
+        // ->get();
+        // dd($history_cuti);
         return view('admin.datacuti');
     }
 
@@ -467,41 +467,27 @@ class AdminController extends Controller
 
     public function storecuti(Request $request)
     {
-        $is_valid = 0;
-       
-        $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
-        FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . auth()->user()->nopeg . "' GROUP BY cuti.jenis_cuti");
+        $max = explode('-', $request->jenis_cuti)[1];
+       if($request->total > $max ){
+            return redirect()->back()->with('error', 'Melebihi Batas Hari Cuti');
 
-        foreach ($history_cuti as $r) {
-            if ($r->id_cuti == $request->jenis_cuti) {
-                if ($r->total_harinya == $r->max_hari) {
-                    $is_valid = 0;
-                } else if (($r->total_harinya + $request->total_cuti) > $r->max_hari) {
-                    $is_valid = 1;
-                }
-            } else {
-                $is_valid = 1;
-            }
-        }
-
-        if ($is_valid == 1) {
-            Cuti::insert([
-                'nopeg' => explode('-', $request->nopeg)[0] ,
-                'name' =>  explode('-', $request->nopeg)[1],
-                'unit' =>  explode('-', $request->nopeg)[2],
-                'jenis_cuti' => explode('-', $request->jenis_cuti)[0],
-                'tgl_awal_cuti' => date('Y-m-d', strtotime($request->startDate)),
-                'tgl_akhir_cuti' => date('Y-m-d', strtotime($request->endDate)),
-                'total_cuti' => $request->total,
-                'alamat' => $request->alamat,
-                'no_hp' => $request->no_hp,
-                'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
-                'validasi' => $request->validasi,
-            ]);
-        } else {
-            return redirect()->back()->with('error', 'Sudah Melebihi Batas Hari Cuti');
-        }
-        return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
+       }else{
+        Cuti::insert([
+            'nopeg' => explode('-', $request->nopeg)[0] ,
+            'name' =>  explode('-', $request->nopeg)[1],
+            'unit' =>  explode('-', $request->nopeg)[2],
+            'jenis_cuti' => explode('-', $request->jenis_cuti)[0],
+            'tgl_awal_cuti' => date('Y-m-d', strtotime($request->startDate)),
+            'tgl_akhir_cuti' => date('Y-m-d', strtotime($request->endDate)),
+            'total_cuti' => $request->total,
+            'alamat' => $request->alamat,
+            'no_hp' => $request->no_hp,
+            'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+            'validasi' => $request->validasi,
+        ]);
+       }
+    
+       return redirect()->route('admin.datacuti')->with('success', 'Add Data Berhasil!');
 
     }
 
@@ -525,6 +511,68 @@ class AdminController extends Controller
 
     //ENDDATA CUTI KARYAWAN
 
+    //Libur Nasional 
 
+    public function liburnasional(){
+        $libur = LiburNasional::get();
+        return view('admin.liburnasional',compact('libur'));
+    }
+
+    
+    public function listlibur(Request $request)
+    {
+        $data = LiburNasional::get();
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($data){
+                    $delete_url = route('admin.destroylibur', $data->id);
+
+                    return $actionBtn = "
+                    <div class='d-block text-center'>
+                    <a href='javascript:void(0)' data-toggle='tooltip' class='btn btn btn-warning btn-xs align-items-center editLibur' 
+                    data-id='$data->id' data-original-title='Edit'><i class='icofont icofont-edit-alt'></i></a>
+                    <a href='$delete_url' class='btn btn-sm btn-danger btn-xs align-items-center''><i class='icofont icofont-trash'></i></a>
+                    </div>
+                    "; 
+                })
+
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+    }
+
+    public function editlibur($id)
+    {
+        $libur = LiburNasional::where('id',$id)->first();   
+        return response()->json($libur);
+    }
+
+    public function updatelibur(Request $request)
+    {
+        LiburNasional::where('id',$request->id)->update([
+                'tanggal' => $request->tanggal,
+                'keterangan' => $request->keterangan,
+        ]);
+
+        return redirect()->route('admin.liburnasional')->with('success', 'Edit Data Berhasil!');
+    }
+
+    public function createlibur(Request $request)
+    {
+        LiburNasional::create([
+                'tanggal' => $request->tanggal,
+                'keterangan' => $request->keterangan,
+        ]);
+
+        return redirect()->route('admin.liburnasional')->with('success', 'Add Data Berhasil!');
+    }
+
+    public function destroylibur($id)
+    {
+        LiburNasional::where('id', $id)->delete();
+        return redirect()->route('admin.liburnasional')->with('success', 'Data berhasil dihapus!');
+    }
 
 }

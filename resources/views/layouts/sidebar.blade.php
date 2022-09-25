@@ -41,6 +41,13 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="dropdown">
+                        <a class="nav-link menu-title link-nav" href="{{ route('admin.liburnasional') }}"><i
+                                data-feather="calendar"></i><span>Pendataan Hari Libur </span>
+                            <div class="according-menu"><i class="fa fa-angle-right"></i></div>
+                        </a>
+
+                    </li>
                 @endif
                 @if (auth()->user()->role == 'karyawan')
                 <li class="dropdown">

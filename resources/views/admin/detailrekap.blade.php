@@ -206,6 +206,7 @@
             // $(this).text(jmlh_hari);
             var total = Math.round((total/jmlh_hari)*100,2);
             $(this).text(total + '%');
+            console.log(jmlh_hari);
         })
     </script>
 

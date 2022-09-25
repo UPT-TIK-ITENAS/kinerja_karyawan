@@ -39,7 +39,7 @@
                             <option value="" selected disabled>-- Pilih Jenis
                                 Cuti--</option>
                             @foreach ($jeniscuti as $item)
-                            <option value="{{ $item->id_jeniscuti }}">
+                            <option value="{{ $item->id_jeniscuti }}-{{ $item->max_hari }}">
                                 {{ $item->jenis_cuti }} - {{ $item->max_hari }} Hari</option>
                             @endforeach
                         </select>
@@ -131,35 +131,11 @@
         }
         return totalBusinessDays;
     }
-
-    function getWorkingDays(startDate, endDate)
-        {
-            var begin = new Date(startDate);
-            var end = new Date(endDate);
-
-            if ($begin > $end) {
-                return 0;
-            } else {
-                var no_days  = 0;
-                var weekends = 0;
-                while ($begin <= $end) {
-                    $no_days++; // no of days in the given interval
-                    $what_day = date("N", $begin);
-                    if ($what_day > 5) { // 6 and 7 are weekend days
-                        $weekends++;
-                    };
-                    $begin += 86400; // +1 day
-                };
-                $working_days = $no_days - $weekends;
-        
-                return $working_days;
-            }
-     }
-
+   
     $("#startDate, #endDate").datepicker();
 
     $("#endDate").on('change', function () {
-        var total = getWorkingDays(
+        var total = calcBusinessDays(
             $("#startDate").datepicker("getDate"),
             $("#endDate").datepicker("getDate")
         );
