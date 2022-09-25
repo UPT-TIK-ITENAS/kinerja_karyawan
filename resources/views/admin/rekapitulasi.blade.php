@@ -50,54 +50,59 @@
 @section('scripts')
     @parent
     <script>
-        let table = $('#table-admin').DataTable({
-            fixedHeader: true,
-            pageLength: 10,
-            responsive: true,
-            processing: true,
-            autoWidth: false,
-            serverSide: true,
-            columnDefs: [{
-                targets: 1,
-                width: "200px !important",
-            }, ],
-            ajax: "{{ route('admin.listrekapkaryawan') }}",
-            columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    className: 'text-center',
-                    orderable: false,
-                    searchable: false,
-                },
-                {
-                    data: 'nopeg',
-                    name: 'nopeg',
-                    class: 'text-center',
-                },
-                {
-                    data: 'name',
-                    name: 'name'
-                },
+        $().ready(function() {
+            let table = $('#table-admin').DataTable({
+                fixedHeader: true,
+                pageLength: 10,
+                responsive: true,
+                processing: true,
+                autoWidth: false,
+                serverSide: true,
+                columnDefs: [{
+                    targets: 1,
+                    width: "200px !important",
+                }, ],
+                ajax: "{{ route('admin.listrekapkaryawan') }}",
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        className: 'text-center',
+                        orderable: false,
+                        searchable: false,
+                    },
+                    {
+                        data: 'nopeg',
+                        name: 'nopeg',
+                        class: 'text-center',
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
 
-                {
-                    data: 'duration',
-                    name: 'duration'
-                },
-                {
-                    data: 'izin',
-                    name: 'izin'
-                },
-                {
-                    data: 'detail',
-                    name: 'detail'
-                },
-                
+                    {
+                        data: 'duration',
+                        name: 'duration'
+                    },
+                    {
+                        data: 'izin',
+                        name: 'izin'
+                    },
+                    {
+                        data: 'detail',
+                        name: 'detail'
+                    },
+                    
 
-            ],
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'print'
-            ]
+                ],
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'print'
+                ]
+            });
+            $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
+                    console.log(message);
+            };
         });
     </script>
 @endsection

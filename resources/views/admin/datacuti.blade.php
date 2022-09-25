@@ -51,44 +51,48 @@
 @section('scripts')
     @parent
     <script>
-        let table = $('#table-cuti').DataTable({
-            fixedHeader: true,
-            pageLength: 10,
-            responsive: true,
-            processing: true,
-            autoWidth: false,
-            serverSide: true,
-            columnDefs: [{
-                targets: 1,
-                width: "200px !important",
-            }, ],
-            ajax: "{{ route('admin.listcuti') }}",
-            columns: [
-                {    data: 'DT_RowIndex',
-                            name: 'DT_RowIndex',
-                            className: 'text-center',
-                            orderable: false,
-                            searchable: false,
-                },
-                { data: 'name',  name: 'name'},
-                { data: 'nopeg', name: 'nopeg'},
-                { data: 'unit', name: 'unit'},
-                { data: 'jenis_cuti', name: 'jenis_cuti'},
-                { data: 'tgl_awal_cuti', name: 'tgl_awal_cuti'},
-                { data: 'tgl_akhir_cuti', name: 'tgl_akhir_cuti'},
-                { data: 'total_cuti', name: 'total_cuti'},
-                { data: 'alasan_tolak', name: 'alasan_tolak'},
-                { data: 'action', name: 'action'},
-                { data: 'status', name: 'status'},
-                
-            ],
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'print'
-            ]
+        $().ready(function() {
+            let table = $('#table-cuti').DataTable({
+                fixedHeader: true,
+                pageLength: 10,
+                responsive: true,
+                processing: true,
+                autoWidth: false,
+                serverSide: true,
+                columnDefs: [{
+                    targets: 1,
+                    width: "200px !important",
+                }, ],
+                ajax: "{{ route('admin.listcuti') }}",
+                columns: [
+                    {    data: 'DT_RowIndex',
+                                name: 'DT_RowIndex',
+                                className: 'text-center',
+                                orderable: false,
+                                searchable: false,
+                    },
+                    { data: 'name',  name: 'name'},
+                    { data: 'nopeg', name: 'nopeg'},
+                    { data: 'unit', name: 'unit'},
+                    { data: 'jenis_cuti', name: 'jenis_cuti'},
+                    { data: 'tgl_awal_cuti', name: 'tgl_awal_cuti'},
+                    { data: 'tgl_akhir_cuti', name: 'tgl_akhir_cuti'},
+                    { data: 'total_cuti', name: 'total_cuti'},
+                    { data: 'alasan_tolak', name: 'alasan_tolak'},
+                    { data: 'action', name: 'action'},
+                    { data: 'status', name: 'status'},
+                    
+                ],
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'print'
+                ]
+            });
+
+            $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
+                    console.log(message);
+            };
         });
-
-
 
     </script>
 @endsection

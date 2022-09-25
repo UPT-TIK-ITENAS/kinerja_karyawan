@@ -52,43 +52,46 @@
 @section('scripts')
     @parent
     <script>
-        let table = $('#table-izin').DataTable({
-            fixedHeader: true,
-            pageLength: 10,
-            responsive: true,
-            processing: true,
-            autoWidth: false,
-            serverSide: true,
-            columnDefs: [{
-                targets: 1,
-                width: "200px !important",
-            }, ],
-            ajax: "{{ route('admin.listizin') }}",
-            columns: [
-                {    data: 'DT_RowIndex',
-                            name: 'DT_RowIndex',
-                            className: 'text-center',
-                            orderable: false,
-                            searchable: false,
-                },
-                { data: 'nopeg', name: 'nopeg'},
-                { data: 'name',  name: 'name'},
-                { data: 'unit', name: 'unit'},
-                { data: 'jenis_izin', name: 'jenis_izin'},
-                { data: 'tgl_awal_izin', name: 'tgl_awal_izin'},
-                { data: 'tgl_akhir_izin', name: 'tgl_akhir_izin'},
-                { data: 'total_izin', name: 'total_izin'},
-                { data: 'print', name: 'print'},
-                { data: 'status', name: 'status'},
-            ],
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'print'
-            ]
+        $().ready(function() {
+            let table = $('#table-izin').DataTable({
+                fixedHeader: true,
+                pageLength: 10,
+                responsive: true,
+                processing: true,
+                autoWidth: false,
+                serverSide: true,
+                columnDefs: [{
+                    targets: 1,
+                    width: "200px !important",
+                }, ],
+                ajax: "{{ route('admin.listizin') }}",
+                columns: [
+                    {    data: 'DT_RowIndex',
+                                name: 'DT_RowIndex',
+                                className: 'text-center',
+                                orderable: false,
+                                searchable: false,
+                    },
+                    { data: 'nopeg', name: 'nopeg'},
+                    { data: 'name',  name: 'name'},
+                    { data: 'unit', name: 'unit'},
+                    { data: 'jenis_izin', name: 'jenis_izin'},
+                    { data: 'tgl_awal_izin', name: 'tgl_awal_izin'},
+                    { data: 'tgl_akhir_izin', name: 'tgl_akhir_izin'},
+                    { data: 'total_izin', name: 'total_izin'},
+                    { data: 'print', name: 'print'},
+                    { data: 'status', name: 'status'},
+                ],
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'print'
+                ]
+            });
+
+            $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
+                    console.log(message);
+            };
         });
-
-
-
     </script>
 @endsection
 

@@ -85,7 +85,7 @@
                                                 <td>{{ $r->alamat }}</td>
                                                 <td>{{ $r->no_hp }}</td>
                                                 <td>{{ $r->tgl_pengajuan }}</td>
-                                                <td align="center">{!! getApproval($r->id_cuti, 'cuti') !!}</td>
+                                                <td align="center">{!! getApproval($r->id_cuti, 'cuti', $r->alasan_tolak) !!}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
