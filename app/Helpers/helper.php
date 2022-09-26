@@ -173,4 +173,13 @@ if (!function_exists('getAksi')) {
             }
         }
     }
+
+    if (!function_exists('getJawabanPertanyaan')) {
+        function getJawabanPertanyaan($pertanyaan_kuesioner)
+        {
+            $jawaban_pertanyaan = DB::table('jawaban_pertanyaan')->where('id_pertanyaan', $pertanyaan_kuesioner)->get();
+            return $jawaban_pertanyaan;
+        }
+    }
+
 }

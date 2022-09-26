@@ -9,6 +9,9 @@ use App\Http\Controllers\PengajuanIzinController;
 use App\Http\Controllers\PengajuanCutiController;
 use App\Http\Controllers\KepalaUnitController;
 use App\Http\Controllers\BiometricAllController;
+use App\Http\Controllers\KuesionerController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -70,6 +73,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/updatelibur', [AdminController::class, 'updatelibur'])->name('admin.updatelibur');
         Route::post('/createlibur', [AdminController::class, 'createlibur'])->name('admin.createlibur');
         Route::get('/destroylibur/{id}', [AdminController::class, 'destroylibur'])->name('admin.destroylibur');
+
+
+        Route::get('/kuesioner', [KuesionerController::class, 'kuesioner'])->name('admin.kuesioner');
+        Route::get('/storekuesioner', [KuesionerController::class, 'storekuesioner'])->name('admin.storekuesioner');
 
         
     });

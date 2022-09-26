@@ -83,6 +83,22 @@ use Illuminate\Support\Facades\DB;
                                     'jam_masuk' => $datetime,
                                 ]);
                             } else if ($time >= '12:45:00' && $time < '15:00:00') {
+
+                                //12.45 < 16.49 
+                                //total telat 
+                                //total kerja = 4 hari
+                                //cuti 
+                                //total 
+                                //nilai rujukan 
+                                //total jam kerja dalam bulan september 
+                                //total keterlambatan 
+                                //persentase keterlambatan (kekurangan jam kerja)
+                                //penulisan merepresentasikan
+                                //lebih informatif lagi dashboard (izin,cuti,sakit,keterlambatan,total jam kerja)
+                                //pembagian kewenangan pimpinan unit dan  prodi   
+                                //petugas gedung ke BKU 
+                                //Nontendik bertemu dengan BKU 
+
                                 $insert_att = DB::table('attendance_baru')->insert([
                                     'nip' => $employee_id,
                                     'tanggal' => $date,

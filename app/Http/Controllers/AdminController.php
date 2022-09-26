@@ -262,6 +262,7 @@ class AdminController extends Controller
                     $data_att     = DB::select('CALL getTotalTelatPerBulan('.$data->nopeg.')');
                     $pagi = 0;
                     $siang = 0;
+                    $total = 0;
                     foreach ($data_att as $row) {
                         $pagi += strtotime($row->total_telat_pagi);
                         $siang += strtotime($row->total_telat_siang);
