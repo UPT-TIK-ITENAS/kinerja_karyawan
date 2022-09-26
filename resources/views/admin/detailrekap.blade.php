@@ -34,8 +34,8 @@
                                     <th width="5%">No.</th>
                                     <th>Bulan</th>
                                     <th>Tahun</th>
-                                    <th>Total Telat Pagi</th>
-                                    <th>Total Telat Siang</th>
+                                    {{-- <th>Total Telat Pagi</th>
+                                    <th>Total Telat Siang</th> --}}
                                     <th>Total Telat Keseluruhan</th>
                                     <th>Total Kerja</th>
                                     <th>Persentase</th> 
@@ -49,8 +49,8 @@
                                         <td align="center">{{ $no + 1 }}</td>
                                         <td>{{ getNamaBulan($r->bulan) }}</td>
                                         <td>{{ $r->tahun }}</td>
-                                        <td>{{ date('H:i:s', strtotime($r->total_telat_pagi)) }}</td>
-                                        <td>{{ date('H:i:s', strtotime($r->total_telat_siang)) }}</td>
+                                        {{-- <td>{{ date('H:i:s', strtotime($r->total_telat_pagi)) }}</td>
+                                        <td>{{ date('H:i:s', strtotime($r->total_telat_siang)) }}</td> --}}
                                         <td>{{ date('H:i:s', strtotime($r->total_telat_siang) + strtotime($r->total_telat_pagi)) }}</td>
                                         <td> {{ $r->totalkerja }}</td>
                                         <td><span class="jumlah" data-id="{{ $r->id }}" data-bulan="{{ $r->bulan }}" data-tahun="{{ $r->tahun }}" data-total="{{ $r->totalkerja }}"></span></td>
