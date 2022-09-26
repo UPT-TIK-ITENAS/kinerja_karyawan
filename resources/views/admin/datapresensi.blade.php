@@ -28,7 +28,7 @@
                         <h5>Monitoring Kehadiran </h5>
                         <span>Daftar hasil monitoring kehadiran karyawan terhitung dari tanggal 01 July 2021</span>
                         <hr>
-
+                        <p><b>Sinkronisasi Biometric</b> </p>
                         <form action="{{ route('admin.SyncAndInsertBiometric') }}" method="POST">
                             @csrf
                             <div class="form-group row">
