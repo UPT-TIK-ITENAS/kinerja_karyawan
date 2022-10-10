@@ -173,4 +173,40 @@ if (!function_exists('getAksi')) {
             }
         }
     }
+
+    if (!function_exists('getJawabanPertanyaan')) {
+        function getJawabanPertanyaan($pertanyaan_kuesioner)
+        {
+            $jawaban_pertanyaan = DB::table('jawaban_pertanyaan')->where('id_pertanyaan', $pertanyaan_kuesioner)->get();
+            return $jawaban_pertanyaan;
+        }
+    }
+
+    if (!function_exists('getPresensi')) {
+        function getPresensi($type)
+        {
+            $data = Attendance::selectRaw('attendance.*, users.name, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->get();
+            foreach($data as $row){
+                if($type == 'duration'){
+                    if($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang == NULL){
+                        return '00:00:00';
+                    }else if ($row->jam_masuk == NULL && $row->jam_siang != NULL && $row->jam_pulang != NULL){
+                        $duration = strtotime($row->jam_pulang) - strtotime($row->jam_siang);
+                        $durationwork = date("H:i:s", $duration);
+                        return $durationwork;
+                    }else if($row->jam_masuk == NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL){
+                        return '00:00:00';
+                    }else {
+                        $time_awalreal =  strtotime($row->jam_masuk);
+                        $time_akhirreal = strtotime($row->jam_pulang);
+                        $duration = ceil(abs($time_akhirreal - $time_awalreal) - strtotime('01:00:00'));
+                        $durationwork = date("H:i:s", $duration);
+                        return $durationwork;
+                    }
+                }
+            }
+           
+        }
+    }
+
 }

@@ -62,72 +62,101 @@ class AdminController extends Controller
                     return $row->nip.'-'.$row->name;
                 })
                 ->addColumn('duration', function ($row) {
-                    if ($row->jam_pulang == NULL) {
-                        $duration = strtotime('13:00:00') - strtotime($row->jam_masuk);
+                   if($row->jam_masuk == NULL && $row->jam_siang == NULL && $row->jam_pulang == NULL){
+                        return '00:00:00';
+                   }else if($row->jam_masuk == NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL){
+                        return '00:00:00';
+                   }else if($row->jam_masuk == NULL && $row->jam_siang != NULL && $row->jam_pulang == NULL){
+                        return '00:00:00';
+                   }else if($row->jam_masuk == NULL && $row->jam_siang != NULL && $row->jam_pulang != NULL){
+                        $duration = strtotime($row->jam_pulang) - strtotime($row->jam_siang);
                         $durationwork = date("H:i:s", $duration);
                         return $durationwork;
-                    } else {
-                        $time_awalreal =  strtotime($row->jam_masuk);
-                        $time_akhirreal = strtotime($row->jam_pulang);
-                        $duration = ceil(abs($time_akhirreal - $time_awalreal) - strtotime('01:00:00'));
+                   }else if($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang == NULL ){
+                         return '00:00:00';
+                   }else if($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL && $row->hari != 6 && $row->hari != 0 && $row->hari != 5){
+                        $duration = strtotime($row->jam_pulang) - strtotime('12:45:00');
                         $durationwork = date("H:i:s", $duration);
                         return $durationwork;
-                    }
+                   }else if($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL && $row->hari == 5){
+                        $duration = strtotime($row->jam_pulang) - strtotime('13:15:00');
+                        $durationwork = date("H:i:s", $duration);
+                        return $durationwork;
+                   }else if($row->jam_masuk != NULL && $row->jam_siang != NULL && $row->jam_pulang == NULL){
+                        $duration = strtotime($row->jam_siang) - strtotime($row->jam_masuk);
+                        $durationwork = date("H:i:s", $duration);
+                        return $durationwork;
+                   }else{
+                        $duration = strtotime($row->jam_pulang) - strtotime($row->jam_masuk);
+                        $durationwork = date("H:i:s", $duration);
+                        return $durationwork;
+                   }
+
                 })
                 ->editColumn('hari', function ($row) {
                     return config('app.days')[$row->hari];
                 })
 
                 ->addColumn('latemasuk', function ($row) {
-                    if ($row->jam_masuk == NULL) {
-                        $durasitelat = strtotime('13:15:00') - strtotime('08:00:00');
-                        $durasi = date("H:i:s", $durasitelat);
-                        return $durasi;
-                    } else if ($row->hari != 6 && $row->hari != 0 && date("H:i:s", strtotime($row->jam_masuk)) <= '08:00:00') {
-                        return '';
-                    } else if ($row->hari != 6 && $row->hari != 0 && date("H:i:s", strtotime($row->jam_masuk)) > '08:00:00') {
-                        $durasitelat = strtotime($row->jam_masuk) - strtotime('08:00:00');
-                        $durasi = date("H:i:s", $durasitelat);
-                        return $durasi;
+                    if ($row->hari == 5) {
+                        if ($row->jam_masuk == NULL && $row->jam_siang == NULL){
+                            $durasitelat = strtotime('13:15:00') - strtotime('08:00:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                            return $durasi;
+                        }
+                    } else if( $row->hari != 6 && $row->hari != 0 ) {
+                        if ($row->jam_masuk == NULL && $row->jam_siang != NULL) {
+                            $durasitelat = strtotime($row->jam_siang) - strtotime('08:00:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                            return $durasi;
+                        } else if ($row->jam_masuk == NULL && $row->jam_siang == NULL){
+                            $durasitelat = strtotime('12:45:00') - strtotime('08:00:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                            return $durasi;
+                        } else if (date("H:i:s", strtotime($row->jam_masuk)) > '08:00:00') {
+                            $durasitelat = strtotime($row->jam_masuk) - strtotime('08:00:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                            return $durasi;
+                        }
                     }
                 })
                 ->addColumn('latesiang', function ($row) {
                     if ($row->hari == 5) {
-                        if ($row->jam_siang == NULL) {
-                            $durasitelat = strtotime('17:00:00') - strtotime('13:30:00');
+                        if ($row->jam_siang == NULL && $row->jam_pulang != NULL) {
+                            $durasitelat = strtotime($row->jam_pulang) - strtotime('13:15:00');
                             $durasi = date("H:i:s", $durasitelat);
                             return $durasi;
-                        } else if (date("H:i:s", strtotime($row->jam_siang)) <= '13:15:00') {
-                            return '';
                         } else if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
                             $durasitelat = strtotime($row->jam_siang) - strtotime('13:30:00');
                             $durasi = date("H:i:s", $durasitelat);
                             return $durasi;
+                        }else{
+                            return '';
                         }
-                    } else {
-                        if ($row->hari != 6 && $row->hari != 0 && $row->jam_siang == NULL) {
-                            $durasitelat = strtotime('17:00:00') - strtotime('13:00:00');
+                    } else if ($row->hari != 6 && $row->hari != 0) {
+                        if ($row->jam_siang == NULL && $row->jam_pulang != NULL) {
+                            $durasitelat = strtotime($row->jam_pulang) - strtotime('12:45:00');
                             $durasi = date("H:i:s", $durasitelat);
                             return $durasi;
-                        } else if ($row->hari != 6 && $row->hari != 0 && date("H:i:s", strtotime($row->jam_siang)) <= '12:45:00') {
-                            return '';
-                        } else if ($row->hari != 6 && $row->hari != 0 && date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
+                        } else if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
                             $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
                             $durasi = date("H:i:s", $durasitelat);
                             return $durasi;
+                        }else{
+                            return '';
                         }
                     }
                 })
                 ->addColumn('latesore',function($row) {
-                    if ($row->hari != 6 && $row->hari != 0 && $row->jam_pulang == NULL){
-                        $durasitelat = strtotime('17:00:00') - strtotime('15:00:00');
+                    if ($row->hari != 6 && $row->hari != 0 && $row->jam_siang != NULL && $row->jam_pulang == NULL){
+                        $durasitelat = strtotime('17:00:00') - strtotime($row->jam_siang);
                         $durasi = date("H:i:s", $durasitelat);
                         return $durasi;
-                    } else if($row->jam_pulang < strtotime('17:00:00') && $row->hari != 6 && $row->hari != 7 ){
-                        $durasiplg = strtotime($row->jam_pulang) - strtotime('17:00:00');
+                    } else if($row->hari != 6 && $row->hari != 0 && $row->jam_siang === NULL && $row->jam_pulang == NULL){
+                        $durasiplg = strtotime($row->jam_masuk) - strtotime('17:00:00');
                         $durasi = date("H:i:s", $durasiplg);
                         return $durasi;
-                    }
+                    } 
 
                 })
 

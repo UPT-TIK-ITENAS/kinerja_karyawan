@@ -64,27 +64,28 @@ use Illuminate\Support\Facades\DB;
                     $day = date("w", strtotime($datetime));
 
                     if ($date == date("Y-m-d", strtotime($request->tanggal))) {
-                        $cek_data_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', date("Y-m-d", strtotime($request->tanggal)))->first();
+                    // if ($date == date("Y-m-d", strtotime($request->tanggal))) {
+                        $cek_data_att = DB::table('attendance')->where('nip', $employee_id)->where('tanggal', date("Y-m-d", strtotime($request->tanggal)))->first();
                         $users = DB::table('users')->get();
                         foreach($users as $user){
                             if($user->nopeg == $employee_id){
                                 if (empty($cek_data_att)) {
                                     if ($time < '12:45:00') {
-                                        $insert_att = DB::table('attendance_baru')->insert([
+                                        $insert_att = DB::table('attendance')->insert([
                                             'nip' => $employee_id,
                                             'tanggal' => $date,
                                             'hari' => $day,
                                             'jam_masuk' => $datetime,
                                         ]);
-                                    } else if ($time >= '12:45:00' && $time < '15:30:00') {
-                                        $insert_att = DB::table('attendance_baru')->insert([
+                                    } else if ($time >= '12:45:00' && $time < '16:49:00') {
+                                        $insert_att = DB::table('attendance')->insert([
                                             'nip' => $employee_id,
                                             'tanggal' => $date,
                                             'hari' => $day,
                                             'jam_siang' => $datetime,
                                         ]);
                                     } else if ($time >= '15:30:00' && $time <= '23:59:00') {
-                                        $insert_att = DB::table('attendance_baru')->insert([
+                                        $insert_att = DB::table('attendance')->insert([
                                             'nip' => $employee_id,
                                             'tanggal' => $date,
                                             'hari' => $day,
@@ -93,15 +94,15 @@ use Illuminate\Support\Facades\DB;
                                     }
                                 } else {
                                     if ($time < '12:45:00') {
-                                        $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
+                                        $upd_att = DB::table('attendance')->where('nip', $employee_id)->where('tanggal', $date)->update([
                                             'jam_masuk' => $datetime,
                                         ]);
-                                    } else if ($time >= '12:45:00' && $time < '15:30:00') {
-                                        $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
+                                    } else if ($time >= '12:45:00' && $time < '16:49:00') {
+                                        $upd_att = DB::table('attendance')->where('nip', $employee_id)->where('tanggal', $date)->update([
                                             'jam_siang' => $datetime,
                                         ]);
                                     } else if ($time >= '15:30:00' && $time <= '23:59:00') {
-                                        $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
+                                        $upd_att = DB::table('attendance')->where('nip', $employee_id)->where('tanggal', $date)->update([
                                             'jam_pulang' => $datetime,
                                         ]);
                                     }
@@ -109,6 +110,7 @@ use Illuminate\Support\Facades\DB;
                             }
                         }
                     }
+                    // }
                 }
             } else {
                 $msg .= "\n FAILED connect machine: " . $errno . " " . $errstr;

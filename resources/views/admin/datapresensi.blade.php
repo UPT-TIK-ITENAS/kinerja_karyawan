@@ -59,7 +59,7 @@
                                     <th>Durasi</th>
                                     <th>Telat Masuk</th>
                                     <th>Telat Siang</th>
-                                    <th>Telat Sore</th>
+                                    <th>Pulang cepat</th>
                                     <th>Aksi</th>
                                     <th>File</th>
                                     <th>Status</th>
