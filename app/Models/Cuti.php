@@ -12,7 +12,7 @@ class Cuti extends Model
     protected $guarded = [];
     protected $primaryKey = 'id_cuti';
 
-    public function jenis_cuti()
+    public function jeniscuti()
     {
         return $this->belongsTo(JenisCuti::class, 'jenis_cuti', 'id_jeniscuti');
     }
@@ -20,5 +20,15 @@ class Cuti extends Model
     public function unit()
     {
         return $this->belongsTo(Unit::class, 'unit', 'id');
+    }
+
+    public function jadwal_satpam()
+    {
+        return $this->morphMany(JadwalSatpam::class, 'tagable', 'tagable_type', 'tagable_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'nopeg', 'nopeg');
     }
 }

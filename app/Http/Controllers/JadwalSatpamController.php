@@ -18,7 +18,7 @@ class JadwalSatpamController extends Controller
             ->groupBy('shift_awal')
             ->get()
             ->keyBy('shift_awal');
-        $datauser = User::where('fungsi', 'satpam')->get();
+        $datauser = User::where('fungsi', 'Satpam')->get();
         return view('admin.jadwal-satpam.index', compact('jadwalSatpamCount', 'datauser'));
     }
 
@@ -101,6 +101,32 @@ class JadwalSatpamController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Data berhasil ditambahkan');
+    }
+
+    public function dataSatpamOffByDate(Request $request)
+    {
+        $search = $request->search;
+        $tanggal_awal = Carbon::parse($request->startDate)->toDateString();
+        $tanggal_akhir = Carbon::parse($request->endDate)->toDateString();
+
+        if ($search == '') {
+            $data = JadwalSatpam::with(['user'])->where('shift_awal', 'off')->whereDate('tanggal_awal', $tanggal_awal)->whereDate('tanggal_akhir', $tanggal_akhir)->get();
+        } else {
+            $data = JadwalSatpam::with(['user' => function ($query) use ($request) {
+                $query->where('nama', 'like', '%' . $request->search . '%')->orWhere('nopeg', 'like', '%' . $request->search . '%');
+            }])->where('shift_awal', 'off')->whereDate('tanggal_awal', $tanggal_awal)->whereDate('tanggal_akhir', $tanggal_akhir)->get();
+        }
+        return response()->json($data);
+    }
+
+    public function checkPengganti(Request $request, $id)
+    {
+        $jadwalSatpam = JadwalSatpam::find($id);
+        if ($jadwalSatpam->nip_pengganti == null) {
+            return response()->json(['data' => $jadwalSatpam, 'status' => 'success', 'penggati' => false]);
+        }
+
+        return response()->json(['data' => $jadwalSatpam, 'status' => 'success', 'pengganti' => true]);
     }
 
     public function allDataCalendar()

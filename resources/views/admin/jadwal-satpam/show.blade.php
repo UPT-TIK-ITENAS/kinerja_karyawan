@@ -319,7 +319,6 @@
                             })
                         }
                     })
-
                 }
             });
             calendar.setOption('locale', 'id');

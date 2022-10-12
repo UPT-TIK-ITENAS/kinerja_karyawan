@@ -44,7 +44,7 @@ if (!function_exists('getApproval')) {
                 } elseif ($getDataIzin->approval == 3) {
                     $for_html = '<span class="badge badge-danger">Ditolak</span><br><span> | "' . $alasan . '"</span>';
                 } else {
-                    $for_html = '<span class="badge badge-warning">Menunggu</span> <a class="btn btn-danger btn-xs" href="' . $url_batal_izin . '" id="btnBatal">X</a>';
+                    $for_html = '<span class="badge badge-warning">Menunggu</span> <a class="btn btn-danger btn-xs" href="' . $url_batal_izin . '" id="btnBatal"><i class="fa fa-times"></i></a>';
                 }
             }
         } elseif ($tipe == 'cuti') {
@@ -57,7 +57,7 @@ if (!function_exists('getApproval')) {
                 } elseif ($getDataCuti->approval == 3) {
                     $for_html = '<span class="badge badge-danger">Ditolak</span><br><span><b>note</b> : ' . $alasan . '</span>';
                 } else {
-                    $for_html = '<span class="badge badge-warning">Menunggu</span> <a class="btn btn-danger btn-xs" href="' . $url_batal_cuti . '" id="btnBatal">X</a>';
+                    $for_html = '<span class="badge badge-warning">Menunggu</span> <a class="btn btn-danger btn-xs" href="' . $url_batal_cuti . '" id="btnBatal"><i class="fa fa-times"></i></a>';
                 }
             }
         }
@@ -107,34 +107,40 @@ if (!function_exists('routeActive')) {
 
 
 if (!function_exists('getAksi')) {
-    function getAksi($id, $tipe)
+    function getAksi($id, $tipe, $user = null)
     {
         $printizin =  route('admin.printizinkerja', $id);
         $printcuti =  route('admin.printcuti', $id);
         $batal_cuti = route('admin.batal_cuti', $id);
         $batal_izin = route('admin.batal_izin', $id);
+        $route_for_satpam = route('admin.datacuti.show', $id);
 
         $for_html = "";
         if ($tipe == 'izin') {
             if (auth()->user()->role == "admin") {
-                $for_html = '<a class="btn btn-success btn-xs" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a> 
-                <a class="btn btn-danger btn-xs batalizin" href="' . $batal_izin . '">X</a>';
+                $for_html = '<a class="btn btn-success btn-xs" href="' . $printizin . '"><i class="fa fa-cloud-download"></i></a> 
+                <a class="btn btn-danger btn-xs batalizin" href="' . $batal_izin . '"><i class="fa fa-times"></i></a>';
             } elseif (auth()->user()->role == "kepalaunit") {
                 $data = IzinKerja::where('id_izinkerja', $id)->first();
                 $for_html = '
-                    <a href="#" class="btn btn-primary btn-xs apprvIzin" data-bs-target="#apprvIzin" data-bs-toggle="modal" data-id="' . $data->id_izinkerja . '"><i class="icofont icofont-pencil-alt-2"></i></a>
-                    <a class="btn btn-secondary btn-xs" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a> 
-                    <a class="btn btn-danger btn-xs batalizin" href="' . $batal_izin . '">X</a> ';
+                    <a href="#" class="btn btn-primary btn-xs apprvIzin" data-bs-target="#apprvIzin" data-bs-toggle="modal" data-id="' . $data->id_izinkerja . '"><i class="fa fa-pencil"></i></a>
+                    <a class="btn btn-secondary btn-xs" href="' . $printizin . '"><i class="fa fa-cloud-download"></i></a> 
+                    <a class="btn btn-danger btn-xs batalizin" href="' . $batal_izin . '"><i class="fa fa-times"></i></a> ';
             }
         } elseif ($tipe == 'cuti') {
             if (auth()->user()->role == "admin") {
-                $for_html = '<a class="btn btn-success btn-xs" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a> 
-                <a class="btn btn-danger btn-xs batalcuti" href="' . $batal_cuti . '">X</a>';
+                $is_satpam = ($user->fungsi === 'Satpam') ? ' <a class="btn btn-info btn-xs" href="' . $route_for_satpam . '"><i class="fa fa-eye"></i></a>' : '';
+                $for_html = $is_satpam . '
+                <a class="btn btn-success btn-xs" href="' . $printcuti . '">
+                    <i class="fa fa-cloud-download"></i>
+                </a> 
+                <a class="btn btn-danger btn-xs batalcuti" href="' . $batal_cuti . '"><i class="fa fa-times"></i></a>
+                ';
             } elseif (auth()->user()->role == "kepalaunit") {
                 $data = Cuti::where('id_cuti', $id)->first();
                 $for_html = '
-                <a href="#" class="btn btn-primary btn-xs apprvCuti" data-bs-target="#apprvCuti" data-bs-toggle="modal" data-id="' . $data->id_cuti . '"><i class="icofont icofont-pencil-alt-2"></i></a>
-                <a class="btn btn-success btn-xs" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a> ';
+                <a href="#" class="btn btn-primary btn-xs apprvCuti" data-bs-target="#apprvCuti" data-bs-toggle="modal" data-id="' . $data->id_cuti . '"><i class="fa fa-pencil"></i></a>
+                <a class="btn btn-success btn-xs" href="' . $printcuti . '"><i class="fa fa-cloud-download"></i></a> ';
             }
         }
 

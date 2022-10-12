@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\JadwalSatpamCalendarResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
@@ -16,6 +17,7 @@ use App\Models\Attendance;
 use App\Models\Izin;
 use App\Models\Cuti;
 use App\Models\IzinKerja;
+use App\Models\JadwalSatpam;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
 use App\Models\LiburNasional;
@@ -449,7 +451,7 @@ class AdminController extends Controller
 
     public function datacuti()
     {
-        // $history_cuti = DB::table('jenis_cuti')->select("jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari")
+        // $history_cuti = DB::table('jeniscuti')->select("jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari")
         // ->leftjoin('cuti','jenis_cuti.id_jeniscuti','=','cuti.jenis_cuti')
         // ->where('cuti.nopeg','1803')
         // ->groupby('cuti.jenis_cuti')
@@ -460,11 +462,11 @@ class AdminController extends Controller
 
     public function listcuti(Request $request)
     {
-        $data = Cuti::query()->with(['jenis_cuti', 'unit'])->latest();
+        $data = Cuti::query()->with(['jeniscuti', 'unit', 'user'])->latest();
         return DataTables::eloquent($data)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                return getAksi($row->id_cuti, 'cuti');
+                return getAksi($row->id_cuti, 'cuti', $row->user);
             })
             ->addColumn('status', function ($row) {
                 if ($row->approval == 1) {
@@ -487,26 +489,90 @@ class AdminController extends Controller
         return view('admin.createcuti', compact('datauser', 'jeniscuti'));
     }
 
+    public function datacuti_show($id)
+    {
+        $cuti = Cuti::with(['jeniscuti', 'unit', 'user'])->where('id_cuti', $id)->first();
+        $jeniscuti = JenisCuti::where('id_jeniscuti', $cuti->jenis_cuti)->first();
+        $datauser = User::where('fungsi', 'satpam')->get();
+        // dd($cuti);
+        return view('admin.datacuti_show', compact('cuti', 'jeniscuti', 'datauser'));
+    }
+
+    public function datacuti_calendar($id, $nopeg)
+    {
+        $cuti = Cuti::with(['jeniscuti', 'unit', 'user'])->where('id_cuti', $id)->first();
+        $data = JadwalSatpam::with('user')->where('nip', $nopeg)->whereHasMorph(
+            'tagable',
+            [Cuti::class],
+            function ($query) use ($cuti) {
+                $query->where('tagable_id', $cuti->id_cuti);
+            }
+        )->get();
+        return response()->json(JadwalSatpamCalendarResource::collection($data));
+    }
+
+    public function datacuti_pengganti(Request $request)
+    {
+        $request->validate([
+            'id_jadwal' => 'required',
+            'nip' => 'required',
+        ]);
+        $data = JadwalSatpam::with('user')->where('id', $request->id_jadwal)->whereHasMorph(
+            'tagable',
+            [Cuti::class],
+        )->first();
+        // assign pengganti
+        $data->update([
+            'nip_pengganti' => $request->nip,
+        ]);
+        return redirect()->back()->with('success', 'Berhasil Menambahkan Pengganti ' . $request->nip);
+    }
+
     public function storecuti(Request $request)
     {
         $max = explode('-', $request->jenis_cuti)[1];
+        // dd($request->all());
         if ($request->total > $max) {
             return redirect()->back()->with('error', 'Melebihi Batas Hari Cuti');
-        } else {
-            Cuti::insert([
-                'nopeg' => explode('-', $request->nopeg)[0],
-                'name' =>  explode('-', $request->nopeg)[1],
-                'unit' =>  explode('-', $request->nopeg)[2],
+        }
+
+
+        // dd($user, $jadwal, $request->all());
+        // DB Transaction
+        DB::transaction(function () use ($request) {
+            $nopeg = explode('-', $request->nopeg)[0];
+            $name = explode('-', $request->nopeg)[1];
+            $unit = explode('-', $request->nopeg)[2];
+
+            $user = User::where('nopeg', $nopeg)->first();
+            $tgl_awal_cuti = date('Y-m-d', strtotime($request->startDate));
+            $tgl_akhir_cuti = date('Y-m-d', strtotime($request->endDate));
+
+            $cuti = Cuti::create([
+                'nopeg' => $nopeg,
+                'name' =>  $name,
+                'unit' =>  $unit,
                 'jenis_cuti' => explode('-', $request->jenis_cuti)[0],
-                'tgl_awal_cuti' => date('Y-m-d', strtotime($request->startDate)),
-                'tgl_akhir_cuti' => date('Y-m-d', strtotime($request->endDate)),
+                'tgl_awal_cuti' => $tgl_awal_cuti,
+                'tgl_akhir_cuti' => $tgl_akhir_cuti,
                 'total_cuti' => $request->total,
                 'alamat' => $request->alamat,
                 'no_hp' => $request->no_hp,
                 'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
                 'validasi' => $request->validasi,
             ]);
-        }
+            if ($user->fungsi === 'Satpam') {
+                $jadwal = JadwalSatpam::with('tagable')->where('nip', $nopeg)->where('tanggal_awal', '>=', $tgl_awal_cuti)
+                    ->where('tanggal_akhir', '<=', $tgl_akhir_cuti)->get();
+                // update jadwal satpam morph
+                foreach ($jadwal as $j) {
+                    $j->update([
+                        'tagable_id' => $cuti->id_cuti,
+                        'tagable_type' => 'App\Models\Cuti',
+                    ]);
+                }
+            }
+        });
 
         return redirect()->route('admin.datacuti')->with('success', 'Add Data Berhasil!');
     }

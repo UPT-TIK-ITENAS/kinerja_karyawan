@@ -22,7 +22,23 @@ class User extends Authenticatable
         'email',
         'password',
         'nopeg',
-        'role'
+        'role',
+        'npp',
+        'unit',
+        'atasan',
+        'atasan_lang',
+        'masuk_kerja',
+        'tempat',
+        'tanggal_lahir',
+        'status',
+        'fungsi',
+        'awal_tugas',
+        'akhir_tugas',
+        'gedung',
+        'email',
+        'nohp',
+        'sisacuti',
+        'last_login'
     ];
 
     /**

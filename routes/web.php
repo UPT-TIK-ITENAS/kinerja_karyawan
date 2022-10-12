@@ -48,6 +48,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/by-id/{id}', [\App\Http\Controllers\JadwalSatpamController::class, 'showDataById'])->name('showDataById');
             Route::get('/by-user/{nip}', [\App\Http\Controllers\JadwalSatpamController::class, 'showByUser'])->name('showByUser');
             Route::post('/by-user/{nip}', [\App\Http\Controllers\JadwalSatpamController::class, 'storeByUser'])->name('storeByUser');
+            Route::get('/by-date/off', [\App\Http\Controllers\JadwalSatpamController::class, 'dataSatpamOffByDate'])->name('dataSatpamOffByDate');
+            Route::get('/check-pengganti/{id}', [\App\Http\Controllers\JadwalSatpamController::class, 'checkPengganti'])->name('checkPengganti');
         });
 
         Route::get('/datapresensi', [AdminController::class, 'datapresensi'])->name('admin.datapresensi');
@@ -66,6 +68,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
         Route::get('/dataizin', [AdminController::class, 'dataizin'])->name('admin.dataizin');
+        Route::get('/dataizin/{id}', [AdminController::class, 'dataizin_show'])->name('admin.dataizin.show');
         Route::get('/listizin', [AdminController::class, 'listizin'])->name('admin.listizin');
         Route::get('createizin', [AdminController::class, 'createizin'])->name('admin.createizin');
         Route::post('storeizin', [AdminController::class, 'storeizin'])->name('admin.storeizin');
@@ -73,6 +76,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('printizinkerja/{id}', [AdminController::class, 'printizinkerja'])->name('admin.printizinkerja');
 
         Route::get('/datacuti', [AdminController::class, 'datacuti'])->name('admin.datacuti');
+        Route::get('/datacuti/{id}', [AdminController::class, 'datacuti_show'])->name('admin.datacuti.show');
+        Route::post('/datacuti/pengganti', [AdminController::class, 'datacuti_pengganti'])->name('admin.datacuti.pengganti');
+        Route::get('/datacuti/calendar/{id}/{nopeg}', [AdminController::class, 'datacuti_calendar'])->name('admin.datacuti.calendar');
         Route::get('/listcuti', [AdminController::class, 'listcuti'])->name('admin.listcuti');
         Route::get('createcuti', [AdminController::class, 'createcuti'])->name('admin.createcuti');
         Route::post('storecuti', [AdminController::class, 'storecuti'])->name('admin.storecuti');

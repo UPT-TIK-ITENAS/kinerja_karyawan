@@ -84,8 +84,8 @@
                         name: 'unit.nama_unit'
                     },
                     {
-                        data: 'jenis_cuti.jenis_cuti',
-                        name: 'jenis_cuti.jenis_cuti'
+                        data: 'jeniscuti.jenis_cuti',
+                        name: 'jeniscuti.jenis_cuti'
                     },
                     {
                         data: 'tgl_awal_cuti',
