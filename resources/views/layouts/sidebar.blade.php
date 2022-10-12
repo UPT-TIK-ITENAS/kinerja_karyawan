@@ -24,7 +24,7 @@
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
                         <ul class="nav-submenu menu-content" style="display: none;">
-                            <li><a href="{{ route('admin.datapresensi') }}" class="">Data Presensi</a>
+                            <li><a href="{{ route('admin.datapresensi') }}" class="">Monitor Kehadiran</a>
                             </li>
                             <li><a href="{{ route('admin.rekapitulasi') }}" class="">Rekapitulasi</a>
                             <li><a href="{{ route('admin.jadwal-satpam.index') }}" class="">Jadwal Satpam</a>

@@ -29,7 +29,6 @@
                             <table class="dataTable" id="table-admin">
                                 <thead>
                                     <th width="5%">No.</th>
-                                    <th>NIP</th>
                                     <th>Nama</th>
                                     <th>Total Keterlambatan</th>
                                     <th>Total Izin</th>
@@ -69,11 +68,6 @@
                         className: 'text-center',
                         orderable: false,
                         searchable: false,
-                    },
-                    {
-                        data: 'nopeg',
-                        name: 'nopeg',
-                        class: 'text-center',
                     },
                     {
                         data: 'name',

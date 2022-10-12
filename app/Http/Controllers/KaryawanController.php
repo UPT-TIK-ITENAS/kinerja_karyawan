@@ -236,6 +236,8 @@ class KaryawanController extends Controller
         $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
         FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . auth()->user()->nopeg . "' GROUP BY cuti.jenis_cuti");
 
+
+        dd($history_cuti);
         foreach ($history_cuti as $r) {
             if ($r->id_cuti == $request->jenis_cuti) {
                 if ($r->total_harinya == $r->max_hari) {
@@ -248,7 +250,7 @@ class KaryawanController extends Controller
             }
         }
 
-        if ($is_valid == 1) {
+        if ($is_valid == 0) {
             $data = new Cuti();
             $data->nopeg = auth()->user()->nopeg;
             $data->unit = auth()->user()->unit;

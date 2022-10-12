@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Attendance;
 use App\Models\Cuti;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -139,46 +140,71 @@ if (!function_exists('getAksi')) {
 
         return $for_html;
     }
-
-    if (!function_exists('getWorkingDays')) {
-        function getWorkingDays($startDate, $endDate)
-        {
-            $begin = strtotime($startDate);
-            $end   = strtotime($endDate);
-            $curentYear = date('Y', $begin);
-            $endYear = date('Y', $end);
-            $libur_nasional = DB::table('libur_nasional')->whereYear('tanggal', '=', $curentYear)->whereYear('tanggal', '=', $endYear)->get();
-            if ($begin > $end) {
-                return 0;
-            } else {
-                $no_days  = 0;
-                $weekends = 0;
-                while ($begin <= $end) {
-                    $no_days++; // no of days in the given interval
-                    $what_day = date("N", $begin);
-                    if ($what_day > 5) { // 6 and 7 are weekend days
+}
+if (!function_exists('getWorkingDays')) {
+    function getWorkingDays($startDate, $endDate)
+    {
+        $begin = strtotime($startDate);
+        $end   = strtotime($endDate);
+        $curentYear = date('Y', $begin);
+        $endYear = date('Y', $end);
+        $libur_nasional = DB::table('libur_nasional')->whereYear('tanggal', '=', $curentYear)->whereYear('tanggal', '=', $endYear)->get();
+        if ($begin > $end) {
+            return 0;
+        } else {
+            $no_days  = 0;
+            $weekends = 0;
+            while ($begin <= $end) {
+                $no_days++; // no of days in the given interval
+                $what_day = date("N", $begin);
+                if ($what_day > 5) { // 6 and 7 are weekend days
+                    $weekends++;
+                }
+                // cek libur nasional
+                foreach ($libur_nasional as $key => $value) {
+                    if (date('Y-m-d', $begin) == $value->tanggal) {
                         $weekends++;
                     }
-                    // cek libur nasional
-                    foreach ($libur_nasional as $key => $value) {
-                        if (date('Y-m-d', $begin) == $value->tanggal) {
-                            $weekends++;
-                        }
-                    }
-                    $begin += 86400; // +1 day
-                };
-                $working_days = $no_days - $weekends;
+                }
+                $begin += 86400; // +1 day
+            };
+            $working_days = $no_days - $weekends;
 
-                return $working_days;
-            }
+            return $working_days;
         }
     }
+}
 
-    if (!function_exists('getJawabanPertanyaan')) {
-        function getJawabanPertanyaan($pertanyaan_kuesioner)
-        {
-            $jawaban_pertanyaan = DB::table('jawaban_pertanyaan')->where('id_pertanyaan', $pertanyaan_kuesioner)->get();
-            return $jawaban_pertanyaan;
+if (!function_exists('getJawabanPertanyaan')) {
+    function getJawabanPertanyaan($pertanyaan_kuesioner)
+    {
+        $jawaban_pertanyaan = DB::table('jawaban_pertanyaan')->where('id_pertanyaan', $pertanyaan_kuesioner)->get();
+        return $jawaban_pertanyaan;
+    }
+}
+
+if (!function_exists('getPresensi')) {
+    function getPresensi($type)
+    {
+        $data = Attendance::selectRaw('attendance.*, users.name, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->get();
+        foreach ($data as $row) {
+            if ($type == 'duration') {
+                if ($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang == NULL) {
+                    return '00:00:00';
+                } else if ($row->jam_masuk == NULL && $row->jam_siang != NULL && $row->jam_pulang != NULL) {
+                    $duration = strtotime($row->jam_pulang) - strtotime($row->jam_siang);
+                    $durationwork = date("H:i:s", $duration);
+                    return $durationwork;
+                } else if ($row->jam_masuk == NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL) {
+                    return '00:00:00';
+                } else {
+                    $time_awalreal =  strtotime($row->jam_masuk);
+                    $time_akhirreal = strtotime($row->jam_pulang);
+                    $duration = ceil(abs($time_akhirreal - $time_awalreal) - strtotime('01:00:00'));
+                    $durationwork = date("H:i:s", $duration);
+                    return $durationwork;
+                }
+            }
         }
     }
 }

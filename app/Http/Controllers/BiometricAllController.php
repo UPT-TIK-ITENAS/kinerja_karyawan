@@ -59,6 +59,15 @@ use Illuminate\Support\Facades\DB;
                         $date = date("Y-m-d", strtotime($datetime));
                         $time = date("H:i:s", strtotime($datetime));
                         $day = date("w", strtotime($datetime));
+                        
+                                            // array_push($for_array, [
+                                            //     'nip' => $employee_id,
+                                            //     'tanggal' => $date,
+                                            //     'hari' => $day,
+                                            //     'jam_masuk' => $datetime,
+                                            //     'jam_siang' => $datetime,
+                                            //     'jam_pulang' => $datetime,
+                                            // ]);
     
                         if ($date < date("2022-07-01")) {
                             continue;
