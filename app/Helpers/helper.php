@@ -181,5 +181,4 @@ if (!function_exists('getAksi')) {
             return $jawaban_pertanyaan;
         }
     }
-
 }

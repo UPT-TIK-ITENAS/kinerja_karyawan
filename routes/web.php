@@ -38,6 +38,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/kepalaunit', [KepalaUnitController::class, 'index'])->name('kepalaunit.kepalaunit_v');
     Route::group(['prefix' => 'admin', 'middleware' => ['is_admin']], function () {
 
+        Route::prefix('jadwal-satpam')->name('admin.jadwal-satpam.')->group(function () {
+            Route::get('/list', [\App\Http\Controllers\JadwalSatpamController::class, 'list'])->name('list');
+            Route::get('/', [\App\Http\Controllers\JadwalSatpamController::class, 'index'])->name('index');
+            Route::post('/', [\App\Http\Controllers\JadwalSatpamController::class, 'store'])->name('store');
+            Route::get('/calendar', [\App\Http\Controllers\JadwalSatpamController::class, 'allDataCalendar'])->name('calendar.all');
+            Route::get('/calendar-by-user/{id}', [\App\Http\Controllers\JadwalSatpamController::class, 'showDataCalendarByUser'])->name('calendar.by-user');
+            Route::delete('/delete/{id}', [\App\Http\Controllers\JadwalSatpamController::class, 'destroy'])->name('showDataById');
+            Route::get('/by-id/{id}', [\App\Http\Controllers\JadwalSatpamController::class, 'showDataById'])->name('showDataById');
+            Route::get('/by-user/{nip}', [\App\Http\Controllers\JadwalSatpamController::class, 'showByUser'])->name('showByUser');
+            Route::post('/by-user/{nip}', [\App\Http\Controllers\JadwalSatpamController::class, 'storeByUser'])->name('storeByUser');
+        });
+
         Route::get('/datapresensi', [AdminController::class, 'datapresensi'])->name('admin.datapresensi');
         Route::get('/listkaryawan', [AdminController::class, 'listkaryawan'])->name('admin.listkaryawan');
         Route::get('/rekapitulasi', [AdminController::class, 'rekapitulasi'])->name('admin.rekapitulasi');
@@ -46,11 +58,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/detailrekap/{nip}', [AdminController::class, 'detailrekap'])->name('admin.detailrekap');
         Route::get('/listdetailrekapkaryawan/{nip}', [AdminController::class, 'listdetailrekapkaryawan'])->name('admin.listdetailrekapkaryawan');
 
-        Route::get('createizinkehadiran/{id}', [AdminController::Class, 'createizinkehadiran'])->name('admin.createizinkehadiran');
-        Route::post('storeizinkehadiran', [AdminController::Class, 'storeizinkehadiran'])->name('admin.storeizinkehadiran');
-        Route::post('/biometric', [BiometricController::Class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
-        Route::get('/biometricall', [BiometricAllController::Class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
-        Route::get('printizin/{id}', [AdminController::Class, 'printizin'])->name('admin.printizin');
+        Route::get('createizinkehadiran/{id}', [AdminController::class, 'createizinkehadiran'])->name('admin.createizinkehadiran');
+        Route::post('storeizinkehadiran', [AdminController::class, 'storeizinkehadiran'])->name('admin.storeizinkehadiran');
+        Route::post('/biometric', [BiometricController::class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
+        Route::get('/biometricall', [BiometricAllController::class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
+        Route::get('printizin/{id}', [AdminController::class, 'printizin'])->name('admin.printizin');
 
 
         Route::get('/dataizin', [AdminController::class, 'dataizin'])->name('admin.dataizin');
@@ -77,8 +89,6 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/kuesioner', [KuesionerController::class, 'kuesioner'])->name('admin.kuesioner');
         Route::get('/storekuesioner', [KuesionerController::class, 'storekuesioner'])->name('admin.storekuesioner');
-
-        
     });
     Route::prefix('karyawan')->name('karyawan.')->group(function () {
         Route::get('/', [KaryawanController::class, 'index'])->name('index');

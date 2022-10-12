@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
-class JenisCuti extends Model
+class Unit extends Model
 {
-    // use HasFactory;
-    protected $table = 'jenis_cuti';
+    use HasFactory;
+
+    protected $table = 'unit';
     protected $guarded = [];
-    protected $primaryKey = ' id_jeniscuti';
+
 
     public function cuti()
     {

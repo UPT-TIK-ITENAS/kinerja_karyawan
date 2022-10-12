@@ -12,6 +12,7 @@
     <meta name="author" content="pixelstrap">
     <link rel="icon" href="{{ asset('assets/images/favicon.png') }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" type="image/x-icon">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>ITENAS - PENILAIAN KINERJA</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link
@@ -37,10 +38,17 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/select2.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/timepicker.css') }}">
-
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/daterangepicker.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.css"
+        integrity="sha256-zsz1FbyNCtIE2gIB+IyWV7GbCLyKJDTBRz0qQaBSLxM=" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
     <link id="color" rel="stylesheet" href="{{ asset('assets/css/color-1.css') }}" media="screen">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive.css') }}">
+
+    @stack('styles')
+    <script>
+        window.baseurl = "{{ url('') }}"
+    </script>
 </head>
 
 <body>
@@ -135,6 +143,8 @@
             </footer>
         </div>
     </div>
+    @stack('modal')
+
 
     @section('scripts')
         <script src="{{ asset('assets/js/jquery-3.5.1.min.js') }}"></script>
@@ -173,6 +183,13 @@
         <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
         <script src="{{ asset('assets/js/select2/select2.full.min.js') }}"></script>
         <script src="{{ asset('assets/js/select2/select2-custom.js') }}"></script>
+        <script src="{{ asset('assets/js/daterangepicker.js') }}"></script>
+        <script src="{{ asset('assets/js/moment.min.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"
+            integrity="sha256-XOMgUu4lWKSn8CFoJoBoGd9Q/OET+xrfGYSo+AKpFhE=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js"
+            integrity="sha256-GcByKJnun2NoPMzoBsuCb4O2MKiqJZLlHTw3PJeqSkI=" crossorigin="anonymous"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
         <script type="text/javascript">

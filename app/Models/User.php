@@ -43,4 +43,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function jadwal_satpam()
+    {
+        return $this->hasMany(JadwalSatpam::class, 'nip', 'nopeg');
+    }
 }
