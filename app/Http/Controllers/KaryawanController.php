@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use App\Models\Cuti;
+use App\Models\Izin;
 use App\Models\IzinKerja;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
+use App\Models\QR;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class KaryawanController extends Controller
 {
@@ -61,9 +65,9 @@ class KaryawanController extends Controller
     {
         if ($request->bulan) {
             $month =  explode('-', $request->bulan);
-            $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg)->whereNotIn('hari', array('6', '0'))->whereMonth('attendance.tanggal', $month[0])->whereYear('attendance.tanggal', $month[1]);
+            $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg)->whereNotIn('hari', array('6', '0'))->whereMonth('attendance.tanggal', $month[0])->whereYear('attendance.tanggal', $month[1])->orderBy('attendance.tanggal', 'desc');
         } else {
-            $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg)->whereNotIn('hari', array('6', '0'));
+            $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg)->whereNotIn('hari', array('6', '0'))->orderBy('attendance.tanggal', 'desc');
         }
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -82,7 +86,6 @@ class KaryawanController extends Controller
                 ->editColumn('hari', function ($row) {
                     return config('app.days')[$row->hari];
                 })
-
                 ->addColumn('latemasuk', function ($row) {
 
                     if (date("H:i:s", strtotime($row->jam_masuk)) <= '08:00:00') {
@@ -112,7 +115,56 @@ class KaryawanController extends Controller
                         }
                     }
                 })
-                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang'])
+                ->addColumn('action', function ($row) {
+                    $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
+                    if ($workingdays < 3) {
+                        $addsurat = route('karyawan.createizinkehadiran', $row->id);
+                        return $actionBtn = "
+                        <div class='d-block text-center'>
+                        <a href='$addsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-ui-add'></i></a>
+                        </div>
+                        ";
+                    } else {
+                        return '';
+                    }
+                })
+                ->addColumn('file', function ($row) {
+                    $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id', $row->id)->get();
+
+                    foreach ($dataizin as $izin) {
+                        $printsurat =  route('karyawan.printizin', $izin->id);
+
+                        if ($row->id == $izin->id_attendance) {
+                            $actionBtn = "
+                            <div class='d-block text-center'>
+                                <a href='$printsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-download-alt'></i></a>
+                            </div>
+                            ";
+                            return $actionBtn;
+                        } else {
+                            $actionBtn = "";
+                            return $actionBtn;
+                        }
+                    }
+                })
+
+                ->addColumn('status', function ($row) {
+                    $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id', $row->id)->get();
+
+                    foreach ($dataizin as $izin) {
+                        if ($row->id == $izin->id_attendance) {
+                            if ($row->approval == 1) {
+                                $apprv = '<span class="badge badge-success">Disetujui</span>';
+                            } else {
+                                $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                            }
+                            return $apprv;
+                        } else {
+                            return $apprv = '';
+                        }
+                    }
+                })
+                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'action', 'file', 'status'])
                 ->make(true);
         }
         return DataTables::queryBuilder($data)->toJson();
@@ -184,19 +236,38 @@ class KaryawanController extends Controller
         $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
         FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . auth()->user()->nopeg . "' GROUP BY cuti.jenis_cuti");
 
-        foreach ($history_cuti as $r) {
-            if ($r->id_cuti == $request->jenis_cuti) {
-                if ($r->total_harinya == $r->max_hari) {
-                    $is_valid = 0;
-                } else if (($r->total_harinya + $request->total_cuti) > $r->max_hari) {
+        // foreach ($history_cuti as $r) {
+        //     if ($r->id_cuti == $request->jenis_cuti) {
+        //         if ($r->total_harinya == $r->max_hari) {
+        //             $is_valid = 1;
+        //         } else if (($r->total_harinya + $request->total_cuti) > $r->max_hari) {
+        //             // dd('lebih');
+        //             $is_valid = 0;
+        //         }
+        //     }
+        // }
+
+        foreach($history_cuti as $r){
+            if($r->id_cuti == $request->jenis_cuti){
+                if ($r->total_harinya == $r->max_hari){
                     $is_valid = 1;
                 }
-            } else {
-                $is_valid = 1;
+                else if(($r->total_harinya + $request->total_cuti) > $r->max_hari){
+                    $is_valid = 1;
+                }else{
+                    $is_valid = 0;
+                }
+            }else if ($r->id_cuti != $request->jenis_cuti){
+                $is_valid = 0;
             }
         }
 
+        // dd($is_valid);
+
+
         if ($is_valid == 1) {
+            return redirect()->back()->with('error', 'Sudah Melebihi Batas Hari Cuti');
+        } else if($is_valid == 0) {
             $data = new Cuti();
             $data->nopeg = auth()->user()->nopeg;
             $data->unit = auth()->user()->unit;
@@ -210,10 +281,8 @@ class KaryawanController extends Controller
             $data->validasi = 1;
             $data->tgl_pengajuan = date('Y-m-d H:i:s');
             $data->save();
-        } else {
-            return redirect()->back()->with('error', 'Sudah Melebihi Batas Hari Cuti');
+            return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
         }
-        return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
     }
 
     public function index_izin()
@@ -269,5 +338,57 @@ class KaryawanController extends Controller
         } else {
             return redirect()->back()->with('error', 'Gagal membatalkan izin');
         }
+    }
+
+    public function createizinkehadiran($id)
+    {
+
+        $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas, unit.nama_unit')
+            ->join('users', 'attendance.nip', '=', 'users.nopeg')
+            ->join('unit', 'unit.id', '=', 'users.unit')
+            ->where('attendance.id', $id)->first();
+        return view('karyawan.createizinkehadiran', compact('data'));
+    }
+
+    public function storeizinkehadiran(Request $request)
+    {
+
+        if ($request->validasi == NULL) {
+            return redirect()->route('karyawan.createizinkehadiran', $request->id_izin)->with('error', 'Validasi Tidak diisi!');
+        } else {
+            Izin::insert([
+                'id_attendance' => $request->id_attendance,
+                'nopeg' => $request->nopeg,
+                'name' => $request->name,
+                'unit' => $request->idunit,
+                'tanggal' => $request->tgl,
+                'jam_awal' => date('H:i:s', strtotime($request->jam_awal)),
+                'jam_akhir' => date('H:i:s', strtotime($request->jam_akhir)),
+                'alasan' => $request->alasan,
+                'validasi' => $request->validasi,
+            ]);
+
+            $dataqr = Izin::where('nopeg', $request->nopeg)->first();
+            $qrcode_filename = 'qr-' . base64_encode($request->nopeg . date('Y-m-d H:i:s')) . '.svg';
+            // dd($qrcode_filename);
+            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nopeg . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
+
+            QR::where('nopeg', $request->nopeg)->insert([
+                'id_attendance' => $request->id_attendance,
+                'nopeg' => $request->nopeg,
+                'qr_peg' => $qrcode_filename,
+            ]);
+
+            return redirect()->route('karyawan.datapresensi')->with('success', 'Pengajuan Izin Berhasil!');
+        }
+    }
+
+    public function printizin($id)
+    {
+        $data = Izin::where('id_attendance', $id)->first();
+        $dataqr = QR::where('id_attendance', $id)->first();
+
+        $pdf = PDF::loadview('admin.printizin', compact('data', 'dataqr'))->setPaper('A5', 'landscape');
+        return $pdf->stream();
     }
 }
