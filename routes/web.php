@@ -10,6 +10,7 @@ use App\Http\Controllers\PengajuanCutiController;
 use App\Http\Controllers\KepalaUnitController;
 use App\Http\Controllers\BiometricAllController;
 use App\Http\Controllers\KuesionerController;
+use App\Http\Controllers\PejabatController;
 
 
 /*
@@ -77,8 +78,6 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/kuesioner', [KuesionerController::class, 'kuesioner'])->name('admin.kuesioner');
         Route::get('/storekuesioner', [KuesionerController::class, 'storekuesioner'])->name('admin.storekuesioner');
-
-        
     });
     Route::prefix('karyawan')->name('karyawan.')->group(function () {
         Route::get('/', [KaryawanController::class, 'index'])->name('index');
@@ -98,6 +97,30 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('storeizinkehadiran', [KaryawanController::class, 'storeizinkehadiran'])->name('storeizinkehadiran');
         Route::get('printizin/{id}', [KaryawanController::class, 'printizin'])->name('printizin');
     });
+
+
+    Route::prefix('pejabat')->name('pejabat.')->group(function () {
+        Route::get('/', [PejabatController::class, 'index'])->name('index');
+        Route::get('/datapresensi', [PejabatController::class, 'index_datapresensi'])->name('datapresensi');
+        Route::get('/datarekapitulasi', [PejabatController::class, 'index_datarekapitulasi'])->name('datarekapitulasi');
+        Route::get('/listdatapresensi', [PejabatController::class, 'listdatapresensi'])->name('listdatapresensi');
+        Route::get('/rekapitulasi', [PejabatController::class, 'rekapitulasi'])->name('rekapitulasi');
+        Route::get('/listdatarekapitulasi', [PejabatController::class, 'listdatarekapitulasi'])->name('listdatarekapitulasi');
+        Route::get('/izin/index', [PejabatController::class, 'index_izin'])->name('izin');
+        Route::post('/izin/store', [PejabatController::class, 'store_izin'])->name('store_izin');
+        Route::get('/izin/batal{id}', [PejabatController::class, 'batal_izin'])->name('batal_izin');
+        Route::get('/cuti/index', [PejabatController::class, 'index_cuti'])->name('cuti');
+        Route::post('/cuti/store', [PejabatController::class, 'store_cuti'])->name('store_cuti');
+        Route::get('/cuti/batal/{id}', [PejabatController::class, 'batal_cuti'])->name('batal_cuti');
+
+        Route::get('createizinkehadiran/{id}', [PejabatController::class, 'createizinkehadiran'])->name('createizinkehadiran');
+        Route::post('storeizinkehadiran', [PejabatController::class, 'storeizinkehadiran'])->name('storeizinkehadiran');
+        Route::get('printizin/{id}', [PejabatController::class, 'printizin'])->name('printizin');
+    });
+
+
+
+
 
     Route::group(['prefix' => 'kepalaunit'], function () {
 

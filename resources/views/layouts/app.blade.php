@@ -109,8 +109,8 @@
                         <div class="row">
                             @if (session('success'))
                                 <div class="success-session" data-flashdata="{{ session('success') }}"></div>
-                            @elseif (session('danger'))
-                                <div class="danger-session" data-flashdata="{{ session('danger') }}"></div>
+                            @elseif (session('error'))
+                                <div class="error-session" data-flashdata="{{ session('error') }}"></div>
                             @endif
                         </div>
                         @yield('content')
@@ -191,7 +191,7 @@
 
             $("document").ready(function() {
                 let flashdatasukses = $('.success-session').data('flashdata');
-                let flashdatagagal = $('.warning-session').data('flashdata');
+                let flashdatagagal = $('.error-session').data('flashdata');
                 if (flashdatasukses) {
                     $.notify({
                         title: 'Success',

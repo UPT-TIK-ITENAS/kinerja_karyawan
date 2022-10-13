@@ -109,12 +109,9 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('karyawan.store_cuti') }}" method="POST">
+                <form class="needs-validation" novalidate="" action="{{ route('pejabat.store_cuti') }}" method="POST">
                     @csrf
                     <div class="modal-body">
-                        <div class="alert alert-danger" id="lebihHari" style="display: none;">
-                            ⚠️ Tidak boleh melebihi jumlah hari yang telah ditentukan.
-                        </div>
                         <div class="row g-1 mb-3">
                             <div class="col-md-12">
                                 <span class="form-label" for="jenis_cuti">Jenis Cuti</span>
@@ -122,8 +119,7 @@
                                     id="jenis_cuti" name="jenis_cuti" required="">
                                     <option selected="" disabled="" value="">-- Pilih ---</option>
                                     @foreach ($data['jeniscuti'] as $r)
-                                        <option value="{{ $r->id_jeniscuti }}|{{ $r->max_hari }}">{{ $r->jenis_cuti }}
-                                        </option>
+                                        <option value="{{ $r->id_jeniscuti }}">{{ $r->jenis_cuti }}</option>
                                     @endforeach
                                 </select>
                                 <input type="hidden" id="lama_cuti">
@@ -182,7 +178,7 @@
                     <div class="modal-footer justify-content-between">
                         <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
                             dihitung</span>
-                        <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
+                        <button class="btn btn-primary" type="submit">Submit</button>
                     </div>
                 </form>
             </div>
@@ -197,12 +193,10 @@
             processing: true,
         });
 
-
         document.getElementById('no_hp').addEventListener('input', function(e) {
             var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,4})(\d{0,5})/);
             e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
         });
-
         $('#tgl_akhir_cuti').on('change', function() {
             let tgl_awal = $('#tgl_awal_cuti').val();
             let tgl_akhir = $('#tgl_akhir_cuti').val();
@@ -213,14 +207,6 @@
                 let date2 = new Date(tgl_akhir);
                 total = getBusinessDatesCount(date1, date2);
                 total_cuti.val(total);
-
-                if (total > $('#lama_cuti').val()) {
-                    $('#lebihHari').css('display', 'block');
-                    $('#btnSubmit').attr('disabled', 'true');
-                } else {
-                    $('#lebihHari').css('display', 'none');
-                    $('#btnSubmit').removeAttr('disabled');
-                }
             }
         });
 
@@ -233,23 +219,6 @@
                 curDate.setDate(curDate.getDate() + 1);
             }
             return count;
-        }
-
-        $('#jenis_cuti').on('change', function() {
-            let jenis_cuti = $('#jenis_cuti');
-            let lama_cuti = $('#lama_cuti');
-            let durasi_cuti = jenis_cuti.val().split('|')[1] ? jenis_cuti.val().split('|')[1] : 100;
-            lama_cuti.val(durasi_cuti);
-            console.log(durasi_cuti);
-            emptyField();
-        });
-
-        function emptyField() {
-            let tgl_awal = $('#tgl_awal_cuti').val('');
-            let tgl_akhir = $('#tgl_akhir_cuti').val('');
-            let total_cuti = $('#total_cuti').val('');
-            $('#lebihHari').css('display', 'none');
-            $('#btnSubmit').removeAttr('disabled');
         }
     </script>
 @endsection

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\Cuti;
 use App\Models\Izin;
@@ -9,23 +10,18 @@ use App\Models\IzinKerja;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
 use App\Models\QR;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class KaryawanController extends Controller
+class PejabatController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function __construct()
     {
         $this->middleware('auth');
     }
+
     public function index()
     {
         $durasi_telat = strtotime('00:00:00');
@@ -54,11 +50,12 @@ class KaryawanController extends Controller
             'terlambat' =>  date("H:i:s", $durasi_telat),
             'durasi_kerja' => date("H:i:s", $durasi_kerja),
         ];
-        return view('karyawan.k_index', compact('data'));
+        return view('pejabat.k_index', compact('data'));
     }
+
     public function index_datapresensi()
     {
-        return view('karyawan.k_datapresensi');
+        return view('pejabat.k_datapresensi');
     }
 
     public function listdatapresensi(Request $request)
@@ -118,7 +115,7 @@ class KaryawanController extends Controller
                 ->addColumn('action', function ($row) {
                     $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
                     if ($workingdays < 3) {
-                        $addsurat = route('karyawan.createizinkehadiran', $row->id);
+                        $addsurat = route('pejabat.createizinkehadiran', $row->id);
                         return $actionBtn = "
                         <div class='d-block text-center'>
                         <a href='$addsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-ui-add'></i></a>
@@ -132,7 +129,7 @@ class KaryawanController extends Controller
                     $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id', $row->id)->get();
 
                     foreach ($dataizin as $izin) {
-                        $printsurat =  route('karyawan.printizin', $izin->id);
+                        $printsurat =  route('pejabat.printizin', $izin->id);
 
                         if ($row->id == $izin->id_attendance) {
                             $actionBtn = "
@@ -170,11 +167,10 @@ class KaryawanController extends Controller
         return DataTables::queryBuilder($data)->toJson();
     }
 
-
     public function index_datarekapitulasi()
     {
         // dd(DB::select("exec getTotalTelatPerBulan('" . auth()->user()->nopeg . "')"));
-        return view('karyawan.k_datarekapitulasi');
+        return view('pejabat.k_datarekapitulasi');
     }
 
     public function listdatarekapitulasi(Request $request)
@@ -218,7 +214,7 @@ class KaryawanController extends Controller
         ];
         // dd($data);
 
-        return view('karyawan.k_index_cuti', compact('data'));
+        return view('pejabat.k_index_cuti', compact('data'));
     }
 
     public function store_cuti(Request $request)
@@ -232,58 +228,45 @@ class KaryawanController extends Controller
             'alamat' => 'required',
             'no_hp' => 'required',
         ]);
-        $a = explode('|', $request->jenis_cuti);
-        // dd($a);
 
         $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
         FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . auth()->user()->nopeg . "' GROUP BY cuti.jenis_cuti");
 
-        // foreach ($history_cuti as $r) {
-        //     if ($r->id_cuti == $request->jenis_cuti) {
-        //         if ($r->total_harinya == $r->max_hari) {
-        //             $is_valid = 1;
-        //         } else if (($r->total_harinya + $request->total_cuti) > $r->max_hari) {
-        //             // dd('lebih');
-        //             $is_valid = 0;
-        //         }
-        //     }
-        // }
-
         foreach ($history_cuti as $r) {
-            if ($r->id_cuti == $a[0]) {
+            if ($r->id_cuti == $request->jenis_cuti) {
                 if ($r->total_harinya == $r->max_hari) {
-                    $is_valid = 1;
+                    $is_valid = 0;
                 } else if (($r->total_harinya + $request->total_cuti) > $r->max_hari) {
                     $is_valid = 1;
-                } else {
-                    $is_valid = 0;
                 }
-            } else if ($r->id_cuti != $a[0]) {
-                $is_valid = 0;
+            } else {
+                $is_valid = 1;
             }
         }
 
-        // dd($is_valid);
-
-
         if ($is_valid == 1) {
+            $postcuti = [
+                $data = new Cuti(),
+                $data->nopeg = auth()->user()->nopeg,
+                $data->unit = auth()->user()->unit,
+                $data->name = auth()->user()->name,
+                $data->jenis_cuti = $request->jenis_cuti,
+                $data->tgl_awal_cuti = $request->tgl_awal_cuti,
+                $data->tgl_akhir_cuti = $request->tgl_akhir_cuti,
+                $data->total_cuti = $request->total_cuti,
+                $data->alamat = $request->alamat,
+                $data->no_hp = '0' . str_replace('-', '', $request->no_hp),
+                $data->validasi = 1,
+                $data->tgl_pengajuan = date('Y-m-d H:i:s')
+            ];
+            Cuti::create($postcuti);
+
+            //$data->save();
+        } else {
             return redirect()->back()->with('error', 'Sudah Melebihi Batas Hari Cuti');
-        } else if ($is_valid == 0) {
-            $data = new Cuti();
-            $data->nopeg = auth()->user()->nopeg;
-            $data->unit = auth()->user()->unit;
-            $data->name = auth()->user()->name;
-            $data->jenis_cuti = $request->jenis_cuti;
-            $data->tgl_awal_cuti = $request->tgl_awal_cuti;
-            $data->tgl_akhir_cuti = $request->tgl_akhir_cuti;
-            $data->total_cuti = $request->total_cuti;
-            $data->alamat = $request->alamat;
-            $data->no_hp = '0' . str_replace('-', '', $request->no_hp);
-            $data->validasi = 1;
-            $data->tgl_pengajuan = date('Y-m-d H:i:s');
-            $data->save();
-            return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
         }
+        //return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->route('pejabat.k_index_cuti')->with('success', 'Add Data Berhasil!');
     }
 
     public function index_izin()
@@ -331,6 +314,7 @@ class KaryawanController extends Controller
             return redirect()->back()->with('error', 'Gagal membatalkan izin');
         }
     }
+
     public function batal_cuti($id)
     {
         $delete = Cuti::where('id_cuti', $id)->delete();
@@ -341,48 +325,6 @@ class KaryawanController extends Controller
         }
     }
 
-    public function createizinkehadiran($id)
-    {
-
-        $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas, unit.nama_unit')
-            ->join('users', 'attendance.nip', '=', 'users.nopeg')
-            ->join('unit', 'unit.id', '=', 'users.unit')
-            ->where('attendance.id', $id)->first();
-        return view('karyawan.createizinkehadiran', compact('data'));
-    }
-
-    public function storeizinkehadiran(Request $request)
-    {
-
-        if ($request->validasi == NULL) {
-            return redirect()->route('karyawan.createizinkehadiran', $request->id_izin)->with('error', 'Validasi Tidak diisi!');
-        } else {
-            Izin::insert([
-                'id_attendance' => $request->id_attendance,
-                'nopeg' => $request->nopeg,
-                'name' => $request->name,
-                'unit' => $request->idunit,
-                'tanggal' => $request->tgl,
-                'jam_awal' => date('H:i:s', strtotime($request->jam_awal)),
-                'jam_akhir' => date('H:i:s', strtotime($request->jam_akhir)),
-                'alasan' => $request->alasan,
-                'validasi' => $request->validasi,
-            ]);
-
-            $dataqr = Izin::where('nopeg', $request->nopeg)->first();
-            $qrcode_filename = 'qr-' . base64_encode($request->nopeg . date('Y-m-d H:i:s')) . '.svg';
-            // dd($qrcode_filename);
-            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nopeg . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
-
-            QR::where('nopeg', $request->nopeg)->insert([
-                'id_attendance' => $request->id_attendance,
-                'nopeg' => $request->nopeg,
-                'qr_peg' => $qrcode_filename,
-            ]);
-
-            return redirect()->route('karyawan.datapresensi')->with('success', 'Pengajuan Izin Berhasil!');
-        }
-    }
 
     public function printizin($id)
     {
