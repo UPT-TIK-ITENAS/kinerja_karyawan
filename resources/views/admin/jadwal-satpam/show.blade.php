@@ -47,8 +47,8 @@
                                         <label class="form-label" for="shift_awal">Shift</label>
                                         <select class="js-example-basic-single @error('shift_awal') is-invalid @enderror"
                                             id="shift_awal" name="shift_awal">
-                                            <option value="pagi">Pagi (07.00 - 17.00)</option>
-                                            <option value="pagi1">Pagi 1 (07.00 - 15.00)</option>
+                                            <option value="pagi">Pagi (07.00 - 15.00)</option>
+                                            <option value="pagi1">Pagi 1 (07.00 - 17.00)</option>
                                             <option value="siang">Siang(15.00 - 23.00)</option>
                                             <option value="malam">Malam (23.00 - 07.00)</option>
                                             <option value="off">OFF (Libur)</option>
@@ -245,19 +245,6 @@
                     cancelLabel: 'Hapus',
                     applyLabel: 'Terapkan',
                     format: 'YYYY-MM-DD HH:mm'
-                }
-            });
-
-            $("#shift_awal").change(function() {
-                let shift_awal = $(this).val();
-                if (shift_awal === "off") {
-                    $("#tanggal_awal").val("")
-                    $("#tanggal_akhir").val("")
-                    $("#tanggal_awal").attr("disabled", true)
-                    $("#tanggal_akhir").attr("disabled", true)
-                } else {
-                    $("#tanggal_awal").attr("disabled", false)
-                    $("#tanggal_akhir").attr("disabled", false)
                 }
             });
         });

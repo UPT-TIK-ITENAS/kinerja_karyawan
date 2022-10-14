@@ -500,7 +500,7 @@ class AdminController extends Controller
 
     public function datacuti_calendar($id, $nopeg)
     {
-        $cuti = Cuti::with(['jeniscuti', 'unit', 'user'])->where('id_cuti', $id)->first();
+        $cuti = Cuti::with(['user'])->where('id_cuti', $id)->first();
         $data = JadwalSatpam::with('user')->where('nip', $nopeg)->whereHasMorph(
             'tagable',
             [Cuti::class],
@@ -530,51 +530,75 @@ class AdminController extends Controller
 
     public function storecuti(Request $request)
     {
+        $request->validate([
+            'jenis_cuti' => 'required',
+            'tgl_awal_cuti' => 'required',
+            'tgl_akhir_cuti' => 'required',
+            'total_cuti' => 'required',
+            'alamat' => 'required',
+            'no_hp' => 'required',
+        ]);
+        dd($request->all());
         $max = explode('-', $request->jenis_cuti)[1];
         // dd($request->all());
         if ($request->total > $max) {
             return redirect()->back()->with('error', 'Melebihi Batas Hari Cuti');
         }
 
+        $history_cuti = DB::table('jenis_cuti')->select(DB::raw("jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari"))->join('cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')->where('cuti.nopeg', auth()->user()->nopeg)->groupBy('cuti.jenis_cuti')->get();
 
-        // dd($user, $jadwal, $request->all());
-        // DB Transaction
-        DB::transaction(function () use ($request) {
-            $nopeg = explode('-', $request->nopeg)[0];
-            $name = explode('-', $request->nopeg)[1];
-            $unit = explode('-', $request->nopeg)[2];
-
-            $user = User::where('nopeg', $nopeg)->first();
-            $tgl_awal_cuti = date('Y-m-d', strtotime($request->startDate));
-            $tgl_akhir_cuti = date('Y-m-d', strtotime($request->endDate));
-
-            $cuti = Cuti::create([
-                'nopeg' => $nopeg,
-                'name' =>  $name,
-                'unit' =>  $unit,
-                'jenis_cuti' => explode('-', $request->jenis_cuti)[0],
-                'tgl_awal_cuti' => $tgl_awal_cuti,
-                'tgl_akhir_cuti' => $tgl_akhir_cuti,
-                'total_cuti' => $request->total,
-                'alamat' => $request->alamat,
-                'no_hp' => $request->no_hp,
-                'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
-                'validasi' => $request->validasi,
-            ]);
-            if ($user->fungsi === 'Satpam') {
-                $jadwal = JadwalSatpam::with('tagable')->where('nip', $nopeg)->where('tanggal_awal', '>=', $tgl_awal_cuti)
-                    ->where('tanggal_akhir', '<=', $tgl_akhir_cuti)->get();
-                // update jadwal satpam morph
-                foreach ($jadwal as $j) {
-                    $j->update([
-                        'tagable_id' => $cuti->id_cuti,
-                        'tagable_type' => 'App\Models\Cuti',
-                    ]);
+        $is_valid = 0;
+        foreach ($history_cuti as $key => $value) {
+            if ($value->id_cuti == $request->jenis_cuti) {
+                if ($value->total_harinya + $request->total_cuti > $value->max_hari) {
+                    $is_valid = 1;
                 }
             }
-        });
+        }
 
-        return redirect()->route('admin.datacuti')->with('success', 'Add Data Berhasil!');
+        // dd($user, $jadwal, $request->all());
+
+        // DB Transaction
+        if ($is_valid == 0) {
+            DB::transaction(function () use ($request) {
+                $nopeg = explode('-', $request->nopeg)[0];
+                $name = explode('-', $request->nopeg)[1];
+                $unit = explode('-', $request->nopeg)[2];
+
+                $user = User::where('nopeg', $nopeg)->first();
+                $tgl_awal_cuti = date('Y-m-d', strtotime($request->tgl_awal_cuti));
+                $tgl_akhir_cuti = date('Y-m-d', strtotime($request->tgl_akhir_cuti));
+
+                $cuti = Cuti::create([
+                    'nopeg' => $nopeg,
+                    'name' =>  $name,
+                    'unit' =>  $unit,
+                    'jenis_cuti' => explode('-', $request->jenis_cuti)[0],
+                    'tgl_awal_cuti' => $tgl_awal_cuti,
+                    'tgl_akhir_cuti' => $tgl_akhir_cuti,
+                    'total_cuti' => $request->total,
+                    'alamat' => $request->alamat,
+                    'no_hp' => $request->no_hp,
+                    'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+                    'validasi' => $request->validasi,
+                ]);
+                if ($user->fungsi === 'Satpam') {
+                    $jadwal = JadwalSatpam::with('tagable')->where('nip', $nopeg)->where('tanggal_awal', '>=', $tgl_awal_cuti)
+                        ->where('tanggal_akhir', '<=', $tgl_akhir_cuti)->get();
+                    // update jadwal satpam morph
+                    foreach ($jadwal as $j) {
+                        $j->update([
+                            'tagable_id' => $cuti->id_cuti,
+                            'tagable_type' => Cuti::class,
+                        ]);
+                    }
+                }
+            });
+
+            return redirect()->route('admin.datacuti')->with('success', 'Add Data Berhasil!');
+        } else {
+            return redirect()->back()->with('danger', 'Melebihi Batas Hari Cuti');
+        }
     }
 
     public function printcuti($id)

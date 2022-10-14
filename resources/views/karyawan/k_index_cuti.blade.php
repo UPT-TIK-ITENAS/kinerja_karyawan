@@ -119,7 +119,9 @@
                                     id="jenis_cuti" name="jenis_cuti" required="">
                                     <option selected="" disabled="" value="">-- Pilih ---</option>
                                     @foreach ($data['jeniscuti'] as $r)
-                                        <option value="{{ $r->id_jeniscuti }}">{{ $r->jenis_cuti }}</option>
+                                        <option value="{{ $r->id_jeniscuti }}">{{ $r->jenis_cuti }} [{{ $r->max_hari }}
+                                            Hari]
+                                        </option>
                                     @endforeach
                                 </select>
                                 <input type="hidden" id="lama_cuti">

@@ -48,13 +48,11 @@
                     </div>
                     <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
                         <label class="form-label" for="disabledInput">Tanggal Awal</label>
-                        <input class="datepicker-here form-control digits" id="startDate" name="startDate" type="text"
-                            data-language="en">
+                        <input class="form-control" id="tgl_awal_cuti" name="tgl_awal_cuti" type="date" required="">
                     </div>
                     <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
                         <label class="form-label" for="disabledInput">Tanggal Akhir</label>
-                        <input class="datepicker-here form-control digits" id="endDate" name="endDate" type="text"
-                            data-language="en">
+                        <input class="form-control" id="tgl_akhir_cuti" name="tgl_akhir_cuti" type="date" required="">
                     </div>
 
                     <div class="col-xl-4 col-md-6 col-12">
@@ -67,8 +65,13 @@
 
                     <div class="col-xl-4 col-md-6 col-12">
                         <div class="mb-1">
-                            <label class="form-label" for="basicInput">No Telp</label>
-                            <input type="text" class="form-control" id="no_hp" name="no_hp" />
+                            <label class="form-label" for="no_hp">No HP</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="no_hp_input">+62</span>
+                                <input class="form-control" id="no_hp" name="no_hp" type="text"
+                                    aria-describedby="no_hp_input" required="">
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-xl-4 col-md-6 col-12 mb-1 mb-md-0">
@@ -112,40 +115,28 @@
     </script>
     <script src="{{ asset('assets/js/jquery.ui.min.js') }}"></script>
     <script>
-        function calcBusinessDays(start, end) {
-            var start = new Date(start);
-            var end = new Date(end);
-            // initial total
-            var totalBusinessDays = 0;
-
-            // normalize both start and end to beginning of the day
-            start.setHours(0, 0, 0, 0);
-            end.setHours(0, 0, 0, 0);
-
-            var current = new Date(start);
-            current.setDate(current.getDate() + 1);
-            var day;
-            // loop through each day, checking
-            while (current <= end) {
-                day = current.getDay();
-                if (day >= 1 && day <= 5) {
-                    ++totalBusinessDays;
-                }
-                current.setDate(current.getDate() + 1);
+        $('#tgl_akhir_cuti').on('change', function() {
+            let tgl_awal = $('#tgl_awal_cuti').val();
+            let tgl_akhir = $('#tgl_akhir_cuti').val();
+            let total_cuti = $('#total_cuti');
+            let total = 0;
+            if (tgl_awal != '' && tgl_akhir != '') {
+                let date1 = new Date(tgl_awal);
+                let date2 = new Date(tgl_akhir);
+                total = getBusinessDatesCount(date1, date2);
+                total_cuti.val(total);
             }
-            return totalBusinessDays;
-        }
-
-        $("#startDate, #endDate").datepicker();
-
-        $("#endDate").on('change', function() {
-            var total = calcBusinessDays(
-                $("#startDate").datepicker("getDate"),
-                $("#endDate").datepicker("getDate")
-            );
-
-            $("#total").val(total);
-            console.log($("#endDate").val());
         });
+
+        function getBusinessDatesCount(startDate, endDate) {
+            let count = 0;
+            const curDate = new Date(startDate.getTime());
+            while (curDate <= endDate) {
+                const dayOfWeek = curDate.getDay();
+                if (dayOfWeek !== 0 && dayOfWeek !== 6) count++;
+                curDate.setDate(curDate.getDate() + 1);
+            }
+            return count;
+        }
     </script>
 @endsection

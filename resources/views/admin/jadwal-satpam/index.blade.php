@@ -141,8 +141,8 @@
                         <div class="mb-3">
                             <label class="col-form-label pt-0" for="shift_awal">Shift</label>
                             <select class="select2" id="shift_awal" name="shift_awal" required>
-                                <option value="pagi">Pagi (07.00 - 17.00)</option>
-                                <option value="pagi1">Pagi 1 (07.00 - 15.00)</option>
+                                <option value="pagi">Pagi (07.00 - 15.00)</option>
+                                <option value="pagi1">Pagi 1 (07.00 - 17.00)</option>
                                 <option value="siang">Siang(15.00 - 23.00)</option>
                                 <option value="malam">Malam (23.00 - 07.00)</option>
                                 <option value="off">OFF (Libur)</option>
@@ -273,7 +273,6 @@
                     })
                 },
                 dateClick: function(info) {
-                    console.log(info)
                     $('.ts-datepicker').daterangepicker({
                         singleDatePicker: true,
                         timePicker: true,

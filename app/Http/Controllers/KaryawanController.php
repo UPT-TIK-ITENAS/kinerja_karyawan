@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use App\Models\Cuti;
 use App\Models\Izin;
 use App\Models\IzinKerja;
+use App\Models\JadwalSatpam;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
 use App\Models\QR;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class KaryawanController extends Controller
 {
@@ -226,48 +228,57 @@ class KaryawanController extends Controller
         $is_valid = 0;
         $this->validate($request, [
             'jenis_cuti' => 'required',
-            'tgl_awal_cuti' => 'required',
+            'request->' => 'required',
             'tgl_akhir_cuti' => 'required',
             'total_cuti' => 'required',
             'alamat' => 'required',
             'no_hp' => 'required',
         ]);
 
-        $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
-        FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . auth()->user()->nopeg . "' GROUP BY cuti.jenis_cuti");
+        $history_cuti = DB::table('jenis_cuti')->select(DB::raw("jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari"))->join('cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')->where('cuti.nopeg', auth()->user()->nopeg)->groupBy('cuti.jenis_cuti')->get();
 
-
-        dd($history_cuti);
-        foreach ($history_cuti as $r) {
-            if ($r->id_cuti == $request->jenis_cuti) {
-                if ($r->total_harinya == $r->max_hari) {
-                    $is_valid = 0;
-                } else if (($r->total_harinya + $request->total_cuti) > $r->max_hari) {
+        foreach ($history_cuti as $key => $value) {
+            if ($value->id_cuti == $request->jenis_cuti) {
+                if ($value->total_harinya + $request->total_cuti > $value->max_hari) {
                     $is_valid = 1;
                 }
-            } else {
-                $is_valid = 1;
             }
         }
 
-        if ($is_valid == 0) {
-            $data = new Cuti();
-            $data->nopeg = auth()->user()->nopeg;
-            $data->unit = auth()->user()->unit;
-            $data->name = auth()->user()->name;
-            $data->jenis_cuti = $request->jenis_cuti;
-            $data->tgl_awal_cuti = $request->tgl_awal_cuti;
-            $data->tgl_akhir_cuti = $request->tgl_akhir_cuti;
-            $data->total_cuti = $request->total_cuti;
-            $data->alamat = $request->alamat;
-            $data->no_hp = '0' . str_replace('-', '', $request->no_hp);
-            $data->validasi = 1;
-            $data->tgl_pengajuan = date('Y-m-d H:i:s');
-            $data->save();
-        } else {
-            return redirect()->back()->with('error', 'Sudah Melebihi Batas Hari Cuti');
+        if ($is_valid == 1) {
+            return redirect()->back()->with('danger', 'Sudah Melebihi Batas Hari Cuti');
+        } else if ($is_valid == 0) {
+            DB::transaction(function () use ($request) {
+                $tgl_awal_cuti = date('Y-m-d', strtotime($request->tgl_awal_cuti));
+                $tgl_akhir_cuti = date('Y-m-d', strtotime($request->tgl_akhir_cuti));
+                $cuti = Cuti::create([
+                    'nopeg' => auth()->user()->nopeg,
+                    'name' =>  auth()->user()->name,
+                    'unit' =>  auth()->user()->unit,
+                    'jenis_cuti' => $request->jenis_cuti,
+                    'tgl_awal_cuti' => $tgl_awal_cuti,
+                    'tgl_akhir_cuti' => $tgl_akhir_cuti,
+                    'total_cuti' => $request->total_cuti,
+                    'alamat' => $request->alamat,
+                    'no_hp' => '0' . str_replace('-', '', $request->no_hp),
+                    'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+                    'validasi' => 1,
+                ]);
+
+                if (auth()->user()->fungsi === 'Satpam') {
+                    $jadwal = JadwalSatpam::with('tagable')->where('nip', auth()->user()->nopeg)->where('tanggal_awal', '>=', $tgl_awal_cuti)
+                        ->where('tanggal_akhir', '<=', $tgl_akhir_cuti)->get();
+                    // update jadwal satpam morph
+                    foreach ($jadwal as $j) {
+                        $j->update([
+                            'tagable_id' => $cuti->id_cuti,
+                            'tagable_type' => Cuti::class,
+                        ]);
+                    }
+                }
+            });
+            return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
         }
-        return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
     }
 
     public function index_izin()
@@ -292,17 +303,31 @@ class KaryawanController extends Controller
             'total_izin' => 'required',
         ]);
 
-        $data = new IzinKerja();
-        $data->nopeg = auth()->user()->nopeg;
-        $data->unit = auth()->user()->unit;
-        $data->name = auth()->user()->name;
-        $data->jenis_izin = explode('|', $request->jenis_izin)[0];
-        $data->tgl_awal_izin = $request->tgl_awal_izin;
-        $data->tgl_akhir_izin = $request->tgl_akhir_izin;
-        $data->total_izin = $request->total_izin;
-        $data->validasi = 1;
-        $data->tgl_pengajuan = date('Y-m-d H:i:s');
-        $data->save();
+        DB::transaction(function () use ($request) {
+            $izin = IzinKerja::create([
+                'nopeg' => auth()->user()->nopeg,
+                'name' =>  auth()->user()->name,
+                'unit' =>  auth()->user()->unit,
+                'jenis_izin' => explode('|', $request->jenis_izin)[0],
+                'tgl_awal_izin' => $request->tgl_awal_izin,
+                'tgl_akhir_izin' => $request->tgl_akhir_izin,
+                'total_izin' => $request->total_izin,
+                'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+                'validasi' => 1,
+            ]);
+
+            if (auth()->user()->fungsi === 'Satpam') {
+                $jadwal = JadwalSatpam::with('tagable')->where('nip', auth()->user()->nopeg)->where('tanggal_awal', '>=', $request->tgl_awal_izin . ' 00:00:00')
+                    ->where('tanggal_akhir', '<=', $request->tgl_akhir_izin . ' 23:00:00')->get();
+                // update jadwal satpam morph
+                foreach ($jadwal as $j) {
+                    $j->update([
+                        'tagable_id' => $izin->id_izinkerja,
+                        'tagable_type' => Izin::class,
+                    ]);
+                }
+            }
+        });
         return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
     }
 

@@ -19,7 +19,6 @@
             @csrf
             <div class="card-body">
                 <div class="row">
-
                     <div class="col-xl-4 col-md-6 col-12 mb-2">
                         <div class="mb-1">
                             <label class="form-label" for="helpInputTop">No. Pegawai</label>
@@ -144,6 +143,7 @@
                     failure: function() {
                         alert('there was an error while fetching events!');
                     },
+                    isLoading: true,
                 }],
                 eventClick: function(info) {
                     let id = info.event.id

@@ -21,4 +21,9 @@ class Izin extends Model
     {
         $this->morphMany(JadwalSatpam::class, 'tagable', 'tagable_type', 'tagable_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'nopeg', 'nopeg');
+    }
 }
