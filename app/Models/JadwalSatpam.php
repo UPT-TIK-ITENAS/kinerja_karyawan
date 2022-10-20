@@ -21,4 +21,9 @@ class JadwalSatpam extends Model
     {
         return $this->morphTo('tagable');
     }
+
+    public function pengganti()
+    {
+        return $this->belongsTo(User::class, 'nip_pengganti', 'nopeg');
+    }
 }

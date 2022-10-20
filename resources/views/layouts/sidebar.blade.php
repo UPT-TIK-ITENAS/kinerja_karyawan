@@ -84,6 +84,11 @@
                                     class="{{ routeActive('karyawan.datarekapitulasi') }}">Data
                                     Rekapitulasi</a>
                             </li>
+                            @if (auth()->user()->fungsi === 'Satpam')
+                                <li><a href="{{ route('karyawan.jadwal-satpam.index') }}" class="">Jadwal
+                                        Satpam</a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                     <li class="dropdown">

@@ -11,6 +11,7 @@ class IzinKerja extends Model
     protected $table = 'izin_kerja';
     protected $guarded = [];
     protected $primaryKey = 'id_izinkerja';
+    protected $with = ['jenisizin'];
 
     public function unit()
     {
@@ -25,5 +26,10 @@ class IzinKerja extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'nopeg', 'nopeg');
+    }
+
+    public function jenisizin()
+    {
+        return $this->belongsTo(JenisIzin::class, 'jenis_izin', 'id_jenisizin');
     }
 }

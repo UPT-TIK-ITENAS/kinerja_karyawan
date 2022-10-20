@@ -21,20 +21,6 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="table-responsive my-5">
-                            <table class="dataTable" id="table-jadwal-satpam">
-                                <thead>
-                                    <th>No.</th>
-                                    <th>NIP</th>
-                                    <th>Nama</th>
-                                    <th>Fungsi</th>
-                                    <th>Aksi</th>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                        </div>
 
                         <div class="mt-5">
                             <h3>Jadwal Satpam</h3>
@@ -118,105 +104,11 @@
             </div>
         </div>
     </div>
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true" id="modal-form">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myLargeModalLabel">
-                        Form Tambah Jadwal
-                    </h4>
-                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form class="theme-form" action="{{ route('admin.jadwal-satpam.store') }}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label class="col-form-label pt-0" for="nip">NIP</label>
-                            <select class="select2" id="nip" name="nip" required>
-                                <option value="" disabled selected>Pilih Karyawan</option>
-                                @foreach ($datauser as $p)
-                                    <option value="{{ $p->nopeg }}">
-                                        {{ $p->nopeg }} - {{ $p->name }} - {{ $p->unit }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="col-form-label pt-0" for="shift_awal">Shift</label>
-                            <select class="select2" id="shift_awal" name="shift_awal" required>
-                                <option value="pagi">Pagi (07.00 - 15.00)</option>
-                                <option value="pagi1">Pagi 1 (07.00 - 17.00)</option>
-                                <option value="siang">Siang(15.00 - 23.00)</option>
-                                <option value="malam">Malam (23.00 - 07.00)</option>
-                                <option value="off">OFF (Libur)</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="col-form-label pt-0" for="tanggal_awal">Tanggal Awal</label>
-                            <input class="ts-datepicker form-control" id="tanggal_awal" name="tanggal_awal"
-                                type="text" readonly required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="col-form-label pt-0" for="tanggal_akhir">Tanggal Akhir</label>
-                            <input class="ts-datepicker form-control" id="tanggal_akhir" name="tanggal_akhir"
-                                type="text" readonly required>
-                        </div>
-                        <button class="btn btn-primary mt-4" type="submit" data-id="">Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 @endpush
 
 @section('scripts')
     @parent
     <script>
-        $().ready(function() {
-            let table = $('#table-jadwal-satpam').DataTable({
-                fixedHeader: true,
-                pageLength: 10,
-                responsive: true,
-                processing: true,
-                autoWidth: true,
-                serverSide: true,
-                ajax: "{{ route('admin.jadwal-satpam.list') }}",
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        className: 'text-center',
-                        orderable: false,
-                        searchable: false,
-                    },
-                    {
-                        data: 'nopeg',
-                        name: 'nopeg',
-                        className: 'text-center',
-                    },
-                    {
-                        data: 'name',
-                        name: 'name',
-                        className: 'text-center',
-                    },
-                    {
-                        data: 'fungsi',
-                        name: 'fungsi',
-                        className: 'text-center',
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false,
-                    },
-                ]
-            });
-
-            $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
-                console.log(message);
-            };
-        });
-
         document.addEventListener('DOMContentLoaded', function() {
             loadCalendarEvents()
         });
@@ -239,7 +131,7 @@
                 },
                 weekNumbers: true,
                 eventSources: [{
-                    url: `{{ route('admin.jadwal-satpam.calendar.all') }}`,
+                    url: `{{ route('karyawan.jadwal-satpam.calendar.by-user', auth()->user()->nopeg) }}`,
                     method: 'GET',
                     failure: function() {
                         alert('there was an error while fetching events!');
@@ -248,11 +140,10 @@
                 eventClick: function(info) {
                     let id = info.event.id
                     $.ajax({
-                        url: "{{ url('admin/jadwal-satpam/by-id') }}/" + id,
+                        url: "{{ url('karyawan/jadwal-satpam/by-id') }}/" + id,
                         type: 'GET',
                         dataType: 'JSON',
                         success: function(response) {
-                            console.log(response)
                             const hasCuti = response.tagable?.hasOwnProperty('id_cuti');
                             const hasIzin = response.tagable?.hasOwnProperty('id_izin');
                             const capitalize = (s) => {
@@ -279,7 +170,7 @@
                                         <p>${response.pengganti != undefined ? response.pengganti.nopeg + ' - ' + response.pengganti.name : 'Belum Ada!'}</p>
                                     </div>
                                 `)
-                                $("#detail-jadwal").html('Detail Jadwal (Pengganti)')
+                                $("#detail-jadwal").html('Detail Jadwal (Diganti)')
                             } else {
                                 $("#tagable").html('')
                                 $("#detail-jadwal").html('Detail Jadwal')
@@ -297,31 +188,6 @@
                             })
                         }
                     })
-                },
-                dateClick: function(info) {
-                    $('.ts-datepicker').daterangepicker({
-                        singleDatePicker: true,
-                        timePicker: true,
-                        timePicker24Hour: true,
-                        showDropdowns: true,
-                        autoUpdateInput: true,
-                        autoApply: true,
-                        startDate: info.dateStr,
-                        minDate: info.dateStr,
-                        drops: 'auto',
-                        locale: {
-                            cancelLabel: 'Hapus',
-                            applyLabel: 'Terapkan',
-                            format: 'YYYY-MM-DD HH:mm'
-                        },
-                        parentEl: '#modal-form'
-                    });
-                    $(".select2").select2({
-                        dropdownParent: $('#modal-form')
-                    });
-                    var myModal = new bootstrap.Modal(document.getElementById(
-                        'modal-form'))
-                    myModal.show()
                 }
             });
             calendar.setOption('locale', 'id');

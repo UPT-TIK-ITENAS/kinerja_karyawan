@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\JadwalSatpamCalendarAllResource;
 use App\Http\Resources\JadwalSatpamCalendarResource;
 use App\Models\JadwalSatpam;
 use App\Models\User;
@@ -131,19 +132,19 @@ class JadwalSatpamController extends Controller
 
     public function allDataCalendar()
     {
-        $data = JadwalSatpam::with('user')->get();
-        return response()->json(JadwalSatpamCalendarResource::collection($data));
+        $data = JadwalSatpam::with(['user', 'tagable'])->get();
+        return response()->json(JadwalSatpamCalendarAllResource::collection($data));
     }
 
     public function showDataCalendarByUser($id)
     {
-        $data = JadwalSatpam::with('user')->where('nip', $id)->get();
+        $data = JadwalSatpam::with(['user', 'tagable'])->where('nip', $id)->orWhere('nip_pengganti', $id)->get();
         return response()->json(JadwalSatpamCalendarResource::collection($data));
     }
 
     public function showDataById($id)
     {
-        $data = JadwalSatpam::with('user')->findOrFail($id);
+        $data = JadwalSatpam::with(['user', 'tagable', 'pengganti'])->findOrFail($id);
         return response()->json($data);
     }
 

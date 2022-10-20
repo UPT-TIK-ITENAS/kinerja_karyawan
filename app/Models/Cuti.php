@@ -11,6 +11,7 @@ class Cuti extends Model
     protected $table = 'cuti';
     protected $guarded = [];
     protected $primaryKey = 'id_cuti';
+    protected $with = ['jeniscuti'];
 
     public function jeniscuti()
     {
@@ -24,7 +25,7 @@ class Cuti extends Model
 
     public function jadwal_satpam()
     {
-        return $this->morphMany(JadwalSatpam::class, 'tagable', 'tagable_type', 'tagable_id');
+        return $this->morphMany(JadwalSatpam::class, 'tagable', 'tagable_type', 'tagable_id')->using(JenisCuti::class);
     }
 
     public function user()

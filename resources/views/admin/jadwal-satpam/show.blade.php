@@ -131,7 +131,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="myLargeModalLabel">
-                        Tambah Jadwal
+                        Detail Jadwal
                     </h4>
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -159,6 +159,9 @@
                             <label class="col-form-label pt-0" for="read_tanggal_akhir">Tanggal Akhir</label>
                             <input class="form-control" id="read_tanggal_akhir" name="read_tanggal_akhir" type="text"
                                 readonly>
+                        </div>
+                        <div id="tagable">
+
                         </div>
                         <button class="btn btn-danger mt-4" data-id="" id="hapus">Hapus</button>
                     </form>
@@ -283,6 +286,8 @@
                         type: 'GET',
                         dataType: 'JSON',
                         success: function(response) {
+                            const hasCuti = response.tagable?.hasOwnProperty('id_cuti');
+                            const hasIzin = response.tagable?.hasOwnProperty('id_izin');
                             const capitalize = (s) => {
                                 if (typeof s !== 'string') return ''
                                 return s.charAt(0).toUpperCase() + s.slice(1)
@@ -292,6 +297,34 @@
                             $("#read_shift_awal").val(capitalize(response.shift_awal))
                             $("#read_tanggal_awal").val(response.tanggal_awal)
                             $("#read_tanggal_akhir").val(response.tanggal_akhir)
+                            if (hasCuti) {
+                                $("#tagable").html(`
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="read_cuti">Alasan</label>
+                                        <p>CUTI ${response.tagable.jeniscuti.jenis_cuti}</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="read_cuti">Total Cuti</label>
+                                        <p>CUTI ${response.tagable.total_cuti} Hari</p>
+                                    </div>
+                                `)
+                                $("#myLargeModalLabel").html('Detail Jadwal (Pengganti)')
+                            } else if (hasIzin) {
+                                $("#tagable").html(`
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="read_cuti">Alasan</label>
+                                        <p>IZIN ${response.tagable.jenisizin.jenis_izin}</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="read_cuti">Total Izin</label>
+                                        <p>${response.tagable.total_izin} Hari</p>
+                                    </div>
+                                `)
+                                $("#myLargeModalLabel").html('Detail Jadwal (Pengganti)')
+                            } else {
+                                $("#tagable").html('')
+                                $("#myLargeModalLabel").html('Detail Jadwal')
+                            }
                             $("#hapus").attr("data-id", response.id)
                             var myModal = new bootstrap.Modal(document.getElementById(
                                 'modal-form'))

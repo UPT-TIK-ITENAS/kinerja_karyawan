@@ -98,6 +98,11 @@ Route::group(['middleware' => 'auth'], function () {
     });
     Route::prefix('karyawan')->name('karyawan.')->group(function () {
         Route::get('/', [KaryawanController::class, 'index'])->name('index');
+        Route::prefix('jadwal-satpam')->name('jadwal-satpam.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Karyawan\JadwalSatpamController::class, 'index'])->name('index');
+            Route::get('/calendar-by-user/{id}', [\App\Http\Controllers\Karyawan\JadwalSatpamController::class, 'showDataCalendarByUser'])->name('calendar.by-user');
+            Route::get('/by-id/{id}', [\App\Http\Controllers\Karyawan\JadwalSatpamController::class, 'showDataById'])->name('showDataById');
+        });
         Route::get('/datapresensi', [KaryawanController::class, 'index_datapresensi'])->name('datapresensi');
         Route::get('/datarekapitulasi', [KaryawanController::class, 'index_datarekapitulasi'])->name('datarekapitulasi');
         Route::get('/listdatapresensi', [KaryawanController::class, 'listdatapresensi'])->name('listdatapresensi');

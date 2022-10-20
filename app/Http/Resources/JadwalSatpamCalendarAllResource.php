@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
 
-class JadwalSatpamCalendarResource extends JsonResource
+class JadwalSatpamCalendarAllResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -13,8 +13,8 @@ class JadwalSatpamCalendarResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    public static $wrap = null;
 
+    public static $wrap = null;
     public function toArray($request)
     {
         $resources =  [
@@ -29,7 +29,7 @@ class JadwalSatpamCalendarResource extends JsonResource
         ];
 
         if ($this->whenLoaded('tagable')) {
-            $resources['title'] = "Pengganti|" . $this->tagable->nopeg . " - " . $this->tagable->name . " - " . Str::ucfirst($this->shift_awal);
+            $resources['title'] = "Diganti|" . $this->tagable->nopeg . " - " . $this->tagable->name . " - " . Str::ucfirst($this->shift_awal);
         }
         return $resources;
     }
