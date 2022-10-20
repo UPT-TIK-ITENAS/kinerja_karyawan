@@ -13,6 +13,7 @@ use App\Models\QR;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class PejabatController extends Controller
@@ -229,44 +230,43 @@ class PejabatController extends Controller
             'no_hp' => 'required',
         ]);
 
+        $a = explode('|', $request->jenis_cuti);
+
         $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
         FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . auth()->user()->nopeg . "' GROUP BY cuti.jenis_cuti");
 
         foreach ($history_cuti as $r) {
-            if ($r->id_cuti == $request->jenis_cuti) {
+            if ($r->id_cuti == $a[0]) {
                 if ($r->total_harinya == $r->max_hari) {
-                    $is_valid = 0;
+                    $is_valid = 1;
                 } else if (($r->total_harinya + $request->total_cuti) > $r->max_hari) {
                     $is_valid = 1;
+                } else {
+                    $is_valid = 0;
                 }
-            } else {
-                $is_valid = 1;
+            } else if ($r->id_cuti != $a[0]) {
+                $is_valid = 0;
             }
         }
 
         if ($is_valid == 1) {
-            $postcuti = [
-                $data = new Cuti(),
-                $data->nopeg = auth()->user()->nopeg,
-                $data->unit = auth()->user()->unit,
-                $data->name = auth()->user()->name,
-                $data->jenis_cuti = $request->jenis_cuti,
-                $data->tgl_awal_cuti = $request->tgl_awal_cuti,
-                $data->tgl_akhir_cuti = $request->tgl_akhir_cuti,
-                $data->total_cuti = $request->total_cuti,
-                $data->alamat = $request->alamat,
-                $data->no_hp = '0' . str_replace('-', '', $request->no_hp),
-                $data->validasi = 1,
-                $data->tgl_pengajuan = date('Y-m-d H:i:s')
-            ];
-            Cuti::create($postcuti);
-
-            //$data->save();
-        } else {
             return redirect()->back()->with('error', 'Sudah Melebihi Batas Hari Cuti');
+        } else if ($is_valid == 0) {
+            $data = new Cuti();
+            $data->nopeg = auth()->user()->nopeg;
+            $data->unit = auth()->user()->unit;
+            $data->name = auth()->user()->name;
+            $data->jenis_cuti = $request->jenis_cuti;
+            $data->tgl_awal_cuti = $request->tgl_awal_cuti;
+            $data->tgl_akhir_cuti = $request->tgl_akhir_cuti;
+            $data->total_cuti = $request->total_cuti;
+            $data->alamat = $request->alamat;
+            $data->no_hp = '0' . str_replace('-', '', $request->no_hp);
+            $data->validasi = 1;
+            $data->tgl_pengajuan = date('Y-m-d H:i:s');
+            $data->save();
+            return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
         }
-        //return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
-        return redirect()->route('pejabat.k_index_cuti')->with('success', 'Add Data Berhasil!');
     }
 
     public function index_izin()
@@ -333,5 +333,72 @@ class PejabatController extends Controller
 
         $pdf = PDF::loadview('admin.printizin', compact('data', 'dataqr'))->setPaper('A5', 'landscape');
         return $pdf->stream();
+    }
+
+    public function index_approval(Request $request)
+    {
+        //$data = DB::select("SELECT * from cuti inner join unit u on u.id =cuti.unit inner join jenis_cuti jc on jc.id_jeniscuti = cuti.jenis_cuti");
+        $data = Cuti::select('cuti.*', 'jenis_cuti.jenis_cuti as nama_cuti')
+            ->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
+            ->where('unit', auth()->user()->unit)->get();
+        $jeniscuti = JenisCuti::all();
+
+        //dd($data);
+        Debugbar::info($data);
+
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                // ->addColumn('action', function ($row) {
+                //     return getAksi($row->id_cuti, 'cuti');
+                // })
+                ->addColumn('action', function ($data) {
+                    $delete_url = route('pejabat.destroyCuti', $data->id_cuti);
+                    $edit_dd = "<div class='d-block text-center'>
+                    <a data-bs-toggle='modal' class='btn btn-success align-items-center editAK fa fa-check' data-id='$data->id_cuti' data-original-title='Edit' data-bs-target='#ProsesCuti'></a>
+                    </div>";
+
+
+                    return $edit_dd;
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->approval == 1) {
+                        $apprv = '<span class="badge badge-success">Disetujui</span>';
+                    } else if ($row->approval == 2) {
+                        $apprv = '<span class="badge badge-danger">Ditolak</span>';
+                    } else {
+                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                    }
+                    return $apprv;
+                })
+                ->rawColumns(['status', 'action'])
+                ->make(true);
+        }
+        return view('pejabat.k_index_approval', compact('data'));
+    }
+
+    public function editCuti($id)
+    {
+        $data = Cuti::where('id_cuti', '=', $id)->first();
+        return response()->json($data);
+    }
+
+    public function destroyCuti($id)
+    {
+        Cuti::where('id_cuti', $id)->delete();
+        return redirect()->route('pejabat.k_index_approval')->with('success', 'Data berhasil dihapus!');
+    }
+
+    public function approveCuti(Request $request)
+    {
+        Cuti::where('id_cuti', $request->id_cuti)->update([
+            'approval' => $request->approval
+        ]);
+
+        if ($request->approval == 1) {
+            return redirect()->back()->with('success', 'Cuti disetujui');
+        } else {
+            return redirect()->back()->with('error', 'Cuti ditolak');
+        }
     }
 }

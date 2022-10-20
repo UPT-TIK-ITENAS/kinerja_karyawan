@@ -113,6 +113,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/cuti/store', [PejabatController::class, 'store_cuti'])->name('store_cuti');
         Route::get('/cuti/batal/{id}', [PejabatController::class, 'batal_cuti'])->name('batal_cuti');
 
+        Route::get('/approval/index', [PejabatController::class, 'index_approval'])->name('approval');
+        Route::get('/approval/editCuti/{id}', [PejabatController::class, 'editCuti'])->name('editCuti');
+        Route::get('/approval/destroyCuti/{id}', [PejabatController::class, 'batal_cuti'])->name('destroyCuti');
+        Route::post('/approval/approveCuti', [PejabatController::class, 'approveCuti'])->name('approveCuti');
+
         Route::get('createizinkehadiran/{id}', [PejabatController::class, 'createizinkehadiran'])->name('createizinkehadiran');
         Route::post('storeizinkehadiran', [PejabatController::class, 'storeizinkehadiran'])->name('storeizinkehadiran');
         Route::get('printizin/{id}', [PejabatController::class, 'printizin'])->name('printizin');

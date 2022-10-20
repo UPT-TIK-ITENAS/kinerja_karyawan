@@ -209,6 +209,9 @@
                             <li><a href="{{ route('pejabat.cuti') }}"
                                     class="{{ routeActive('pejabat.cuti') }}">Cuti</a>
                             </li>
+                            <li><a href="{{ route('pejabat.approval') }}"
+                                    class="{{ routeActive('pejabat.approval') }}">Approval</a>
+                            </li>
                         </ul>
                     </li>
                 @endif
