@@ -340,7 +340,11 @@ class PejabatController extends Controller
         //$data = DB::select("SELECT * from cuti inner join unit u on u.id =cuti.unit inner join jenis_cuti jc on jc.id_jeniscuti = cuti.jenis_cuti");
         $data = Cuti::select('cuti.*', 'jenis_cuti.jenis_cuti as nama_cuti')
             ->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
-            ->where('unit', auth()->user()->unit)->get();
+            ->join('users', 'cuti.nopeg', '=', 'users.nopeg')
+            ->where('users.unit', auth()->user()->unit)
+            ->where('users.role', 'karyawan')->get();
+
+
         $jeniscuti = JenisCuti::all();
 
         //dd($data);
@@ -355,7 +359,7 @@ class PejabatController extends Controller
                 ->addColumn('action', function ($data) {
                     $delete_url = route('pejabat.destroyCuti', $data->id_cuti);
                     $edit_dd = "<div class='d-block text-center'>
-                    <a data-bs-toggle='modal' class='btn btn-success align-items-center editAK fa fa-check' data-id='$data->id_cuti' data-original-title='Edit' data-bs-target='#ProsesCuti'></a>
+                    <a data-bs-toggle='modal' class='btn btn-success align-items-center editAK fa fa-pencil' data-id='$data->id_cuti' data-original-title='Edit' data-bs-target='#ProsesCuti'></a>
                     </div>";
 
 
@@ -392,12 +396,15 @@ class PejabatController extends Controller
     public function approveCuti(Request $request)
     {
         Cuti::where('id_cuti', $request->id_cuti)->update([
-            'approval' => $request->approval
+            'approval' => $request->approval,
         ]);
 
         if ($request->approval == 1) {
             return redirect()->back()->with('success', 'Cuti disetujui');
         } else {
+            Cuti::where('id_cuti', $request->id_cuti)->update([
+                'alasan_tolak' => $request->alasan_tolak,
+            ]);
             return redirect()->back()->with('error', 'Cuti ditolak');
         }
     }

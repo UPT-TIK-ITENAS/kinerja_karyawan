@@ -76,13 +76,17 @@
                         <div class="col-md-12">
                             <span class="form-label" for="approval">Persetujuan</span>
                             <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
-                                id="approval" name="approval" required="">
+                                onchange="yesnoCheck(this);" id="approval" name="approval" required="">
                                 <option selected="" disabled="" value="">-- Pilih ---</option>
                                 <option value="1">Disetujui</option>
                                 <option value="2">Ditolak</option>
                             </select>
                             <input type="hidden" id="lama_cuti">
                             <div class="invalid-feedback">Pilih salah satu !</div>
+                        </div>
+                        <div class="col-md-6" id="ifYes" style="display: none;">
+                            <span class="form-label" for="alasan_tolak">Alasan Tolak</span>
+                            <textarea name="alasan_tolak" id="alasan_tolak" name="alasan_tolak" class="form-control col-12" required=""></textarea>
                         </div>
                         <div class="row g-2 mb-3">
                             <div class="col-md-4">
@@ -97,8 +101,8 @@
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="total_cuti">Total Hari</span>
-                                <input class="form-control" id="total_cuti" name="total_cuti" type="number" required=""
-                                    disabled>
+                                <input class="form-control" id="total_cuti" name="total_cuti" type="number"
+                                    required="" disabled>
                             </div>
                         </div>
                         <div class="row g-2 mb-3">
@@ -138,6 +142,7 @@
                 $('#ProsesCuti').modal('show');
                 $("#token").val($("meta[name=csrf-token]").attr("content"));
                 $('#id_cuti').val(data.id_cuti);
+                $('#alasan_tolak').val(data.alasan_tolak);
                 $('#jenis_cuti').val(data.jenis_cuti);
                 $('#tgl_awal_cuti').val(data.tgl_awal_cuti);
                 $('#tgl_akhir_cuti').val(data.tgl_akhir_cuti);
@@ -220,5 +225,13 @@
             };
 
         });
+
+        function yesnoCheck(that) {
+            if (that.value == "2") {
+                document.getElementById("ifYes").style.display = "block";
+            } else {
+                document.getElementById("ifYes").style.display = "none";
+            }
+        }
     </script>
 @endsection
