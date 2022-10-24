@@ -348,7 +348,7 @@ class PejabatController extends Controller
         $jeniscuti = JenisCuti::all();
 
         //dd($data);
-        Debugbar::info($data);
+        //Debugbar::info($data);
 
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -357,11 +357,12 @@ class PejabatController extends Controller
                 //     return getAksi($row->id_cuti, 'cuti');
                 // })
                 ->addColumn('action', function ($data) {
-                    $delete_url = route('pejabat.destroyCuti', $data->id_cuti);
+                    // $delete_url = route('pejabat.destroyCuti', $data->id_cuti);
                     $edit_dd = "<div class='d-block text-center'>
-                    <a data-bs-toggle='modal' class='btn btn-success align-items-center editAK fa fa-pencil' data-id='$data->id_cuti' data-original-title='Edit' data-bs-target='#ProsesCuti'></a>
-                    </div>";
+                        <a data-bs-toggle='modal' class='btn btn-success align-items-center editAK fa fa-pencil' data-id='$data->id_cuti' data-original-title='Edit' data-bs-target='#ProsesCuti'></a>
+                        </div>";
 
+                    Debugbar::info($data);
 
                     return $edit_dd;
                 })
@@ -383,7 +384,8 @@ class PejabatController extends Controller
 
     public function editCuti($id)
     {
-        $data = Cuti::where('id_cuti', '=', $id)->first();
+        $data = Cuti::where('id_cuti', '=', $id)
+            ->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')->first();
         return response()->json($data);
     }
 

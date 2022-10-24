@@ -68,15 +68,14 @@
                                 <input class="form-control" id="jenis_cuti" name="jenis_cuti" type="text" required=""
                                     disabled>
                                 <input type="hidden" id="lama_cuti">
-                                <div class="invalid-feedback">Pilih salah satu !</div>
                             </div>
                         </div>
 
                         <input type="hidden" id="id_cuti" name="id_cuti">
                         <div class="col-md-12">
                             <span class="form-label" for="approval">Persetujuan</span>
-                            <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
-                                onchange="yesnoCheck(this);" id="approval" name="approval" required="">
+                            <select class="form-control col-sm-12" onchange="yesnoCheck(this);" id="approval"
+                                name="approval" required="">
                                 <option selected="" disabled="" value="">-- Pilih ---</option>
                                 <option value="1">Disetujui</option>
                                 <option value="2">Ditolak</option>
@@ -101,8 +100,8 @@
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="total_cuti">Total Hari</span>
-                                <input class="form-control" id="total_cuti" name="total_cuti" type="number"
-                                    required="" disabled>
+                                <input class="form-control" id="total_cuti" name="total_cuti" type="number" required=""
+                                    disabled>
                             </div>
                         </div>
                         <div class="row g-2 mb-3">
@@ -137,7 +136,25 @@
         $('body').on('click', '.editAK', function() {
             id = $(this).data('id');
             console.log(id)
+            $('#approval').prop('disabled', false);
+            $('#alasan_tolak').prop('disabled', false);
+            $('#approval').val(null);
+            $('#btnSubmit').prop('disabled', false);
+            console.log("approval", $("#approval"))
             $.get("{{ url('/pejabat/approval/editCuti') }}/" + id, function(data, jeniscuti) {
+                if (data.approval != 0) {
+                    $('#approval').prop('disabled', true);
+                    $('#alasan_tolak').prop('disabled', true);
+                }
+                if (data.approval == 2) {
+                    document.getElementById("ifYes").style.display = "block";
+                    $('#btnSubmit').prop('disabled', true);
+                }
+                if (data.approval == 1) {
+                    document.getElementById("ifYes").style.display = "none";
+                    $('#btnSubmit').prop('disabled', true);
+                }
+                $('#approval').val(data.approval);
                 $('#ModalTitle').html("Edit Jenis Kegiatan");
                 $('#ProsesCuti').modal('show');
                 $("#token").val($("meta[name=csrf-token]").attr("content"));
