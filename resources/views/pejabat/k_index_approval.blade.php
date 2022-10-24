@@ -84,7 +84,7 @@
                             <input type="hidden" id="lama_cuti">
                             <div class="invalid-feedback">Pilih salah satu !</div>
                         </div>
-                        <div class="col-md-6" id="ifYes" style="display: none;">
+                        <div class="col-md-12" id="ifYes" style="display: none;">
                             <span class="form-label" for="alasan_tolak">Alasan Tolak</span>
                             <textarea name="alasan_tolak" id="alasan_tolak" name="alasan_tolak" class="form-control col-12" required=""></textarea>
                         </div>
@@ -229,8 +229,10 @@
         function yesnoCheck(that) {
             if (that.value == "2") {
                 document.getElementById("ifYes").style.display = "block";
+                $('#alasan_tolak').prop('required', true);
             } else {
                 document.getElementById("ifYes").style.display = "none";
+                $('#alasan_tolak').prop('required', false);
             }
         }
     </script>
