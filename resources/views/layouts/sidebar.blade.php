@@ -112,31 +112,62 @@
 
                 @if (auth()->user()->role == 'kepalaunit')
                     <li class="dropdown">
-                        <a class="nav-link menu-title link-nav active" href="{{ route('kepalaunit') }}"><i
+                        <a id="karyawan_index"
+                            class="nav-link menu-title link-nav {{ routeActive('kepalaunit.kepalaunit') }}"
+                            href="{{ route('kepalaunit.kepalaunit') }}"><i
                                 data-feather="users"></i><span>Dashboard</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
+                    </li>
+                    <li class="sidebar-main-title">
+                        <div>
+                            <h6>Data dan Pengajuan</h6>
+                        </div>
+                    </li>
 
-                    </li>
-                    {{-- <li class="dropdown">
-                <a class="nav-link menu-title"><i data-feather="book-open"></i><span>Data Presensi</span>
-                    <div class="according-menu"><i class="fa fa-angle-right"></i></div>
-                </a>
-                <ul class="nav-submenu menu-content" style="display: none;">
-                    <li><a href="" class="">Data Presensi</a>
-                    </li>
-                    <li><a href="" class="">Rekapitulasi</a>
-                    </li>
-                </ul>
-            </li> --}}
                     <li class="dropdown">
-                        <a class="nav-link menu-title"><i data-feather="bookmark"></i><span>Data Pengajuan</span>
+                        <a class="nav-link menu-title @if (request()->routeIs('kepalaunit.datapresensi') || request()->routeIs('kepalaunit.datarekapitulasi')) active @endif"><i
+                                data-feather="book-open"></i><span>Data
+                                Kehadiran</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
-                        <ul class="nav-submenu menu-content" style="display: none;">
-                            <li><a href="{{ route('kepalaunit.dataizin') }}" class="">Pengajuan Izin</a>
+                        <ul class="nav-submenu menu-content"
+                            style="display: @if (request()->routeIs('kepalaunit.datapresensi') || request()->routeIs('kepalaunit.datarekapitulasi')) block
+                    @else
+                        none @endif;">
+                            <li><a id="a_active" href="{{ route('kepalaunit.datapresensi') }}"
+                                    class="{{ routeActive('kepalaunit.datapresensi') }}">Data Presensi</a>
                             </li>
-                            <li><a href="{{ route('kepalaunit.datacuti') }}" class="">Pengajuan Cuti</a>
+                            <li><a href="{{ route('kepalaunit.datarekapitulasi') }}"
+                                    class="{{ routeActive('kepalaunit.datarekapitulasi') }}">Data
+                                    Rekapitulasi</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a class="nav-link menu-title @if (request()->routeIs('kepalaunit.izin') ||
+                            request()->routeIs('kepalaunit.store_izin') ||
+                            request()->routeIs('kepalaunit.cuti') ||
+                            request()->routeIs('kepalaunit.store_cuti')) active @endif"><i
+                                data-feather="edit-3"></i><span>Pengajuan</span>
+                            <div class="according-menu"><i class="fa fa-angle-right"></i></div>
+                        </a>
+                        <ul class="nav-submenu menu-content"
+                            style="display: @if (request()->routeIs('kepalaunit.izin') ||
+                                request()->routeIs('kepalaunit.store_izin') ||
+                                request()->routeIs('kepalaunit.cuti') ||
+                                request()->routeIs('kepalaunit.store_cuti')) block
+                        @else
+                            none @endif;">
+                            <li><a href="{{ route('kepalaunit.izin') }}"
+                                    class="{{ routeActive('kepalaunit.izin') }}">Izin</a>
+                            </li>
+                            <li><a href="{{ route('kepalaunit.cuti') }}"
+                                    class="{{ routeActive('kepalaunit.cuti') }}">Cuti</a>
+                            </li>
+                            <li><a href="{{ route('kepalaunit.approval') }}"
+                                    class="{{ routeActive('kepalaunit.approval') }}">Approval</a>
                             </li>
                         </ul>
                     </li>

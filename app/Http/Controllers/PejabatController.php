@@ -368,8 +368,10 @@ class PejabatController extends Controller
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->approval == 1) {
-                        $apprv = '<span class="badge badge-success">Disetujui</span>';
+                        $apprv = '<span class="badge badge-success">Disetujui Atasan</span>';
                     } else if ($row->approval == 2) {
+                        $apprv = '<span class="badge badge-success">Disetujui Kepala Unit</span>';
+                    } else if ($row->approval == 3) {
                         $apprv = '<span class="badge badge-danger">Ditolak</span>';
                     } else {
                         $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';

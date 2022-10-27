@@ -14,20 +14,54 @@
         </div>
     </div>
     <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <h6>Total Cuti yang Pernah Diajukan</h6>
+                        </div>
+                        <div class="row">
+                            @foreach ($data['history'] as $r)
+                                <div class="col-lg-3 col-md-3 col-sm-4">
+                                    <div class="alert alert-light" role="alert">
+                                        <p align="center"><b>{{ $r->jeniscuti }}</b></p>
+                                        <hr>
+                                        <div class="alert alert-primary" role="alert">
+                                            {{-- <i class="icon-timer"></i> --}}
+                                            <div class="row">
+                                                <div class="col-lg-12 col-sm-12 col-md-12">
+                                                    <p align="center"><b>[{{ $r->total_harinya }} hari]</b></p>
+                                                </div>
+                                            </div>
 
+                                        </div>
+                                    </div>
+
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <!-- Zero Configuration  Starts-->
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-
+                        <div class="row mb-2">
+                            <div class="col">
+                                <a href="#" class="btn btn-primary" data-bs-target="#tambahCuti"
+                                    data-bs-toggle="modal" style="float: right">+ Tambah</a>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="table-responsive">
-                                <table class="dataTable" id="table-cutiKU">
+                                <table class="dataTable" id="table-cuti">
                                     <thead>
                                         <tr align="center">
                                             <th width="5%">No.</th>
-                                            <th>Nama</th>
                                             <th>Jenis Cuti</th>
                                             <th>Tanggal Awal</th>
                                             <th>Tanggal Akhir</th>
@@ -36,35 +70,24 @@
                                             <th>No. Telp</th>
                                             <th>Tanggal Pengajuan</th>
                                             <th>Status</th>
-                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($data as $no => $r)
-                                        <tr>
-                                            <td align="center">{{ $no + 1 }}</td>
-                                            <td>{{ $r->name }}</td>
-                                            <td>{{ $r->nama_cuti }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($r->tgl_awal_cuti)->isoFormat('D MMMM Y') }}
-                                            </td>
-                                            <td>{{ \Carbon\Carbon::parse($r->tgl_akhir_cuti)->isoFormat('D MMMM Y') }}
-                                            </td>
-                                            <td>{{ $r->total_cuti }}</td>
-                                            <td>{{ $r->alamat }}</td>
-                                            <td>{{ $r->no_hp }}</td>
-                                            <td>{{ $r->tgl_pengajuan }}</td>
-                                            @if ( $r->approval == 1)
-                                                <td><span class="badge badge-primary">Disetujui</span> </td>
-                                            @elseif ($r->approval == 2 )
-                                                <td><span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span></td>  
-                                            @elseif($r->approval == 3)
-                                                <td><span class="badge badge-danger">Ditolak</span></td>  
-                                            @else
-                                                <td><span class="badge badge-warning">Menunggu</span></td>  
-                                            @endif
-                                            <td align="center">{!! getAksi($r->id_cuti, 'cuti') !!}</td>
-                                        </tr>
-                                    @endforeach
+                                        @foreach ($data['cuti'] as $no => $r)
+                                            <tr>
+                                                <td align="center">{{ $no + 1 }}</td>
+                                                <td>{{ $r->nama_cuti }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($r->tgl_awal_cuti)->isoFormat('D MMMM Y') }}
+                                                </td>
+                                                <td>{{ \Carbon\Carbon::parse($r->tgl_akhir_cuti)->isoFormat('D MMMM Y') }}
+                                                </td>
+                                                <td>{{ $r->total_cuti }}</td>
+                                                <td>{{ $r->alamat }}</td>
+                                                <td>{{ $r->no_hp }}</td>
+                                                <td>{{ $r->tgl_pengajuan }}</td>
+                                                <td align="center">{!! getApproval($r->id_cuti, 'cuti', $r->alasan_tolak) !!}</td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -77,124 +100,156 @@
 @endsection
 
 @section('scripts')
-
-<div class="modal fade bd-example-modal-lg" id="apprvCuti" aria-labelledby="myLargeModalLabel" aria-modal="true"
-role="dialog">
-<div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h4 class="modal-title" id="myLargeModalLabel">Form Pengajuan Cuti</h4>
-            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
-                data-bs-original-title="" title=""></button>
-        </div>
-        <form class="needs-validation" novalidate="" action="{{ route('kepalaunit.updatecuti') }}" method="POST">
-            @csrf
-            <div class="modal-body">
-                <div class="row g-1 mb-3">
-                    <div class="col-md-4">
-                        <span class="form-label" for="name">Nama</span>
-                        <input class="form-control" id="name" name="name" type="text" readonly>
-                    </div>
-                    <input id="id_cuti" name="id_cuti" type="hidden">
-                    <div class="col-md-4">
-                        <span class="form-label" for="nama_cuti">Jenis Cuti</span>
-                        <input class="form-control" id="nama_cuti" name="nama_cuti" type="text" readonly>
-                    </div>
-                    
-                    <div class="col-md-4">
-                        <span class="form-label" for="tgl_awal_cuti">Tanggal Awal</span>
-                        <input class="form-control" id="tgl_awal_cuti" name="tgl_awal_cuti" type="text" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <span class="form-label" for="tgl_akhir_cuti">Tanggal Akhir</span>
-                        <input class="form-control" id="tgl_akhir_cuti" name="tgl_akhir_cuti" type="text" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <span class="form-label" for="total_cuti">Total Hari</span>
-                        <input class="form-control" id="total_cuti" name="total_cuti" type="number" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <span class="form-label" for="no_hp">No HP</span>
-                        <div class="input-group">
-                            <span class="input-group-text" id="no_hp_input">+62</span>
-                            <input class="form-control" id="no_hp" name="no_hp" type="text"
-                                aria-describedby="no_hp_input" readonly>
-
+    <div class="modal fade bd-example-modal-lg" id="tambahCuti" aria-labelledby="myLargeModalLabel" aria-modal="true"
+        role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Form Pengajuan Cuti</h4>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
+                        data-bs-original-title="" title=""></button>
+                </div>
+                <form class="needs-validation" novalidate="" action="{{ route('pejabat.store_cuti') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="alert alert-danger" id="lebihHari" style="display: none;">
+                            ⚠️ Tidak boleh melebihi jumlah hari yang telah ditentukan.
+                        </div>
+                        <div class="row g-1 mb-3">
+                            <div class="col-md-12">
+                                <span class="form-label" for="jenis_cuti">Jenis Cuti</span>
+                                <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                    id="jenis_cuti" name="jenis_cuti" required="">
+                                    <option selected="" disabled="" value="">-- Pilih ---</option>
+                                    @foreach ($data['jeniscuti'] as $r)
+                                        <option value="{{ $r->id_jeniscuti }}|{{ $r->max_hari }}">{{ $r->jenis_cuti }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <input type="hidden" id="lama_cuti">
+                                <div class="invalid-feedback">Pilih salah satu !</div>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-4">
+                                <span class="form-label" for="tgl_awal_cuti">Tanggal Awal</span>
+                                <input class="form-control" id="tgl_awal_cuti" name="tgl_awal_cuti" type="date"
+                                    required="">
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="tgl_akhir_cuti">Tanggal Akhir</span>
+                                <input class="form-control" id="tgl_akhir_cuti" name="tgl_akhir_cuti" type="date"
+                                    required="">
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="total_cuti">Total Hari</span>
+                                <input class="form-control" id="total_cuti" name="total_cuti" type="number"
+                                    required="">
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6">
+                                <span class="form-label" for="alamat">Alamat</span>
+                                <textarea name="alamat" id="alamat" name="alamat" class="form-control" required></textarea>
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="form-label" for="no_hp">No HP</span>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="no_hp_input">+62</span>
+                                    <input class="form-control" id="no_hp" name="no_hp" type="text"
+                                        aria-describedby="no_hp_input" required="">
+                                    <div class="invalid-feedback">Wajib Diisi !</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <div class="checkbox p-0">
+                                    <div class="checkbox checkbox-dark">
+                                        <input id="cb_valid" class="form-check-input" type="checkbox" required>
+                                        <label class="form-check-label" for="cb_valid">Pengajuan cuti dilakukan oleh diri
+                                            sendiri dan secara sadar sesuai dengan ketentuan yang berlaku</label>
+                                    </div>
+                                    <div class="invalid-feedback">Wajib di centang !</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <span class="form-label" for="alamat">Alamat</span>
-                        <textarea name="alamat" id="alamat" name="alamat" class="form-control" readonly></textarea>
+                    <div class="modal-footer justify-content-between">
+                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
+                            dihitung</span>
+                        <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
                     </div>
-                    <div class="col-md-4">
-                        <span class="form-label" for="approval">Status</span>
-                        <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
-                            id="approval" name="approval" required="">
-                            <option selected="" disabled="" value="">-- Pilih ---</option>
-                            <option value="1">Disetujui</option>
-                            <option value="2">Disetujui Atasan dari Atasan Langsung</option>
-                            <option value="3">Ditolak</option>
-                        </select>
-                    </div>
-                </div>
-              
+                </form>
             </div>
-            <div class="modal-footer justify-content-between">
-                <button class="btn btn-primary" type="submit">Submit</button>
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-</div>
     @parent
     <script>
-        let table = $('#table-cutiKU').DataTable({
+        let table = $('#table-cuti').DataTable({
             fixedHeader: true,
             pageLength: 10,
             responsive: true,
             processing: true,
         });
 
-        $('body').on('click', '.apprvCuti', function() {
-            var id = $(this).data('id');
 
-            $.get('/kepalaunit/editcuti/' + id, function(data) {
-                $('#ModalTitle').html("Edit Kinerja");
-                $('#apprvIzin').modal('show');
-                $('#id_cuti').val(data.id_cuti);
-                $('#jenis_cuti').val(data.jenis_cuti);
-                $('#name').val(data.name);
-                $('#nama_cuti').val(data.nama_cuti);
-                $('#tgl_awal_cuti').val(data.tgl_awal_cuti);
-                $('#tgl_akhir_cuti').val(data.tgl_akhir_cuti);
-                $('#total_cuti').val(data.total_cuti);
-                $('#tgl_pengajuan').val(data.tgl_pengajuan);
-                $('#alamat').val(data.alamat);
-                $('#no_hp').val(data.no_hp);
-                $('#approval').val(data.approval);
-                
-                console.log(data);
-            })
+        document.getElementById('no_hp').addEventListener('input', function(e) {
+            var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,4})(\d{0,5})/);
+            e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
         });
 
-        $('#table-cutiKU').on('click', '.batalcuti', function(e) {
-        let id = $(this).data('id');
-        const href = $(this).attr('href');
-        e.preventDefault();
-        Swal.fire({
-            title: 'Apakah Yakin?',
-            text: `Apakah Anda yakin ingin menghapus?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Hapus'
-        }).then((result) => {
-            if (result.value == true) {
-                document.location.href = href;
+        $('#tgl_akhir_cuti').on('change', function() {
+            let tgl_awal = $('#tgl_awal_cuti').val();
+            let tgl_akhir = $('#tgl_akhir_cuti').val();
+            let total_cuti = $('#total_cuti');
+            let total = 0;
+            if (tgl_awal != '' && tgl_akhir != '') {
+                let date1 = new Date(tgl_awal);
+                let date2 = new Date(tgl_akhir);
+                total = getBusinessDatesCount(date1, date2);
+                total_cuti.val(total);
+
+                if (total > $('#lama_cuti').val()) {
+                    $('#lebihHari').css('display', 'block');
+                    $('#btnSubmit').attr('disabled', 'true');
+                } else {
+                    $('#lebihHari').css('display', 'none');
+                    $('#btnSubmit').removeAttr('disabled');
+                }
             }
         });
-    })
 
+        function getBusinessDatesCount(startDate, endDate) {
+            let count = 0;
+            const curDate = new Date(startDate.getTime());
+            while (curDate <= endDate) {
+                const dayOfWeek = curDate.getDay();
+                if (dayOfWeek !== 0 && dayOfWeek !== 6) count++;
+                curDate.setDate(curDate.getDate() + 1);
+            }
+            return count;
+        }
+
+        $('#jenis_cuti').on('change', function() {
+            let jenis_cuti = $('#jenis_cuti');
+            let lama_cuti = $('#lama_cuti');
+            let durasi_cuti = jenis_cuti.val().split('|')[1] ? jenis_cuti.val().split('|')[1] : 100;
+            lama_cuti.val(durasi_cuti);
+            console.log(durasi_cuti);
+            emptyField();
+        });
+
+        function emptyField() {
+            let tgl_awal = $('#tgl_awal_cuti').val('');
+            let tgl_akhir = $('#tgl_akhir_cuti').val('');
+            let total_cuti = $('#total_cuti').val('');
+            $('#lebihHari').css('display', 'none');
+            $('#btnSubmit').removeAttr('disabled');
+        }
     </script>
 @endsection

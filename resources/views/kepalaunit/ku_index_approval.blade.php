@@ -19,7 +19,7 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        {{-- <a href="{{ route('pejabat.createcuti') }}" class="btn btn-primary"><i
+                        {{-- <a href="{{ route('kepalaunit.createcuti') }}" class="btn btn-primary"><i
                                 class="icofont icofont-plus-square"></i> Tambah</a> --}}
                         <div class="table-responsive">
                             <table class="dataTable" id="table-cuti">
@@ -59,7 +59,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('pejabat.approveCuti') }}" method="POST">
+                <form class="needs-validation" novalidate="" action="{{ route('kepalaunit.approveCuti') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-1 mb-3">
@@ -77,7 +77,7 @@
                             <select class="form-control col-sm-12" onchange="yesnoCheck(this);" id="approval"
                                 name="approval" required="">
                                 <option selected="" disabled="" value="">-- Pilih ---</option>
-                                <option value="1">Disetujui</option>
+                                <option value="2">Disetujui</option>
                                 <option value="3">Ditolak</option>
                             </select>
                             <input type="hidden" id="lama_cuti">
@@ -141,18 +141,18 @@
             $('#approval').val(null);
             $('#btnSubmit').prop('disabled', false);
             console.log("approval", $("#approval"))
-            $.get("{{ url('/pejabat/approval/editCuti') }}/" + id, function(data, jeniscuti) {
-                if (data.approval != 0) {
-                    $('#approval').prop('disabled', true);
-                    $('#alasan_tolak').prop('disabled', true);
-                }
+            $.get("{{ url('/kepalaunit/approval/editCuti') }}/" + id, function(data, jeniscuti) {
                 if (data.approval == 2) {
                     document.getElementById("ifYes").style.display = "block";
                     $('#btnSubmit').prop('disabled', true);
+                    $('#approval').prop('disabled', true);
+                    $('#alasan_tolak').prop('disabled', true);
                 }
                 if (data.approval == 1) {
                     document.getElementById("ifYes").style.display = "none";
-                    $('#btnSubmit').prop('disabled', true);
+                    $('#btnSubmit').prop('disabled', false);
+                    $('#approval').prop('disabled', false);
+                    $('#alasan_tolak').prop('disabled', false);
                 }
                 $('#approval').val(data.approval);
                 $('#ModalTitle').html("Edit Jenis Kegiatan");
@@ -183,7 +183,7 @@
                     targets: 1,
                     width: "200px !important",
                 }, ],
-                ajax: "{{ route('pejabat.approval') }}",
+                ajax: "{{ route('kepalaunit.approval') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
