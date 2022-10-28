@@ -56,7 +56,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('storeizin', [AdminController::class, 'storeizin'])->name('admin.storeizin');
         Route::get('/batal_izin/{id}', [AdminController::class, 'batal_izin'])->name('admin.batal_izin');
         Route::get('printizinkerja/{id}', [AdminController::class, 'printizinkerja'])->name('admin.printizinkerja');
+        Route::get('/getWorkingDays/{startDate}/{endDate}', [AdminController::class, 'getWorkingDays'])->name('admin.getWorkingDays');
+        Route::get('/historycuti/{nopeg}/{jenis}', [AdminController::class, 'historycuti'])->name('admin.historycuti');
 
+        
         Route::get('/datacuti', [AdminController::class, 'datacuti'])->name('admin.datacuti');
         Route::get('/listcuti', [AdminController::class, 'listcuti'])->name('admin.listcuti');
         Route::get('createcuti', [AdminController::class, 'createcuti'])->name('admin.createcuti');
@@ -70,7 +73,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/updatelibur', [AdminController::class, 'updatelibur'])->name('admin.updatelibur');
         Route::post('/createlibur', [AdminController::class, 'createlibur'])->name('admin.createlibur');
         Route::get('/destroylibur/{id}', [AdminController::class, 'destroylibur'])->name('admin.destroylibur');
-
+        
+        
+        
         
     });
     Route::prefix('karyawan')->name('karyawan.')->group(function () {

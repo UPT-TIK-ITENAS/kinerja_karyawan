@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\JenisIzin;
 use App\Models\IzinKerja;
+use App\Models\User;
 
 if (!function_exists('getCheck')) {
     function getCheck($jenis_izin, $id, $tipe)
@@ -208,5 +209,14 @@ if (!function_exists('getAksi')) {
            
         }
     }
+
+    if (!function_exists('getNama')) {
+        function getNama($nopeg)
+        {
+            $nama = User::select('name')->where('nopeg', $nopeg)->first();
+            return $nama;
+        }
+    }
+
 
 }

@@ -42,121 +42,35 @@ class AdminController extends Controller
     //DATA PRESENSI
     public function datapresensi()
     {
-        // $history_cuti = Cuti::select('cuti.*, users.sisacuti, sum(cuti.total_cuti) AS total_cuti')
-        // ->join('users','users.nopeg','=','cuti.nopeg')
-        // ->join('jenis_cuti','cuti.jenis_cuti', 'jenis_cuti.jenis_cuti')
-        // ->where('cuti.nopeg',1803)->first();
-        // // $test = getWorkingDays('2022-08-12', '2022-08-18');
-        // dd($history_cuti);
+        // $data = Attendance::where('nip','1071')->get();
+        // dd($data);
         return view('admin.datapresensi');
     }
 
 
     public function listkaryawan(Request $request)
     {
-        $data = Attendance::selectRaw('attendance.*, users.name, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg');
+        $data = Attendance::selectRaw('attendance.*, users.name, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('fungsi','Admin')->orderby('attendance.tanggal','asc');
+        
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->editColumn('name', function ($row){
-                    return $row->nip.'-'.$row->name;
+                ->editColumn('hari', function ($row) {
+                    return config('app.days')[$row->hari];
                 })
-                ->addColumn('duration', function ($row) {
-                   if($row->jam_masuk == NULL && $row->jam_siang == NULL && $row->jam_pulang == NULL){
-                        return '00:00:00';
-                   }else if($row->jam_masuk == NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL){
-                        return '00:00:00';
-                   }else if($row->jam_masuk == NULL && $row->jam_siang != NULL && $row->jam_pulang == NULL){
-                        return '00:00:00';
-                   }else if($row->jam_masuk == NULL && $row->jam_siang != NULL && $row->jam_pulang != NULL){
-                        $duration = strtotime($row->jam_pulang) - strtotime($row->jam_siang);
-                        $durationwork = date("H:i:s", $duration);
-                        return $durationwork;
-                   }else if($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang == NULL ){
-                         return '00:00:00';
-                   }else if($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL && $row->hari != 6 && $row->hari != 0 && $row->hari != 5){
-                        $duration = strtotime($row->jam_pulang) - strtotime('12:45:00');
-                        $durationwork = date("H:i:s", $duration);
-                        return $durationwork;
-                   }else if($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL && $row->hari == 5){
-                        $duration = strtotime($row->jam_pulang) - strtotime('13:15:00');
-                        $durationwork = date("H:i:s", $duration);
-                        return $durationwork;
-                   }else if($row->jam_masuk != NULL && $row->jam_siang != NULL && $row->jam_pulang == NULL){
-                        $duration = strtotime($row->jam_siang) - strtotime($row->jam_masuk);
-                        $durationwork = date("H:i:s", $duration);
-                        return $durationwork;
-                   }else{
-                        $duration = strtotime($row->jam_pulang) - strtotime($row->jam_masuk);
-                        $durationwork = date("H:i:s", $duration);
-                        return $durationwork;
-                   }
 
+                ->addColumn('nama', function ($row) {
+                    return $row->nip . ' - ' . $row->name;
                 })
                 ->editColumn('hari', function ($row) {
                     return config('app.days')[$row->hari];
                 })
 
                 ->addColumn('latemasuk', function ($row) {
-                    if ($row->hari == 5) {
-                        if ($row->jam_masuk == NULL && $row->jam_siang == NULL){
-                            $durasitelat = strtotime('13:15:00') - strtotime('08:00:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                            return $durasi;
-                        }
-                    } else if( $row->hari != 6 && $row->hari != 0 ) {
-                        if ($row->jam_masuk == NULL && $row->jam_siang != NULL) {
-                            $durasitelat = strtotime($row->jam_siang) - strtotime('08:00:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                            return $durasi;
-                        } else if ($row->jam_masuk == NULL && $row->jam_siang == NULL){
-                            $durasitelat = strtotime('12:45:00') - strtotime('08:00:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                            return $durasi;
-                        } else if (date("H:i:s", strtotime($row->jam_masuk)) > '08:00:00') {
-                            $durasitelat = strtotime($row->jam_masuk) - strtotime('08:00:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                            return $durasi;
-                        }
-                    }
                 })
                 ->addColumn('latesiang', function ($row) {
-                    if ($row->hari == 5) {
-                        if ($row->jam_siang == NULL && $row->jam_pulang != NULL) {
-                            $durasitelat = strtotime($row->jam_pulang) - strtotime('13:15:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                            return $durasi;
-                        } else if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
-                            $durasitelat = strtotime($row->jam_siang) - strtotime('13:30:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                            return $durasi;
-                        }else{
-                            return '';
-                        }
-                    } else if ($row->hari != 6 && $row->hari != 0) {
-                        if ($row->jam_siang == NULL && $row->jam_pulang != NULL) {
-                            $durasitelat = strtotime($row->jam_pulang) - strtotime('12:45:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                            return $durasi;
-                        } else if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
-                            $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                            return $durasi;
-                        }else{
-                            return '';
-                        }
-                    }
                 })
                 ->addColumn('latesore',function($row) {
-                    if ($row->hari != 6 && $row->hari != 0 && $row->jam_siang != NULL && $row->jam_pulang == NULL){
-                        $durasitelat = strtotime('17:00:00') - strtotime($row->jam_siang);
-                        $durasi = date("H:i:s", $durasitelat);
-                        return $durasi;
-                    } else if($row->hari != 6 && $row->hari != 0 && $row->jam_siang === NULL && $row->jam_pulang == NULL){
-                        $durasiplg = strtotime($row->jam_masuk) - strtotime('17:00:00');
-                        $durasi = date("H:i:s", $durasiplg);
-                        return $durasi;
-                    } 
 
                 })
 
@@ -288,7 +202,7 @@ class AdminController extends Controller
 
                 ->addColumn('duration', function ($data) {
 
-                    $data_att     = DB::select('CALL getTotalTelatPerBulan('.$data->nopeg.')');
+                    $data_att= DB::select('CALL getTotalTelatPerBulan('.$data->nopeg.')');
                     $pagi = 0;
                     $siang = 0;
                     foreach ($data_att as $row) {
@@ -354,7 +268,15 @@ class AdminController extends Controller
 
     public function dataizin()
     {
-        return view('admin.dataizin');
+        $user = User::join('unit','users.unit','=','unit.id')->where('fungsi', 'admin')->get();
+        $jenisizin = JenisIzin::all();
+
+        $data = [
+            'user' => $user,
+            'jenisizin' => $jenisizin
+        ];
+
+        return view('admin.dataizin',compact('data'));
     }
 
     public function listizin(Request $request)
@@ -401,7 +323,7 @@ class AdminController extends Controller
                 'nopeg' => explode('-', $request->nopeg)[0],
                 'name' =>  explode('-', $request->nopeg)[1],
                 'unit' =>  explode('-', $request->nopeg)[2],
-                'jenis_izin' => $request->jenis_izin,
+                'jenis_izin' => explode('|', $request->jenis_izin)[0],
                 'total_izin' => $request->total,
                 'tgl_awal_izin' => date('Y-m-d', strtotime($request->startDate)),
                 'tgl_akhir_izin' => date('Y-m-d', strtotime($request->endDate)),
@@ -447,18 +369,68 @@ class AdminController extends Controller
 
     //END DATA IZIN KARYAWAN
 
+    function getWorkingDays($startDate, $endDate)
+    {
+            $begin = strtotime($startDate);
+            $end   = strtotime($endDate);
+            $curentYear = date('Y', $begin);
+            $endYear = date('Y', $end);
+            $libur_nasional = DB::table('libur_nasional')->whereYear('tanggal', '=', $curentYear)->whereYear('tanggal', '=', $endYear)->get();
+            if ($begin > $end) {
+                return 0;
+            } else {
+                $no_days  = 0;
+                $weekends = 0;
+                while ($begin <= $end) {
+                    $no_days++; // no of days in the given interval
+                    $what_day = date("N", $begin);
+                    if ($what_day > 5) { // 6 and 7 are weekend days
+                        $weekends++;
+                    }
+                    // cek libur nasional
+                    foreach ($libur_nasional as $key => $value) {
+                        if (date('Y-m-d', $begin) == $value->tanggal) {
+                            $weekends++;
+                        }
+                    }
+                    $begin += 86400; // +1 day
+                };
+
+                $working_days = $no_days - $weekends;
+
+                return response()->json($working_days);
+            }
+    }
 
     //DATA CUTI KARYAWAN
 
     public function datacuti()
+    { 
+        $user = User::join('unit','users.unit','=','unit.id')->where('fungsi', 'admin')->get();
+        $jeniscuti = JenisCuti::all();
+
+        $data = [
+            'user' => $user,
+            'jeniscuti' => $jeniscuti
+        ];
+        return view('admin.datacuti',compact('data'));
+    }
+
+    public function historycuti($nopeg,$jenis)
     {
-        // $history_cuti = DB::table('jenis_cuti')->select("jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari")
-        // ->leftjoin('cuti','jenis_cuti.id_jeniscuti','=','cuti.jenis_cuti')
-        // ->where('cuti.nopeg','1803')
-        // ->groupby('cuti.jenis_cuti')
-        // ->get();
-        // dd($history_cuti);
-        return view('admin.datacuti');
+        $history_cuti = 
+        cuti::join('jenis_cuti','jenis_cuti.id_jeniscuti','=','cuti.jenis_cuti')
+        ->where('cuti.nopeg',$nopeg)
+        ->where('cuti.jenis_cuti',$jenis)
+        ->GROUPBY('cuti.jenis_cuti')->sum('total_cuti');
+        // DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
+        // FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . $nopeg . "' and cuti.jenis_cuti = '" . $jenis . "' GROUP BY cuti.jenis_cuti");
+        
+        // $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
+        // FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . $nopeg . "' and cuti.jenis_cuti = '" . $jenis . "' GROUP BY cuti.jenis_cuti");
+        
+
+        return response()->json($history_cuti);
     }
 
     public function listcuti(Request $request)

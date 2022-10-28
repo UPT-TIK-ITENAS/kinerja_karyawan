@@ -19,7 +19,13 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <a href="{{ route('admin.createcuti') }}" class="btn btn-primary"><i class="icofont icofont-plus-square"></i> Tambah</a>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <a href="#" class="btn btn-primary" data-bs-target="#tambahCuti"
+                                    data-bs-toggle="modal" style="float: right">+ Tambah</a>
+                            </div>
+                        </div>
+                        {{-- <a href="{{ route('admin.createcuti') }}" class="btn btn-primary"><i class="icofont icofont-plus-square"></i> Tambah</a> --}}
                         <div class="table-responsive"> 
                             <table class="dataTable" id="table-cuti">
                                 <thead>
@@ -49,6 +55,114 @@
 @endsection
 
 @section('scripts')
+
+<div class="modal fade bd-example-modal-lg" id="tambahCuti" aria-labelledby="myLargeModalLabel" aria-modal="true"
+        role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Form Pengajuan Cuti</h4>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
+                        data-bs-original-title="" title=""></button>
+                </div>
+                <form class="needs-validation" novalidate="" action="{{ route('admin.storecuti') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="alert alert-danger" id="lebihHari" style="display: none;">
+                            ⚠️ Tidak boleh melebihi jumlah hari yang telah ditentukan.
+                        </div>
+                        <div class="row g-1 mb-3">
+                            <div class="col-md-12">
+                                <span class="form-label" for="jenis_izin">Karyawan</span>
+                                <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                    id="nopeg" name="nopeg" required="">
+                                    <option selected="" disabled="" value="">-- Pilih ---</option>
+                                    @foreach ($data['user'] as $p)
+                                        <option value="{{ $p->nopeg }}-{{ $p->name }}-{{ $p->unit }} ">
+                                            {{ $p->nopeg }} - {{ $p->name }} - {{ $p->nama_unit }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-8">
+                                <span class="form-label" for="jenis_cuti">Jenis Cuti</span>
+                                <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                    id="jenis_cuti" name="jenis_cuti" required="">
+                                    <option selected="" disabled="" value="">-- Pilih ---</option>
+                                    @foreach ($data['jeniscuti'] as $r)
+                                        <option value="{{ $r->id_jeniscuti }}" data-max="{{ $r->max_hari }}">{{ $r->jenis_cuti }}</option>
+                                    @endforeach
+                                </select>
+                                <input type="hidden" id="lama_cuti">
+                                <div class="invalid-feedback">Pilih salah satu !</div>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="sumcuti">Total cuti yang sudah terpakai</span>
+                                <input class="form-control" id="sumcuti" name="sumcuti" type="text"
+                                    required="">
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-4">
+                                <span class="form-label" for="tgl_awal_cuti">Tanggal Awal</span>
+                                <input class="form-control" id="tgl_awal_cuti" name="tgl_awal_cuti" type="date"
+                                    required="">
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="tgl_akhir_cuti">Tanggal Akhir</span>
+                                <input class="form-control" id="tgl_akhir_cuti" name="tgl_akhir_cuti" type="date"
+                                    required="">
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="total_cuti">Total Hari</span>
+                                <input class="form-control" id="total_cuti" name="total_cuti" type="number"
+                                    required="">
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6">
+                                <span class="form-label" for="alamat">Alamat</span>
+                                <textarea name="alamat" id="alamat" name="alamat" class="form-control" required></textarea>
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="form-label" for="no_hp">No HP</span>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="no_hp_input">+62</span>
+                                    <input class="form-control" id="no_hp" name="no_hp" type="text"
+                                        aria-describedby="no_hp_input" required="">
+                                    <div class="invalid-feedback">Wajib Diisi !</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <div class="checkbox p-0">
+                                    <div class="checkbox checkbox-dark">
+                                        <input id="cb_valid" class="form-check-input" type="checkbox" required>
+                                        <label class="form-check-label" for="cb_valid">Pengajuan cuti dilakukan oleh diri
+                                            sendiri dan secara sadar sesuai dengan ketentuan yang berlaku</label>
+                                    </div>
+                                    <div class="invalid-feedback">Wajib di centang !</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
+                            dihitung</span>
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     @parent
     <script>
         $().ready(function() {
@@ -94,6 +208,57 @@
             };
         });
 
+        $(document).ready(function() {
+            $('#jenis_cuti').on('change', function() {
+                const selected = $(this).find('option:selected');
+                const max_hari = selected.data('max');
+
+                $("#lama_cuti").val(max_hari);
+            });
+        });
+
+        $('#tgl_akhir_cuti').on('change', function() {
+            let tgl_awal = $('#tgl_awal_cuti').val();
+            let tgl_akhir = $('#tgl_akhir_cuti').val();
+            let total_cuti = $('#total_cuti');
+            let sumcuti = $('#sumcuti');
+            let nopeg = $('#nopeg').val().split('-')[0];
+            let jenis = $('#jenis_cuti').val();
+            let total = 0;
+            // let totalsum = 0;
+            
+            
+            if (tgl_awal != '' && tgl_akhir != '') {
+                $.get(window.baseurl + '/admin/getWorkingDays/' + tgl_awal + '/' + tgl_akhir, function(response) {
+                    total = total_cuti.val(response);
+                })
+                $.get(window.baseurl + '/admin/historycuti/' + nopeg + '/' + jenis, function(res) {
+                    sumcuti.val(res);
+                    let totalll = total + res;
+                    // console.log(totalll);
+
+                    if (totalll > $('#lama_cuti').val()) {
+                        $('#lebihHari').css('display', 'block');
+                        $('#btnSubmit').attr('disabled', 'true');
+                    } else {
+                        $('#lebihHari').css('display', 'none');
+                        $('#btnSubmit').removeAttr('disabled');
+                    }
+
+                })
+
+                
+                
+            
+            }
+        });
+        function emptyField() {
+            let tgl_awal = $('#tgl_awal_cuti').val('');
+            let tgl_akhir = $('#tgl_akhir_cuti').val('');
+            let total_cuti = $('#total_cuti').val('');
+            $('#lebihHari').css('display', 'none');
+            $('#btnSubmit').removeAttr('disabled');
+        }
     </script>
 @endsection
 
