@@ -30,7 +30,6 @@ class AdminController extends Controller
         $this->middleware('auth');
     }
 
-
     //DASHBOARD
     public function index()
     {
@@ -42,28 +41,39 @@ class AdminController extends Controller
     //DATA PRESENSI
     public function datapresensi()
     {
-        // $data = Attendance::where('nip','1071')->get();
-        // dd($data);
-        return view('admin.datapresensi');
+        $user = User::where('fungsi','Admin')->get();
+        $attendance = Attendance::select('tanggal')->groupby('tanggal')->get();
+        // dd($attendance[1]);
+        return view('admin.datapresensi',compact('user','attendance'));
     }
 
 
     public function listkaryawan(Request $request)
     {
-        $data = Attendance::selectRaw('attendance.*, users.name, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('fungsi','Admin')->orderby('attendance.tanggal','asc');
-        
+        $data = Attendance::selectRaw('attendance.*, users.name, users.awal_tugas, users.akhir_tugas')
+        ->join('users', 'attendance.nip', '=', 'users.nopeg')
+        ->where('fungsi','Admin')
+        ->where('attendance.nip', $request->get('filter1'), '', 'and')
+        ->where('attendance.tanggal', $request->get('filter2'), '', 'and')
+        ->orderby('attendance.tanggal','asc');
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->editColumn('hari', function ($row) {
                     return config('app.days')[$row->hari];
                 })
-
                 ->addColumn('nama', function ($row) {
                     return $row->nip . ' - ' . $row->name;
                 })
-                ->editColumn('hari', function ($row) {
-                    return config('app.days')[$row->hari];
+                ->addColumn('duration', function($row){
+                    if($row->jam_masuk == NULL && $row->jam_siang == NULL && $jam_pulang != NULL){
+                        $durationwork = date('00:00:00');
+                    }else{
+                        $duration = strtotime($row->jam_pulang) - strtotime($row->jam_masuk);
+                        $durationwork = date("H:i:s", $duration);
+                    }
+                    
+                    return $durationwork;
                 })
 
                 ->addColumn('latemasuk', function ($row) {

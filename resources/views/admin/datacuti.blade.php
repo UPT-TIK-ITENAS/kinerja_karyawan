@@ -37,7 +37,6 @@
                                     <th>Tanggal Awal Cuti</th>
                                     <th>Tanggal Akhir Cuti</th>
                                     <th>Total Hari Cuti</th>
-                                    <th>Keterangan</th>
                                     <th>Aksi</th>
                                     <th>Status</th>
                                 </thead>
@@ -192,7 +191,6 @@
                     { data: 'tgl_awal_cuti', name: 'tgl_awal_cuti'},
                     { data: 'tgl_akhir_cuti', name: 'tgl_akhir_cuti'},
                     { data: 'total_cuti', name: 'total_cuti'},
-                    { data: 'alasan_tolak', name: 'alasan_tolak'},
                     { data: 'action', name: 'action'},
                     { data: 'status', name: 'status'},
                     
@@ -255,6 +253,26 @@
                
             }
         });
+
+        $('#table-cuti').on('click', '.batalcuti', function(e) {
+            let id = $(this).data('id');
+            const href = $(this).attr('href');
+
+            e.preventDefault()
+            Swal.fire({
+                title: 'Apakah Yakin?',
+                text: `Apakah Anda yakin ingin menghapus?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Hapus'
+            }).then((result) => {
+                if (result.value == true) {
+                    document.location.href = href;
+                }
+            })
+        })
 
       
     </script>

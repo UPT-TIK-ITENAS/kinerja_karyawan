@@ -1,34 +1,25 @@
 @extends('layouts.app')
-<!-- Plugins css start-->
-<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}">
-<!-- Plugins css Ends-->
-
 @section('content')
-    <div class="container-fluid">
-        <div class="page-header">
-            <div class="row">
-                <div class="col-lg-6">
-                    <h3>Master Data Presensi</h3>
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">Sistem Laporan Presensi Karyawan</li>
-                        <li class="breadcrumb-item active">Master Data Presensi</li>
-                    </ol>
-                </div>
+<div class="container-fluid">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-lg-6">
+                <h3>Master Data Presensi</h3>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">Sistem Laporan Presensi Karyawan</li>
+                    <li class="breadcrumb-item active">Master Data Presensi</li>
+                </ol>
             </div>
         </div>
     </div>
-
-
+</div>
     <div class="container-fluid">
         <div class="row">
             <!-- Zero Configuration  Starts-->
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5>Monitoring Kehadiran </h5>
-                        <span>Daftar hasil monitoring kehadiran karyawan terhitung dari tanggal 01 July 2021</span>
-                        <hr>
-                        <p><b>Sinkronisasi Biometric</b> </p>
+                        <p><b>Sinkronisasi Mesin Sidik Jari</b> </p>
                         <form action="{{ route('admin.SyncAndInsertBiometric') }}" method="POST">
                             @csrf
                             <div class="form-group row">
@@ -40,16 +31,41 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-12 col-lg-6">
-                                    <button class="btn btn-secondary" type="submit">Sinkron</button>
+                                    <button class="btn btn-outline-success-2x" type="button"  id="clear"><i class="fa fa-refresh"></i> Sinkron</button>
                                 </div>
                             </div>
-                            <form>
+                        <form>
+                        <hr>
+                        <form>
+                            <div class="form-group row">
+                                <label class="col-sm-1 col-form-label">Filter</label>
+                                <div class="col-xl-3">
+                                    <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible" name="filter1" id="filter1" required="">
+                                        <option selected="" disabled="" value=""> Pilih Nama </option>
+                                        @foreach ($user as $u)
+                                            <option value="{{ $u->nopeg }}">{{ $u->nopeg }} - {{ $u->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-xl-2">
+                                    <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible" name="filter2" id="filter2" required="">
+                                        <option selected="" disabled="" value="">Pilih Tanggal </option>
+                                        @foreach ($attendance as $a)
+                                            <option value="{{ $a->tanggal }}">{{ $a->tanggal }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                    <button class="btn btn-outline-danger txt-red" type="button"  id="clear"><i class="icofont icofont-ui-delete"></i> Hapus</button>
+                                    {{-- <button class="btn btn-danger" type="submit" id="clear">Hapus</button> --}}
+                                </div>
+                            </div>
+                        <form>
                     </div>
-
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="table-responsive"> 
                             <table class="dataTable" id="table-admin">
-                                <thead class="text-center">
+                                <thead>
                                     <th>No.</th>
                                     <th>Nama</th>
                                     <th>Hari</th>
@@ -65,7 +81,7 @@
                                     <th>Status</th>
                                 </thead>
                                 <tbody>
-
+                 
                                 </tbody>
                             </table>
                         </div>
@@ -74,6 +90,7 @@
             </div>
         </div>
     </div>
+
 @endsection
 
 @section('scripts')
@@ -87,11 +104,19 @@
                 processing: true,
                 autoWidth: false,
                 serverSide: true,
+                searching: false,
                 columnDefs: [{
                     targets: 1,
                     width: "200px !important",
                 }, ],
-                ajax: "{{ route('admin.listkaryawan') }}",
+                ajax: {
+                    url: "{{ route('admin.listkaryawan') }}",
+                    data: function(d) {
+                        d.filter1 = $('#filter1').val() ? $('#filter1').val() : '<>';
+                        d.filter2 = $('#filter2').val() ? $('#filter2').val() : '<>';
+                        // d.search = $('input[type="search"]').val();
+                    }
+                },
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -154,6 +179,19 @@
                     'copy', 'csv', 'print'
                 ]
             });
+            $("#clear").on('click', function(e) {
+                e.preventDefault();
+                // location.reload();
+                $("#filter1").val('').trigger('change');
+                $("#filter2").val('').trigger('change');
+            });
+            $("#filter1").on('change', function() {
+                table.draw();
+            });
+            $("#filter2").on('change', function() {
+                table.draw();
+            });
+
             $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
                 console.log(message);
             };

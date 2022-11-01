@@ -176,7 +176,7 @@
         <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
         <script src="{{ asset('assets/js/select2/select2.full.min.js') }}"></script>
         <script src="{{ asset('assets/js/select2/select2-custom.js') }}"></script>
-
+        <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
 
         <script type="text/javascript">
             $(window).on('load', function() {
