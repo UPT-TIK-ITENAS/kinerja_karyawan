@@ -137,7 +137,7 @@
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
+                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu dan libur nasional tidak
                             dihitung</span>
                         <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
                     </div>
@@ -147,6 +147,9 @@
     </div>
 
     @parent
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+  
     <script>
         $().ready(function() {
             let table = $('#table-izin').DataTable({
@@ -170,7 +173,7 @@
                     },
                     { data: 'nopeg', name: 'nopeg'},
                     { data: 'name',  name: 'name'},
-                    { data: 'unit', name: 'unit'},
+                    { data: 'singkatan_unit', name: 'singkatan_unit'},
                     { data: 'jenis_izin', name: 'jenis_izin'},
                     { data: 'tgl_awal_izin', name: 'tgl_awal_izin'},
                     { data: 'tgl_akhir_izin', name: 'tgl_akhir_izin'},
@@ -189,45 +192,66 @@
             };
         });
 
+        $('#table-izin').on('click', '.batalizin', function(e) {
+            let id = $(this).data('id');
+            const href = $(this).attr('href');
+
+            e.preventDefault()
+            Swal.fire({
+                title: 'Apakah Yakin?',
+                text: `Apakah Anda yakin ingin menghapus?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Hapus'
+            }).then((result) => {
+                if (result.value == true) {
+                    document.location.href = href;
+                }
+            })
+        })
+
         
         $('#tgl_akhir_izin').on('change', function() {
             let tgl_awal = $('#tgl_awal_izin').val();
             let tgl_akhir = $('#tgl_akhir_izin').val();
             let total_izin = $('#total_izin');
+            let lama_izin = $('#lama_izin').val();
             let total = 0;
             if (tgl_awal != '' && tgl_akhir != '') {
 
                 $.get(window.baseurl + '/admin/getWorkingDays/' + tgl_awal + '/' + tgl_akhir, function(response) {
                     total = total_izin.val(response);
-
-                    if (total > $('#lama_izin').val()) {
-                        $('#lebihHari').css('display', 'block');
-                        $('#btnSubmit').attr('disabled', 'true');
-                    } else {
+                    console.log(response);
+                    console.log(lama_izin);
+                    if(lama_izin == 0 ){
                         $('#lebihHari').css('display', 'none');
                         $('#btnSubmit').removeAttr('disabled');
+                    }else if(lama_izin != 0){
+                        if (response >= lama_izin) {
+                            $('#lebihHari').css('display', 'block');
+                            $('#btnSubmit').attr('disabled', 'true');
+                        } else {
+                            $('#lebihHari').css('display', 'none');
+                            $('#btnSubmit').removeAttr('disabled');
+                        }
                     }
                 })
-               
             }
         });
-
-
+        
         $('#jenis_izin').on('change', function() {
             let jenis_izin = $('#jenis_izin');
             let lama_izin = $('#lama_izin');
             let durasi_izin = jenis_izin.val().split('|')[1] ? jenis_izin.val().split('|')[1] : 100;
-            lama_izin.val(durasi_izin);
-            emptyField();
+            if(durasi_izin == 100){
+                lama_izin.val(0);
+            }else{
+                lama_izin.val(durasi_izin);
+            }
         });
 
-        function emptyField() {
-            let tgl_awal = $('#tgl_awal_izin').val('');
-            let tgl_akhir = $('#tgl_akhir_izin').val('');
-            let total_izin = $('#total_izin').val('');
-            $('#lebihHari').css('display', 'none');
-            $('#btnSubmit').removeAttr('disabled');
-        }
     </script>
 @endsection
 

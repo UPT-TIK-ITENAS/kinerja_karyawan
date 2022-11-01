@@ -30,8 +30,8 @@
                             <table class="dataTable" id="table-cuti">
                                 <thead>
                                     <th>No.</th>
-                                    <th>NIP</th>
                                     <th>Nama</th>
+                                    <th>NIP</th>
                                     <th>Unit</th>
                                     <th>Jenis Cuti</th>
                                     <th>Tanggal Awal Cuti</th>
@@ -154,9 +154,9 @@
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
+                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu dan hari libur nasional tidak
                             dihitung</span>
-                        <button class="btn btn-primary" type="submit">Submit</button>
+                        <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
                     </div>
                 </form>
             </div>
@@ -187,7 +187,7 @@
                     },
                     { data: 'name',  name: 'name'},
                     { data: 'nopeg', name: 'nopeg'},
-                    { data: 'unit', name: 'unit'},
+                    { data: 'singkatan_unit', name: 'singkatan_unit'},
                     { data: 'jenis_cuti', name: 'jenis_cuti'},
                     { data: 'tgl_awal_cuti', name: 'tgl_awal_cuti'},
                     { data: 'tgl_akhir_cuti', name: 'tgl_akhir_cuti'},
@@ -217,27 +217,33 @@
             });
         });
 
+        $('#jenis_cuti').on('change', function() {
+            let nopeg = $('#nopeg').val().split('-')[0];
+            let jenis = $('#jenis_cuti').val();
+            
+            let sumcuti = $('#sumcuti');
+            $.get(window.baseurl + '/admin/historycuti/' + nopeg + '/' + jenis, function(res) {
+                sumcuti.val(res);
+                console.log(res);
+            })
+        });
+
         $('#tgl_akhir_cuti').on('change', function() {
             let tgl_awal = $('#tgl_awal_cuti').val();
             let tgl_akhir = $('#tgl_akhir_cuti').val();
             let total_cuti = $('#total_cuti');
-            let sumcuti = $('#sumcuti');
-            let nopeg = $('#nopeg').val().split('-')[0];
-            let jenis = $('#jenis_cuti').val();
+            let sumcuti = $('#sumcuti').val();
+            let lama = $('#lama_cuti').val();
             let total = 0;
-            // let totalsum = 0;
-            
+            let totalll = 0;
             
             if (tgl_awal != '' && tgl_akhir != '') {
                 $.get(window.baseurl + '/admin/getWorkingDays/' + tgl_awal + '/' + tgl_akhir, function(response) {
                     total = total_cuti.val(response);
-                })
-                $.get(window.baseurl + '/admin/historycuti/' + nopeg + '/' + jenis, function(res) {
-                    sumcuti.val(res);
-                    let totalll = total + res;
-                    // console.log(totalll);
+                    totalll = parseInt(response) + parseInt(sumcuti);
+                    console.log(totalll);
 
-                    if (totalll > $('#lama_cuti').val()) {
+                    if (totalll >= lama) {
                         $('#lebihHari').css('display', 'block');
                         $('#btnSubmit').attr('disabled', 'true');
                     } else {
@@ -246,19 +252,11 @@
                     }
 
                 })
-
-                
-                
-            
+               
             }
         });
-        function emptyField() {
-            let tgl_awal = $('#tgl_awal_cuti').val('');
-            let tgl_akhir = $('#tgl_akhir_cuti').val('');
-            let total_cuti = $('#total_cuti').val('');
-            $('#lebihHari').css('display', 'none');
-            $('#btnSubmit').removeAttr('disabled');
-        }
+
+      
     </script>
 @endsection
 

@@ -179,7 +179,7 @@
                 </td>
                 
                 <td style="width:2%;text-align: center">:</td>
-                <td style="width:2%;font-size: 15px;">{{ $data->unit }}</td>
+                <td style="width:2%;font-size: 15px;">{{ $data->nama_unit }}</td>
             </tr>
             <tr>
                 <td style="width:10%;font-size: 15px;">
@@ -253,13 +253,13 @@
                 </tr>
                 <tr>
                     <td>
-                        {{-- <img src="data:image/png;base64, {!! $qrcode !!}"> --}}
+                        <img src="{{ url('qrcode/' . $data->qrcode_peg) }}" width="80" height="80" alt="">
                         <img src="">
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <u><b>Epih Haryanti, A.Md.</u></b>
+                        <u><b>{{ $data->name }}</u></b>
                     </td>
                 </tr>
             </table>
@@ -300,6 +300,9 @@
 
     </footer>
     <br>
+<br>
+<br>
+<br>
 <br>
 <br>
 <br>

@@ -175,7 +175,7 @@
                 </td>
                 
                 <td style="width:2%;text-align: center">:</td>
-                <td style="width:2%;font-size: 14.5px;">{{ $data->unit }}</td>
+                <td style="width:2%;font-size: 14.5px;">{{ $data->nama_unit }}</td>
             </tr>
         </table>
         <p style="font-size: 14.5px;"> Mengajukan permohonan tidak masuk kerja selama {{ $data->total_izin }} hari</p>
@@ -261,13 +261,13 @@
                 </tr>
                 <tr>
                     <td>
-                        <img src="{{ url('qrcode/' . $dataqr->qr_peg) }}" width="80" height="80" alt="">
+                        <img src="{{ url('qrcode/' . $data->qrcode_peg) }}" width="80" height="80" alt="">
                         <img src="">
                     </td>
                 </tr>
                 <tr>
                     <td  style="font-size: 14.5px;">
-                        <u><b>Epih Haryanti, A.Md.</u></b>
+                        <u><b>{{  $data->name}}</u></b>
                     </td>
                 </tr>
             </table>
@@ -287,7 +287,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <img src="{{ url('qrcode/' . $dataqr->qr_kepalaunit) }}" width="80" height="80" alt="">
+                        <img src="{{ url('qrcode/' . $data->qrcode_kepala) }}" width="80" height="80" alt="">
                         <img src="">
                     </td>
                 </tr>

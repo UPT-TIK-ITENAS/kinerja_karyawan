@@ -52,7 +52,6 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/dataizin', [AdminController::class, 'dataizin'])->name('admin.dataizin');
         Route::get('/listizin', [AdminController::class, 'listizin'])->name('admin.listizin');
-        Route::get('createizin', [AdminController::class, 'createizin'])->name('admin.createizin');
         Route::post('storeizin', [AdminController::class, 'storeizin'])->name('admin.storeizin');
         Route::get('/batal_izin/{id}', [AdminController::class, 'batal_izin'])->name('admin.batal_izin');
         Route::get('printizinkerja/{id}', [AdminController::class, 'printizinkerja'])->name('admin.printizinkerja');
@@ -62,7 +61,6 @@ Route::group(['middleware' => 'auth'], function () {
         
         Route::get('/datacuti', [AdminController::class, 'datacuti'])->name('admin.datacuti');
         Route::get('/listcuti', [AdminController::class, 'listcuti'])->name('admin.listcuti');
-        Route::get('createcuti', [AdminController::class, 'createcuti'])->name('admin.createcuti');
         Route::post('storecuti', [AdminController::class, 'storecuti'])->name('admin.storecuti');
         Route::get('/batal_cuti/{id}', [AdminController::class, 'batal_cuti'])->name('admin.batal_cuti');
         Route::get('printcuti/{id}', [AdminController::class, 'printcuti'])->name('admin.printcuti');

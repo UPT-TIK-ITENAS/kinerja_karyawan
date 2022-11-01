@@ -264,111 +264,6 @@ class AdminController extends Controller
     //END DATA REKAPITULASI
 
 
-    //DATA IZIN KARYAWAN
-
-    public function dataizin()
-    {
-        $user = User::join('unit','users.unit','=','unit.id')->where('fungsi', 'admin')->get();
-        $jenisizin = JenisIzin::all();
-
-        $data = [
-            'user' => $user,
-            'jenisizin' => $jenisizin
-        ];
-
-        return view('admin.dataizin',compact('data'));
-    }
-
-    public function listizin(Request $request)
-    {
-        $data = DB::table('izin_kerja')->join('jenis_izin', 'jenis_izin.id_izin', '=', 'izin_kerja.jenis_izin');
-
-        if ($request->ajax()) {
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('print', function ($row) {
-                    return getAksi($row->id_izinkerja, 'izin');
-                })
-                ->addColumn('status', function ($row) {
-                    if ($row->approval == 1) {
-                        $apprv = '<span class="badge badge-success">Disetujui</span>';
-                    } else {
-                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
-                    }
-                    return $apprv;
-                })
-                ->rawColumns(['print', 'status'])
-                ->make(true);
-        }
-        return DataTables::queryBuilder($data)->toJson();
-    }
-
-    public function createizin()
-    {
-        $datauser = User::groupby('nopeg')->get();
-        $jenisizin = JenisIzin::get();
-        $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas, users.atasan')->join('users', 'attendance.nip', '=', 'users.nopeg')->get();
-        return view('admin.createizin', compact('data', 'datauser', 'jenisizin'));
-    }
-
-    public function storeizin(Request $request)
-    {
-        // dd(date('d-m-Y', strtotime($request->startDate)) );
-        if ($request->total > $request->lama_izin && $request->jenis_izin != 'Sakit') {
-            return redirect()->route('admin.dataizin')->with('error', 'Pengajuan Izin Tidak Berhasil, Total lama izin melebihi ketentuan hari yang diizinkan!');
-        } elseif ($request->validasi == NULL) {
-            return redirect()->route('admin.createizin')->with('error', 'Validasi Tidak diisi!');
-        } else {
-            IzinKerja::insert([
-                'nopeg' => explode('-', $request->nopeg)[0],
-                'name' =>  explode('-', $request->nopeg)[1],
-                'unit' =>  explode('-', $request->nopeg)[2],
-                'jenis_izin' => explode('|', $request->jenis_izin)[0],
-                'total_izin' => $request->total,
-                'tgl_awal_izin' => date('Y-m-d', strtotime($request->startDate)),
-                'tgl_akhir_izin' => date('Y-m-d', strtotime($request->endDate)),
-                'validasi' => $request->validasi,
-                'approval' => '0',
-            ]);
-
-            $dataqr = IzinKerja::where('id_izinkerja', $request->id_izinkerja)->first();
-            $qrcode_filename = 'qr-' . base64_encode(explode('-', $request->nopeg)[0] . date('Y-m-d H:i:s')) . '.svg';
-            // dd($qrcode_filename);
-            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
-
-            QR::where('id_izinkerja', $request->id_izinkerja)->update([
-                'qr_peg' => $qrcode_filename,
-            ]);
-        }
-
-        return redirect()->route('admin.dataizin')->with('success', 'Pengajuan Izin Berhasil!');
-    }
-
-    public function printizinkerja($id)
-    {
-        $data = IzinKerja::join('users', 'izin_kerja.nopeg', '=', 'users.nopeg')->where('id_izinkerja', $id)->first();
-        $kepala = User::select('name')->where('nopeg', $data->atasan)->first();
-        $jenisizin = JenisIzin::where('jenis_izin', '!=', 'sakit')->get();
-        $dataqr = QR::where('id_izinkerja', $id)->first();
-
-
-        $pdf = PDF::loadview('admin.printizinkerja', compact('data', 'jenisizin', 'dataqr', 'kepala'))->setPaper('potrait');
-        return $pdf->stream();
-    }
-
-    public function batal_izin($id)
-    {
-        $delete = IzinKerja::where('id_izinkerja', $id)->delete();
-        if ($delete) {
-            return redirect()->back()->with('success', 'Berhasil membatalkan izin');
-        } else {
-            return redirect()->back()->with('error', 'Gagal membatalkan izin');
-        }
-    }
-
-
-    //END DATA IZIN KARYAWAN
-
     function getWorkingDays($startDate, $endDate)
     {
             $begin = strtotime($startDate);
@@ -402,6 +297,106 @@ class AdminController extends Controller
             }
     }
 
+
+    //DATA IZIN KARYAWAN
+
+    public function dataizin()
+    {
+        $user = User::join('unit','users.unit','=','unit.id')->where('fungsi', 'admin')->get();
+        $jenisizin = JenisIzin::all();
+
+        $data = [
+            'user' => $user,
+            'jenisizin' => $jenisizin
+        ];
+
+        return view('admin.dataizin',compact('data'));
+    }
+
+    public function listizin(Request $request)
+    {
+        $data = DB::table('izin_kerja')->join('unit','izin_kerja.unit','=','unit.id')->join('jenis_izin', 'jenis_izin.id_izin', '=', 'izin_kerja.jenis_izin');
+
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('print', function ($row) {
+                    return getAksi($row->id_izinkerja, 'izin');
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->approval == 1) {
+                        $apprv = '<span class="badge badge-success">Disetujui</span>';
+                    } else {
+                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                    }
+                    return $apprv;
+                })
+                ->rawColumns(['print', 'status'])
+                ->make(true);
+        }
+        return DataTables::queryBuilder($data)->toJson();
+    }
+
+    public function storeizin(Request $request)
+    {
+         IzinKerja::insert([
+                'nopeg' => explode('-', $request->nopeg)[0],
+                'name' =>  explode('-', $request->nopeg)[1],
+                'unit' =>  explode('-', $request->nopeg)[2],
+                'jenis_izin' => explode('|', $request->jenis_izin)[0],
+                'total_izin' => $request->total_izin,
+                'tgl_awal_izin' => date('Y-m-d', strtotime($request->tgl_awal_izin)),
+                'tgl_akhir_izin' => date('Y-m-d', strtotime($request->tgl_akhir_izin)),
+                'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+                'validasi' => '1',
+                'approval' => '0',
+        ]);
+
+        $qrcode_filename = 'qr-' . explode('-', $request->nopeg)[0] . '-' . explode('|', $request->jenis_izin)[0] . '.svg';
+        QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
+        
+        IzinKerja::insert([
+            'nopeg' => explode('-', $request->nopeg)[0],
+            'name' =>  explode('-', $request->nopeg)[1],
+            'unit' =>  explode('-', $request->nopeg)[2],
+            'jenis_izin' => explode('|', $request->jenis_izin)[0],
+            'total_izin' => $request->total_izin,
+            'tgl_awal_izin' => date('Y-m-d', strtotime($request->tgl_awal_izin)),
+            'tgl_akhir_izin' => date('Y-m-d', strtotime($request->tgl_akhir_izin)),
+            'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+            'validasi' => '1',
+            'approval' => '0',
+            'qrcode_peg' => $qrcode_filename,
+        ]);
+       
+        return redirect()->route('admin.dataizin')->with('success', 'Pengajuan Izin Berhasil!');
+    }
+
+    public function printizinkerja($id)
+    {
+        $data = IzinKerja::join('users', 'izin_kerja.nopeg', '=', 'users.nopeg')->join('unit','izin_kerja.unit','=','unit.id')->where('id_izinkerja', $id)->first();
+        $kepala = User::select('name')->where('nopeg', $data->atasan)->first();
+        $jenisizin = JenisIzin::where('jenis_izin', '!=', 'sakit')->get();
+        // $dataqr = QR::where('id_izinkerja', $id)->first();
+
+        $pdf = PDF::loadview('admin.printizinkerja', compact('data', 'jenisizin', 'kepala'))->setPaper('potrait');
+        return $pdf->stream();
+    }
+
+    public function batal_izin($id)
+    {
+        $delete = IzinKerja::where('id_izinkerja', $id)->delete();
+        if ($delete) {
+            return redirect()->back()->with('success', 'Berhasil membatalkan izin');
+        } else {
+            return redirect()->back()->with('error', 'Gagal membatalkan izin');
+        }
+    }
+
+
+    //END DATA IZIN KARYAWAN
+
+
     //DATA CUTI KARYAWAN
 
     public function datacuti()
@@ -423,19 +418,13 @@ class AdminController extends Controller
         ->where('cuti.nopeg',$nopeg)
         ->where('cuti.jenis_cuti',$jenis)
         ->GROUPBY('cuti.jenis_cuti')->sum('total_cuti');
-        // DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
-        // FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . $nopeg . "' and cuti.jenis_cuti = '" . $jenis . "' GROUP BY cuti.jenis_cuti");
-        
-        // $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
-        // FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . $nopeg . "' and cuti.jenis_cuti = '" . $jenis . "' GROUP BY cuti.jenis_cuti");
-        
-
+      
         return response()->json($history_cuti);
     }
 
     public function listcuti(Request $request)
     {
-        $data = DB::table('cuti');
+        $data = cuti::join('unit','cuti.unit','unit.id')->join('jenis_cuti','cuti.jenis_cuti','jenis_cuti.id_jeniscuti');
 
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -444,49 +433,36 @@ class AdminController extends Controller
                     return getAksi($row->id_cuti, 'cuti');
                 })
                 ->addColumn('status', function ($row) {
-                    if ($row->approval == 1) {
-                        $apprv = '<span class="badge badge-success">Disetujui</span>';
-                    } else {
-                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
-                    }
-                    return $apprv;
+                    return getAprv($row->id_cuti, 'cuti', $row->alasan_tolak);
                 })
                 ->rawColumns(['action', 'status'])
                 ->make(true);
         }
         return DataTables::queryBuilder($data)->toJson();
     }
-
-
-    public function createcuti()
-    {
-        $datauser = User::groupby('nopeg')->get();
-        $jeniscuti = JenisCuti::get();
-        // $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas')->join('users','attendance.nip','=','users.nopeg')->get();
-        return view('admin.createcuti', compact('datauser', 'jeniscuti'));
-    }
-
+    
     public function storecuti(Request $request)
     {
-        $max = explode('-', $request->jenis_cuti)[1];
-       if($request->total > $max ){
-            return redirect()->back()->with('error', 'Melebihi Batas Hari Cuti');
 
-       }else{
+        $qrcode_filename = 'qr-' . explode('-', $request->nopeg)[0] . '-' . explode('|', $request->jenis_cuti)[0] . '.svg';
+        // dd($qrcode_filename);
+        QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
+
         Cuti::insert([
             'nopeg' => explode('-', $request->nopeg)[0] ,
             'name' =>  explode('-', $request->nopeg)[1],
             'unit' =>  explode('-', $request->nopeg)[2],
             'jenis_cuti' => explode('-', $request->jenis_cuti)[0],
-            'tgl_awal_cuti' => date('Y-m-d', strtotime($request->startDate)),
-            'tgl_akhir_cuti' => date('Y-m-d', strtotime($request->endDate)),
-            'total_cuti' => $request->total,
+            'tgl_awal_cuti' => date('Y-m-d', strtotime($request->tgl_awal_cuti)),
+            'tgl_akhir_cuti' => date('Y-m-d', strtotime($request->tgl_akhir_cuti)),
+            'total_cuti' => $request->total_cuti,
             'alamat' => $request->alamat,
             'no_hp' => $request->no_hp,
             'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
-            'validasi' => $request->validasi,
+            'validasi' => 1,
+            'approval' => 0,
+            'qrcode_peg' => $qrcode_filename,
         ]);
-       }
     
        return redirect()->route('admin.datacuti')->with('success', 'Add Data Berhasil!');
 
@@ -494,7 +470,7 @@ class AdminController extends Controller
 
     public function printcuti($id)
     {
-        $data = Cuti::where('id_cuti', $id)->first();
+        $data = Cuti::join('unit','cuti.unit','=','unit.id')->join('jenis_cuti','cuti.jenis_cuti','=','jenis_cuti.id_jeniscuti')->where('id_cuti', $id)->first();
 
         $pdf = PDF::loadview('admin.printcuti', compact('data'))->setPaper('potrait');
         return $pdf->stream();
