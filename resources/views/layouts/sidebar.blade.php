@@ -30,6 +30,8 @@
                             </li>
                         </ul>
                     </li>
+                @endif
+                @if (auth()->user()->role == 'admin' || auth()->user()->role == 'admin_bkhp')
                     <li class="dropdown">
                         <a class="nav-link menu-title"><i data-feather="edit-3"></i><span>Pengajuan</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>

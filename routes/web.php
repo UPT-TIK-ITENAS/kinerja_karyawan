@@ -33,7 +33,7 @@ Route::group(['name' => 'auth'], function () {
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.admin_v');
     Route::get('/kepalaunit', [KepalaUnitController::class, 'index'])->name('kepalaunit.kepalaunit_v');
-    Route::group(['prefix' => 'admin', 'middleware' => ['is_admin']], function () {
+    Route::group(['prefix' => 'admin'], function () {
 
         Route::get('/datapresensi', [AdminController::class, 'datapresensi'])->name('admin.datapresensi');
         Route::get('/listkaryawan', [AdminController::class, 'listkaryawan'])->name('admin.listkaryawan');
@@ -43,7 +43,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/detailrekap/{nip}', [AdminController::class, 'detailrekap'])->name('admin.detailrekap');
         Route::get('/listdetailrekapkaryawan/{nip}', [AdminController::class, 'listdetailrekapkaryawan'])->name('admin.listdetailrekapkaryawan');
 
-        Route::get('createizinkehadiran/{id}', [AdminController::Class, 'createizinkehadiran'])->name('admin.createizinkehadiran');
+        Route::get('editAtt/{id}', [AdminController::Class, 'editAtt'])->name('admin.editAtt');
         Route::post('storeizinkehadiran', [AdminController::Class, 'storeizinkehadiran'])->name('admin.storeizinkehadiran');
         Route::post('/biometric', [BiometricController::Class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
         Route::get('/biometricall', [BiometricAllController::Class, 'SyncAndInsertBiometric'])->name('admin.biometricall');

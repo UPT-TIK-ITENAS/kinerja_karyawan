@@ -30,7 +30,6 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/feather-icon.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/animate.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/chartist.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/prism.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vector-map.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
@@ -151,13 +150,10 @@
         <script src="{{ asset('assets/js/clipboard/clipboard.min.js') }}"></script>
         <script src="{{ asset('assets/js/custom-card/custom-card.js') }}"></script>
         <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-time-picker/moment.min.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-time-picker/tempusdominus-bootstrap-4.min.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-time-picker/datetimepicker.custom.js') }}"></script>
-
+{{-- 
         <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.js') }}"></script>
         <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.en.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.custom.js') }}"></script>
+        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.custom.js') }}"></script> --}}
         <script src="{{ asset('assets/js/time-picker/jquery-clockpicker.min.js') }}"></script>
         <script src="{{ asset('assets/js/time-picker/highlight.min.js') }}"></script>
         <script src="{{ asset('assets/js/time-picker/clockpicker.js') }}"></script>
@@ -177,6 +173,7 @@
         <script src="{{ asset('assets/js/select2/select2.full.min.js') }}"></script>
         <script src="{{ asset('assets/js/select2/select2-custom.js') }}"></script>
         <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
+
 
         <script type="text/javascript">
             $(window).on('load', function() {

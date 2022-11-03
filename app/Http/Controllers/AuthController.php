@@ -27,7 +27,7 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($login)) {
-            if ($data->role == "admin") {
+            if ($data->role == "admin" || $data->role == "admin_bkhp") {
                 $request->session()->regenerate();
                 return redirect()->intended('admin')->with('success', 'Berhasil Login');
             } else if ($data->role == "karyawan") {

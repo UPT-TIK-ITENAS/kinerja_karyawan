@@ -27,7 +27,7 @@
                                 <div class="col-xl-2">
                                     <div class="input-group">
                                         <input class="datepicker-here form-control digits" id="tanggal" name="tanggal"
-                                            type="text" data-language="en" required>
+                                            type="date" data-language="en" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-12 col-lg-6">
@@ -75,7 +75,6 @@
                                     <th>Durasi</th>
                                     <th>Telat Masuk</th>
                                     <th>Telat Siang</th>
-                                    <th>Pulang cepat</th>
                                     <th>Aksi</th>
                                     <th>File</th>
                                     <th>Status</th>
@@ -94,7 +93,97 @@
 @endsection
 
 @section('scripts')
+<div class="modal fade bd-example-modal-lg" id="show-izin" aria-labelledby="myLargeModalLabel" aria-modal="true"
+        role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myLargeModalLabel">Form Pengajuan Izin</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
+                        data-bs-original-title="" title=""></button>
+                </div>
+                <form class="needs-validation" novalidate="" action="{{ route('admin.storeizin') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-2">
+                                <span class="form-label" for="nip">No Pegawai</span>
+                                <input class="form-control" id="nip" name="nip" type="text"
+                                    required="">
+                                <input id="id" name="id" hidden />
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="name">Nama</span>
+                                <input class="form-control" id="name" name="name" type="text"
+                                    required="">
+                            </div>
+                            <div class="col-md-6">
+                                <span class="form-label" for="nama_unit">Unit</span>
+                                <input class="form-control" id="nama_unit" name="nama_unit" type="text"
+                                    required="">
+                                <input id="unit" name="unit" hidden />
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-4">
+                                <span class="form-label" for="jam_masuk">Jam Masuk</span>
+                                <div class="input-group date" id="dt-minimum" data-target-input="nearest">
+                                    <input class="form-control datetimepicker-input digits" type="text" data-target="#dt-minimum" id="jam_masuk" name="jam_masuk">
+                                    <div class="input-group-text" data-target="#dt-minimum" data-toggle="datetimepicker"><i class="fa fa-calendar"> </i></div>
+                                </div>
+                                {{-- <input class="form-control" id="jam_masuk" name="jam_masuk" type="date"
+                                    required=""> --}}
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="jam_siang">Jam Siang</span>
+                                <div class="input-group date" id="dt-minimum" data-target-input="nearest">
+                                    <input class="form-control datetimepicker-input digits" type="text" data-target="#dt-minimum" id="jam_siang" name="jam_siang">
+                                    <div class="input-group-text" data-target="#dt-minimum" data-toggle="datetimepicker"><i class="fa fa-calendar"> </i></div>
+                                </div>
+                                {{-- <input class="form-control" id="jam_siang" name="jam_siang" type="date"
+                                    required=""> --}}
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="jam_pulang">Jam Sore</span>
+                                <div class="input-group date" id="dt-minimum" data-target-input="nearest">
+                                    <input class="form-control datetimepicker-input digits" type="text" data-target="#dt-minimum" id="jam_pulang" name="jam_pulang">
+                                    <div class="input-group-text" data-target="#dt-minimum" data-toggle="datetimepicker"><i class="fa fa-calendar"> </i></div>
+                                </div>
+                                {{-- <input class="form-control" id="jam_pulang" name="jam_pulang" type="date"
+                                    required=""> --}}
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <span class="form-label" for="alasan">Alasan</span>
+                            <textarea class="form-control" id="alasan" name="alasan" rows="3" placeholder="Alasan" required></textarea>
+                            {{-- <input class="form-control" id="jam_masuk" name="jam_masuk" type="date"
+                                required=""> --}}
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <div class="checkbox p-0">
+                                    <div class="checkbox checkbox-dark">
+                                        <input id="cb_valid" class="form-check-input" type="checkbox" required>
+                                        <label class="form-check-label" for="cb_valid">Keterangan izin dilakukan oleh diri
+                                            sendiri dan secara sadar sesuai dengan ketentuan yang berlaku</label>
+                                    </div>
+                                    <div class="invalid-feedback">Wajib di centang !</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     @parent
+  
+    <script src="{{ asset('assets/js/datepicker/date-time-picker/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/js/datepicker/date-time-picker/tempusdominus-bootstrap-4.min.js') }}"></script>
+    <script src="{{ asset('assets/js/datepicker/date-time-picker/datetimepicker.custom.js') }}"></script>
     <script>
         $().ready(function() {
             let table = $('#table-admin').DataTable({
@@ -125,8 +214,8 @@
                         searchable: false,
                     },
                     {
-                        data: 'nama',
-                        name: 'nama'
+                        data: 'name',
+                        name: 'name'
                     },
                     {
                         data: 'hari',
@@ -157,10 +246,6 @@
                         name: 'latesiang'
                     },
                     {
-                        data: 'latesore',
-                        name: 'latesore'
-                    },
-                    {
                         data: 'action',
                         name: 'action'
                     },
@@ -179,6 +264,7 @@
                     'copy', 'csv', 'print'
                 ]
             });
+
             $("#clear").on('click', function(e) {
                 e.preventDefault();
                 // location.reload();
@@ -196,5 +282,26 @@
                 console.log(message);
             };
         });
+
+        $('body').on('click', '.editAtt', function() {
+                var id = $(this).data('id');
+
+                $.get("{{ route('admin.admin_v') }}" + '/editAtt/' + id, function(data) {
+                    $('#ModalTitle').html("Attendance");
+                    $('#show-izin').modal('show');
+                    $('#id').val(data.id);
+                    $('#nip').val(data.nip);
+                    $('#name').val(data.name);
+                    $('#unit').val(data.unit);
+                    $('#nama_unit').val(data.nama_unit);
+                    $('#jam_masuk').val(data.jam_masuk);
+                    $('#jam_siang').val(data.jam_siang);
+                    $('#jam_pulang').val(data.jam_pulang);
+
+                    console.log(data);
+                })
+            });
+
+ 
     </script>
 @endsection

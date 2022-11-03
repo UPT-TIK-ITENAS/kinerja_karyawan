@@ -28,7 +28,6 @@
                                 <th>Tanggal</th>
                                 <th>Keterangan</th>
                                 <th>Aksi</th>
-
                             </thead>
                             <tbody>
                             </tbody>
@@ -120,7 +119,6 @@
     
     <script>
         $(function() {
-
             let table = $('#table-libur').DataTable({
                 fixedHeader: true,
                 pageLength: 10,
@@ -173,6 +171,26 @@
                 console.log(data);
             })
         });
+
+        $('#table-libur').on('click', '.hapusLibur', function(e) {
+            let id = $(this).data('id');
+            const href = $(this).attr('href');
+
+            e.preventDefault()
+            Swal.fire({
+                title: 'Apakah Yakin?',
+                text: `Apakah Anda yakin ingin menghapus?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Hapus'
+            }).then((result) => {
+                if (result.value == true) {
+                    document.location.href = href;
+                }
+            })
+        })
 
         });
     </script>

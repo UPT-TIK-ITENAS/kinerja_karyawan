@@ -62,41 +62,86 @@ class AdminController extends Controller
                 ->editColumn('hari', function ($row) {
                     return config('app.days')[$row->hari];
                 })
-                ->addColumn('nama', function ($row) {
-                    return $row->nip . ' - ' . $row->name;
-                })
                 ->addColumn('duration', function($row){
-                    if($row->jam_masuk == NULL && $row->jam_siang == NULL && $jam_pulang != NULL){
+                    if($row->jam_masuk == NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL){
                         $durationwork = date('00:00:00');
+                    }else if($row->jam_masuk == NULL && $row->jam_siang != NULL && $row->jam_pulang == NULL){
+                        $durationwork = date('00:00:00');
+                    }else if($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang == NULL){
+                        $durationwork = date('00:00:00');
+                    }else if($row->jam_masuk == NULL && $row->jam_siang != NULL && $row->jam_pulang != NULL){
+                        $duration = strtotime($row->jam_pulang) - strtotime($row->jam_siang);
+                        $durationwork = date("H:i:s", $duration);
+                    }else if($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL){
+                        if($row->hari == '5'){
+                            $duration = strtotime("13:30:00") - strtotime($row->jam_masuk);
+                            $durationwork = date("H:i:s", $duration);
+                        }else {
+                            $duration = strtotime("13:00:00") - strtotime($row->jam_masuk);
+                            $durationwork = date("H:i:s", $duration);
+                        }
+                    }else if($row->jam_masuk != NULL && $row->jam_siang != NULL && $row->jam_pulang == NULL){
+                        $duration = strtotime($row->jam_siang) - strtotime($row->jam_masuk);
+                        $durationwork = date("H:i:s", $duration);                       
                     }else{
                         $duration = strtotime($row->jam_pulang) - strtotime($row->jam_masuk);
                         $durationwork = date("H:i:s", $duration);
                     }
-                    
                     return $durationwork;
                 })
 
                 ->addColumn('latemasuk', function ($row) {
-                })
-                ->addColumn('latesiang', function ($row) {
-                })
-                ->addColumn('latesore',function($row) {
-
-                })
-
-                ->addColumn('action', function ($row) {
-                    $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
-                    if ($workingdays < 3) {
-                        $addsurat = route('admin.createizinkehadiran', $row->id);
-                        return $actionBtn = "
-                        <div class='d-block text-center'>
-                        <a href='$addsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-ui-add'></i></a>
-                        </div>
-                        ";
-                    }else{
-                        return '-';
-
+                    $durasi = '';
+                    if( $row->hari != 6 && $row->hari != 0 ) {
+                        if ($row->jam_masuk == NULL && $row->jam_siang != NULL) {
+                            $durasitelat = strtotime($row->jam_siang) - strtotime('08:00:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                        } else if ($row->jam_masuk == NULL && $row->jam_siang == NULL){
+                            $durasitelat = strtotime('12:45:00') - strtotime('08:00:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                        } else if (date("H:i:s", strtotime($row->jam_masuk)) > '08:00:00') {
+                            $durasitelat = strtotime($row->jam_masuk) - strtotime('08:00:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                        }
                     }
+                    return $durasi;
+                })
+
+                ->addColumn('latesiang', function ($row) {
+                    $durasi = '';
+                    if ($row->hari == 5) {
+                        if ($row->jam_siang == NULL && $row->jam_pulang != NULL){
+                            $durasitelat = strtotime($row->jam_pulang) - strtotime('13:30:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                        }else if ($row->jam_siang == NULL && $row->jam_pulang == NULL){
+                            $durasitelat = strtotime('16:59:00') - strtotime('13:30:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                        }else if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
+                            $durasitelat = strtotime($row->jam_pulang) - strtotime('13:30:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                        }
+                    } else if ($row->hari != 6 && $row->hari != 0) {
+                        if ($row->jam_siang == NULL && $row->jam_pulang != NULL) {
+                            $durasitelat = strtotime($row->jam_pulang) - strtotime('13:00:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                        }else if ($row->jam_siang == NULL && $row->jam_pulang == NULL){
+                            $durasitelat = strtotime('16:59:00') - strtotime('13:00:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                        }else if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
+                            $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                        }
+                    }
+                    return $durasi;
+                })
+                ->addColumn('action', function ($row) {
+                    // $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
+                    // if ($workingdays < 3) {
+                        return getAksi($row->id, 'att');
+                    // }else{
+                    //     return '-';
+
+                    // }
                 })
                 ->addColumn('file', function ($row) {
                     $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id', $row->id)->get();
@@ -141,47 +186,39 @@ class AdminController extends Controller
         return DataTables::queryBuilder($data)->toJson();
     }
 
-    public function createizinkehadiran($id)
+    public function editAtt($id)
     {
-
         $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas, unit.nama_unit')
-            ->join('users', 'attendance.nip', '=', 'users.nopeg')
-            ->join('unit', 'unit.id', '=', 'users.unit')
-            ->where('attendance.id', $id)->first();
-        return view('admin.createizinkehadiran', compact('data'));
+        ->join('users', 'attendance.nip', '=', 'users.nopeg')
+        ->join('unit', 'unit.id', '=', 'users.unit')
+        ->where('attendance.id', $id)->first();   
+        return response()->json($data);
     }
 
     public function storeizinkehadiran(Request $request)
     {
+        Izin::insert([
+            'id_attendance' => $request->id,
+            'nopeg' => $request->nip,
+            'name' => $request->name,
+            'unit' => $request->unit,
+            'alasan' => $request->alasan,
+            'validasi' => 1,
+        ]);
 
-        if ($request->validasi == NULL) {
-            return redirect()->route('admin.createizinkehadiran', $request->id_izin)->with('error', 'Validasi Tidak diisi!');
-        } else {
-            Izin::insert([
-                'id_attendance' => $request->id_attendance,
-                'nopeg' => $request->nopeg,
-                'name' => $request->name,
-                'unit' => $request->idunit,
-                'tanggal' => $request->tgl,
-                'jam_awal' => date('H:i:s', strtotime($request->jam_awal)),
-                'jam_akhir' => date('H:i:s', strtotime($request->jam_akhir)),
-                'alasan' => $request->alasan,
-                'validasi' => $request->validasi,
-            ]);
-
-            $dataqr = Izin::where('nopeg', $request->nopeg)->first();
-            $qrcode_filename = 'qr-' . base64_encode($request->nopeg . date('Y-m-d H:i:s')) . '.svg';
+        $dataqr = Izin::where('nopeg', $request->nopeg)->first();
+        $qrcode_filename = 'qr-' . base64_encode($request->nopeg . date('Y-m-d H:i:s')) . '.svg';
             // dd($qrcode_filename);
-            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nopeg . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
+        QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nopeg . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
 
-            QR::where('nopeg', $request->nopeg)->insert([
-                'id_attendance' => $request->id_attendance,
-                'nopeg' => $request->nopeg,
-                'qr_peg' => $qrcode_filename,
-            ]);
+        QR::where('nopeg', $request->nopeg)->insert([
+            'id_attendance' => $request->id_attendance,
+            'nopeg' => $request->nopeg,
+            'qr_peg' => $qrcode_filename,
+        ]);
 
-            return redirect()->route('admin.datapresensi')->with('success', 'Pengajuan Izin Berhasil!');
-        }
+        return redirect()->route('admin.datapresensi')->with('success', 'Pengajuan Izin Berhasil!');
+        
     }
 
     public function printizin($id)
@@ -513,15 +550,7 @@ class AdminController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($data){
-                    $delete_url = route('admin.destroylibur', $data->id);
-
-                    return $actionBtn = "
-                    <div class='d-block text-center'>
-                    <a href='javascript:void(0)' data-toggle='tooltip' class='btn btn btn-warning btn-xs align-items-center editLibur' 
-                    data-id='$data->id' data-original-title='Edit'><i class='icofont icofont-edit-alt'></i></a>
-                    <a href='$delete_url' class='btn btn-sm btn-danger btn-xs align-items-center''><i class='icofont icofont-trash'></i></a>
-                    </div>
-                    "; 
+                    return getAksi($data->id, 'liburnasional');
                 })
 
                 ->rawColumns(['action'])

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\JenisIzin;
 use App\Models\IzinKerja;
 use App\Models\User;
+use App\Models\Attendance;
 
     if (!function_exists('getCheck')) {
         function getCheck($jenis_izin, $id, $tipe)
@@ -113,6 +114,7 @@ use App\Models\User;
             $printcuti =  route('admin.printcuti', $id);
             $batal_cuti = route('admin.batal_cuti', $id);
             $batal_izin = route('admin.batal_izin', $id);
+            $delete_url = route('admin.destroylibur', $id);
 
             $for_html = "";
             if ($tipe == 'izin') {
@@ -136,8 +138,19 @@ use App\Models\User;
                     <a href="#" class="btn btn-primary btn-xs apprvCuti" data-bs-target="#apprvCuti" data-bs-toggle="modal" data-id="' . $data->id_cuti . '"><i class="icofont icofont-pencil-alt-2"></i></a>
                     <a class="btn btn-success btn-xs" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a> ';
                 }
+            } else if($tipe =='liburnasional'){
+                    $for_html = "
+                    <div class='d-block text-center'>
+                    <a href='javascript:void(0)' data-toggle='tooltip' class='btn btn btn-warning btn-xs align-items-center editLibur' 
+                    data-id='$id' data-original-title='Edit' title='Edit Libur'><i class='icofont icofont-edit-alt'></i></a>
+                    <a href='$delete_url' title='Hapus Libur' class='btn btn-sm btn-danger btn-xs align-items-center hapusLibur'><i class='icofont icofont-trash'></i></a>
+                    </div>
+                    "; 
+            } else if($tipe =='att'){
+                    $data = Attendance::where('id', $id)->first();
+                    $for_html = '
+                    <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-target="#editAtt" data-bs-toggle="modal" data-id="' . $data->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
             }
-
             return $for_html;
         }
     }
@@ -215,32 +228,7 @@ use App\Models\User;
         }
     }
 
-    if (!function_exists('getPresensi')) {
-        function getPresensi($type)
-        {
-            $data = Attendance::selectRaw('attendance.*, users.name, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->get();
-            foreach($data as $row){
-                if($type == 'duration'){
-                    if($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang == NULL){
-                        return '00:00:00';
-                    }else if ($row->jam_masuk == NULL && $row->jam_siang != NULL && $row->jam_pulang != NULL){
-                        $duration = strtotime($row->jam_pulang) - strtotime($row->jam_siang);
-                        $durationwork = date("H:i:s", $duration);
-                        return $durationwork;
-                    }else if($row->jam_masuk == NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL){
-                        return '00:00:00';
-                    }else {
-                        $time_awalreal =  strtotime($row->jam_masuk);
-                        $time_akhirreal = strtotime($row->jam_pulang);
-                        $duration = ceil(abs($time_akhirreal - $time_awalreal) - strtotime('01:00:00'));
-                        $durationwork = date("H:i:s", $duration);
-                        return $durationwork;
-                    }
-                }
-            }
-           
-        }
-    }
+
 
     if (!function_exists('getNama')) {
         function getNama($nopeg)
