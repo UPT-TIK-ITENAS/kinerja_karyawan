@@ -111,7 +111,19 @@
                         <div class="row">
                             @if (session('success'))
                                 <div class="success-session" data-flashdata="{{ session('success') }}"></div>
-                            @elseif (session('danger'))
+                            @endif
+                            @if (session('warning'))
+                                <div class="warning-sync" data-flashdata="{{ session('warning') }}">
+                                    <div class="alert alert-warning inverse alert-dismissible fade show"
+                                        role="alert"><i class="icon-alert txt-dark"></i>
+                                        <p><b> Perhatian ! </b> <br> {!! session('warning') !!}</p>
+                                        <button class="btn-close" type="button" data-bs-dismiss="alert"
+                                            aria-label="Close" data-bs-original-title="" title=""></button>
+
+                                    </div>
+                                </div>
+                            @endif
+                            @if (session('danger'))
                                 <div class="danger-session" data-flashdata="{{ session('danger') }}"></div>
                             @endif
                         </div>

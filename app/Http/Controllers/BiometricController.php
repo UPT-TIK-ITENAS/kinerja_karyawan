@@ -16,13 +16,14 @@ class BiometricController extends Controller
         ]);
 
         $listmesinabsensi = DB::table('biometricmachine')->where('status', 'enable')->get();
+        $gagalMesin = [];
         if (empty($listmesinabsensi)) {
             return "Finger Print Machine not register or not enable";
         }
 
         foreach ($listmesinabsensi as $mesinabsensi) {
             $msg = "Sync data from machine " . $mesinabsensi->name . "(" . $mesinabsensi->ipaddress . ":" . $mesinabsensi->port . ")";
-            $Connect = fsockopen($mesinabsensi->ipaddress, $mesinabsensi->port, $errno, $errstr, 1);
+            $Connect = @fsockopen($mesinabsensi->ipaddress, $mesinabsensi->port, $errno, $errstr, 1);
             if ($Connect) {
                 $msg .= "\n SUCCESS connect machine";
                 if (!isset($Key)) $Key = "0";
@@ -114,7 +115,15 @@ class BiometricController extends Controller
                 }
             } else {
                 $msg .= "\n FAILED connect machine: " . $errno . " " . $errstr;
-                return $msg;
+                // return $msg;
+                $last_connect = date('Y-m-d H:i:s');
+                $last_response = $msg;
+                $save_log = DB::table('biometricmachine')->where('id', $mesinabsensi->id)->update([
+                    'last_connect' => $last_connect,
+                    'last_response' => $last_response,
+                ]);
+                array_push($gagalMesin, 'Gagal Sinkron pada Mesin : ' . $mesinabsensi->name . ' (' . $mesinabsensi->ipaddress . ')');
+                continue;
             }
             $last_connect = date('Y-m-d H:i:s');
             $last_response = $msg;
@@ -124,7 +133,8 @@ class BiometricController extends Controller
                 'last_response' => $last_response,
             ]);
         }
-        return redirect()->route('admin.datapresensi')->with('success', 'Sinkronisasi Berhasil!');
+        $gagalMesin = implode("<br>", $gagalMesin);
+        return redirect()->route('admin.datapresensi')->with(array('warning' => $gagalMesin ?? 'Berhasil Mengambil data dari semua mesin sidik jari', 'success' => 'Sinkronisasi Berhasil'));
     }
 
     public function Parse_Data($data, $p1, $p2)
