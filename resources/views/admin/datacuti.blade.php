@@ -98,7 +98,8 @@
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="sumcuti">Total cuti yang sudah terpakai</span>
-                                <input class="form-control" id="sumcuti" name="sumcuti" type="text" required="">
+                                <input class="form-control" readonly id="sumcuti" name="sumcuti" type="text"
+                                    required="">
                             </div>
                         </div>
                         <div class="row g-2 mb-3">
@@ -238,47 +239,53 @@
                 const max_hari = selected.data('max');
 
                 $("#lama_cuti").val(max_hari);
-            });
-        });
+                let nopeg = $('#nopeg').val().split('-')[0];
+                let jenis = $('#jenis_cuti').val();
 
-        $('#jenis_cuti').on('change', function() {
-            let nopeg = $('#nopeg').val().split('-')[0];
-            let jenis = $('#jenis_cuti').val();
-
-            let sumcuti = $('#sumcuti');
-            $.get(window.baseurl + '/admin/historycuti/' + nopeg + '/' + jenis, function(res) {
-                sumcuti.val(res);
-                console.log(res);
-            })
-        });
-
-        $('#tgl_akhir_cuti').on('change', function() {
-            let tgl_awal = $('#tgl_awal_cuti').val();
-            let tgl_akhir = $('#tgl_akhir_cuti').val();
-            let total_cuti = $('#total_cuti');
-            let sumcuti = $('#sumcuti').val();
-            let lama = $('#lama_cuti').val();
-            let total = 0;
-            let totalll = 0;
-
-            if (tgl_awal != '' && tgl_akhir != '') {
-                $.get(window.baseurl + '/admin/getWorkingDays/' + tgl_awal + '/' + tgl_akhir, function(response) {
-                    total = total_cuti.val(response);
-                    totalll = parseInt(response) + parseInt(sumcuti);
-                    console.log(totalll);
-
-                    if (totalll > lama) {
-                        $('#lebihHari').css('display', 'block');
-                        $('#btnSubmit').attr('disabled', 'true');
-                    } else {
-                        $('#lebihHari').css('display', 'none');
-                        $('#btnSubmit').removeAttr('disabled');
-                    }
-
+                let sumcuti = $('#sumcuti');
+                $.get(window.baseurl + '/admin/historycuti/' + nopeg + '/' + jenis, function(res) {
+                    sumcuti.val(res);
+                    console.log(res);
                 })
+                getTotalCuti();
+            });
+            $('#tgl_akhir_cuti').on('change', function() {
+                getTotalCuti();
+            });
+            $('#tgl_awal_cuti').on('change', function() {
+                getTotalCuti();
+            });
 
+            function getTotalCuti() {
+                let tgl_awal = $('#tgl_awal_cuti').val();
+                let tgl_akhir = $('#tgl_akhir_cuti').val();
+                let total_cuti = $('#total_cuti');
+                let sumcuti = $('#sumcuti').val();
+                let lama = $('#lama_cuti').val();
+                let total = 0;
+                let totalll = 0;
+
+                if (tgl_awal != '' && tgl_akhir != '') {
+                    $.get(window.baseurl + '/admin/getWorkingDays/' + tgl_awal + '/' + tgl_akhir, function(
+                        response) {
+                        total = total_cuti.val(response);
+                        totalll = parseInt(response) + parseInt(sumcuti);
+                        console.log(totalll);
+
+                        if (totalll > lama) {
+                            $('#lebihHari').css('display', 'block');
+                            $('#btnSubmit').attr('disabled', 'true');
+                        } else {
+                            $('#lebihHari').css('display', 'none');
+                            $('#btnSubmit').removeAttr('disabled');
+                        }
+
+                    })
+
+                }
             }
         });
+
 
         $('#table-cuti').on('click', '.batalcuti', function(e) {
             let id = $(this).data('id');
