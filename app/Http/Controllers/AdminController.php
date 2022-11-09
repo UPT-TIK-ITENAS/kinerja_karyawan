@@ -385,18 +385,6 @@ class AdminController extends Controller
 
     public function storeizin(Request $request)
     {
-        IzinKerja::insert([
-            'nopeg' => explode('-', $request->nopeg)[0],
-            'name' =>  explode('-', $request->nopeg)[1],
-            'unit' =>  explode('-', $request->nopeg)[2],
-            'jenis_izin' => explode('|', $request->jenis_izin)[0],
-            'total_izin' => $request->total_izin,
-            'tgl_awal_izin' => date('Y-m-d', strtotime($request->tgl_awal_izin)),
-            'tgl_akhir_izin' => date('Y-m-d', strtotime($request->tgl_akhir_izin)),
-            'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
-            'validasi' => '1',
-            'approval' => '0',
-        ]);
 
         $qrcode_filename = 'qr-' . explode('-', $request->nopeg)[0] . '-' . explode('|', $request->jenis_izin)[0] . '.svg';
         QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
