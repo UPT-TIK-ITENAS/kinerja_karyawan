@@ -31,43 +31,39 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-12 col-lg-6">
-                                    <button class="btn btn-outline-success-2x" type="button" id="clear"><i
-                                            class="fa fa-refresh"></i> Sinkron</button>
+                                    <button class="btn btn-outline-success-2x" type="submit"><i class="fa fa-refresh"></i>
+                                        Sinkron</button>
                                 </div>
                             </div>
-                            <form>
-                                <hr>
-                                <form>
-                                    <div class="form-group row">
-                                        <label class="col-sm-1 col-form-label">Filter</label>
-                                        <div class="col-xl-3">
-                                            <select
-                                                class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
-                                                name="filter1" id="filter1" required="">
-                                                <option selected="" disabled="" value=""> Pilih Nama </option>
-                                                @foreach ($user as $u)
-                                                    <option value="{{ $u->nopeg }}">{{ $u->nopeg }} -
-                                                        {{ $u->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="col-xl-2">
-                                            <select
-                                                class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
-                                                name="filter2" id="filter2" required="">
-                                                <option selected="" disabled="" value="">Pilih Tanggal </option>
-                                                @foreach ($attendance as $a)
-                                                    <option value="{{ $a->tanggal }}">{{ $a->tanggal }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-12 col-md-12 col-lg-6">
-                                            <button class="btn btn-outline-danger txt-red" type="button" id="clear"><i
-                                                    class="icofont icofont-ui-delete"></i> Hapus</button>
-                                            {{-- <button class="btn btn-danger" type="submit" id="clear">Hapus</button> --}}
-                                        </div>
-                                    </div>
-                                    <form>
+                        </form>
+                        <hr>
+                        <div class="form-group row">
+                            <label class="col-sm-1 col-form-label">Filter</label>
+                            <div class="col-xl-3">
+                                <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                    name="filter1" id="filter1" required="">
+                                    <option selected="" disabled="" value=""> Pilih Nama </option>
+                                    @foreach ($user as $u)
+                                        <option value="{{ $u->nopeg }}">{{ $u->nopeg }} -
+                                            {{ $u->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-xl-2">
+                                <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                    name="filter2" id="filter2" required="">
+                                    <option selected="" disabled="" value="">Pilih Tanggal </option>
+                                    @foreach ($attendance as $a)
+                                        <option value="{{ $a->tanggal }}">{{ $a->tanggal }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-6">
+                                <button class="btn btn-outline-danger txt-red" type="button" id="clear"><i
+                                        class="icofont icofont-ui-delete"></i> Hapus</button>
+                                {{-- <button class="btn btn-danger" type="submit" id="clear">Hapus</button> --}}
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">

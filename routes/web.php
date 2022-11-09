@@ -58,7 +58,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/getWorkingDays/{startDate}/{endDate}', [AdminController::class, 'getWorkingDays'])->name('admin.getWorkingDays');
         Route::get('/historycuti/{nopeg}/{jenis}', [AdminController::class, 'historycuti'])->name('admin.historycuti');
 
-        
+
         Route::get('/datacuti', [AdminController::class, 'datacuti'])->name('admin.datacuti');
         Route::get('/listcuti', [AdminController::class, 'listcuti'])->name('admin.listcuti');
         Route::post('storecuti', [AdminController::class, 'storecuti'])->name('admin.storecuti');
@@ -71,10 +71,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/updatelibur', [AdminController::class, 'updatelibur'])->name('admin.updatelibur');
         Route::post('/createlibur', [AdminController::class, 'createlibur'])->name('admin.createlibur');
         Route::get('/destroylibur/{id}', [AdminController::class, 'destroylibur'])->name('admin.destroylibur');
-        
-        
-        
-        
     });
     Route::prefix('karyawan')->name('karyawan.')->group(function () {
         Route::get('/', [KaryawanController::class, 'index'])->name('index');
