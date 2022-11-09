@@ -19,18 +19,18 @@
         <div class="row">
             <!-- Zero Configuration  Starts-->
             <div class="col-sm-12">
-                <div class="card"> 
+                <div class="card">
                     <div class="card-body">
 
-                         <div class="row mb-2">
+                        <div class="row mb-2">
                             <div class="col">
                                 <a href="#" class="btn btn-primary" data-bs-target="#tambahIzin"
                                     data-bs-toggle="modal" style="float: right">+ Tambah</a>
                             </div>
                         </div>
-                        
+
                         {{-- <a href="{{ route('admin.createizin') }}" class="btn btn-primary"><i class="icofont icofont-plus-square"></i> Tambah</a> --}}
-                        <div class="table-responsive"> 
+                        <div class="table-responsive">
                             <table class="dataTable" id="table-izin">
                                 <thead>
                                     <th>No.</th>
@@ -45,7 +45,7 @@
                                     <th>Status</th>
                                 </thead>
                                 <tbody>
-                 
+
                                 </tbody>
                             </table>
                         </div>
@@ -54,12 +54,10 @@
             </div>
         </div>
     </div>
-
 @endsection
 
 @section('scripts')
-
-<div class="modal fade bd-example-modal-lg" id="tambahIzin" aria-labelledby="myLargeModalLabel" aria-modal="true"
+    <div class="modal fade bd-example-modal-lg" id="tambahIzin" aria-labelledby="myLargeModalLabel" aria-modal="true"
         role="dialog">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -137,7 +135,8 @@
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu dan libur nasional tidak
+                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu dan libur
+                            nasional tidak
                             dihitung</span>
                         <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
                     </div>
@@ -147,7 +146,7 @@
     </div>
 
     @parent
-   
+
     <script>
         $().ready(function() {
             let table = $('#table-izin').DataTable({
@@ -162,22 +161,49 @@
                     width: "200px !important",
                 }, ],
                 ajax: "{{ route('admin.listizin') }}",
-                columns: [
-                    {    data: 'DT_RowIndex',
-                                name: 'DT_RowIndex',
-                                className: 'text-center',
-                                orderable: false,
-                                searchable: false,
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        className: 'text-center',
+                        orderable: false,
+                        searchable: false,
                     },
-                    { data: 'nopeg', name: 'nopeg'},
-                    { data: 'name',  name: 'name'},
-                    { data: 'singkatan_unit', name: 'singkatan_unit'},
-                    { data: 'jenis_izin', name: 'jenis_izin'},
-                    { data: 'tgl_awal_izin', name: 'tgl_awal_izin'},
-                    { data: 'tgl_akhir_izin', name: 'tgl_akhir_izin'},
-                    { data: 'total_izin', name: 'total_izin'},
-                    { data: 'print', name: 'print'},
-                    { data: 'status', name: 'status'},
+                    {
+                        data: 'nopeg',
+                        name: 'nopeg'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'singkatan_unit',
+                        name: 'singkatan_unit'
+                    },
+                    {
+                        data: 'jenis_izin',
+                        name: 'jenis_izin'
+                    },
+                    {
+                        data: 'tgl_awal_izin',
+                        name: 'tgl_awal_izin'
+                    },
+                    {
+                        data: 'tgl_akhir_izin',
+                        name: 'tgl_akhir_izin'
+                    },
+                    {
+                        data: 'total_izin',
+                        name: 'total_izin'
+                    },
+                    {
+                        data: 'print',
+                        name: 'print'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
+                    },
                 ],
                 dom: 'Bfrtip',
                 buttons: [
@@ -186,7 +212,7 @@
             });
 
             $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
-                    console.log(message);
+                console.log(message);
             };
         });
 
@@ -210,7 +236,7 @@
             })
         })
 
-        
+
         $('#tgl_akhir_izin').on('change', function() {
             let tgl_awal = $('#tgl_awal_izin').val();
             let tgl_akhir = $('#tgl_akhir_izin').val();
@@ -223,11 +249,11 @@
                     total = total_izin.val(response);
                     console.log(response);
                     console.log(lama_izin);
-                    if(lama_izin == 0 ){
+                    if (lama_izin == 0) {
                         $('#lebihHari').css('display', 'none');
                         $('#btnSubmit').removeAttr('disabled');
-                    }else if(lama_izin != 0){
-                        if (response >= lama_izin) {
+                    } else if (lama_izin != 0) {
+                        if (response > lama_izin) {
                             $('#lebihHari').css('display', 'block');
                             $('#btnSubmit').attr('disabled', 'true');
                         } else {
@@ -238,18 +264,16 @@
                 })
             }
         });
-        
+
         $('#jenis_izin').on('change', function() {
             let jenis_izin = $('#jenis_izin');
             let lama_izin = $('#lama_izin');
             let durasi_izin = jenis_izin.val().split('|')[1] ? jenis_izin.val().split('|')[1] : 100;
-            if(durasi_izin == 100){
+            if (durasi_izin == 100) {
                 lama_izin.val(0);
-            }else{
+            } else {
                 lama_izin.val(durasi_izin);
             }
         });
-
     </script>
 @endsection
-

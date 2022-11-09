@@ -1,18 +1,18 @@
 @extends('layouts.app')
 @section('content')
-<div class="container-fluid">
-    <div class="page-header">
-        <div class="row">
-            <div class="col-lg-6">
-                <h3>Data Pengajuan Cuti</h3>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">Data Pengajuan Cuti</li>
-                    <li class="breadcrumb-item active">Data Cuti</li>
-                </ol>
+    <div class="container-fluid">
+        <div class="page-header">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h3>Data Pengajuan Cuti</h3>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">Data Pengajuan Cuti</li>
+                        <li class="breadcrumb-item active">Data Cuti</li>
+                    </ol>
+                </div>
             </div>
         </div>
     </div>
-</div>
     <div class="container-fluid">
         <div class="row">
             <!-- Zero Configuration  Starts-->
@@ -26,7 +26,7 @@
                             </div>
                         </div>
                         {{-- <a href="{{ route('admin.createcuti') }}" class="btn btn-primary"><i class="icofont icofont-plus-square"></i> Tambah</a> --}}
-                        <div class="table-responsive"> 
+                        <div class="table-responsive">
                             <table class="dataTable" id="table-cuti">
                                 <thead>
                                     <th>No.</th>
@@ -41,7 +41,7 @@
                                     <th>Status</th>
                                 </thead>
                                 <tbody>
-                 
+
                                 </tbody>
                             </table>
                         </div>
@@ -50,12 +50,10 @@
             </div>
         </div>
     </div>
-
 @endsection
 
 @section('scripts')
-
-<div class="modal fade bd-example-modal-lg" id="tambahCuti" aria-labelledby="myLargeModalLabel" aria-modal="true"
+    <div class="modal fade bd-example-modal-lg" id="tambahCuti" aria-labelledby="myLargeModalLabel" aria-modal="true"
         role="dialog">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -91,7 +89,8 @@
                                     id="jenis_cuti" name="jenis_cuti" required="">
                                     <option selected="" disabled="" value="">-- Pilih ---</option>
                                     @foreach ($data['jeniscuti'] as $r)
-                                        <option value="{{ $r->id_jeniscuti }}" data-max="{{ $r->max_hari }}">{{ $r->jenis_cuti }}</option>
+                                        <option value="{{ $r->id_jeniscuti }}" data-max="{{ $r->max_hari }}">
+                                            {{ $r->jenis_cuti }}</option>
                                     @endforeach
                                 </select>
                                 <input type="hidden" id="lama_cuti">
@@ -99,8 +98,7 @@
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="sumcuti">Total cuti yang sudah terpakai</span>
-                                <input class="form-control" id="sumcuti" name="sumcuti" type="text"
-                                    required="">
+                                <input class="form-control" id="sumcuti" name="sumcuti" type="text" required="">
                             </div>
                         </div>
                         <div class="row g-2 mb-3">
@@ -153,7 +151,8 @@
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu dan hari libur nasional tidak
+                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu dan hari libur
+                            nasional tidak
                             dihitung</span>
                         <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
                     </div>
@@ -177,23 +176,50 @@
                     width: "200px !important",
                 }, ],
                 ajax: "{{ route('admin.listcuti') }}",
-                columns: [
-                    {    data: 'DT_RowIndex',
-                                name: 'DT_RowIndex',
-                                className: 'text-center',
-                                orderable: false,
-                                searchable: false,
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        className: 'text-center',
+                        orderable: false,
+                        searchable: false,
                     },
-                    { data: 'name',  name: 'name'},
-                    { data: 'nopeg', name: 'nopeg'},
-                    { data: 'singkatan_unit', name: 'singkatan_unit'},
-                    { data: 'jenis_cuti', name: 'jenis_cuti'},
-                    { data: 'tgl_awal_cuti', name: 'tgl_awal_cuti'},
-                    { data: 'tgl_akhir_cuti', name: 'tgl_akhir_cuti'},
-                    { data: 'total_cuti', name: 'total_cuti'},
-                    { data: 'action', name: 'action'},
-                    { data: 'status', name: 'status'},
-                    
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'nopeg',
+                        name: 'nopeg'
+                    },
+                    {
+                        data: 'singkatan_unit',
+                        name: 'singkatan_unit'
+                    },
+                    {
+                        data: 'jenis_cuti',
+                        name: 'jenis_cuti'
+                    },
+                    {
+                        data: 'tgl_awal_cuti',
+                        name: 'tgl_awal_cuti'
+                    },
+                    {
+                        data: 'tgl_akhir_cuti',
+                        name: 'tgl_akhir_cuti'
+                    },
+                    {
+                        data: 'total_cuti',
+                        name: 'total_cuti'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
+                    },
+
                 ],
                 dom: 'Bfrtip',
                 buttons: [
@@ -202,7 +228,7 @@
             });
 
             $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
-                    console.log(message);
+                console.log(message);
             };
         });
 
@@ -218,7 +244,7 @@
         $('#jenis_cuti').on('change', function() {
             let nopeg = $('#nopeg').val().split('-')[0];
             let jenis = $('#jenis_cuti').val();
-            
+
             let sumcuti = $('#sumcuti');
             $.get(window.baseurl + '/admin/historycuti/' + nopeg + '/' + jenis, function(res) {
                 sumcuti.val(res);
@@ -234,14 +260,14 @@
             let lama = $('#lama_cuti').val();
             let total = 0;
             let totalll = 0;
-            
+
             if (tgl_awal != '' && tgl_akhir != '') {
                 $.get(window.baseurl + '/admin/getWorkingDays/' + tgl_awal + '/' + tgl_akhir, function(response) {
                     total = total_cuti.val(response);
                     totalll = parseInt(response) + parseInt(sumcuti);
                     console.log(totalll);
 
-                    if (totalll >= lama) {
+                    if (totalll > lama) {
                         $('#lebihHari').css('display', 'block');
                         $('#btnSubmit').attr('disabled', 'true');
                     } else {
@@ -250,7 +276,7 @@
                     }
 
                 })
-               
+
             }
         });
 
@@ -273,8 +299,5 @@
                 }
             })
         })
-
-      
     </script>
 @endsection
-
