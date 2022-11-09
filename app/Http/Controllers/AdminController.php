@@ -41,49 +41,49 @@ class AdminController extends Controller
     //DATA PRESENSI
     public function datapresensi()
     {
-        $user = User::where('fungsi','Admin')->get();
+        $user = User::where('fungsi', 'Admin')->get();
         $attendance = Attendance::select('tanggal')->groupby('tanggal')->get();
         // dd($attendance[1]);
-        return view('admin.datapresensi',compact('user','attendance'));
+        return view('admin.datapresensi', compact('user', 'attendance'));
     }
 
 
     public function listkaryawan(Request $request)
     {
         $data = Attendance::selectRaw('attendance.*, users.name, users.awal_tugas, users.akhir_tugas')
-        ->join('users', 'attendance.nip', '=', 'users.nopeg')
-        ->where('fungsi','Admin')
-        ->where('attendance.nip', $request->get('filter1'), '', 'and')
-        ->where('attendance.tanggal', $request->get('filter2'), '', 'and')
-        ->orderby('attendance.tanggal','asc');
+            ->join('users', 'attendance.nip', '=', 'users.nopeg')
+            ->where('fungsi', 'Admin')
+            ->where('attendance.nip', $request->get('filter1'), '', 'and')
+            ->where('attendance.tanggal', $request->get('filter2'), '', 'and')
+            ->orderby('attendance.tanggal', 'asc');
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->editColumn('hari', function ($row) {
                     return config('app.days')[$row->hari];
                 })
-                ->addColumn('duration', function($row){
-                    if($row->jam_masuk == NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL){
+                ->addColumn('duration', function ($row) {
+                    if ($row->jam_masuk == NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL) {
                         $durationwork = date('00:00:00');
-                    }else if($row->jam_masuk == NULL && $row->jam_siang != NULL && $row->jam_pulang == NULL){
+                    } else if ($row->jam_masuk == NULL && $row->jam_siang != NULL && $row->jam_pulang == NULL) {
                         $durationwork = date('00:00:00');
-                    }else if($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang == NULL){
+                    } else if ($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang == NULL) {
                         $durationwork = date('00:00:00');
-                    }else if($row->jam_masuk == NULL && $row->jam_siang != NULL && $row->jam_pulang != NULL){
+                    } else if ($row->jam_masuk == NULL && $row->jam_siang != NULL && $row->jam_pulang != NULL) {
                         $duration = strtotime($row->jam_pulang) - strtotime($row->jam_siang);
                         $durationwork = date("H:i:s", $duration);
-                    }else if($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL){
-                        if($row->hari == '5'){
+                    } else if ($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL) {
+                        if ($row->hari == '5') {
                             $duration = strtotime("13:30:00") - strtotime($row->jam_masuk);
                             $durationwork = date("H:i:s", $duration);
-                        }else {
+                        } else {
                             $duration = strtotime("13:00:00") - strtotime($row->jam_masuk);
                             $durationwork = date("H:i:s", $duration);
                         }
-                    }else if($row->jam_masuk != NULL && $row->jam_siang != NULL && $row->jam_pulang == NULL){
+                    } else if ($row->jam_masuk != NULL && $row->jam_siang != NULL && $row->jam_pulang == NULL) {
                         $duration = strtotime($row->jam_siang) - strtotime($row->jam_masuk);
-                        $durationwork = date("H:i:s", $duration);                       
-                    }else{
+                        $durationwork = date("H:i:s", $duration);
+                    } else {
                         $duration = strtotime($row->jam_pulang) - strtotime($row->jam_masuk);
                         $durationwork = date("H:i:s", $duration);
                     }
@@ -92,11 +92,11 @@ class AdminController extends Controller
 
                 ->addColumn('latemasuk', function ($row) {
                     $durasi = '';
-                    if( $row->hari != 6 && $row->hari != 0 ) {
+                    if ($row->hari != 6 && $row->hari != 0) {
                         if ($row->jam_masuk == NULL && $row->jam_siang != NULL) {
                             $durasitelat = strtotime($row->jam_siang) - strtotime('08:00:00');
                             $durasi = date("H:i:s", $durasitelat);
-                        } else if ($row->jam_masuk == NULL && $row->jam_siang == NULL){
+                        } else if ($row->jam_masuk == NULL && $row->jam_siang == NULL) {
                             $durasitelat = strtotime('12:45:00') - strtotime('08:00:00');
                             $durasi = date("H:i:s", $durasitelat);
                         } else if (date("H:i:s", strtotime($row->jam_masuk)) > '08:00:00') {
@@ -110,13 +110,13 @@ class AdminController extends Controller
                 ->addColumn('latesiang', function ($row) {
                     $durasi = '';
                     if ($row->hari == 5) {
-                        if ($row->jam_siang == NULL && $row->jam_pulang != NULL){
+                        if ($row->jam_siang == NULL && $row->jam_pulang != NULL) {
                             $durasitelat = strtotime($row->jam_pulang) - strtotime('13:30:00');
                             $durasi = date("H:i:s", $durasitelat);
-                        }else if ($row->jam_siang == NULL && $row->jam_pulang == NULL){
+                        } else if ($row->jam_siang == NULL && $row->jam_pulang == NULL) {
                             $durasitelat = strtotime('16:59:00') - strtotime('13:30:00');
                             $durasi = date("H:i:s", $durasitelat);
-                        }else if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
+                        } else if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
                             $durasitelat = strtotime($row->jam_pulang) - strtotime('13:30:00');
                             $durasi = date("H:i:s", $durasitelat);
                         }
@@ -124,10 +124,10 @@ class AdminController extends Controller
                         if ($row->jam_siang == NULL && $row->jam_pulang != NULL) {
                             $durasitelat = strtotime($row->jam_pulang) - strtotime('13:00:00');
                             $durasi = date("H:i:s", $durasitelat);
-                        }else if ($row->jam_siang == NULL && $row->jam_pulang == NULL){
+                        } else if ($row->jam_siang == NULL && $row->jam_pulang == NULL) {
                             $durasitelat = strtotime('16:59:00') - strtotime('13:00:00');
                             $durasi = date("H:i:s", $durasitelat);
-                        }else if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
+                        } else if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
                             $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
                             $durasi = date("H:i:s", $durasitelat);
                         }
@@ -137,7 +137,7 @@ class AdminController extends Controller
                 ->addColumn('action', function ($row) {
                     // $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
                     // if ($workingdays < 3) {
-                        return getAksi($row->id, 'att');
+                    return getAksi($row->id, 'att');
                     // }else{
                     //     return '-';
 
@@ -179,7 +179,7 @@ class AdminController extends Controller
                         }
                     }
                 })
-                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang','latesore', 'action','file','status'])
+                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'latesore', 'action', 'file', 'status'])
 
                 ->make(true);
         }
@@ -189,9 +189,9 @@ class AdminController extends Controller
     public function editAtt($id)
     {
         $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas, unit.nama_unit')
-        ->join('users', 'attendance.nip', '=', 'users.nopeg')
-        ->join('unit', 'unit.id', '=', 'users.unit')
-        ->where('attendance.id', $id)->first();   
+            ->join('users', 'attendance.nip', '=', 'users.nopeg')
+            ->join('unit', 'unit.id', '=', 'users.unit')
+            ->where('attendance.id', $id)->first();
         return response()->json($data);
     }
 
@@ -208,7 +208,7 @@ class AdminController extends Controller
 
         $dataqr = Izin::where('nopeg', $request->nopeg)->first();
         $qrcode_filename = 'qr-' . base64_encode($request->nopeg . date('Y-m-d H:i:s')) . '.svg';
-            // dd($qrcode_filename);
+        // dd($qrcode_filename);
         QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nopeg . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
 
         QR::where('nopeg', $request->nopeg)->insert([
@@ -218,7 +218,6 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('admin.datapresensi')->with('success', 'Pengajuan Izin Berhasil!');
-        
     }
 
     public function printizin($id)
@@ -249,7 +248,7 @@ class AdminController extends Controller
 
                 ->addColumn('duration', function ($data) {
 
-                    $data_att= DB::select('CALL getTotalTelatPerBulan('.$data->nopeg.')');
+                    $data_att = DB::select('CALL getTotalTelatPerBulan(' . $data->nopeg . ')');
                     $pagi = 0;
                     $siang = 0;
                     foreach ($data_att as $row) {
@@ -313,35 +312,35 @@ class AdminController extends Controller
 
     function getWorkingDays($startDate, $endDate)
     {
-            $begin = strtotime($startDate);
-            $end   = strtotime($endDate);
-            $curentYear = date('Y', $begin);
-            $endYear = date('Y', $end);
-            $libur_nasional = DB::table('libur_nasional')->whereYear('tanggal', '=', $curentYear)->whereYear('tanggal', '=', $endYear)->get();
-            if ($begin > $end) {
-                return 0;
-            } else {
-                $no_days  = 0;
-                $weekends = 0;
-                while ($begin <= $end) {
-                    $no_days++; // no of days in the given interval
-                    $what_day = date("N", $begin);
-                    if ($what_day > 5) { // 6 and 7 are weekend days
+        $begin = strtotime($startDate);
+        $end   = strtotime($endDate);
+        $curentYear = date('Y', $begin);
+        $endYear = date('Y', $end);
+        $libur_nasional = DB::table('libur_nasional')->whereYear('tanggal', '=', $curentYear)->whereYear('tanggal', '=', $endYear)->get();
+        if ($begin > $end) {
+            return 0;
+        } else {
+            $no_days  = 0;
+            $weekends = 0;
+            while ($begin <= $end) {
+                $no_days++; // no of days in the given interval
+                $what_day = date("N", $begin);
+                if ($what_day > 5) { // 6 and 7 are weekend days
+                    $weekends++;
+                }
+                // cek libur nasional
+                foreach ($libur_nasional as $key => $value) {
+                    if (date('Y-m-d', $begin) == $value->tanggal) {
                         $weekends++;
                     }
-                    // cek libur nasional
-                    foreach ($libur_nasional as $key => $value) {
-                        if (date('Y-m-d', $begin) == $value->tanggal) {
-                            $weekends++;
-                        }
-                    }
-                    $begin += 86400; // +1 day
-                };
+                }
+                $begin += 86400; // +1 day
+            };
 
-                $working_days = $no_days - $weekends;
+            $working_days = $no_days - $weekends;
 
-                return response()->json($working_days);
-            }
+            return response()->json($working_days);
+        }
     }
 
 
@@ -349,7 +348,7 @@ class AdminController extends Controller
 
     public function dataizin()
     {
-        $user = User::join('unit','users.unit','=','unit.id')->where('fungsi', 'admin')->get();
+        $user = User::join('unit', 'users.unit', '=', 'unit.id')->where('fungsi', 'admin')->get();
         $jenisizin = JenisIzin::all();
 
         $data = [
@@ -357,12 +356,12 @@ class AdminController extends Controller
             'jenisizin' => $jenisizin
         ];
 
-        return view('admin.dataizin',compact('data'));
+        return view('admin.dataizin', compact('data'));
     }
 
     public function listizin(Request $request)
     {
-        $data = DB::table('izin_kerja')->join('unit','izin_kerja.unit','=','unit.id')->join('jenis_izin', 'jenis_izin.id_izin', '=', 'izin_kerja.jenis_izin');
+        $data = DB::table('izin_kerja')->join('unit', 'izin_kerja.unit', '=', 'unit.id')->join('jenis_izin', 'jenis_izin.id_izin', '=', 'izin_kerja.jenis_izin');
 
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -386,22 +385,22 @@ class AdminController extends Controller
 
     public function storeizin(Request $request)
     {
-         IzinKerja::insert([
-                'nopeg' => explode('-', $request->nopeg)[0],
-                'name' =>  explode('-', $request->nopeg)[1],
-                'unit' =>  explode('-', $request->nopeg)[2],
-                'jenis_izin' => explode('|', $request->jenis_izin)[0],
-                'total_izin' => $request->total_izin,
-                'tgl_awal_izin' => date('Y-m-d', strtotime($request->tgl_awal_izin)),
-                'tgl_akhir_izin' => date('Y-m-d', strtotime($request->tgl_akhir_izin)),
-                'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
-                'validasi' => '1',
-                'approval' => '0',
+        IzinKerja::insert([
+            'nopeg' => explode('-', $request->nopeg)[0],
+            'name' =>  explode('-', $request->nopeg)[1],
+            'unit' =>  explode('-', $request->nopeg)[2],
+            'jenis_izin' => explode('|', $request->jenis_izin)[0],
+            'total_izin' => $request->total_izin,
+            'tgl_awal_izin' => date('Y-m-d', strtotime($request->tgl_awal_izin)),
+            'tgl_akhir_izin' => date('Y-m-d', strtotime($request->tgl_akhir_izin)),
+            'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+            'validasi' => '1',
+            'approval' => '0',
         ]);
 
         $qrcode_filename = 'qr-' . explode('-', $request->nopeg)[0] . '-' . explode('|', $request->jenis_izin)[0] . '.svg';
         QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
-        
+
         IzinKerja::insert([
             'nopeg' => explode('-', $request->nopeg)[0],
             'name' =>  explode('-', $request->nopeg)[1],
@@ -415,13 +414,13 @@ class AdminController extends Controller
             'approval' => '0',
             'qrcode_peg' => $qrcode_filename,
         ]);
-       
+
         return redirect()->route('admin.dataizin')->with('success', 'Pengajuan Izin Berhasil!');
     }
 
     public function printizinkerja($id)
     {
-        $data = IzinKerja::join('users', 'izin_kerja.nopeg', '=', 'users.nopeg')->join('unit','izin_kerja.unit','=','unit.id')->where('id_izinkerja', $id)->first();
+        $data = IzinKerja::join('users', 'izin_kerja.nopeg', '=', 'users.nopeg')->join('unit', 'izin_kerja.unit', '=', 'unit.id')->where('id_izinkerja', $id)->first();
         $kepala = User::select('name')->where('nopeg', $data->atasan)->first();
         $jenisizin = JenisIzin::where('jenis_izin', '!=', 'sakit')->get();
         // $dataqr = QR::where('id_izinkerja', $id)->first();
@@ -447,31 +446,31 @@ class AdminController extends Controller
     //DATA CUTI KARYAWAN
 
     public function datacuti()
-    { 
-        $user = User::join('unit','users.unit','=','unit.id')->where('fungsi', 'admin')->get();
+    {
+        $user = User::join('unit', 'users.unit', '=', 'unit.id')->where('fungsi', 'admin')->get();
         $jeniscuti = JenisCuti::all();
 
         $data = [
             'user' => $user,
             'jeniscuti' => $jeniscuti
         ];
-        return view('admin.datacuti',compact('data'));
+        return view('admin.datacuti', compact('data'));
     }
 
-    public function historycuti($nopeg,$jenis)
+    public function historycuti($nopeg, $jenis)
     {
-        $history_cuti = 
-        cuti::join('jenis_cuti','jenis_cuti.id_jeniscuti','=','cuti.jenis_cuti')
-        ->where('cuti.nopeg',$nopeg)
-        ->where('cuti.jenis_cuti',$jenis)
-        ->GROUPBY('cuti.jenis_cuti')->sum('total_cuti');
-      
+        $history_cuti =
+            cuti::join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
+            ->where('cuti.nopeg', $nopeg)
+            ->where('cuti.jenis_cuti', $jenis)
+            ->GROUPBY('cuti.jenis_cuti')->sum('total_cuti');
+
         return response()->json($history_cuti);
     }
 
     public function listcuti(Request $request)
     {
-        $data = cuti::join('unit','cuti.unit','unit.id')->join('jenis_cuti','cuti.jenis_cuti','jenis_cuti.id_jeniscuti');
+        $data = cuti::join('unit', 'cuti.unit', 'unit.id')->join('jenis_cuti', 'cuti.jenis_cuti', 'jenis_cuti.id_jeniscuti');
 
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -487,7 +486,7 @@ class AdminController extends Controller
         }
         return DataTables::queryBuilder($data)->toJson();
     }
-    
+
     public function storecuti(Request $request)
     {
 
@@ -496,7 +495,7 @@ class AdminController extends Controller
         QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
 
         Cuti::insert([
-            'nopeg' => explode('-', $request->nopeg)[0] ,
+            'nopeg' => explode('-', $request->nopeg)[0],
             'name' =>  explode('-', $request->nopeg)[1],
             'unit' =>  explode('-', $request->nopeg)[2],
             'jenis_cuti' => explode('-', $request->jenis_cuti)[0],
@@ -510,14 +509,13 @@ class AdminController extends Controller
             'approval' => 0,
             'qrcode_peg' => $qrcode_filename,
         ]);
-    
-       return redirect()->route('admin.datacuti')->with('success', 'Add Data Berhasil!');
 
+        return redirect()->route('admin.datacuti')->with('success', 'Add Data Berhasil!');
     }
 
     public function printcuti($id)
     {
-        $data = Cuti::join('unit','cuti.unit','=','unit.id')->join('jenis_cuti','cuti.jenis_cuti','=','jenis_cuti.id_jeniscuti')->where('id_cuti', $id)->first();
+        $data = Cuti::join('unit', 'cuti.unit', '=', 'unit.id')->join('jenis_cuti', 'cuti.jenis_cuti', '=', 'jenis_cuti.id_jeniscuti')->where('id_cuti', $id)->first();
 
         $pdf = PDF::loadview('admin.printcuti', compact('data'))->setPaper('potrait');
         return $pdf->stream();
@@ -537,39 +535,39 @@ class AdminController extends Controller
 
     //Libur Nasional 
 
-    public function liburnasional(){
+    public function liburnasional()
+    {
         $libur = LiburNasional::get();
-        return view('admin.liburnasional',compact('libur'));
+        return view('admin.liburnasional', compact('libur'));
     }
 
-    
+
     public function listlibur(Request $request)
     {
         $data = LiburNasional::get();
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('action', function($data){
+                ->addColumn('action', function ($data) {
                     return getAksi($data->id, 'liburnasional');
                 })
 
                 ->rawColumns(['action'])
                 ->make(true);
         }
-
     }
 
     public function editlibur($id)
     {
-        $libur = LiburNasional::where('id',$id)->first();   
+        $libur = LiburNasional::where('id', $id)->first();
         return response()->json($libur);
     }
 
     public function updatelibur(Request $request)
     {
-        LiburNasional::where('id',$request->id)->update([
-                'tanggal' => $request->tanggal,
-                'keterangan' => $request->keterangan,
+        LiburNasional::where('id', $request->id)->update([
+            'tanggal' => $request->tanggal,
+            'keterangan' => $request->keterangan,
         ]);
 
         return redirect()->route('admin.liburnasional')->with('success', 'Edit Data Berhasil!');
@@ -578,8 +576,8 @@ class AdminController extends Controller
     public function createlibur(Request $request)
     {
         LiburNasional::create([
-                'tanggal' => $request->tanggal,
-                'keterangan' => $request->keterangan,
+            'tanggal' => $request->tanggal,
+            'keterangan' => $request->keterangan,
         ]);
 
         return redirect()->route('admin.liburnasional')->with('success', 'Add Data Berhasil!');
@@ -590,5 +588,4 @@ class AdminController extends Controller
         LiburNasional::where('id', $id)->delete();
         return redirect()->route('admin.liburnasional')->with('success', 'Data berhasil dihapus!');
     }
-
 }

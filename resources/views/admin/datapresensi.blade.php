@@ -1,18 +1,18 @@
 @extends('layouts.app')
 @section('content')
-<div class="container-fluid">
-    <div class="page-header">
-        <div class="row">
-            <div class="col-lg-6">
-                <h3>Master Data Presensi</h3>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">Sistem Laporan Presensi Karyawan</li>
-                    <li class="breadcrumb-item active">Master Data Presensi</li>
-                </ol>
+    <div class="container-fluid">
+        <div class="page-header">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h3>Master Data Presensi</h3>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">Sistem Laporan Presensi Karyawan</li>
+                        <li class="breadcrumb-item active">Master Data Presensi</li>
+                    </ol>
+                </div>
             </div>
         </div>
     </div>
-</div>
     <div class="container-fluid">
         <div class="row">
             <!-- Zero Configuration  Starts-->
@@ -31,39 +31,46 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-12 col-lg-6">
-                                    <button class="btn btn-outline-success-2x" type="button"  id="clear"><i class="fa fa-refresh"></i> Sinkron</button>
+                                    <button class="btn btn-outline-success-2x" type="button" id="clear"><i
+                                            class="fa fa-refresh"></i> Sinkron</button>
                                 </div>
                             </div>
-                        <form>
-                        <hr>
-                        <form>
-                            <div class="form-group row">
-                                <label class="col-sm-1 col-form-label">Filter</label>
-                                <div class="col-xl-3">
-                                    <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible" name="filter1" id="filter1" required="">
-                                        <option selected="" disabled="" value=""> Pilih Nama </option>
-                                        @foreach ($user as $u)
-                                            <option value="{{ $u->nopeg }}">{{ $u->nopeg }} - {{ $u->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-xl-2">
-                                    <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible" name="filter2" id="filter2" required="">
-                                        <option selected="" disabled="" value="">Pilih Tanggal </option>
-                                        @foreach ($attendance as $a)
-                                            <option value="{{ $a->tanggal }}">{{ $a->tanggal }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-sm-12 col-md-12 col-lg-6">
-                                    <button class="btn btn-outline-danger txt-red" type="button"  id="clear"><i class="icofont icofont-ui-delete"></i> Hapus</button>
-                                    {{-- <button class="btn btn-danger" type="submit" id="clear">Hapus</button> --}}
-                                </div>
-                            </div>
-                        <form>
+                            <form>
+                                <hr>
+                                <form>
+                                    <div class="form-group row">
+                                        <label class="col-sm-1 col-form-label">Filter</label>
+                                        <div class="col-xl-3">
+                                            <select
+                                                class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                                name="filter1" id="filter1" required="">
+                                                <option selected="" disabled="" value=""> Pilih Nama </option>
+                                                @foreach ($user as $u)
+                                                    <option value="{{ $u->nopeg }}">{{ $u->nopeg }} -
+                                                        {{ $u->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-xl-2">
+                                            <select
+                                                class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                                name="filter2" id="filter2" required="">
+                                                <option selected="" disabled="" value="">Pilih Tanggal </option>
+                                                @foreach ($attendance as $a)
+                                                    <option value="{{ $a->tanggal }}">{{ $a->tanggal }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-12 col-md-12 col-lg-6">
+                                            <button class="btn btn-outline-danger txt-red" type="button" id="clear"><i
+                                                    class="icofont icofont-ui-delete"></i> Hapus</button>
+                                            {{-- <button class="btn btn-danger" type="submit" id="clear">Hapus</button> --}}
+                                        </div>
+                                    </div>
+                                    <form>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive"> 
+                        <div class="table-responsive">
                             <table class="dataTable" id="table-admin">
                                 <thead>
                                     <th>No.</th>
@@ -80,7 +87,7 @@
                                     <th>Status</th>
                                 </thead>
                                 <tbody>
-                 
+
                                 </tbody>
                             </table>
                         </div>
@@ -89,12 +96,11 @@
             </div>
         </div>
     </div>
-
 @endsection
 
 @section('scripts')
-<div class="modal fade bd-example-modal-lg" id="show-izin" aria-labelledby="myLargeModalLabel" aria-modal="true"
-        role="dialog">
+    <div class="modal fade bd-example-modal-lg" id="show-izin" aria-labelledby="myLargeModalLabel" aria-modal="true"
+        tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -108,14 +114,12 @@
                         <div class="row g-2 mb-3">
                             <div class="col-md-2">
                                 <span class="form-label" for="nip">No Pegawai</span>
-                                <input class="form-control" id="nip" name="nip" type="text"
-                                    required="">
+                                <input class="form-control" id="nip" name="nip" type="text" required="">
                                 <input id="id" name="id" hidden />
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="name">Nama</span>
-                                <input class="form-control" id="name" name="name" type="text"
-                                    required="">
+                                <input class="form-control" id="name" name="name" type="text" required="">
                             </div>
                             <div class="col-md-6">
                                 <span class="form-label" for="nama_unit">Unit</span>
@@ -128,17 +132,21 @@
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_masuk">Jam Masuk</span>
                                 <div class="input-group date" id="dt-minimum" data-target-input="nearest">
-                                    <input class="form-control datetimepicker-input digits" type="text" data-target="#dt-minimum" id="jam_masuk" name="jam_masuk">
-                                    <div class="input-group-text" data-target="#dt-minimum" data-toggle="datetimepicker"><i class="fa fa-calendar"> </i></div>
+                                    <input class="form-control datetimepicker-input digits" type="text"
+                                        data-target="#dt-minimum" id="jam_masuk" name="jam_masuk">
+                                    <div class="input-group-text" data-target="#dt-minimum" data-toggle="datetimepicker">
+                                        <i class="fa fa-calendar"> </i>
+                                    </div>
                                 </div>
-                                {{-- <input class="form-control" id="jam_masuk" name="jam_masuk" type="date"
-                                    required=""> --}}
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_siang">Jam Siang</span>
                                 <div class="input-group date" id="dt-minimum" data-target-input="nearest">
-                                    <input class="form-control datetimepicker-input digits" type="text" data-target="#dt-minimum" id="jam_siang" name="jam_siang">
-                                    <div class="input-group-text" data-target="#dt-minimum" data-toggle="datetimepicker"><i class="fa fa-calendar"> </i></div>
+                                    <input class="form-control datetimepicker-input digits" type="text"
+                                        data-target="#dt-minimum" id="jam_siang" name="jam_siang">
+                                    <div class="input-group-text" data-target="#dt-minimum" data-toggle="datetimepicker">
+                                        <i class="fa fa-calendar"> </i>
+                                    </div>
                                 </div>
                                 {{-- <input class="form-control" id="jam_siang" name="jam_siang" type="date"
                                     required=""> --}}
@@ -146,8 +154,11 @@
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_pulang">Jam Sore</span>
                                 <div class="input-group date" id="dt-minimum" data-target-input="nearest">
-                                    <input class="form-control datetimepicker-input digits" type="text" data-target="#dt-minimum" id="jam_pulang" name="jam_pulang">
-                                    <div class="input-group-text" data-target="#dt-minimum" data-toggle="datetimepicker"><i class="fa fa-calendar"> </i></div>
+                                    <input class="form-control datetimepicker-input digits" type="text"
+                                        data-target="#dt-minimum" id="jam_pulang" name="jam_pulang">
+                                    <div class="input-group-text" data-target="#dt-minimum" data-toggle="datetimepicker">
+                                        <i class="fa fa-calendar"> </i>
+                                    </div>
                                 </div>
                                 {{-- <input class="form-control" id="jam_pulang" name="jam_pulang" type="date"
                                     required=""> --}}
@@ -180,10 +191,11 @@
         </div>
     </div>
     @parent
-  
+
     <script src="{{ asset('assets/js/datepicker/date-time-picker/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/datepicker/date-time-picker/tempusdominus-bootstrap-4.min.js') }}"></script>
     <script src="{{ asset('assets/js/datepicker/date-time-picker/datetimepicker.custom.js') }}"></script>
+
     <script>
         $().ready(function() {
             let table = $('#table-admin').DataTable({
@@ -284,24 +296,22 @@
         });
 
         $('body').on('click', '.editAtt', function() {
-                var id = $(this).data('id');
+            var id = $(this).data('id');
 
-                $.get("{{ route('admin.admin_v') }}" + '/editAtt/' + id, function(data) {
-                    $('#ModalTitle').html("Attendance");
-                    $('#show-izin').modal('show');
-                    $('#id').val(data.id);
-                    $('#nip').val(data.nip);
-                    $('#name').val(data.name);
-                    $('#unit').val(data.unit);
-                    $('#nama_unit').val(data.nama_unit);
-                    $('#jam_masuk').val(data.jam_masuk);
-                    $('#jam_siang').val(data.jam_siang);
-                    $('#jam_pulang').val(data.jam_pulang);
+            $.get("{{ route('admin.admin_v') }}" + '/editAtt/' + id, function(data) {
+                $('#ModalTitle').html('Attendance');
+                $('#show-izin').modal('show');
+                $('#id').val(data.id);
+                $('#nip').val(data.nip);
+                $('#name').val(data.name);
+                $('#unit').val(data.unit);
+                $('#nama_unit').val(data.nama_unit);
+                $('#jam_masuk').val(data.jam_masuk);
+                $('#jam_siang').val(data.jam_siang);
+                $('#jam_pulang').val(data.jam_pulang);
 
-                    console.log(data);
-                })
-            });
-
- 
+                console.log(data);
+            })
+        });
     </script>
 @endsection
