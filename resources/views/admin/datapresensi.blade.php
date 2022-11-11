@@ -104,61 +104,52 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('admin.storeizin') }}" method="POST">
+                <form class="needs-validation" novalidate="" action="{{ route('admin.storeizinkehadiran') }}"
+                    method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-2 mb-3">
                             <div class="col-md-2">
                                 <span class="form-label" for="nip">No Pegawai</span>
-                                <input class="form-control" id="nip" name="nip" type="text" required="">
+                                <input class="form-control" id="nip" name="nip" type="text" required=""
+                                    readonly>
                                 <input id="id" name="id" hidden />
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="name">Nama</span>
-                                <input class="form-control" id="name" name="name" type="text" required="">
+                                <input class="form-control" id="name" name="name" type="text" required=""
+                                    readonly>
                             </div>
                             <div class="col-md-6">
                                 <span class="form-label" for="nama_unit">Unit</span>
-                                <input class="form-control" id="nama_unit" name="nama_unit" type="text"
+                                <input class="form-control" id="nama_unit" name="nama_unit" type="text" readonly
                                     required="">
                                 <input id="unit" name="unit" hidden />
                             </div>
                         </div>
                         <div class="row g-2 mb-3">
                             <div class="col-md-4">
-                                <span class="form-label" for="jam_masuk">Jam Masuk</span>
-                                <div class="input-group date" id="dt-minimum" data-target-input="nearest">
-                                    <input class="form-control datetimepicker-input digits" type="text"
-                                        data-target="#dt-minimum" id="jam_masuk" name="jam_masuk">
-                                    <div class="input-group-text" data-target="#dt-minimum" data-toggle="datetimepicker">
-                                        <i class="fa fa-calendar"> </i>
-                                    </div>
+                                <span class="form-label" for="jam_masuk">Tanggal</span>
+                                <div class="input-group">
+                                    <input class="datepicker-here form-control digits" type="text" id="tanggall"
+                                        name="tanggall" data-language="en" data-bs-original-title="" title="">
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <span class="form-label" for="jam_siang">Jam Siang</span>
-                                <div class="input-group date" id="dt-minimum" data-target-input="nearest">
-                                    <input class="form-control datetimepicker-input digits" type="text"
-                                        data-target="#dt-minimum" id="jam_siang" name="jam_siang">
-                                    <div class="input-group-text" data-target="#dt-minimum" data-toggle="datetimepicker">
-                                        <i class="fa fa-calendar"> </i>
-                                    </div>
+                                <span class="form-label" for="jam_masuk">Jam Keluar </span>
+                                <div class="input-group clockpicker" data-autoclose="true">
+                                    <input class="form-control" type="text" id="jam_awal" name="jam_awal"><span
+                                        class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                 </div>
-                                {{-- <input class="form-control" id="jam_siang" name="jam_siang" type="date"
-                                    required=""> --}}
                             </div>
                             <div class="col-md-4">
-                                <span class="form-label" for="jam_pulang">Jam Sore</span>
-                                <div class="input-group date" id="dt-minimum" data-target-input="nearest">
-                                    <input class="form-control datetimepicker-input digits" type="text"
-                                        data-target="#dt-minimum" id="jam_pulang" name="jam_pulang">
-                                    <div class="input-group-text" data-target="#dt-minimum" data-toggle="datetimepicker">
-                                        <i class="fa fa-calendar"> </i>
-                                    </div>
+                                <span class="form-label" for="jam_masuk">Jam Kembali </span>
+                                <div class="input-group clockpicker" data-autoclose="true">
+                                    <input class="form-control" type="text" id="jam_akhir" name="jam_akhir"><span
+                                        class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                 </div>
-                                {{-- <input class="form-control" id="jam_pulang" name="jam_pulang" type="date"
-                                    required=""> --}}
                             </div>
+
                         </div>
                         <div class="col-md-7">
                             <span class="form-label" for="alasan">Alasan</span>
@@ -188,9 +179,6 @@
     </div>
     @parent
 
-    <script src="{{ asset('assets/js/datepicker/date-time-picker/moment.min.js') }}"></script>
-    <script src="{{ asset('assets/js/datepicker/date-time-picker/tempusdominus-bootstrap-4.min.js') }}"></script>
-    <script src="{{ asset('assets/js/datepicker/date-time-picker/datetimepicker.custom.js') }}"></script>
 
     <script>
         $().ready(function() {
@@ -302,6 +290,7 @@
                 $('#name').val(data.name);
                 $('#unit').val(data.unit);
                 $('#nama_unit').val(data.nama_unit);
+                $('#tanggall').val(data.tanggal);
                 $('#jam_masuk').val(data.jam_masuk);
                 $('#jam_siang').val(data.jam_siang);
                 $('#jam_pulang').val(data.jam_pulang);
