@@ -9,6 +9,9 @@ use App\Http\Controllers\PengajuanIzinController;
 use App\Http\Controllers\PengajuanCutiController;
 use App\Http\Controllers\KepalaUnitController;
 use App\Http\Controllers\BiometricAllController;
+use App\Http\Controllers\MesinController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -71,6 +74,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/updatelibur', [AdminController::class, 'updatelibur'])->name('admin.updatelibur');
         Route::post('/createlibur', [AdminController::class, 'createlibur'])->name('admin.createlibur');
         Route::get('/destroylibur/{id}', [AdminController::class, 'destroylibur'])->name('admin.destroylibur');
+
+        Route::get('/mesinsidikjari', [MesinController::class, 'index'])->name('admin.mesinsidikjari');
+        Route::get('/editmesin/{id}', [MesinController::class, 'editmesin'])->name('admin.editmesin');
+        Route::post('/updatemesin', [MesinController::class, 'updatemesin'])->name('admin.updatemesin');
+        Route::post('/createmesin', [MesinController::class, 'createmesin'])->name('admin.createmesin');
+        Route::get('/destroymesin/{id}', [MesinController::class, 'destroymesin'])->name('admin.destroymesin');
     });
     Route::prefix('karyawan')->name('karyawan.')->group(function () {
         Route::get('/', [KaryawanController::class, 'index'])->name('index');
