@@ -207,6 +207,7 @@ class AdminController extends Controller
             'jam_akhir' => $request->jam_akhir,
             'alasan' => $request->alasan,
             'validasi' => 1,
+            'approval' => 0,
         ]);
 
         // $dataqr = Izin::where('nopeg', $request->nopeg)->first();
