@@ -19,6 +19,7 @@ use App\Models\IzinKerja;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
 use App\Models\LiburNasional;
+use App\Models\Jabatan;
 use Carbon\Carbon;
 use App\Models\QR;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -352,7 +353,8 @@ class AdminController extends Controller
 
     public function dataizin()
     {
-        $user = User::join('unit', 'users.unit', '=', 'unit.id')->where('fungsi', 'admin')->get();
+        $user = User::SelectRaw('users.*,unit.*,jabatan.nopeg as peg_jab, jabatan.nama as name_jab')->join('unit', 'users.unit', '=', 'unit.id')->join('jabatan', 'users.atasan', '=', 'jabatan.id')->where('fungsi', 'admin')->get();
+        // dd($user[20]);
         $jenisizin = JenisIzin::all();
 
         $data = [
@@ -388,23 +390,46 @@ class AdminController extends Controller
 
     public function storeizin(Request $request)
     {
+        $qrcode_filenamepeg = 'qr-' . explode('-', $request->nopeg)[0] . '-' . explode('|', $request->jenis_izin)[0] . '.svg';
+        $qrcode_filenameat = 'qr-' . $request->atasan . '-' . explode('-', $request->nopeg)[0] .  explode('|', $request->jenis_izin)[0] . '.svg';
+        if (auth()->user()->role == 'admin_bsdm') {
+            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
+            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->atasan . '-' .  $request->name_jab . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenameat));
+        } else {
+            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
+        }
 
-        $qrcode_filename = 'qr-' . explode('-', $request->nopeg)[0] . '-' . explode('|', $request->jenis_izin)[0] . '.svg';
-        QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
+        if (auth()->user()->role == 'admin_bsdm') {
+            IzinKerja::insert([
+                'nopeg' => explode('-', $request->nopeg)[0],
+                'name' =>  explode('-', $request->nopeg)[1],
+                'unit' =>  explode('-', $request->nopeg)[2],
+                'jenis_izin' => explode('|', $request->jenis_izin)[0],
+                'total_izin' => $request->total_izin,
+                'tgl_awal_izin' => date('Y-m-d', strtotime($request->tgl_awal_izin)),
+                'tgl_akhir_izin' => date('Y-m-d', strtotime($request->tgl_akhir_izin)),
+                'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+                'validasi' => '1',
+                'approval' => '1',
+                'qrcode_peg' => $qrcode_filenamepeg,
+                'qrcode_kepala' => $qrcode_filenameat,
+            ]);
+        } else {
+            IzinKerja::insert([
+                'nopeg' => explode('-', $request->nopeg)[0],
+                'name' =>  explode('-', $request->nopeg)[1],
+                'unit' =>  explode('-', $request->nopeg)[2],
+                'jenis_izin' => explode('|', $request->jenis_izin)[0],
+                'total_izin' => $request->total_izin,
+                'tgl_awal_izin' => date('Y-m-d', strtotime($request->tgl_awal_izin)),
+                'tgl_akhir_izin' => date('Y-m-d', strtotime($request->tgl_akhir_izin)),
+                'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+                'validasi' => '1',
+                'approval' => '0',
+                'qrcode_peg' => $qrcode_filenamepeg,
+            ]);
+        }
 
-        IzinKerja::insert([
-            'nopeg' => explode('-', $request->nopeg)[0],
-            'name' =>  explode('-', $request->nopeg)[1],
-            'unit' =>  explode('-', $request->nopeg)[2],
-            'jenis_izin' => explode('|', $request->jenis_izin)[0],
-            'total_izin' => $request->total_izin,
-            'tgl_awal_izin' => date('Y-m-d', strtotime($request->tgl_awal_izin)),
-            'tgl_akhir_izin' => date('Y-m-d', strtotime($request->tgl_akhir_izin)),
-            'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
-            'validasi' => '1',
-            'approval' => '0',
-            'qrcode_peg' => $qrcode_filename,
-        ]);
 
         return redirect()->route('admin.dataizin')->with('success', 'Pengajuan Izin Berhasil!');
     }
@@ -412,11 +437,11 @@ class AdminController extends Controller
     public function printizinkerja($id)
     {
         $data = IzinKerja::join('users', 'izin_kerja.nopeg', '=', 'users.nopeg')->join('unit', 'izin_kerja.unit', '=', 'unit.id')->where('id_izinkerja', $id)->first();
-        $kepala = User::select('name')->where('nopeg', $data->atasan)->first();
+        // $atasan = User::selectRaw('jabatan.*')->join('jabatan', 'jabatan.id', 'users.atasan')->where('jabatan.nopeg', $data->atasan)->first();
+        $atasan = Jabatan::join('users', 'users.atasan', '=', 'jabatan.id')->where('users.atasan', $data->atasan)->first();
         $jenisizin = JenisIzin::where('jenis_izin', '!=', 'sakit')->get();
-        // $dataqr = QR::where('id_izinkerja', $id)->first();
 
-        $pdf = PDF::loadview('admin.printizinkerja', compact('data', 'jenisizin', 'kepala'))->setPaper('potrait');
+        $pdf = PDF::loadview('admin.printizinkerja', compact('data', 'jenisizin', 'atasan'))->setPaper('potrait');
         return $pdf->stream();
     }
 
@@ -438,7 +463,13 @@ class AdminController extends Controller
 
     public function datacuti()
     {
-        $user = User::join('unit', 'users.unit', '=', 'unit.id')->where('fungsi', 'admin')->get();
+        // $user = User::join('unit', 'users.unit', '=', 'unit.id')->where('fungsi', 'admin')->get();
+        $user = User::SelectRaw('users.*,unit.*, jb1.nopeg as peg_jab, jb1.nama as name_jab, jb2.nopeg as peg_jab2, jb2.nama as name_jab2')
+            ->join('unit', 'users.unit', '=', 'unit.id')
+            ->join('jabatan as jb1', 'users.atasan', '=', 'jb1.id')
+            ->join('jabatan as jb2', 'users.atasan_lang', '=', 'jb2.id')
+            ->where('fungsi', 'admin')->get();
+
         $jeniscuti = JenisCuti::all();
 
         $data = [
@@ -479,35 +510,67 @@ class AdminController extends Controller
 
     public function storecuti(Request $request)
     {
+        $qrcode_filenamepeg = 'qr-' . explode('-', $request->nopeg)[0] . '-' . explode('|', $request->jenis_cuti)[0] . '.svg';
+        $qrcode_filenameat = 'qr-' . $request->atasan . '-' . explode('-', $request->nopeg)[0] .  explode('|', $request->jenis_cuti)[0] . '.svg';
+        $qrcode_filenameatlang = 'qr-' . $request->atasan_lang . '-' . explode('-', $request->nopeg)[0] .  explode('|', $request->jenis_cuti)[0] . '.svg';
 
-        $qrcode_filename = 'qr-' . explode('-', $request->nopeg)[0] . '-' . explode('|', $request->jenis_cuti)[0] . '.svg';
-        // dd($qrcode_filename);
-        QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
+        if (auth()->user()->role == 'admin_bsdm') {
+            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
+            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->atasan . '-' .  $request->name_jab . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenameat));
+            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->atasan_lang . '-' .  $request->name_jab_lang . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenameatlang));
+        } else {
+            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
+        }
 
-        Cuti::insert([
-            'nopeg' => explode('-', $request->nopeg)[0],
-            'name' =>  explode('-', $request->nopeg)[1],
-            'unit' =>  explode('-', $request->nopeg)[2],
-            'jenis_cuti' => explode('-', $request->jenis_cuti)[0],
-            'tgl_awal_cuti' => date('Y-m-d', strtotime($request->tgl_awal_cuti)),
-            'tgl_akhir_cuti' => date('Y-m-d', strtotime($request->tgl_akhir_cuti)),
-            'total_cuti' => $request->total_cuti,
-            'alamat' => $request->alamat,
-            'no_hp' => $request->no_hp,
-            'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
-            'validasi' => 1,
-            'approval' => 0,
-            'qrcode_peg' => $qrcode_filename,
-        ]);
+        if (auth()->user()->role == 'admin_bsdm') {
+            Cuti::insert([
+                'nopeg' => explode('-', $request->nopeg)[0],
+                'name' =>  explode('-', $request->nopeg)[1],
+                'unit' =>  explode('-', $request->nopeg)[2],
+                'jenis_cuti' => explode('-', $request->jenis_cuti)[0],
+                'tgl_awal_cuti' => date('Y-m-d', strtotime($request->tgl_awal_cuti)),
+                'tgl_akhir_cuti' => date('Y-m-d', strtotime($request->tgl_akhir_cuti)),
+                'total_cuti' => $request->total_cuti,
+                'alamat' => $request->alamat,
+                'no_hp' => $request->no_hp,
+                'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+                'validasi' => 1,
+                'approval' => 2,
+                'qrcode_peg' => $qrcode_filenamepeg,
+                'qrcode_kepala' => $qrcode_filenameat,
+                'qrcode_pejabat' => $qrcode_filenameatlang,
+            ]);
+        } else {
+            Cuti::insert([
+                'nopeg' => explode('-', $request->nopeg)[0],
+                'name' =>  explode('-', $request->nopeg)[1],
+                'unit' =>  explode('-', $request->nopeg)[2],
+                'jenis_cuti' => explode('-', $request->jenis_cuti)[0],
+                'tgl_awal_cuti' => date('Y-m-d', strtotime($request->tgl_awal_cuti)),
+                'tgl_akhir_cuti' => date('Y-m-d', strtotime($request->tgl_akhir_cuti)),
+                'total_cuti' => $request->total_cuti,
+                'alamat' => $request->alamat,
+                'no_hp' => $request->no_hp,
+                'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+                'validasi' => 1,
+                'approval' => 0,
+                'qrcode_peg' => $qrcode_filenamepeg,
+            ]);
+        }
+
 
         return redirect()->route('admin.datacuti')->with('success', 'Add Data Berhasil!');
     }
 
     public function printcuti($id)
     {
-        $data = Cuti::join('unit', 'cuti.unit', '=', 'unit.id')->join('jenis_cuti', 'cuti.jenis_cuti', '=', 'jenis_cuti.id_jeniscuti')->where('id_cuti', $id)->first();
 
-        $pdf = PDF::loadview('admin.printcuti', compact('data'))->setPaper('potrait');
+        $data = Cuti::join('unit', 'cuti.unit', '=', 'unit.id')->join('users', 'cuti.nopeg', '=', 'users.nopeg')->join('jenis_cuti', 'cuti.jenis_cuti', '=', 'jenis_cuti.id_jeniscuti')->where('id_cuti', $id)->first();
+        $atasan = Jabatan::join('users', 'users.atasan', '=', 'jabatan.id')->where('users.atasan', $data->atasan)->first();
+        $atasan_lang = Jabatan::join('users', 'users.atasan_lang', '=', 'jabatan.id')->where('users.atasan_lang', $data->atasan_lang)->first();
+        // dd($data);
+
+        $pdf = PDF::loadview('admin.printcuti', compact('data', 'atasan', 'atasan_lang'))->setPaper('potrait');
         return $pdf->stream();
     }
 

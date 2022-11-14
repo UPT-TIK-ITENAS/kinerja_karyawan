@@ -75,13 +75,18 @@
                                     id="nopeg" name="nopeg" required="">
                                     <option selected="" disabled="" value="">-- Pilih ---</option>
                                     @foreach ($data['user'] as $p)
-                                        <option value="{{ $p->nopeg }}-{{ $p->name }}-{{ $p->unit }} ">
+                                        <option value="{{ $p->nopeg }}-{{ $p->name }}-{{ $p->unit }}"
+                                            data-atasan="{{ $p->peg_jab }}" data-name_jab="{{ $p->name_jab }}"
+                                            data-atasan_lang="{{ $p->peg_jab2 }}" data-name_jab_lang="{{ $p->name_jab2 }}">
                                             {{ $p->nopeg }} - {{ $p->name }} - {{ $p->nama_unit }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-
+                        <input id="atasan" name="atasan" type="hidden">
+                        <input id="name_jab" name="name_jab" type="hidden">
+                        <input id="atasan_lang" name="atasan_lang" type="hidden">
+                        <input id="name_jab_lang" name="name_jab_lang" type="hidden">
                         <div class="row g-2 mb-3">
                             <div class="col-md-8">
                                 <span class="form-label" for="jenis_cuti">Jenis Cuti</span>
@@ -306,5 +311,15 @@
                 }
             })
         })
+
+        $(document).ready(function() {
+            $('#nopeg').on('change', function() {
+                const selected = $(this).find('option:selected');
+                $("#atasan").val(selected.data('atasan'));
+                $("#atasan_lang").val(selected.data('atasan_lang'));
+                $("#name_jab").val(selected.data('name_jab'));
+                $("#name_jab_lang").val(selected.data('name_jab_lang'));
+            });
+        });
     </script>
 @endsection

@@ -80,12 +80,15 @@
                                     id="nopeg" name="nopeg" required="">
                                     <option selected="" disabled="" value="">-- Pilih ---</option>
                                     @foreach ($data['user'] as $p)
-                                        <option value="{{ $p->nopeg }}-{{ $p->name }}-{{ $p->unit }} ">
+                                        <option value="{{ $p->nopeg }}-{{ $p->name }}-{{ $p->unit }}"
+                                            data-atasan="{{ $p->peg_jab }}" data-name_jab="{{ $p->name_jab }}">
                                             {{ $p->nopeg }} - {{ $p->name }} - {{ $p->nama_unit }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
+                        <input id="atasan" name="atasan" type="hidden">
+                        <input id="name_jab" name="name_jab" type="hidden">
                         <div class="row g-1 mb-3">
                             <div class="col-md-12">
                                 <span class="form-label" for="jenis_izin">Jenis izin</span>
@@ -117,7 +120,8 @@
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="total_izin">Total Hari</span>
-                                <input class="form-control" id="total_izin" name="total_izin" type="number" required="">
+                                <input class="form-control" id="total_izin" name="total_izin" type="number"
+                                    required="">
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                         </div>
@@ -274,6 +278,14 @@
             } else {
                 lama_izin.val(durasi_izin);
             }
+        });
+
+        $(document).ready(function() {
+            $('#nopeg').on('change', function() {
+                const selected = $(this).find('option:selected');
+                $("#atasan").val(selected.data('atasan'));
+                $("#name_jab").val(selected.data('name_jab'));
+            });
         });
     </script>
 @endsection

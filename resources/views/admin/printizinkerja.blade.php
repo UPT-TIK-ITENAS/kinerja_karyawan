@@ -36,7 +36,7 @@
         margin: auto;
     }
 
-    .table1{
+    .table1 {
         position: relative;
         width: 100%;
         max: width 100%;
@@ -114,7 +114,6 @@
     .page:after {
         content: counter(page);
     }
-
 </style>
 
 <body>
@@ -173,7 +172,7 @@
                 <td style="width:10%;font-size: 14.5px;">
                     Unit Kerja
                 </td>
-                
+
                 <td style="width:2%;text-align: center">:</td>
                 <td style="width:2%;font-size: 14.5px;">{{ $data->nama_unit }}</td>
             </tr>
@@ -187,7 +186,7 @@
             </tr>
             <tr>
                 <td style="width:10%;font-size: 14.5px;">
-                   <center> Tanggal Sakit : {!! getCheck($data->jenis_izin, $data->id_izinkerja,'sakit') !!} </center>
+                    <center> Tanggal Sakit : {!! getCheck($data->jenis_izin, $data->id_izinkerja, 'sakit') !!} </center>
                 </td>
             </tr>
         </table>
@@ -195,25 +194,27 @@
         <table class="table1">
             <tr>
                 <td style="width:10%;font-size: 14.5px;">
-                    a.  Bila sakit sampai dengan 1 (satu) hari, harus mengisi form ini.
+                    a. Bila sakit sampai dengan 1 (satu) hari, harus mengisi form ini.
                 </td>
             </tr>
             <tr>
                 <td style="width:10%;font-size: 14.5px;">
-                    b.  Bila sakit 2 s/d 14 hari, harus mengisi form ini dan melampirkan surat keterangan sakit dari dokter.
+                    b. Bila sakit 2 s/d 14 hari, harus mengisi form ini dan melampirkan surat keterangan sakit dari
+                    dokter.
                 </td>
-               
+
             </tr>
             <tr>
                 <td style="width:10%;font-size: 14.5px;">
-                    c.  Bila sakit lebih dari > 14 hari, harus mengisi form ini dan dilampiri surat keterangan sakit dari dokter spesialis.
+                    c. Bila sakit lebih dari > 14 hari, harus mengisi form ini dan dilampiri surat keterangan sakit dari
+                    dokter spesialis.
                 </td>
-             
+
             </tr>
         </table>
         <br>
 
-         <table class="table1" border="1" cellpadding="0" cellspacing="0">
+        <table class="table1" border="1" cellpadding="0" cellspacing="0">
             <thead class="text-center">
                 <tr>
                     <td style="font-size: 14.5px;"colspan="4">
@@ -225,19 +226,19 @@
                     <th style="font-size: 14.5px;">Alasan Izin</th>
                     <th style="font-size: 14.5px;">Lamanya Hari yang diizinkan </th>
                     <th style="font-size: 14.5px;">Periode Tanggal Izin yang diambil </th>
-            </tr>
+                </tr>
             </thead>
             <tbody>
                 @foreach ($jenisizin as $no => $p)
                     <tr>
                         <td style="width:1%;font-size: 14.5px;">{{ $no + 1 }}</td>
-                        <td style="font-size: 14.5px;">{{ $p->jenis_izin }}  </td>
+                        <td style="font-size: 14.5px;">{{ $p->jenis_izin }} </td>
                         <td style="font-size: 14.5px;">{{ $p->lama_izin }} hari kerja</td>
-                        <td style="font-size: 14.5px;"> {!! getCheck($p->id_izin, $data->id_izinkerja,'check') !!} </td>
+                        <td style="font-size: 14.5px;"> {!! getCheck($p->id_izin, $data->id_izinkerja, 'check') !!} </td>
                     </tr>
                 @endforeach
             </tbody>
-            
+
         </table>
 
     </div>
@@ -256,18 +257,19 @@
                 </tr>
                 <tr>
                     <td style="font-size: 14.5px;">
-                        <b>Yang bersangkutan, 
+                        <b>Yang bersangkutan,
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <img src="{{ url('qrcode/' . $data->qrcode_peg) }}" width="80" height="80" alt="">
+                        <img src="{{ url('qrcode/' . $data->qrcode_peg) }}" width="80" height="80"
+                            alt="">
                         <img src="">
                     </td>
                 </tr>
                 <tr>
-                    <td  style="font-size: 14.5px;">
-                        <u><b>{{  $data->name}}</u></b>
+                    <td style="font-size: 14.5px;">
+                        <u><b>{{ $data->name }}</u></b>
                     </td>
                 </tr>
             </table>
@@ -276,29 +278,30 @@
         <div class="ttd2">
             <table style="float:left">
                 <tr>
-                    <td  style="font-size: 14.5px;">
+                    <td style="font-size: 14.5px;">
                         Mengetahui
                     </td>
                 </tr>
                 <tr>
-                    <td  style="font-size: 14.5px;">
-                        <b>Pimpinan Unit Kerja 
+                    <td style="font-size: 14.5px;">
+                        <b>Pimpinan Unit Kerja
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <img src="{{ url('qrcode/' . $data->qrcode_kepala) }}" width="80" height="80" alt="">
+                        <img src="{{ url('qrcode/' . $data->qrcode_kepala) }}" width="80" height="80"
+                            alt="">
                         <img src="">
                     </td>
                 </tr>
                 <tr>
-                    <td  style="font-size: 14.5px;">
-                        <u><b>{{ $kepala->name }}</u></b>
+                    <td style="font-size: 14.5px;">
+                        <u><b>{{ $atasan->nama }}</u></b>
                     </td>
                 </tr>
             </table>
         </div>
-    
+
         {{-- <div class="ttd2">
             <table style="float:right">
                 <tr>
@@ -326,7 +329,7 @@
         </div> --}}
     </div>
     <footer>
-        
+
 
     </footer>
 </body>
