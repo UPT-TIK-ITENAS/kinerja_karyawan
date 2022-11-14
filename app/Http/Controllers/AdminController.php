@@ -376,12 +376,7 @@ class AdminController extends Controller
                     return getAksi($row->id_izinkerja, 'izin');
                 })
                 ->addColumn('status', function ($row) {
-                    if ($row->approval == 1) {
-                        $apprv = '<span class="badge badge-success">Disetujui</span>';
-                    } else {
-                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
-                    }
-                    return $apprv;
+                    return getAprv($row->id_izinkerja, 'izin', '');
                 })
                 ->rawColumns(['print', 'status'])
                 ->make(true);
