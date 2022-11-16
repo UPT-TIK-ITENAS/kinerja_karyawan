@@ -2,17 +2,24 @@
 
 @section('content')
     <div class="container-fluid">
+        <div class="page-header">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h3>Pendataan Mesin Sidik Jari</h3>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">Daftar Mesin Sidik Jari</li>
+                        <li class="breadcrumb-item active">Mesin</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
         <div class="row">
             <!-- Zero Configuration  Starts-->
             <div class="col-sm-12">
                 <div class="card">
-                    <div class="card-header">
-                        <div class="row mb-2">
-                            <h5>Pendataan Mesin Sidik Jari</h5>
-                            <span>Daftar Mesin Sidik Jari</span>
-                        </div>
-
-                    </div>
                     <div class="card-body">
                         <div class="row mb-2">
                             <div class="col">
@@ -20,7 +27,7 @@
                                     data-bs-toggle="modal" style="float: right">+ Tambah</a>
                             </div>
                         </div>
-                        <div class="table-responsive">
+                        <div class="dt-ext table-responsive">
                             <table class="dataTable" id="table-sidik">
                                 <thead>
                                     <th>No.</th>

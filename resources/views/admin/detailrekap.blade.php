@@ -28,7 +28,7 @@
                     <div class="card-body">
 
                         <h6 class="font-primary">Rekapitulasi Kehadiran</h6>
-                        <div class="table-responsive">
+                        <div class="dt-ext table-responsive">
                             <table class="table table-bordered" id="table-rekapitulasi">
                                 <thead>
                                     <th width="5%">No.</th>

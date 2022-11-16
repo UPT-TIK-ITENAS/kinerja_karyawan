@@ -250,10 +250,6 @@
                         name: 'status'
                     },
                 ],
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'print'
-                ]
             });
 
             $("#clear").on('click', function(e) {

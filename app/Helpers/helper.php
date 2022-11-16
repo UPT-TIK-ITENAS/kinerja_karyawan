@@ -185,7 +185,7 @@ if (!function_exists('getAprv')) {
                 } elseif ($getDataCuti->approval == 2) {
                     $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
                 } elseif ($getDataCuti->approval == 3) {
-                    $for_html = '<span class="badge badge-danger">Ditolak</span><br><span><b>note</b> : ' . $alasan . '</span>';
+                    $for_html = '<span class="badge badge-danger">Ditolak</span><br><span>';
                 } else {
                     $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span></a>';
                 }

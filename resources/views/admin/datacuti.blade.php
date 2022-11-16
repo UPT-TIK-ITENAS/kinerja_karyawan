@@ -26,7 +26,7 @@
                             </div>
                         </div>
                         {{-- <a href="{{ route('admin.createcuti') }}" class="btn btn-primary"><i class="icofont icofont-plus-square"></i> Tambah</a> --}}
-                        <div class="table-responsive">
+                        <div class="dt-ext table-responsive">
                             <table class="dataTable" id="table-cuti">
                                 <thead>
                                     <th>No.</th>
@@ -227,10 +227,6 @@
                     },
 
                 ],
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'print'
-                ]
             });
 
             $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {

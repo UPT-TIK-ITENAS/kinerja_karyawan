@@ -21,13 +21,12 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="dataTable" id="table-kar">
+                        <div class="dt-ext table-responsive">
+                            <table class="display" id="table-kar" width="100%">
                                 <thead>
-                                    <th width="5%">No.</th>
-                                    <th>Nopeg</th>
-                                    <th>NPP</th>
+                                    <th>No.</th>
                                     <th>Nama</th>
+                                    <th>NPP</th>
                                     <th>TTL</th>
                                     <th>Email</th>
                                     <th>No HP</th>
@@ -41,9 +40,8 @@
                                     @foreach ($peg as $no => $p)
                                         <tr>
                                             <td width="5%" align="center">{{ $no + 1 }}</td>
-                                            <td align="center">{{ $p->nopeg }}</td>
+                                            <td align="center">{{ $p->nopeg }} - {{ $p->name }}</td>
                                             <td align="center">{{ $p->npp }}</td>
-                                            <td>{{ $p->name }}</td>
                                             <td>{{ $p->tempat }}, {{ $p->tanggal_lahir }}</td>
                                             <td>{{ $p->email }}</td>
                                             <td>{{ $p->nohp }}</td>
