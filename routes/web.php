@@ -10,7 +10,7 @@ use App\Http\Controllers\PengajuanCutiController;
 use App\Http\Controllers\KepalaUnitController;
 use App\Http\Controllers\BiometricAllController;
 use App\Http\Controllers\MesinController;
-
+use App\Http\Controllers\RekapitulasiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,11 +40,12 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/datapresensi', [AdminController::class, 'datapresensi'])->name('admin.datapresensi');
         Route::get('/listkaryawan', [AdminController::class, 'listkaryawan'])->name('admin.listkaryawan');
-        Route::get('/rekapitulasi', [AdminController::class, 'rekapitulasi'])->name('admin.rekapitulasi');
-        Route::get('/rekapitulasikaryawan', [AdminController::class, 'rekapitulasikaryawan'])->name('admin.rekapitulasikaryawan');
-        Route::get('/listrekapkaryawan', [AdminController::class, 'listrekapkaryawan'])->name('admin.listrekapkaryawan');
-        Route::get('/detailrekap/{nip}', [AdminController::class, 'detailrekap'])->name('admin.detailrekap');
-        Route::get('/listdetailrekapkaryawan/{nip}', [AdminController::class, 'listdetailrekapkaryawan'])->name('admin.listdetailrekapkaryawan');
+
+        Route::get('/rekapitulasi', [RekapitulasiController::class, 'index'])->name('admin.rekapitulasi');
+        Route::get('/listrekapkaryawan', [RekapitulasiController::class, 'listrekapkaryawan'])->name('admin.listrekapkaryawan');
+        Route::get('/rekapitulasi/detailrekap/{nopeg}', [RekapitulasiController::class, 'detailrekap'])->name('admin.detailrekap');
+
+        // Route::get('/listdetailrekapkaryawan/{nip}', [AdminController::class, 'listdetailrekapkaryawan'])->name('admin.listdetailrekapkaryawan');
 
         Route::get('editAtt/{id}', [AdminController::Class, 'editAtt'])->name('admin.editAtt');
         Route::post('storeizinkehadiran', [AdminController::Class, 'storeizinkehadiran'])->name('admin.storeizinkehadiran');

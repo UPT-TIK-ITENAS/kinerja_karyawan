@@ -33,7 +33,7 @@
                     </li>
                     <li class="dropdown">
                         <a class="nav-link menu-title link-nav @if (request()->routeIs('admin.mesinsidikjari')) active @endif"
-                            href="{{ route('admin.mesinsidikjari') }}"><i data-feather="book-open"></i><span>Mesin Sidik
+                            href="{{ route('admin.mesinsidikjari') }}"><i data-feather="tablet"></i><span>Mesin Sidik
                                 Jari</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>

@@ -26,12 +26,12 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="dataTable" id="table-admin">
+                            <table class="dataTable" id="table-rekap">
                                 <thead>
                                     <th width="5%">No.</th>
+                                    <th>Nopeg</th>
                                     <th>Nama</th>
-                                    <th>Total Keterlambatan</th>
-                                    <th>Total Izin</th>
+                                    <th>Unit</th>
                                     <th>Detail</th>
                                 </thead>
                                 <tbody>
@@ -50,7 +50,7 @@
     @parent
     <script>
         $().ready(function() {
-            let table = $('#table-admin').DataTable({
+            let table = $('#table-rekap').DataTable({
                 fixedHeader: true,
                 pageLength: 10,
                 responsive: true,
@@ -70,23 +70,21 @@
                         searchable: false,
                     },
                     {
+                        data: 'nopeg',
+                        name: 'nopeg'
+                    },
+                    {
                         data: 'name',
                         name: 'name'
                     },
-
                     {
-                        data: 'duration',
-                        name: 'duration'
-                    },
-                    {
-                        data: 'izin',
-                        name: 'izin'
+                        data: 'nama_unit',
+                        name: 'nama_unit'
                     },
                     {
                         data: 'detail',
                         name: 'detail'
                     },
-                    
 
                 ],
                 dom: 'Bfrtip',
@@ -95,7 +93,7 @@
                 ]
             });
             $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
-                    console.log(message);
+                console.log(message);
             };
         });
     </script>

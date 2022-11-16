@@ -14,166 +14,79 @@
         </div>
     </div>
 
-    
+
 
     <div class="container-fluid">
         <div class="row">
             <!-- Zero Configuration  Starts-->
             <div class="col-sm-12">
                 <div class="card">
-                    <div class="card-header">
+                    {{-- <div class="card-header">
                         <h5>Daftar Detail Rekapitulasi Kehadiran Karyawan</h5>
                         <span>Daftar hasil rekapitulasi kehadiran karyawan terhitung dari tanggal 01 Juli 2022</span>
-                    </div>
+                    </div> --}}
                     <div class="card-body">
 
-                        <h6 class="font-primary">Rekapitulasi</h6>
+                        <h6 class="font-primary">Rekapitulasi Kehadiran</h6>
                         <div class="table-responsive">
                             <table class="table table-bordered" id="table-rekapitulasi">
                                 <thead>
                                     <th width="5%">No.</th>
                                     <th>Bulan</th>
                                     <th>Tahun</th>
-                                    {{-- <th>Total Telat Pagi</th>
-                                    <th>Total Telat Siang</th> --}}
-                                    <th>Total Telat Keseluruhan</th>
-                                    <th>Total Kerja</th>
-                                    <th>Persentase</th> 
+                                    <th>Hadir</th>
                                     <th>Izin</th>
                                     <th>Sakit</th>
-                                    {{-- <th>Skor</th> --}}
+                                    <th>Cuti</th>
+                                    <th>Tanpa Keterangan</th>
+                                    <th>Jumlah Hari per Bulan</th>
                                 </thead>
                                 <tbody>
                                     @foreach ($data as $no => $r)
-                                    <tr>
-                                        <td align="center">{{ $no + 1 }}</td>
-                                        <td>{{ getNamaBulan($r->bulan) }}</td>
-                                        <td>{{ $r->tahun }}</td>
-                                        {{-- <td>{{ date('H:i:s', strtotime($r->total_telat_pagi)) }}</td>
-                                        <td>{{ date('H:i:s', strtotime($r->total_telat_siang)) }}</td> --}}
-                                        <td>{{ date('H:i:s', strtotime($r->total_telat_siang) + strtotime($r->total_telat_pagi)) }}</td>
-                                        <td> {{ $r->totalkerja }}</td>
-                                        <td><span class="jumlah" data-id="{{ $r->id }}" data-bulan="{{ $r->bulan }}" data-tahun="{{ $r->tahun }}" data-total="{{ $r->totalkerja }}"></span></td>
+                                        <tr>
+                                            <td align="center">{{ $no + 1 }}</td>
+                                            <td>{{ getNamaBulan($r->bulan) }}</td>
+                                            <td>{{ $r->tahun }}</td>
+                                            <td> {{ $r->totalkerja }} hari</td>
 
+                                            @if ($data2 == null)
+                                                <td> 0 </td>
+                                                <td> 0 </td>
+                                            @else
+                                                @foreach ($data2 as $d)
+                                                    <td> {{ $d->totalizin }} hari</td>
+                                                    <td> {{ $d->totalsakit }} hari</td>
+                                                @endforeach
+                                            @endif
 
-                                        @foreach ($dataizinkerja as $no => $d)
-                                        @if ($d->bulan == $r->bulan &&  $d->tahun == $r->tahun)
-                                            <td>{{ $d->total }}</td>
-                                        @else
-                                            <td> </td>
-                                        @endif  
-                                        @endforeach
-
-                                        
-                                        @foreach ($datasakit as $no => $s)
-                                        @if ($s->bulan == $r->bulan &&  $s->tahun == $r->tahun)
-                                            <td>{{ $s->total }}</td>
-                                        @else
-                                            <td> </td>
-                                        @endif  
-                                        @endforeach 
-
-                                        {{--                                         
-                                        @if (date('i', strtotime($r->total_telat_siang) + strtotime($r->total_telat_pagi)) > 300)
-                                            <td> 0</td>
-                                        @else
-                                            <td>{{ 15*(300- date('i', strtotime($r->total_telat_siang) + strtotime($r->total_telat_pagi)))/300 }} </td> 
-                                        @endif                                        --}}
-
-                                       
-
-                                    </tr>
+                                            @if ($cuti == null)
+                                                <td> 0 </td>
+                                            @else
+                                                @foreach ($cuti as $d)
+                                                    <td> {{ $d->totalcuti }} hari</td>
+                                                @endforeach
+                                            @endif
+                                            <td> 0 </td>
+                                            <td><span class="jumlah" data-bulan="{{ $r->bulan }}"
+                                                    data-tahun="{{ $r->tahun }}" data-total="{{ $r->totalkerja }}"
+                                                    data-libur="{{ $r->jumlah_hari_libur }}"></span></td>
+                                        </tr>
                                     @endforeach
+
                                 </tbody>
                             </table>
                         </div>
 
-                        <br>
-                        <h6 class="font-primary">Keterlambatan/pulang cepat - Jumlah Kurang Jam (menit)</h6>
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="table-rekapitulasi">
-                                <thead>
-                                    <th width="5%">No.</th>
-                                    <th>Bulan</th>
-                                    <th>Tahun</th>
-                                    <th>Total Telat Pagi</th>
-                                    <th>Total Telat Siang</th>
-                                    <th>Total Telat Keseluruhan</th>
-                                </thead>
-                                <tbody>
-                                    @foreach ($data as $no => $r)
-                                    <tr>
-                                        <td align="center">{{ $no + 1 }}</td>
-                                        <td>{{ getNamaBulan($r->bulan) }}</td>
-                                        <td>{{ $r->tahun }}</td>
-                                        <td>{{ date('H:i:s', strtotime($r->total_telat_pagi)) }}</td>
-                                        <td>{{ date('H:i:s', strtotime($r->total_telat_siang)) }}</td>
-                                        <td>{{ date('H:i:s', strtotime($r->total_telat_siang) + strtotime($r->total_telat_pagi)) }}</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        <br>
-                        <h6 class="font-primary">Jumlah Izin di luar Izin Resmi (jam)</h6>
-                        <div class="table-responsive">
-                            <table class="table table-bordered a1" id="table-rekapitulasi">
-                                <thead>
-                                    <th width="5%">No.</th>
-                                    <th>Bulan</th>
-                                    <th>Tahun</th>
-                                
-                                    <th>Total Izin</th>
-                                </thead>
-                                <tbody>
-                                    @foreach ($dataizinkerja as $no => $r)
-                                    <tr>
-                                        <td align="center">{{ $no + 1 }}</td>
-                                        <td>{{ getNamaBulan($r->bulan)}}</td>
-                                        <td>{{ $r->tahun }}</td>
-                                        <td>{{ $r->total }}</td>
-                                    
-                                    </tr>
-                                    @endforeach
-                                    </tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                        <br>
-                        <h6 class="font-primary">Jumlah Sakit (Ajuan Sakit) </h6>
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="table-rekapitulasi">
-                                <thead>
-                                    <th width="5%">No.</th>
-                                    <th>Bulan</th>
-                                    <th>Tahun</th>
-                                    <th>Total Izin</th>
-                                </thead>
-                                <tbody>
-                                    @foreach ($datasakit as $no => $r)
-                                    <tr>
-                                        <td align="center">{{ $no + 1 }}</td>
-                                        <td>{{ getNamaBulan($r->bulan)}}</td>
-                                        <td>{{ $r->tahun }}</td>
-                                        <td>{{ $r->total }}</td>
-                                    
-                                    </tr>
-                                    @endforeach
-                                    </tbody>
-                                </tbody>
-                            </table>
-                        </div>
+
                     </div>
 
                 </div>
             </div>
         </div>
     </div>
-
 @endsection
 
 @section('scripts')
-
     @parent
     <script>
         function getDaysInMonth(month, year) {
@@ -183,11 +96,11 @@
             while (date.getMonth() === month) {
 
                 // Exclude weekends
-                var tmpDate = new Date(date);            
+                var tmpDate = new Date(date);
                 var weekDay = tmpDate.getDay(); // week day
                 var day = tmpDate.getDate(); // day
 
-                if (weekDay%6) { // exclude 0=Sunday and 6=Saturday
+                if (weekDay % 6) { // exclude 0=Sunday and 6=Saturday
                     days.push(day);
                 }
 
@@ -195,19 +108,21 @@
             }
 
             return days;
-        }  
-        
+        }
+
         $(".jumlah").each(function() {
             var bulan = $(this).data('bulan');
             var tahun = $(this).data('tahun');
             var total = $(this).data('total');
+            var libur = $(this).data('libur');
             var hasil = getDaysInMonth(bulan, tahun);
-            var jmlh_hari = hasil.length;
+            var jmlh_hari = hasil - libur;
+            var totalhari = hasil.length - libur;
             // $(this).text(jmlh_hari);
-            var total = Math.round((total/jmlh_hari)*100,2);
-            $(this).text(total + '%');
-            console.log(jmlh_hari);
+            // var total = Math.round((total / jmlh_hari) * 100, 2);
+            // $(this).text(total + '%');
+            $(this).text(totalhari + ' hari');
+            console.log(totalhari);
         })
     </script>
-
 @endsection
