@@ -34,6 +34,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vector-map.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.css') }}">
+    <link rel="stylesheet"
+        href="{{ asset('vendor/assets/js/datatables-responsive-bs5/responsive.bootstrap5.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/select2.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/timepicker.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}">
@@ -183,6 +185,8 @@
         <script src="{{ asset('assets/js/form-validation-custom.js') }}"></script>
         <script src="{{ asset('assets/js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
         <script src="{{ asset('assets/js/datatable/datatables/datatable.custom.js') }}"></script>
+        <script src="{{ asset('assets/js/datatables-responsive/datatables.responsive.js') }}"></script>
+        <script src="{{ asset('assets/js/datatables-responsive-bs5/responsive.bootstrap5.js') }}"></script>
         <script src="{{ asset('assets/js/script.js') }}"></script>
         <script src="{{ asset('assets/js/theme-customizer/customizer.js') }}"></script>
         <script src="{{ asset('assets/js/notify/bootstrap-notify.min.js') }}"></script>

@@ -14,7 +14,7 @@
                 @if (auth()->user()->role == 'admin')
                     <li class="dropdown">
                         <a class="nav-link menu-title link-nav @if (request()->routeIs('admin.admin_v')) active @endif"
-                            href="{{ route('admin.admin_v') }}"><i data-feather="users"></i><span>Dashboard</span>
+                            href="{{ route('admin.admin_v') }}"><i data-feather="home"></i><span>Dashboard</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
 
@@ -35,6 +35,13 @@
                         <a class="nav-link menu-title link-nav @if (request()->routeIs('admin.mesinsidikjari')) active @endif"
                             href="{{ route('admin.mesinsidikjari') }}"><i data-feather="tablet"></i><span>Mesin Sidik
                                 Jari</span>
+                            <div class="according-menu"><i class="fa fa-angle-right"></i></div>
+                        </a>
+
+                    </li>
+                    <li class="dropdown">
+                        <a class="nav-link menu-title link-nav @if (request()->routeIs('admin.list')) active @endif"
+                            href="{{ route('admin.list') }}"><i data-feather="users"></i><span>Data Karyawan</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
 

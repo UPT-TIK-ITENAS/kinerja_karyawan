@@ -14,14 +14,14 @@ class RekapitulasiController extends Controller
 {
     public function index()
     {
-        $peg = User::join('unit', 'unit.id', '=', 'users.unit')->wherenot('unit', '29')->get();
+        $peg = User::join('unit', 'unit.id', '=', 'users.unit')->wherenot('unit', '29')->where('status', '1')->get();
         // dd($peg[1]);
         return view('admin.rekapitulasi');
     }
 
     public function listrekapkaryawan(Request $request)
     {
-        $data = User::join('unit', 'unit.id', '=', 'users.unit')->wherenot('unit', '29')->get();
+        $data = User::join('unit', 'unit.id', '=', 'users.unit')->wherenot('unit', '29')->where('status', '1')->get();
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()

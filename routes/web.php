@@ -11,6 +11,7 @@ use App\Http\Controllers\KepalaUnitController;
 use App\Http\Controllers\BiometricAllController;
 use App\Http\Controllers\MesinController;
 use App\Http\Controllers\RekapitulasiController;
+use App\Http\Controllers\ListKaryawanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/rekapitulasi/detailrekap/{nopeg}', [RekapitulasiController::class, 'detailrekap'])->name('admin.detailrekap');
 
         // Route::get('/listdetailrekapkaryawan/{nip}', [AdminController::class, 'listdetailrekapkaryawan'])->name('admin.listdetailrekapkaryawan');
+
+        Route::get('/list', [ListKaryawanController::class, 'index'])->name('admin.list');
+
 
         Route::get('editAtt/{id}', [AdminController::Class, 'editAtt'])->name('admin.editAtt');
         Route::post('storeizinkehadiran', [AdminController::Class, 'storeizinkehadiran'])->name('admin.storeizinkehadiran');

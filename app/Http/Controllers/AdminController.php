@@ -53,7 +53,7 @@ class AdminController extends Controller
     {
         $data = Attendance::selectRaw('attendance.*, users.name, users.awal_tugas, users.akhir_tugas')
             ->join('users', 'attendance.nip', '=', 'users.nopeg')
-            ->where('fungsi', 'Admin')
+            ->where('users.status', '1')
             ->where('attendance.nip', $request->get('filter1'), '', 'and')
             ->where('attendance.tanggal', $request->get('filter2'), '', 'and')
             ->orderby('attendance.tanggal', 'asc');
