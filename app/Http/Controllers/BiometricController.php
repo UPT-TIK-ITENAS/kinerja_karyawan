@@ -6,23 +6,24 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-    class BiometricController extends Controller
-    {
+class BiometricController extends Controller
+{
     public function SyncAndInsertBiometric(Request $request)
     {
 
-        $this->validate($request,[
+        $this->validate($request, [
             'tanggal' => 'required',
         ]);
 
         $listmesinabsensi = DB::table('biometricmachine')->where('status', 'enable')->get();
+        $gagalMesin = [];
         if (empty($listmesinabsensi)) {
             return "Finger Print Machine not register or not enable";
         }
 
         foreach ($listmesinabsensi as $mesinabsensi) {
             $msg = "Sync data from machine " . $mesinabsensi->name . "(" . $mesinabsensi->ipaddress . ":" . $mesinabsensi->port . ")";
-            $Connect = fsockopen($mesinabsensi->ipaddress, $mesinabsensi->port, $errno, $errstr, 1);
+            $Connect = @fsockopen($mesinabsensi->ipaddress, $mesinabsensi->port, $errno, $errstr, 1);
             if ($Connect) {
                 $msg .= "\n SUCCESS connect machine";
                 if (!isset($Key)) $Key = "0";
@@ -64,27 +65,28 @@ use Illuminate\Support\Facades\DB;
                     $day = date("w", strtotime($datetime));
 
                     if ($date == date("Y-m-d", strtotime($request->tanggal))) {
-                        $cek_data_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', date("Y-m-d", strtotime($request->tanggal)))->first();
+                        // if ($date == date("Y-m-d", strtotime($request->tanggal))) {
+                        $cek_data_att = DB::table('attendance')->where('nip', $employee_id)->where('tanggal', date("Y-m-d", strtotime($request->tanggal)))->first();
                         $users = DB::table('users')->get();
-                        foreach($users as $user){
-                            if($user->nopeg == $employee_id){
+                        foreach ($users as $user) {
+                            if ($user->nopeg == $employee_id) {
                                 if (empty($cek_data_att)) {
                                     if ($time < '12:45:00') {
-                                        $insert_att = DB::table('attendance_baru')->insert([
+                                        $insert_att = DB::table('attendance')->insert([
                                             'nip' => $employee_id,
                                             'tanggal' => $date,
                                             'hari' => $day,
                                             'jam_masuk' => $datetime,
                                         ]);
-                                    } else if ($time >= '12:45:00' && $time < '15:30:00') {
-                                        $insert_att = DB::table('attendance_baru')->insert([
+                                    } else if ($time >= '12:45:00' && $time < '16:59:00') {
+                                        $insert_att = DB::table('attendance')->insert([
                                             'nip' => $employee_id,
                                             'tanggal' => $date,
                                             'hari' => $day,
                                             'jam_siang' => $datetime,
                                         ]);
-                                    } else if ($time >= '15:30:00' && $time <= '23:59:00') {
-                                        $insert_att = DB::table('attendance_baru')->insert([
+                                    } else if ($time >= '16:59:00' && $time <= '23:59:00') {
+                                        $insert_att = DB::table('attendance')->insert([
                                             'nip' => $employee_id,
                                             'tanggal' => $date,
                                             'hari' => $day,
@@ -93,26 +95,45 @@ use Illuminate\Support\Facades\DB;
                                     }
                                 } else {
                                     if ($time < '12:45:00') {
-                                        $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
+                                        $upd_att = DB::table('attendance')->where('nip', $employee_id)->where('tanggal', $date)->update([
                                             'jam_masuk' => $datetime,
                                         ]);
-                                    } else if ($time >= '12:45:00' && $time < '15:30:00') {
-                                        $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
+                                    } else if ($time >= '12:45:00' && $time < '16:59:00') {
+                                        $upd_att = DB::table('attendance')->where('nip', $employee_id)->where('tanggal', $date)->update([
                                             'jam_siang' => $datetime,
                                         ]);
-                                    } else if ($time >= '15:30:00' && $time <= '23:59:00') {
-                                        $upd_att = DB::table('attendance_baru')->where('nip', $employee_id)->where('tanggal', $date)->update([
+                                    } else if ($time >= '16:59:00' && $time <= '23:59:00') {
+                                        $upd_att = DB::table('attendance')->where('nip', $employee_id)->where('tanggal', $date)->update([
                                             'jam_pulang' => $datetime,
                                         ]);
                                     }
                                 }
                             }
                         }
+                        $cek_status = DB::table('attendance')->where([
+                            'tanggal' => $date
+                        ])->get();
+                        foreach ($cek_status as $cs) {
+                            if (!empty($cs->jam_masuk) && !empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
+                                $query_upd = DB::table('attendance')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
+                                    'status' => 1,
+                                ]);
+                            }
+                        }
                     }
+                    // }
                 }
             } else {
                 $msg .= "\n FAILED connect machine: " . $errno . " " . $errstr;
-                return $msg;
+                // return $msg;
+                $last_connect = date('Y-m-d H:i:s');
+                $last_response = $msg;
+                $save_log = DB::table('biometricmachine')->where('id', $mesinabsensi->id)->update([
+                    'last_connect' => $last_connect,
+                    'last_response' => $last_response,
+                ]);
+                array_push($gagalMesin, 'Gagal Sinkron pada Mesin : ' . $mesinabsensi->name . ' (' . $mesinabsensi->ipaddress . ')');
+                continue;
             }
             $last_connect = date('Y-m-d H:i:s');
             $last_response = $msg;
@@ -122,7 +143,8 @@ use Illuminate\Support\Facades\DB;
                 'last_response' => $last_response,
             ]);
         }
-        return redirect()->route('admin.datapresensi')->with('success', 'Sinkronisasi Berhasil!');
+        $gagalMesin = implode("<br>", $gagalMesin);
+        return redirect()->route('admin.datapresensi')->with(array('warning' => $gagalMesin ?? 'Berhasil Mengambil data dari semua mesin sidik jari', 'success' => 'Sinkronisasi Berhasil'));
     }
 
     public function Parse_Data($data, $p1, $p2)

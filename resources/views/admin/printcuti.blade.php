@@ -36,7 +36,7 @@
         margin: auto;
     }
 
-    .table1{
+    .table1 {
         position: relative;
         width: 100%;
         max: width 100%;
@@ -106,10 +106,11 @@
     }
 
     .ttd3 {
-        position:absolute;
-        left:12%;
-        margin-left:-120px; /* (300/2) */
-        }
+        position: absolute;
+        left: 6%;
+        margin-left: -120px;
+        /* (300/2) */
+    }
 
     .paddingttd {
 
@@ -119,7 +120,6 @@
     .page:after {
         content: counter(page);
     }
-
 </style>
 
 <body>
@@ -177,15 +177,15 @@
                 <td style="width:10%;font-size: 15px;">
                     Unit Kerja
                 </td>
-                
+
                 <td style="width:2%;text-align: center">:</td>
-                <td style="width:2%;font-size: 15px;">{{ $data->unit }}</td>
+                <td style="width:2%;font-size: 15px;">{{ $data->nama_unit }}</td>
             </tr>
             <tr>
                 <td style="width:10%;font-size: 15px;">
                     Jenis Cuti
                 </td>
-                
+
                 <td style="width:2%;text-align: center">:</td>
                 <td style="width:2%;font-size: 15px;">{{ $data->jenis_cuti }}</td>
             </tr>
@@ -193,15 +193,15 @@
                 <td style="width:10%;font-size: 15px;">
                     Tanggal Cuti
                 </td>
-                
+
                 <td style="width:2%;text-align: center">:</td>
                 <td style="width:2%;font-size: 15px;">{{ $data->tgl_awal_cuti }} s/d {{ $data->tgl_akhir_cuti }}</td>
             </tr>
             <tr>
                 <td style="width:10%;font-size: 15px;">
-                    Alamat & No Tlp yang dapat dihubungi selama cuti 
+                    Alamat & No Tlp yang dapat dihubungi selama cuti
                 </td>
-                
+
                 <td style="width:2%;text-align: center">:</td>
                 <td style="width:2%;font-size: 15px;">{{ $data->alamat }}. <b> No telpon </b> {{ $data->no_hp }}</td>
             </tr>
@@ -227,13 +227,13 @@
                 </tr>
                 <tr>
                     <td>
-                        {{-- <img src="data:image/png;base64, {!! $qrcode !!}"> --}}
-                        <img src="">
+                        <img src="{{ url('qrcode/' . $data->qrcode_pejabat) }}" width="80" height="80"
+                            alt="">
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <u><b>Epih Haryanti, A.Md.</u></b>
+                        <u><b>{{ $atasan_lang->nama }}</u></b>
                     </td>
                 </tr>
             </table>
@@ -253,19 +253,19 @@
                 </tr>
                 <tr>
                     <td>
-                        {{-- <img src="data:image/png;base64, {!! $qrcode !!}"> --}}
-                        <img src="">
+                        <img src="{{ url('qrcode/' . $data->qrcode_peg) }}" width="80" height="80"
+                            alt="">
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <u><b>Epih Haryanti, A.Md.</u></b>
+                        <u><b>{{ $data->name }}</u></b>
                     </td>
                 </tr>
             </table>
         </div>
 
-        
+
         <div class="ttd3">
             <table style="float:left">
                 <tr>
@@ -280,70 +280,76 @@
                 </tr>
                 <tr>
                     <td>
-                        {{-- <img src="data:image/png;base64, {!! $qrcode !!}"> --}}
-                        <img src="">
+                        <img src="{{ url('qrcode/' . $data->qrcode_kepala) }}" width="80" height="80"
+                            alt="">
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <u><b>Epih Haryanti, A.Md.</u></b>
+                        <u><b>{{ $atasan->nama }}</u></b>
                     </td>
                 </tr>
             </table>
         </div>
-    
-       
+
+
     </div>
 
     <footer>
-        
+
 
     </footer>
     <br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<div class="isi">
-    <p style="font-size: 14.5px;"> Alasan tidak disetujui : </p>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="isi">
+        <p style="font-size: 14.5px;"> Alasan tidak disetujui : </p>
 
-    <br>
-    <br>
-    <br>
-    <p style="font-size: 14.5px;"> <b>Keterangan : </b> </p>
-    <table class="table1">
-        <tr>
-            <td style="width:10%;font-size: 15px;">
-                1. Jumlah hak cuti tahunan selama tahun 2022 adalah 12 hari
-            </td>
-        </tr>
-        <tr>
-            <td style="width:10%;font-size: 15px;">
-                2. Jumllah hak cuti besar adalah 2 bulan per 6 tahun-an
-            </td>
-        </tr>
-        <tr>
-            <td style="width:10%;font-size: 15px;">
-                3. Jumllah hak cuti melahirkan adalah 3 bulan dan berlaku untuk anak pertama sampai anak ke-tiga
-            </td>
-        </tr>
-        <tr>
-            <td style="width:10%;font-size: 15px;">
-                4. Cuti Ibadah Haji diberikan selama 40 (empat puluh) hari kalender dan tidak memotong cuti tahunan yang bersangkutan dapat menggunakan Cuti Besar. 
-                (Cuti ibah haji hanya berlaku hanya untuk satu  kali kesempatan ibadah haji, untuk ibdah haji berikutnya menggunakan cuti besar)
-            </td>
-        </tr>
-        <tr>
-            <td style="width:10%;font-size: 15px;">
-                5. Cuti Umroh dapat diberikan dengan mengambil cuti tahunan (menggunakan hak cuti tahunan yang bersangkutan)
-            </td>
-        </tr>
-    </table>
-</div>
+        <br>
+        <br>
+        <br>
+        <p style="font-size: 14.5px;"> <b>Keterangan : </b> </p>
+        <table class="table1">
+            <tr>
+                <td style="width:10%;font-size: 15px;">
+                    1. Jumlah hak cuti tahunan selama tahun 2022 adalah 12 hari
+                </td>
+            </tr>
+            <tr>
+                <td style="width:10%;font-size: 15px;">
+                    2. Jumllah hak cuti besar adalah 2 bulan per 6 tahun-an
+                </td>
+            </tr>
+            <tr>
+                <td style="width:10%;font-size: 15px;">
+                    3. Jumllah hak cuti melahirkan adalah 3 bulan dan berlaku untuk anak pertama sampai anak ke-tiga
+                </td>
+            </tr>
+            <tr>
+                <td style="width:10%;font-size: 15px;">
+                    4. Cuti Ibadah Haji diberikan selama 40 (empat puluh) hari kalender dan tidak memotong cuti tahunan
+                    yang bersangkutan dapat menggunakan Cuti Besar.
+                    (Cuti ibah haji hanya berlaku hanya untuk satu kali kesempatan ibadah haji, untuk ibdah haji
+                    berikutnya menggunakan cuti besar)
+                </td>
+            </tr>
+            <tr>
+                <td style="width:10%;font-size: 15px;">
+                    5. Cuti Umroh dapat diberikan dengan mengambil cuti tahunan (menggunakan hak cuti tahunan yang
+                    bersangkutan)
+                </td>
+            </tr>
+        </table>
+    </div>
 
 </body>
 

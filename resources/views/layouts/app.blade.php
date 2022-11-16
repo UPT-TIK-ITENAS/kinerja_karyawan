@@ -30,17 +30,27 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/feather-icon.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/animate.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/chartist.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/prism.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vector-map.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.css') }}">
+    <link rel="stylesheet"
+        href="{{ asset('vendor/assets/js/datatables-responsive-bs5/responsive.bootstrap5.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/select2.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/timepicker.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}">
 
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
     <link id="color" rel="stylesheet" href="{{ asset('assets/css/color-1.css') }}" media="screen">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive.css') }}">
+    <style>
+        .clockpicker-popover {
+            z-index: 99999999;
+        }
+    </style>
+    <script>
+        window.baseurl = "{{ url('/') }}"
+    </script>
 </head>
 
 <body>
@@ -109,7 +119,19 @@
                         <div class="row">
                             @if (session('success'))
                                 <div class="success-session" data-flashdata="{{ session('success') }}"></div>
-                            @elseif (session('danger'))
+                            @endif
+                            @if (session('warning'))
+                                <div class="warning-sync" data-flashdata="{{ session('warning') }}">
+                                    <div class="alert alert-warning inverse alert-dismissible fade show"
+                                        role="alert"><i class="icon-alert txt-dark"></i>
+                                        <p><b> Perhatian ! </b> <br> {!! session('warning') !!}</p>
+                                        <button class="btn-close" type="button" data-bs-dismiss="alert"
+                                            aria-label="Close" data-bs-original-title="" title=""></button>
+
+                                    </div>
+                                </div>
+                            @endif
+                            @if (session('danger'))
                                 <div class="danger-session" data-flashdata="{{ session('danger') }}"></div>
                             @endif
                         </div>
@@ -148,9 +170,6 @@
         <script src="{{ asset('assets/js/clipboard/clipboard.min.js') }}"></script>
         <script src="{{ asset('assets/js/custom-card/custom-card.js') }}"></script>
         <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-time-picker/moment.min.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-time-picker/tempusdominus-bootstrap-4.min.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-time-picker/datetimepicker.custom.js') }}"></script>
 
         <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.js') }}"></script>
         <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.en.js') }}"></script>
@@ -166,6 +185,8 @@
         <script src="{{ asset('assets/js/form-validation-custom.js') }}"></script>
         <script src="{{ asset('assets/js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
         <script src="{{ asset('assets/js/datatable/datatables/datatable.custom.js') }}"></script>
+        <script src="{{ asset('assets/js/datatables-responsive/datatables.responsive.js') }}"></script>
+        <script src="{{ asset('assets/js/datatables-responsive-bs5/responsive.bootstrap5.js') }}"></script>
         <script src="{{ asset('assets/js/script.js') }}"></script>
         <script src="{{ asset('assets/js/theme-customizer/customizer.js') }}"></script>
         <script src="{{ asset('assets/js/notify/bootstrap-notify.min.js') }}"></script>
@@ -173,6 +194,7 @@
         <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
         <script src="{{ asset('assets/js/select2/select2.full.min.js') }}"></script>
         <script src="{{ asset('assets/js/select2/select2-custom.js') }}"></script>
+        <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
 
 
         <script type="text/javascript">
