@@ -79,7 +79,6 @@
                                     <th>Telat Masuk</th>
                                     <th>Telat Siang</th>
                                     <th>Aksi</th>
-                                    <th>File</th>
                                     <th>Status</th>
                                 </thead>
                                 <tbody>
@@ -132,7 +131,8 @@
                                 <span class="form-label" for="jam_masuk">Tanggal</span>
                                 <div class="input-group">
                                     <input class="datepicker-here form-control digits" type="text" id="tanggall"
-                                        name="tanggall" data-language="en" data-bs-original-title="" title="">
+                                        name="tanggall" data-language="en" data-bs-original-title="" title=""
+                                        readonly>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -244,11 +244,6 @@
                     {
                         data: 'action',
                         name: 'action'
-                    },
-
-                    {
-                        data: 'file',
-                        name: 'file'
                     },
                     {
                         data: 'status',

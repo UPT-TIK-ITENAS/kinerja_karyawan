@@ -144,33 +144,13 @@ class AdminController extends Controller
 
                     // }
                 })
-                ->addColumn('file', function ($row) {
-                    $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id', $row->id)->get();
-
-                    foreach ($dataizin as $izin) {
-                        $printsurat =  route('admin.printizin', $izin->id);
-
-                        if ($row->id == $izin->id_attendance) {
-                            $actionBtn = "
-                            <div class='d-block text-center'>
-                                <a href='$printsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-download-alt'></i></a>
-                            </div>
-                            ";
-                            return $actionBtn;
-                        } else {
-                            $actionBtn = "";
-                            return $actionBtn;
-                        }
-                    }
-                })
-
                 ->addColumn('status', function ($row) {
                     $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id', $row->id)->get();
 
                     foreach ($dataizin as $izin) {
                         if ($row->id == $izin->id_attendance) {
                             if ($row->approval == 1) {
-                                $apprv = '<span class="badge badge-success">Disetujui</span>';
+                                $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
                             } else {
                                 $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
                             }
@@ -180,7 +160,7 @@ class AdminController extends Controller
                         }
                     }
                 })
-                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'latesore', 'action', 'file', 'status'])
+                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'latesore', 'action', 'status'])
 
                 ->make(true);
         }
@@ -198,6 +178,9 @@ class AdminController extends Controller
 
     public function storeizinkehadiran(Request $request)
     {
+
+        $qrcode_filenamepeg = 'qr-' . $request->nip . '-' . $request->id . '.svg';
+        QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nip . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
         Izin::insert([
             'id_attendance' => $request->id,
             'nopeg' => $request->nip,
@@ -209,18 +192,8 @@ class AdminController extends Controller
             'alasan' => $request->alasan,
             'validasi' => 1,
             'approval' => 0,
+            'qrcode_peg' => $qrcode_filenamepeg,
         ]);
-
-        // $dataqr = Izin::where('nopeg', $request->nopeg)->first();
-        // $qrcode_filename = 'qr-' . base64_encode($request->nopeg . date('Y-m-d H:i:s')) . '.svg';
-        // // dd($qrcode_filename);
-        // QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nopeg . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
-
-        // QR::where('nopeg', $request->nopeg)->insert([
-        //     'id_attendance' => $request->id_attendance,
-        //     'nopeg' => $request->nopeg,
-        //     'qr_peg' => $qrcode_filename,
-        // ]);
 
         return redirect()->route('admin.datapresensi')->with('success', 'Pengajuan Izin Berhasil!');
     }
@@ -228,92 +201,11 @@ class AdminController extends Controller
     public function printizin($id)
     {
         $data = Izin::where('id_attendance', $id)->first();
-        $dataqr = QR::where('id_attendance', $id)->first();
 
-        $pdf = PDF::loadview('admin.printizin', compact('data', 'dataqr'))->setPaper('A5', 'landscape');
+        $pdf = PDF::loadview('admin.printizin', compact('data'))->setPaper('A5', 'landscape');
         return $pdf->stream();
     }
     //END DATA PRESENSI
-
-
-    //DATA REKAPITULASI
-    public function rekapitulasi()
-    {
-
-        return view('admin.rekapitulasi');
-    }
-
-    public function listrekapkaryawan(Request $request)
-    {
-        $data = DB::table('users');
-
-        if ($request->ajax()) {
-            return DataTables::of($data)
-                ->addIndexColumn()
-
-                ->addColumn('duration', function ($data) {
-
-                    $data_att = DB::select('CALL getTotalTelatPerBulan(' . $data->nopeg . ')');
-                    $pagi = 0;
-                    $siang = 0;
-                    foreach ($data_att as $row) {
-                        $pagi += strtotime($row->total_telat_pagi);
-                        $siang += strtotime($row->total_telat_siang);
-                        $total = $pagi + $siang;
-                    }
-                    return (date("H:i:s", $total));
-                })
-
-                ->addColumn('izin', function ($data) {
-                    $izin = IzinKerja::selectRaw('SUM(total_izin)*8 AS total, nopeg')->where('nopeg', $data->nopeg)->get();
-
-                    foreach ($izin as $row) {
-                        if ($row->nopeg != NULL) {
-                            return $row->total . ' Jam';
-                        } else {
-                            return '';
-                        }
-                    }
-                })
-
-                ->addColumn('detail', function ($data) {
-                    $rekap =  route('admin.detailrekap', $data->nopeg);
-                    $actionBtn = "
-                        <div class='d-block text-center'>
-                            <a href='$rekap' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-eye-alt'></i></a>
-                        </div>";
-                    return $actionBtn;
-                })
-                ->rawColumns(['duration', 'izin', 'detail'])
-                ->make(true);
-        }
-        return DataTables::queryBuilder($data)->toJson();
-    }
-
-    public function detailrekap($nip)
-    {
-
-        $data = DB::select('CALL getTotalTelatPerBulan(' . $nip . ')');
-
-        $dataizinkerja = Attendance::selectRaw('izin_kerja.*,attendance.id, attendance.nip, MONTH(izin_kerja.tgl_awal_izin) AS bulan,  YEAR(izin_kerja.tgl_awal_izin) AS tahun, izin_kerja.total_izin AS total')
-            ->join('izin_kerja', 'attendance.nip', '=', 'izin_kerja.nopeg')
-            ->whereIn('attendance.nip', [$nip])
-            ->whereNotIn('izin_kerja.jenis_izin', ['9'])
-            ->groupBy('bulan', 'tahun')
-            ->get();
-
-        $datasakit = Attendance::selectRaw('izin_kerja.*, attendance.id, attendance.nip, MONTH(izin_kerja.tgl_awal_izin) AS bulan,  YEAR(izin_kerja.tgl_awal_izin) AS tahun, izin_kerja.total_izin AS total')
-            ->join('izin_kerja', 'attendance.nip', '=', 'izin_kerja.nopeg')
-            ->where('attendance.nip', $nip)
-            ->where('izin_kerja.jenis_izin', '9')
-            ->groupBy('bulan', 'tahun')
-            ->get();
-
-        return view('admin.detailrekap', compact('data', 'dataizinkerja', 'datasakit'));
-    }
-
-    //END DATA REKAPITULASI
-
 
     function getWorkingDays($startDate, $endDate)
     {

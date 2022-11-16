@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\JenisIzin;
 use App\Models\IzinKerja;
 use App\Models\User;
+use App\Models\Izin;
 use App\Models\Attendance;
 
 if (!function_exists('getCheck')) {
@@ -112,6 +113,7 @@ if (!function_exists('getAksi')) {
     {
         $printizin =  route('admin.printizinkerja', $id);
         $printcuti =  route('admin.printcuti', $id);
+        $print =  route('admin.printizin', $id);
         $batal_cuti = route('admin.batal_cuti', $id);
         $batal_izin = route('admin.batal_izin', $id);
         $delete_url = route('admin.destroylibur', $id);
@@ -148,8 +150,15 @@ if (!function_exists('getAksi')) {
                     ";
         } else if ($tipe == 'att') {
             $data = Attendance::where('id', $id)->first();
-            $for_html = '
-                    <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $data->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
+            $izin = Izin::where('id_attendance', $id)->first();
+            if ($izin == NULL) {
+                $for_html = '
+                <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $data->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
+            } else {
+                $for_html = '
+                <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $data->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
+                <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
+            }
         }
         return $for_html;
     }

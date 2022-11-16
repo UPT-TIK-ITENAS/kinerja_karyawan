@@ -20,7 +20,7 @@
 
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title @if (request()->routeIs('admin.datapresensi') || request()->routeIs('admin.datarekapitulasi')) active @endif"><i
+                        <a class="nav-link menu-title @if (request()->routeIs('admin.datapresensi') || request()->routeIs('admin.rekapitulasi')) active @endif"><i
                                 data-feather="monitor"></i><span>Master Data Presensi</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
