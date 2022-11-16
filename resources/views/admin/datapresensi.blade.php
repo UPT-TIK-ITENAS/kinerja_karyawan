@@ -27,7 +27,7 @@
                                 <div class="col-xl-2">
                                     <div class="input-group">
                                         <input class="datepicker-here form-control digits" id="tanggal" name="tanggal"
-                                            type="date" data-language="en" required>
+                                            type="text" data-language="en" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-12 col-lg-6">

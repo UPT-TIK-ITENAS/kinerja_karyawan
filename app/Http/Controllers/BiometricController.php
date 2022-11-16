@@ -110,6 +110,16 @@ class BiometricController extends Controller
                                 }
                             }
                         }
+                        $cek_status = DB::table('attendance')->where([
+                            'tanggal' => $date
+                        ])->get();
+                        foreach ($cek_status as $cs) {
+                            if (!empty($cs->jam_masuk) && !empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
+                                $query_upd = DB::table('attendance')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
+                                    'status' => 1,
+                                ]);
+                            }
+                        }
                     }
                     // }
                 }
