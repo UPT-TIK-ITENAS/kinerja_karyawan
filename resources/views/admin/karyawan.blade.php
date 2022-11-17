@@ -22,7 +22,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="dt-ext table-responsive">
-                            <table class="display" id="table-kar" width="100%">
+                            <table class="dataTable" id="table-kar">
                                 <thead>
                                     <th>No.</th>
                                     <th>Nama</th>

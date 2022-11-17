@@ -129,11 +129,9 @@
                         <div class="row g-2 mb-3">
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_masuk">Tanggal</span>
-                                <div class="input-group">
-                                    <input class="datepicker-here form-control digits" type="text" id="tanggall"
-                                        name="tanggall" data-language="en" data-bs-original-title="" title=""
-                                        readonly>
-                                </div>
+                                <input class="form-control" id="tanggall" name="tanggall" type="text" readonly
+                                    required="">
+
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_masuk">Jam Keluar </span>
