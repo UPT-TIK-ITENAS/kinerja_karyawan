@@ -109,7 +109,7 @@
         /* position:fixed; */
     }
 
-    
+
 
     .center {
         border: 1px solid #000000;
@@ -119,13 +119,12 @@
     .page:after {
         content: counter(page);
     }
-
-
 </style>
 
 <body>
     <header class="header">
-        <p style="font-size: 20px;align:left;"> INSTITUT TEKNOLOGI NASIONAL <br> JL. PHH MUSTAPA 23 BANDUNG <br> ------------------------------------------------</p>
+        <p style="font-size: 20px;align:left;"> INSTITUT TEKNOLOGI NASIONAL <br> JL. PHH MUSTAPA 23 BANDUNG <br>
+            ------------------------------------------------</p>
     </header>
     <br>
     <div class="isi">
@@ -152,9 +151,12 @@
             </tr>
         </table>
     </div>
-    
+
     <div class="isi">
-        <p style="font-size: 16px;align:left;"> Dengan ini menyatakan bahwa saya tidak hadir pada tanggal dan jam <b> {{ $data->tgl_awal_izin }} </b> sampai dengan tanggal dan jam <b> {{ $data->tgl_akhir_izin }} </b> dikarenakan <b> {{ $data->alasan }} </b> </p>
+        <p style="font-size: 16px;align:left;"> Dengan ini menyatakan bahwa saya tidak hadir di tanggal
+            <b>{{ $data->tanggal }}</b> pada jam <b> {{ $data->jam_awal }} </b> sampai dengan jam <b>
+                {{ $data->jam_akhir }} </b> dikarenakan <b> {{ $data->alasan }} </b>
+        </p>
 
     </div>
     <div class="isi">
@@ -171,7 +173,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>Pimpinan Unit Kerja 
+                        <b>Pimpinan Unit Kerja
                     </td>
                 </tr>
                 <tr>
@@ -187,7 +189,7 @@
                 </tr>
             </table>
         </div>
-    
+
         <div class="ttd2">
             <table style="float:right">
                 <tr>
@@ -202,7 +204,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <img src="{{ url('qrcode/' . $dataqr->qr_peg) }}" width="80" height="80" alt="">
+                        <img src="{{ url('qrcode/' . $data->qrcode_peg) }}" width="80" height="80"
+                            alt="">
                         <img src="">
                     </td>
                 </tr>
@@ -215,7 +218,7 @@
         </div>
     </div>
     <footer>
-        
+
 
     </footer>
 

@@ -31,11 +31,11 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/feather-icon.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/animate.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/chartist.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/prism.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vector-map.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatable-extension.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/select2.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/timepicker.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/daterangepicker.css') }}">
@@ -44,10 +44,15 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
     <link id="color" rel="stylesheet" href="{{ asset('assets/css/color-1.css') }}" media="screen">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive.css') }}">
-
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}">
     @stack('styles')
+    <style>
+        .clockpicker-popover {
+            z-index: 99999999;
+        }
+    </style>
     <script>
-        window.baseurl = "{{ url('') }}"
+        window.baseurl = "{{ url('/') }}"
     </script>
 </head>
 
@@ -117,7 +122,19 @@
                         <div class="row">
                             @if (session('success'))
                                 <div class="success-session" data-flashdata="{{ session('success') }}"></div>
-                            @elseif (session('danger'))
+                            @endif
+                            @if (session('warning'))
+                                <div class="warning-sync" data-flashdata="{{ session('warning') }}">
+                                    <div class="alert alert-warning inverse alert-dismissible fade show"
+                                        role="alert"><i class="icon-alert txt-dark"></i>
+                                        <p><b> Perhatian ! </b> <br> {!! session('warning') !!}</p>
+                                        <button class="btn-close" type="button" data-bs-dismiss="alert"
+                                            aria-label="Close" data-bs-original-title="" title=""></button>
+
+                                    </div>
+                                </div>
+                            @endif
+                            @if (session('danger'))
                                 <div class="danger-session" data-flashdata="{{ session('danger') }}"></div>
                             @endif
                         </div>
@@ -158,9 +175,6 @@
         <script src="{{ asset('assets/js/clipboard/clipboard.min.js') }}"></script>
         <script src="{{ asset('assets/js/custom-card/custom-card.js') }}"></script>
         <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-time-picker/moment.min.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-time-picker/tempusdominus-bootstrap-4.min.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-time-picker/datetimepicker.custom.js') }}"></script>
 
         <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.js') }}"></script>
         <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.en.js') }}"></script>
@@ -176,6 +190,27 @@
         <script src="{{ asset('assets/js/form-validation-custom.js') }}"></script>
         <script src="{{ asset('assets/js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
         <script src="{{ asset('assets/js/datatable/datatables/datatable.custom.js') }}"></script>
+
+
+        <script src="{{ asset('assets/js/datatable/datatable-extension/dataTables.buttons.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datatable/datatable-extension/jszip.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datatable/datatable-extension/buttons.colVis.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datatable/datatable-extension/pdfmake.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datatable/datatable-extension/vfs_fonts.js') }}"></script>
+        <script src="{{ asset('assets/js/datatable/datatable-extension/dataTables.autoFill.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datatable/datatable-extension/dataTables.select.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datatable/datatable-extension/buttons.bootstrap4.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datatable/datatable-extension/buttons.html5.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datatable/datatable-extension/buttons.print.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datatable/datatable-extension/dataTables.bootstrap4.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datatable/datatable-extension/dataTables.responsive.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datatable/datatable-extension/responsive.bootstrap4.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datatable/datatable-extension/dataTables.keyTable.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datatable/datatable-extension/dataTables.colReorder.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datatable/datatable-extension/dataTables.fixedHeader.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datatable/datatable-extension/dataTables.rowReorder.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datatable/datatable-extension/dataTables.scroller.min.js') }}"></script>
+
         <script src="{{ asset('assets/js/script.js') }}"></script>
         <script src="{{ asset('assets/js/theme-customizer/customizer.js') }}"></script>
         <script src="{{ asset('assets/js/notify/bootstrap-notify.min.js') }}"></script>
@@ -183,7 +218,7 @@
         <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
         <script src="{{ asset('assets/js/select2/select2.full.min.js') }}"></script>
         <script src="{{ asset('assets/js/select2/select2-custom.js') }}"></script>
-        <script src="{{ asset('assets/js/daterangepicker.js') }}"></script>
+        <<<<<<< HEAD <script src="{{ asset('assets/js/daterangepicker.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"
             integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -192,6 +227,9 @@
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js"
             integrity="sha256-GcByKJnun2NoPMzoBsuCb4O2MKiqJZLlHTw3PJeqSkI=" crossorigin="anonymous"></script>
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        =======
+        <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
+        >>>>>>> origin/dev
 
 
         <script type="text/javascript">
@@ -210,7 +248,7 @@
 
             $("document").ready(function() {
                 let flashdatasukses = $('.success-session').data('flashdata');
-                let flashdatagagal = $('.warning-session').data('flashdata');
+                let flashdatagagal = $('.error-session').data('flashdata');
                 if (flashdatasukses) {
                     $.notify({
                         title: 'Success',

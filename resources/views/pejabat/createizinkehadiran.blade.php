@@ -18,7 +18,7 @@
         <div class="card-header pb-0">
             <h5>Data Izin</h5>
         </div>
-        <form action="{{ route('admin.storeizinkehadiran', $data->id) }}" method="POST" name="tmbh"
+        <form action="{{ route('karyawan.storeizinkehadiran', $data->id) }}" method="POST" name="tmbh"
             enctype="multipart/form-data">
             @csrf
             <div class="card-body">

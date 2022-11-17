@@ -27,16 +27,18 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($login)) {
-            if ($data->role == "admin") {
+            if ($data->role == "admin" || $data->role == "admin_bsdm") {
                 $request->session()->regenerate();
                 return redirect()->intended('admin')->with('success', 'Berhasil Login');
             } else if ($data->role == "karyawan") {
                 $request->session()->regenerate();
                 return redirect()->intended('karyawan')->with('success', 'Berhasil Login');
-            }
-            else if ($data->role == "kepalaunit") {
+            } else if ($data->role == "kepalaunit") {
                 $request->session()->regenerate();
                 return redirect()->intended('kepalaunit')->with('success', 'Berhasil Login');
+            } else if ($data->role == "pejabat") {
+                $request->session()->regenerate();
+                return redirect()->intended('pejabat')->with('success', 'Berhasil Login');
             }
         } else {
             return redirect()->back()->with('error', 'Username / Password Salah');
