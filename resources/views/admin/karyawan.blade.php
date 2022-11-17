@@ -39,9 +39,9 @@
                                 <tbody>
                                     @foreach ($peg as $no => $p)
                                         <tr>
-                                            <td width="5%" align="center">{{ $no + 1 }}</td>
-                                            <td align="center">{{ $p->nopeg }} - {{ $p->name }}</td>
-                                            <td align="center">{{ $p->npp }}</td>
+                                            <td align="center">{{ $no + 1 }}</td>
+                                            <td>{{ $p->nopeg }} - {{ $p->name }}</td>
+                                            <td>{{ $p->npp }}</td>
                                             <td>{{ $p->tempat }}, {{ $p->tanggal_lahir }}</td>
                                             <td>{{ $p->email }}</td>
                                             <td>{{ $p->nohp }}</td>

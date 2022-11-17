@@ -320,7 +320,6 @@
     <div class="isi">
         <p style="font-size: 14.5px;"> Alasan tidak disetujui : </p>
         <p>{{ $data->alasan_tolak }}</p>
-        <br>
         <p style="font-size: 14.5px;"> <b>Keterangan : </b> </p>
         <table class="table1">
             <tr>

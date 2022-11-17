@@ -85,7 +85,7 @@ class AdminController extends Controller
                         $duration = strtotime($row->jam_siang) - strtotime($row->jam_masuk);
                         $durationwork = date("H:i:s", $duration);
                     } else {
-                        $duration = strtotime($row->jam_pulang) - strtotime($row->jam_masuk);
+                        $duration = strtotime($row->jam_pulang) - strtotime($row->jam_masuk) - strtotime('01:00:00');
                         $durationwork = date("H:i:s", $duration);
                     }
                     return $durationwork;
