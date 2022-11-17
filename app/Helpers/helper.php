@@ -121,8 +121,7 @@ if (!function_exists('getAksi')) {
         $for_html = "";
         if ($tipe == 'izin') {
             if (auth()->user()->role == "admin" || auth()->user()->role == "admin_bsdm") {
-                $for_html = '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a> 
-                    <a class="btn btn-danger btn-xs batalizin" title="Batal Izin" href="' . $batal_izin . '">X</a>';
+                $for_html = '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a>';
             } elseif (auth()->user()->role == "kepalaunit") {
                 $data = IzinKerja::where('id_izinkerja', $id)->first();
                 $for_html = '
@@ -132,8 +131,7 @@ if (!function_exists('getAksi')) {
             }
         } elseif ($tipe == 'cuti') {
             if (auth()->user()->role == "admin" || auth()->user()->role == "admin_bsdm") {
-                $for_html = '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a> 
-                    <a class="btn btn-danger btn-xs batalcuti" title="Batal Cuti" href="' . $batal_cuti . '">X</a>';
+                $for_html = '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a> ';
             } elseif (auth()->user()->role == "kepalaunit") {
                 $data = Cuti::where('id_cuti', $id)->first();
                 $for_html = '
@@ -167,6 +165,8 @@ if (!function_exists('getAksi')) {
 if (!function_exists('getAprv')) {
     function getAprv($id, $tipe, $alasan = "")
     {
+        $batal_cuti = route('admin.batal_cuti', $id);
+        $batal_izin = route('admin.batal_izin', $id);
         $for_html = "";
         if ($tipe == 'izin') {
             $getDataIzin = IzinKerja::where('id_izinkerja', $id)->first();
@@ -174,7 +174,7 @@ if (!function_exists('getAprv')) {
                 if ($getDataIzin->approval == 1) {
                     $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
                 } else {
-                    $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span></a>';
+                    $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalizin" title="Batal Izin" href="' . $batal_izin . '">X</a>';
                 }
             }
         } elseif ($tipe == 'cuti') {
@@ -185,9 +185,9 @@ if (!function_exists('getAprv')) {
                 } elseif ($getDataCuti->approval == 2) {
                     $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
                 } elseif ($getDataCuti->approval == 3) {
-                    $for_html = '<span class="badge badge-danger">Ditolak</span><br><span><b>note</b> : ' . $alasan . '</span>';
+                    $for_html = '<span class="badge badge-danger">Ditolak</span><br><p><b>note</b> : ' . $alasan . '</p>';
                 } else {
-                    $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span></a>';
+                    $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalcuti" title="Batal Cuti" href="' . $batal_cuti . '">X</a>';
                 }
             }
         }

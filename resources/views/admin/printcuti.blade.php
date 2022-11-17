@@ -107,8 +107,9 @@
 
     .ttd3 {
         position: absolute;
-        left: 6%;
-        margin-left: -120px;
+        /* margin-right: 1em; */
+        right: 30%;
+
         /* (300/2) */
     }
 
@@ -212,7 +213,7 @@
         <br>
         <br>
         <br>
-        <br>
+
         <div class="ttd">
             <table style="float:right">
                 <tr>
@@ -227,13 +228,15 @@
                 </tr>
                 <tr>
                     <td>
-                        <img src="{{ url('qrcode/' . $data->qrcode_pejabat) }}" width="80" height="80"
+                        <img src="{{ url('qrcode/' . $data->qrcode_kepala) }}" width="80" height="80"
                             alt="">
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <u><b>{{ $atasan_lang->nama }}</u></b>
+                        <u><b>{{ $atasan->nama }}</u></b>
+                        <br>
+                        Atasan Langsung
                     </td>
                 </tr>
             </table>
@@ -260,45 +263,48 @@
                 <tr>
                     <td>
                         <u><b>{{ $data->name }}</u></b>
+                        <br>
+                        Yang Bersangkutan
                     </td>
                 </tr>
             </table>
         </div>
-
-
-        <div class="ttd3">
-            <table style="float:left">
-                <tr>
-                    <td>
-                        <b style="color:white">Disetujui/Tidak Disetujui oleh,
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>Disetujui/Tidak Disetujui oleh,
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="{{ url('qrcode/' . $data->qrcode_kepala) }}" width="80" height="80"
-                            alt="">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <u><b>{{ $atasan->nama }}</u></b>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-
     </div>
-
-    <footer>
-
-
-    </footer>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="ttd3">
+        <table style="float:center">
+            <tr>
+                <td>
+                    <b style="color:white">D
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Diajukan oleh,
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="{{ url('qrcode/' . $data->qrcode_pejabat) }}" width="80" height="80"
+                        alt="">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <u><b>{{ $atasan_lang->name }}</u></b><br>
+                    Atasan dari Atasan Langsung
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <br>
     <br>
     <br>
     <br>
@@ -313,10 +319,7 @@
     <br>
     <div class="isi">
         <p style="font-size: 14.5px;"> Alasan tidak disetujui : </p>
-
-        <br>
-        <br>
-        <br>
+        <p>{{ $data->alasan_tolak }}</p>
         <p style="font-size: 14.5px;"> <b>Keterangan : </b> </p>
         <table class="table1">
             <tr>

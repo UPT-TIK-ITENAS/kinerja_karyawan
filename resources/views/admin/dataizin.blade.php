@@ -30,7 +30,7 @@
                         </div>
 
                         {{-- <a href="{{ route('admin.createizin') }}" class="btn btn-primary"><i class="icofont icofont-plus-square"></i> Tambah</a> --}}
-                        <div class="table-responsive">
+                        <div class="dt-ext table-responsive">
                             <table class="dataTable" id="table-izin">
                                 <thead>
                                     <th>No.</th>
@@ -209,10 +209,7 @@
                         name: 'status'
                     },
                 ],
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'print'
-                ]
+
             });
 
             $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {

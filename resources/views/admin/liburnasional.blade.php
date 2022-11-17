@@ -1,50 +1,47 @@
 @extends('layouts.app')
 
 @section('content')
-
-<div class="container-fluid">
-    <div class="row">
-        <!-- Zero Configuration  Starts-->
-        <div class="col-sm-12">
-            <div class="card">
-                <div class="card-header">
-                    <div class="row mb-2">
-                        <h5>Pendataan Hari Libur </h5>
-                        <span>Daftar hari libur nasional</span>
-                    </div>
-                 
-                </div>
-                <div class="card-body">
-                    <div class="row mb-2">
-                        <div class="col">
-                            <a href="#" class="btn btn-primary" data-bs-target="#tambahLibur"
-                                data-bs-toggle="modal" style="float: right">+ Tambah</a>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Zero Configuration  Starts-->
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row mb-2">
+                            <h5>Pendataan Hari Libur </h5>
+                            <span>Daftar hari libur nasional</span>
                         </div>
+
                     </div>
-                    <div class="table-responsive">
-                        <table class="dataTable" id="table-libur">
-                            <thead>
-                                <th>No.</th>
-                                <th>Tanggal</th>
-                                <th>Keterangan</th>
-                                <th>Aksi</th>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col">
+                                <a href="#" class="btn btn-primary" data-bs-target="#tambahLibur"
+                                    data-bs-toggle="modal" style="float: right">+ Tambah</a>
+                            </div>
+                        </div>
+                        <div class="dt-ext table-responsive">
+                            <table class="dataTable" id="table-libur">
+                                <thead>
+                                    <th>No.</th>
+                                    <th>Tanggal</th>
+                                    <th>Keterangan</th>
+                                    <th>Aksi</th>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-
 @endsection
 
 @section('scripts')
-
-    <div class="modal fade bd-example-modal-lg" id="show-libur" aria-labelledby="myLargeModalLabel" aria-modal="true" role="dialog">
+    <div class="modal fade bd-example-modal-lg" id="show-libur" aria-labelledby="myLargeModalLabel" aria-modal="true"
+        role="dialog">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -59,20 +56,18 @@
                             <div class="col-md-4">
                                 <input id="id" name="id" type="hidden">
                                 <span class="form-label" for="tanggal">Tanggal</span>
-                                <input class="form-control" id="tanggal" name="tanggal" type="date"
-                                    required="">
+                                <input class="form-control" id="tanggal" name="tanggal" type="date" required="">
                             </div>
                             <div class="col-md-7">
                                 <span class="form-label" for="tanggal">Keterangan</span>
-                                <input class="form-control" id="keterangan" name="keterangan" type="text"
-                                    required="">
+                                <input class="form-control" id="keterangan" name="keterangan" type="text" required="">
                             </div>
 
                         </div>
-  
+
                     </div>
                     <div class="modal-footer justify-content-between">
-                       
+
                         <button class="btn btn-primary" type="submit">Submit</button>
                     </div>
                 </form>
@@ -80,7 +75,8 @@
         </div>
     </div>
 
-    <div class="modal fade bd-example-modal-lg" id="tambahLibur" aria-labelledby="myLargeModalLabel" aria-modal="true" role="dialog">
+    <div class="modal fade bd-example-modal-lg" id="tambahLibur" aria-labelledby="myLargeModalLabel" aria-modal="true"
+        role="dialog">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -94,20 +90,18 @@
                         <div class="row g-2 mb-3">
                             <div class="col-md-4">
                                 <span class="form-label" for="tanggal">Tanggal</span>
-                                <input class="form-control" id="tanggal" name="tanggal" type="date"
-                                    required="">
+                                <input class="form-control" id="tanggal" name="tanggal" type="date" required="">
                             </div>
                             <div class="col-md-7">
                                 <span class="form-label" for="tanggal">Keterangan</span>
-                                <input class="form-control" id="keterangan" name="keterangan" type="text"
-                                    required="">
+                                <input class="form-control" id="keterangan" name="keterangan" type="text" required="">
                             </div>
 
                         </div>
 
                     </div>
                     <div class="modal-footer justify-content-between">
-                    
+
                         <button class="btn btn-primary" type="submit">Submit</button>
                     </div>
                 </form>
@@ -116,7 +110,7 @@
     </div>
 
     @parent
-    
+
     <script>
         $(function() {
             let table = $('#table-libur').DataTable({
@@ -150,47 +144,43 @@
                         data: 'action',
                         name: 'action'
                     },
-                   
+
                 ],
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'print'
-                ]
             });
-           
-            
-        $('body').on('click', '.editLibur', function() {
-            var id = $(this).data('id');
 
-            $.get("{{ route('admin.admin_v') }}" + '/editlibur/' + id, function(data) {
-                $('#ModalTitle').html("Pertanyaan");
-                $('#show-libur').modal('show');
-                $('#id').val(data.id);
-                $('#tanggal').val(data.tanggal);
-                $('#keterangan').val(data.keterangan);
-                console.log(data);
+
+            $('body').on('click', '.editLibur', function() {
+                var id = $(this).data('id');
+
+                $.get("{{ route('admin.admin_v') }}" + '/editlibur/' + id, function(data) {
+                    $('#ModalTitle').html("Pertanyaan");
+                    $('#show-libur').modal('show');
+                    $('#id').val(data.id);
+                    $('#tanggal').val(data.tanggal);
+                    $('#keterangan').val(data.keterangan);
+                    console.log(data);
+                })
+            });
+
+            $('#table-libur').on('click', '.hapusLibur', function(e) {
+                let id = $(this).data('id');
+                const href = $(this).attr('href');
+
+                e.preventDefault()
+                Swal.fire({
+                    title: 'Apakah Yakin?',
+                    text: `Apakah Anda yakin ingin menghapus?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Hapus'
+                }).then((result) => {
+                    if (result.value == true) {
+                        document.location.href = href;
+                    }
+                })
             })
-        });
-
-        $('#table-libur').on('click', '.hapusLibur', function(e) {
-            let id = $(this).data('id');
-            const href = $(this).attr('href');
-
-            e.preventDefault()
-            Swal.fire({
-                title: 'Apakah Yakin?',
-                text: `Apakah Anda yakin ingin menghapus?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Hapus'
-            }).then((result) => {
-                if (result.value == true) {
-                    document.location.href = href;
-                }
-            })
-        })
 
         });
     </script>

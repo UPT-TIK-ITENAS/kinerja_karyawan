@@ -78,6 +78,7 @@
                                     <th>Durasi</th>
                                     <th>Telat Masuk</th>
                                     <th>Telat Siang</th>
+                                    <th>Note</th>
                                     <th>Aksi</th>
                                     <th>Status</th>
                                 </thead>
@@ -129,11 +130,9 @@
                         <div class="row g-2 mb-3">
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_masuk">Tanggal</span>
-                                <div class="input-group">
-                                    <input class="datepicker-here form-control digits" type="text" id="tanggall"
-                                        name="tanggall" data-language="en" data-bs-original-title="" title=""
-                                        readonly>
-                                </div>
+                                <input class="form-control" id="tanggall" name="tanggall" type="text" readonly
+                                    required="">
+
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_masuk">Jam Keluar </span>
@@ -242,6 +241,10 @@
                         name: 'latesiang'
                     },
                     {
+                        data: 'note',
+                        name: 'note'
+                    },
+                    {
                         data: 'action',
                         name: 'action'
                     },
@@ -250,10 +253,6 @@
                         name: 'status'
                     },
                 ],
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'print'
-                ]
             });
 
             $("#clear").on('click', function(e) {
