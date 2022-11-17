@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Attendance;
 use App\Models\Cuti;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -7,7 +8,6 @@ use App\Models\JenisIzin;
 use App\Models\IzinKerja;
 use App\Models\User;
 use App\Models\Izin;
-use App\Models\Attendance;
 
 if (!function_exists('getCheck')) {
     function getCheck($jenis_izin, $id, $tipe)
@@ -41,25 +41,25 @@ if (!function_exists('getApproval')) {
             if ($getDataIzin) {
                 if ($getDataIzin->approval == 1) {
                     $for_html = '<span class="badge badge-primary">Disetujui</span>';
-                } elseif ($getDataIzin->approval == 2) {
-                    $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
                 } elseif ($getDataIzin->approval == 3) {
                     $for_html = '<span class="badge badge-danger">Ditolak</span><br><span> | "' . $alasan . '"</span>';
+                } elseif ($getDataIzin->approval == 2) {
+                    $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
                 } else {
-                    $for_html = '<span class="badge badge-warning">Menunggu</span> <a class="btn btn-danger btn-xs" href="' . $url_batal_izin . '" id="btnBatal">X</a>';
+                    $for_html = '<span class="badge badge-warning">Menunggu</span> <a class="btn btn-danger btn-xs" href="' . $url_batal_izin . '" id="btnBatal"><i class="fa fa-times"></i></a>';
                 }
             }
         } elseif ($tipe == 'cuti') {
             $getDataCuti = Cuti::where('id_cuti', $id)->first();
             if ($getDataCuti) {
                 if ($getDataCuti->approval == 1) {
-                    $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
-                } elseif ($getDataCuti->approval == 2) {
-                    $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
+                    $for_html = '<span class="badge badge-primary">Disetujui Atasan</span>';
                 } elseif ($getDataCuti->approval == 3) {
                     $for_html = '<span class="badge badge-danger">Ditolak</span><br><span><b>note</b> : ' . $alasan . '</span>';
+                } elseif ($getDataCuti->approval == 2) {
+                    $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
                 } else {
-                    $for_html = '<span class="badge badge-warning">Menunggu</span> <a class="btn btn-danger btn-xs" href="' . $url_batal_cuti . '" id="btnBatal">X</a>';
+                    $for_html = '<span class="badge badge-warning">Menunggu</span> <a class="btn btn-danger btn-xs" href="' . $url_batal_cuti . '" id="btnBatal"><i class="fa fa-times"></i></a>';
                 }
             }
         }
@@ -109,7 +109,7 @@ if (!function_exists('routeActive')) {
 
 
 if (!function_exists('getAksi')) {
-    function getAksi($id, $tipe)
+    function getAksi($id, $tipe, $user = null)
     {
         $printizin =  route('admin.printizinkerja', $id);
         $printcuti =  route('admin.printcuti', $id);
@@ -227,17 +227,41 @@ if (!function_exists('getWorkingDays')) {
             return $working_days;
         }
     }
-
-    if (!function_exists('getJawabanPertanyaan')) {
-        function getJawabanPertanyaan($pertanyaan_kuesioner)
-        {
-            $jawaban_pertanyaan = DB::table('jawaban_pertanyaan')->where('id_pertanyaan', $pertanyaan_kuesioner)->get();
-            return $jawaban_pertanyaan;
-        }
-    }
-
 }
 
+if (!function_exists('getJawabanPertanyaan')) {
+    function getJawabanPertanyaan($pertanyaan_kuesioner)
+    {
+        $jawaban_pertanyaan = DB::table('jawaban_pertanyaan')->where('id_pertanyaan', $pertanyaan_kuesioner)->get();
+        return $jawaban_pertanyaan;
+    }
+}
+
+if (!function_exists('getPresensi')) {
+    function getPresensi($type)
+    {
+        $data = Attendance::selectRaw('attendance.*, users.name, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->get();
+        foreach ($data as $row) {
+            if ($type == 'duration') {
+                if ($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang == NULL) {
+                    return '00:00:00';
+                } else if ($row->jam_masuk == NULL && $row->jam_siang != NULL && $row->jam_pulang != NULL) {
+                    $duration = strtotime($row->jam_pulang) - strtotime($row->jam_siang);
+                    $durationwork = date("H:i:s", $duration);
+                    return $durationwork;
+                } else if ($row->jam_masuk == NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL) {
+                    return '00:00:00';
+                } else {
+                    $time_awalreal =  strtotime($row->jam_masuk);
+                    $time_akhirreal = strtotime($row->jam_pulang);
+                    $duration = ceil(abs($time_akhirreal - $time_awalreal) - strtotime('01:00:00'));
+                    $durationwork = date("H:i:s", $duration);
+                    return $durationwork;
+                }
+            }
+        }
+    }
+}
 if (!function_exists('getJawabanPertanyaan')) {
     function getJawabanPertanyaan($pertanyaan_kuesioner)
     {

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\JadwalSatpamCalendarResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
@@ -16,6 +17,7 @@ use App\Models\Attendance;
 use App\Models\Izin;
 use App\Models\Cuti;
 use App\Models\IzinKerja;
+use App\Models\JadwalSatpam;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
 use App\Models\LiburNasional;
@@ -401,6 +403,45 @@ class AdminController extends Controller
                 ->rawColumns(['action', 'status'])
                 ->make(true);
         }
+    }
+
+    public function datacuti_show($id)
+    {
+        $cuti = Cuti::with(['jeniscuti', 'unit', 'user'])->where('id_cuti', $id)->first();
+        $jeniscuti = JenisCuti::where('id_jeniscuti', $cuti->jenis_cuti)->first();
+        $datauser = User::where('fungsi', 'satpam')->get();
+        // dd($cuti);
+        return view('admin.datacuti_show', compact('cuti', 'jeniscuti', 'datauser'));
+    }
+
+    public function datacuti_calendar($id, $nopeg)
+    {
+        $cuti = Cuti::with(['user'])->where('id_cuti', $id)->first();
+        $data = JadwalSatpam::with('user')->where('nip', $nopeg)->whereHasMorph(
+            'tagable',
+            [Cuti::class],
+            function ($query) use ($cuti) {
+                $query->where('tagable_id', $cuti->id_cuti);
+            }
+        )->get();
+        return response()->json(JadwalSatpamCalendarResource::collection($data));
+    }
+
+    public function datacuti_pengganti(Request $request)
+    {
+        $request->validate([
+            'id_jadwal' => 'required',
+            'nip' => 'required',
+        ]);
+        $data = JadwalSatpam::with('user')->where('id', $request->id_jadwal)->whereHasMorph(
+            'tagable',
+            [Cuti::class],
+        )->first();
+        // assign pengganti
+        $data->update([
+            'nip_pengganti' => $request->nip,
+        ]);
+        return redirect()->back()->with('success', 'Berhasil Menambahkan Pengganti ' . $request->nip);
     }
 
     public function storecuti(Request $request)

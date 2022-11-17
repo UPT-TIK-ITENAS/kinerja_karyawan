@@ -2,32 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\Cuti;
 use App\Models\Izin;
 use App\Models\IzinKerja;
-use App\Models\JadwalSatpam;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
 use App\Models\QR;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
 
-class KaryawanController extends Controller
+class PejabatController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function __construct()
     {
         $this->middleware('auth');
     }
+
     public function index()
     {
         $durasi_telat = strtotime('00:00:00');
@@ -56,11 +51,12 @@ class KaryawanController extends Controller
             'terlambat' =>  date("H:i:s", $durasi_telat),
             'durasi_kerja' => date("H:i:s", $durasi_kerja),
         ];
-        return view('karyawan.k_index', compact('data'));
+        return view('pejabat.k_index', compact('data'));
     }
+
     public function index_datapresensi()
     {
-        return view('karyawan.k_datapresensi');
+        return view('pejabat.k_datapresensi');
     }
 
     public function listdatapresensi(Request $request)
@@ -120,7 +116,7 @@ class KaryawanController extends Controller
                 ->addColumn('action', function ($row) {
                     $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
                     if ($workingdays < 3) {
-                        $addsurat = route('karyawan.createizinkehadiran', $row->id);
+                        $addsurat = route('pejabat.createizinkehadiran', $row->id);
                         return $actionBtn = "
                         <div class='d-block text-center'>
                         <a href='$addsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-ui-add'></i></a>
@@ -134,7 +130,7 @@ class KaryawanController extends Controller
                     $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id', $row->id)->get();
 
                     foreach ($dataizin as $izin) {
-                        $printsurat =  route('karyawan.printizin', $izin->id);
+                        $printsurat =  route('pejabat.printizin', $izin->id);
 
                         if ($row->id == $izin->id_attendance) {
                             $actionBtn = "
@@ -172,11 +168,10 @@ class KaryawanController extends Controller
         return DataTables::queryBuilder($data)->toJson();
     }
 
-
     public function index_datarekapitulasi()
     {
         // dd(DB::select("exec getTotalTelatPerBulan('" . auth()->user()->nopeg . "')"));
-        return view('karyawan.k_datarekapitulasi');
+        return view('pejabat.k_datarekapitulasi');
     }
 
     public function listdatarekapitulasi(Request $request)
@@ -207,9 +202,7 @@ class KaryawanController extends Controller
 
     public function index_cuti()
     {
-        $cuti = Cuti::select('cuti.*', 'jenis_cuti.jenis_cuti as nama_cuti')
-            ->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
-            ->where('nopeg', auth()->user()->nopeg)->get();
+        $cuti = Cuti::select('cuti.*', 'jenis_cuti.jenis_cuti as nama_cuti')->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')->where('nopeg', auth()->user()->nopeg)->get();
         $jeniscuti = JenisCuti::all();
         $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(cuti.total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
         FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti 
@@ -222,7 +215,7 @@ class KaryawanController extends Controller
         ];
         // dd($data);
 
-        return view('karyawan.k_index_cuti', compact('data'));
+        return view('pejabat.k_index_cuti', compact('data'));
     }
 
     public function store_cuti(Request $request)
@@ -230,19 +223,18 @@ class KaryawanController extends Controller
         $is_valid = 0;
         $this->validate($request, [
             'jenis_cuti' => 'required',
-            'request->' => 'required',
+            'tgl_awal_cuti' => 'required',
             'tgl_akhir_cuti' => 'required',
             'total_cuti' => 'required',
             'alamat' => 'required',
             'no_hp' => 'required',
         ]);
+
         $a = explode('|', $request->jenis_cuti);
-        // dd($a);
 
-        $history_cuti = DB::table('jenis_cuti')->select(DB::raw("jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari"))->join('cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')->where('cuti.nopeg', auth()->user()->nopeg)->groupBy('cuti.jenis_cuti')->get();
+        $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
+        FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . auth()->user()->nopeg . "' GROUP BY cuti.jenis_cuti");
 
-
-        dd($history_cuti);
         foreach ($history_cuti as $r) {
             if ($r->id_cuti == $a[0]) {
                 if ($r->total_harinya == $r->max_hari) {
@@ -257,7 +249,9 @@ class KaryawanController extends Controller
             }
         }
 
-        if ($is_valid == 0) {
+        if ($is_valid == 1) {
+            return redirect()->back()->with('error', 'Sudah Melebihi Batas Hari Cuti');
+        } else if ($is_valid == 0) {
             $data = new Cuti();
             $data->nopeg = auth()->user()->nopeg;
             $data->unit = auth()->user()->unit;
@@ -297,31 +291,17 @@ class KaryawanController extends Controller
             'total_izin' => 'required',
         ]);
 
-        DB::transaction(function () use ($request) {
-            $izin = IzinKerja::create([
-                'nopeg' => auth()->user()->nopeg,
-                'name' =>  auth()->user()->name,
-                'unit' =>  auth()->user()->unit,
-                'jenis_izin' => explode('|', $request->jenis_izin)[0],
-                'tgl_awal_izin' => $request->tgl_awal_izin,
-                'tgl_akhir_izin' => $request->tgl_akhir_izin,
-                'total_izin' => $request->total_izin,
-                'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
-                'validasi' => 1,
-            ]);
-
-            if (auth()->user()->fungsi === 'Satpam') {
-                $jadwal = JadwalSatpam::with('tagable')->where('nip', auth()->user()->nopeg)->where('tanggal_awal', '>=', $request->tgl_awal_izin . ' 00:00:00')
-                    ->where('tanggal_akhir', '<=', $request->tgl_akhir_izin . ' 23:00:00')->get();
-                // update jadwal satpam morph
-                foreach ($jadwal as $j) {
-                    $j->update([
-                        'tagable_id' => $izin->id_izinkerja,
-                        'tagable_type' => Izin::class,
-                    ]);
-                }
-            }
-        });
+        $data = new IzinKerja();
+        $data->nopeg = auth()->user()->nopeg;
+        $data->unit = auth()->user()->unit;
+        $data->name = auth()->user()->name;
+        $data->jenis_izin = explode('|', $request->jenis_izin)[0];
+        $data->tgl_awal_izin = $request->tgl_awal_izin;
+        $data->tgl_akhir_izin = $request->tgl_akhir_izin;
+        $data->total_izin = $request->total_izin;
+        $data->validasi = 1;
+        $data->tgl_pengajuan = date('Y-m-d H:i:s');
+        $data->save();
         return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
     }
 
@@ -334,6 +314,7 @@ class KaryawanController extends Controller
             return redirect()->back()->with('error', 'Gagal membatalkan izin');
         }
     }
+
     public function batal_cuti($id)
     {
         $delete = Cuti::where('id_cuti', $id)->delete();
@@ -344,48 +325,6 @@ class KaryawanController extends Controller
         }
     }
 
-    public function createizinkehadiran($id)
-    {
-
-        $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas, unit.nama_unit')
-            ->join('users', 'attendance.nip', '=', 'users.nopeg')
-            ->join('unit', 'unit.id', '=', 'users.unit')
-            ->where('attendance.id', $id)->first();
-        return view('karyawan.createizinkehadiran', compact('data'));
-    }
-
-    public function storeizinkehadiran(Request $request)
-    {
-
-        if ($request->validasi == NULL) {
-            return redirect()->route('karyawan.createizinkehadiran', $request->id_izin)->with('error', 'Validasi Tidak diisi!');
-        } else {
-            Izin::insert([
-                'id_attendance' => $request->id_attendance,
-                'nopeg' => $request->nopeg,
-                'name' => $request->name,
-                'unit' => $request->idunit,
-                'tanggal' => $request->tgl,
-                'jam_awal' => date('H:i:s', strtotime($request->jam_awal)),
-                'jam_akhir' => date('H:i:s', strtotime($request->jam_akhir)),
-                'alasan' => $request->alasan,
-                'validasi' => $request->validasi,
-            ]);
-
-            $dataqr = Izin::where('nopeg', $request->nopeg)->first();
-            $qrcode_filename = 'qr-' . base64_encode($request->nopeg . date('Y-m-d H:i:s')) . '.svg';
-            // dd($qrcode_filename);
-            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nopeg . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
-
-            QR::where('nopeg', $request->nopeg)->insert([
-                'id_attendance' => $request->id_attendance,
-                'nopeg' => $request->nopeg,
-                'qr_peg' => $qrcode_filename,
-            ]);
-
-            return redirect()->route('karyawan.datapresensi')->with('success', 'Pengajuan Izin Berhasil!');
-        }
-    }
 
     public function printizin($id)
     {
@@ -394,5 +333,83 @@ class KaryawanController extends Controller
 
         $pdf = PDF::loadview('admin.printizin', compact('data', 'dataqr'))->setPaper('A5', 'landscape');
         return $pdf->stream();
+    }
+
+    public function index_approval(Request $request)
+    {
+        //$data = DB::select("SELECT * from cuti inner join unit u on u.id =cuti.unit inner join jenis_cuti jc on jc.id_jeniscuti = cuti.jenis_cuti");
+        $data = Cuti::select('cuti.*', 'jenis_cuti.jenis_cuti as nama_cuti')
+            ->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
+            ->join('users', 'cuti.nopeg', '=', 'users.nopeg')
+            ->where('users.unit', auth()->user()->unit)
+            ->where('users.role', 'karyawan')->get();
+
+
+        $jeniscuti = JenisCuti::all();
+
+        //dd($data);
+        //Debugbar::info($data);
+
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                // ->addColumn('action', function ($row) {
+                //     return getAksi($row->id_cuti, 'cuti');
+                // })
+                ->addColumn('action', function ($data) {
+                    // $delete_url = route('pejabat.destroyCuti', $data->id_cuti);
+                    $edit_dd = "<div class='d-block text-center'>
+                        <a data-bs-toggle='modal' class='btn btn-success align-items-center editAK fa fa-pencil' data-id='$data->id_cuti' data-original-title='Edit' data-bs-target='#ProsesCuti'></a>
+                        </div>";
+
+                    Debugbar::info($data);
+
+                    return $edit_dd;
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->approval == 1) {
+                        $apprv = '<span class="badge badge-success">Disetujui Atasan</span>';
+                    } else if ($row->approval == 2) {
+                        $apprv = '<span class="badge badge-success">Disetujui Kepala Unit</span>';
+                    } else if ($row->approval == 3) {
+                        $apprv = '<span class="badge badge-danger">Ditolak</span>';
+                    } else {
+                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                    }
+                    return $apprv;
+                })
+                ->rawColumns(['status', 'action'])
+                ->make(true);
+        }
+        return view('pejabat.k_index_approval', compact('data'));
+    }
+
+    public function editCuti($id)
+    {
+        $data = Cuti::where('id_cuti', '=', $id)
+            ->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')->first();
+        return response()->json($data);
+    }
+
+    public function destroyCuti($id)
+    {
+        Cuti::where('id_cuti', $id)->delete();
+        return redirect()->route('pejabat.k_index_approval')->with('success', 'Data berhasil dihapus!');
+    }
+
+    public function approveCuti(Request $request)
+    {
+        Cuti::where('id_cuti', $request->id_cuti)->update([
+            'approval' => $request->approval,
+        ]);
+
+        if ($request->approval == 1) {
+            return redirect()->back()->with('success', 'Cuti disetujui');
+        } else {
+            Cuti::where('id_cuti', $request->id_cuti)->update([
+                'alasan_tolak' => $request->alasan_tolak,
+            ]);
+            return redirect()->back()->with('error', 'Cuti ditolak');
+        }
     }
 }
