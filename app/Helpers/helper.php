@@ -121,7 +121,7 @@ if (!function_exists('getAksi')) {
         $for_html = "";
         if ($tipe == 'izin') {
             if (auth()->user()->role == "admin" || auth()->user()->role == "admin_bsdm") {
-                $for_html = '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a> x';
+                $for_html = '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a>';
             } elseif (auth()->user()->role == "kepalaunit") {
                 $data = IzinKerja::where('id_izinkerja', $id)->first();
                 $for_html = '
@@ -174,7 +174,7 @@ if (!function_exists('getAprv')) {
                 if ($getDataIzin->approval == 1) {
                     $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
                 } else {
-                    $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span><a class="btn btn-danger btn-xs batalizin" title="Batal Izin" href="' . $batal_izin . '">X</a>';
+                    $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalizin" title="Batal Izin" href="' . $batal_izin . '">X</a>';
                 }
             }
         } elseif ($tipe == 'cuti') {

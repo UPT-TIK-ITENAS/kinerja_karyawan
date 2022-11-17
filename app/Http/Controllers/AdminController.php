@@ -135,6 +135,14 @@ class AdminController extends Controller
                     }
                     return $durasi;
                 })
+                ->addColumn('note', function ($row) {
+                    if ($row->status == 0) {
+                        $note = 'Kurang';
+                    } else {
+                        $note = 'Lengkap';
+                    }
+                    return $note;
+                })
                 ->addColumn('action', function ($row) {
                     // $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
                     // if ($workingdays < 3) {
@@ -160,7 +168,7 @@ class AdminController extends Controller
                         }
                     }
                 })
-                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'latesore', 'action', 'status'])
+                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'latesore', 'action', 'status', 'note'])
 
                 ->make(true);
         }

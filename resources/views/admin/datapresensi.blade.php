@@ -78,6 +78,7 @@
                                     <th>Durasi</th>
                                     <th>Telat Masuk</th>
                                     <th>Telat Siang</th>
+                                    <th>Note</th>
                                     <th>Aksi</th>
                                     <th>Status</th>
                                 </thead>
@@ -238,6 +239,10 @@
                     {
                         data: 'latesiang',
                         name: 'latesiang'
+                    },
+                    {
+                        data: 'note',
+                        name: 'note'
                     },
                     {
                         data: 'action',
