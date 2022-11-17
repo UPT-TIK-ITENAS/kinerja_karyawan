@@ -77,7 +77,7 @@
                             <select class="form-control col-sm-12" onchange="yesnoCheck(this);" id="approval"
                                 name="approval" required="">
                                 <option selected="" disabled="" value="">-- Pilih ---</option>
-                                <option value="1">Disetujui</option>
+                                <option value="2">Disetujui</option>
                                 <option value="3">Ditolak</option>
                             </select>
                             <input type="hidden" id="lama_cuti">
@@ -133,6 +133,44 @@
 @section('scripts')
     @parent
     <script>
+        // $('body').on('click', '.editAK', function() {
+        //     id = $(this).data('id');
+        //     console.log(id)
+        //     $('#approval').prop('disabled', false);
+        //     $('#alasan_tolak').prop('disabled', false);
+        //     $('#approval').val(null);
+        //     $('#btnSubmit').prop('disabled', false);
+        //     console.log("approval", $("#approval"))
+        //     $.get("{{ url('/pejabat/approval/editCuti') }}/" + id, function(data, jeniscuti) {
+        //         if (data.approval != 0) {
+        //             $('#approval').prop('disabled', true);
+        //             $('#alasan_tolak').prop('disabled', true);
+        //         }
+        //         if (data.approval == 2) {
+        //             document.getElementById("ifYes").style.display = "block";
+        //             $('#btnSubmit').prop('disabled', true);
+        //         }
+        //         if (data.approval == 1) {
+        //             document.getElementById("ifYes").style.display = "none";
+        //             $('#btnSubmit').prop('disabled', true);
+        //         }
+        //         $('#approval').val(data.approval);
+        //         $('#ModalTitle').html("Edit Jenis Kegiatan");
+        //         $('#ProsesCuti').modal('show');
+        //         $("#token").val($("meta[name=csrf-token]").attr("content"));
+        //         $('#id_cuti').val(data.id_cuti);
+        //         $('#alasan_tolak').val(data.alasan_tolak);
+        //         $('#jenis_cuti').val(data.jenis_cuti);
+        //         $('#tgl_awal_cuti').val(data.tgl_awal_cuti);
+        //         $('#tgl_akhir_cuti').val(data.tgl_akhir_cuti);
+        //         $('#total_cuti').val(data.total_cuti);
+        //         $('#alamat').val(data.alamat);
+        //         $('#no_hp').val(data.no_hp);
+        //         console.log(data);
+        //         //console.log(jeniscuti);
+        //     })
+        // });
+
         $('body').on('click', '.editAK', function() {
             id = $(this).data('id');
             console.log(id)
@@ -141,18 +179,18 @@
             $('#approval').val(null);
             $('#btnSubmit').prop('disabled', false);
             console.log("approval", $("#approval"))
-            $.get("{{ url('/pejabat/approval/editCuti') }}/" + id, function(data, jeniscuti) {
-                if (data.approval != 0) {
-                    $('#approval').prop('disabled', true);
-                    $('#alasan_tolak').prop('disabled', true);
-                }
+            $.get("{{ url('/kepalaunit/approval/editCuti') }}/" + id, function(data, jeniscuti) {
                 if (data.approval == 2) {
                     document.getElementById("ifYes").style.display = "block";
                     $('#btnSubmit').prop('disabled', true);
+                    $('#approval').prop('disabled', true);
+                    $('#alasan_tolak').prop('disabled', true);
                 }
                 if (data.approval == 1) {
                     document.getElementById("ifYes").style.display = "none";
-                    $('#btnSubmit').prop('disabled', true);
+                    $('#btnSubmit').prop('disabled', false);
+                    $('#approval').prop('disabled', false);
+                    $('#alasan_tolak').prop('disabled', false);
                 }
                 $('#approval').val(data.approval);
                 $('#ModalTitle').html("Edit Jenis Kegiatan");

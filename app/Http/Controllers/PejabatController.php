@@ -279,7 +279,7 @@ class PejabatController extends Controller
             'izinkerja' => $izinkerja
         ];
 
-        return view('karyawan.k_index_izin', compact('data'));
+        return view('kepalaunit.ku_dataizin', compact('data'));
     }
 
     public function store_izin(Request $request)
@@ -341,14 +341,19 @@ class PejabatController extends Controller
         $data = Cuti::select('cuti.*', 'jenis_cuti.jenis_cuti as nama_cuti')
             ->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
             ->join('users', 'cuti.nopeg', '=', 'users.nopeg')
-            ->where('users.unit', auth()->user()->unit)
+            ->join('jabatan', 'jabatan.id', '=', 'users.atasan_lang')
+            ->where('jabatan.nopeg', auth()->user()->nopeg)
+            //->where('users.unit', auth()->user()->unit)
+            //->where('users.atasan_lang', 3)
+            ->where('cuti.approval', 1)
             ->where('users.role', 'karyawan')->get();
 
 
-        $jeniscuti = JenisCuti::all();
+
+        // $jeniscuti = JenisCuti::all();
 
         //dd($data);
-        //Debugbar::info($data);
+        // /Debugbar::info($data);
 
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -368,9 +373,9 @@ class PejabatController extends Controller
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->approval == 1) {
-                        $apprv = '<span class="badge badge-success">Disetujui Atasan</span>';
-                    } else if ($row->approval == 2) {
                         $apprv = '<span class="badge badge-success">Disetujui Kepala Unit</span>';
+                    } else if ($row->approval == 2) {
+                        $apprv = '<span class="badge badge-success">Disetujui Atasan</span>';
                     } else if ($row->approval == 3) {
                         $apprv = '<span class="badge badge-danger">Ditolak</span>';
                     } else {
@@ -403,7 +408,7 @@ class PejabatController extends Controller
             'approval' => $request->approval,
         ]);
 
-        if ($request->approval == 1) {
+        if ($request->approval == 2) {
             return redirect()->back()->with('success', 'Cuti disetujui');
         } else {
             Cuti::where('id_cuti', $request->id_cuti)->update([
