@@ -231,7 +231,7 @@
 
             $("document").ready(function() {
                 let flashdatasukses = $('.success-session').data('flashdata');
-                let flashdatagagal = $('.warning-session').data('flashdata');
+                let flashdatagagal = $('.error-session').data('flashdata');
                 if (flashdatasukses) {
                     $.notify({
                         title: 'Success',

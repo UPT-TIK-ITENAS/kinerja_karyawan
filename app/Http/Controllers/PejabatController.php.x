@@ -16,7 +16,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class KepalaUnitController extends Controller
+class PejabatController extends Controller
 {
     public function __construct()
     {
@@ -51,12 +51,12 @@ class KepalaUnitController extends Controller
             'terlambat' =>  date("H:i:s", $durasi_telat),
             'durasi_kerja' => date("H:i:s", $durasi_kerja),
         ];
-        return view('kepalaunit.kepalaunit_v', compact('data'));
+        return view('pejabat.k_index', compact('data'));
     }
 
     public function index_datapresensi()
     {
-        return view('kepalaunit.ku_datapresensi');
+        return view('pejabat.k_datapresensi');
     }
 
     public function listdatapresensi(Request $request)
@@ -116,7 +116,7 @@ class KepalaUnitController extends Controller
                 ->addColumn('action', function ($row) {
                     $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
                     if ($workingdays < 3) {
-                        $addsurat = route('kepalaunit.createizinkehadiran', $row->id);
+                        $addsurat = route('pejabat.createizinkehadiran', $row->id);
                         return $actionBtn = "
                         <div class='d-block text-center'>
                         <a href='$addsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-ui-add'></i></a>
@@ -130,7 +130,7 @@ class KepalaUnitController extends Controller
                     $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id', $row->id)->get();
 
                     foreach ($dataizin as $izin) {
-                        $printsurat =  route('kepalaunit.printizin', $izin->id);
+                        $printsurat =  route('pejabat.printizin', $izin->id);
 
                         if ($row->id == $izin->id_attendance) {
                             $actionBtn = "
@@ -171,7 +171,7 @@ class KepalaUnitController extends Controller
     public function index_datarekapitulasi()
     {
         // dd(DB::select("exec getTotalTelatPerBulan('" . auth()->user()->nopeg . "')"));
-        return view('kepalaunit.k_datarekapitulasi');
+        return view('pejabat.k_datarekapitulasi');
     }
 
     public function listdatarekapitulasi(Request $request)
@@ -215,7 +215,7 @@ class KepalaUnitController extends Controller
         ];
         // dd($data);
 
-        return view('kepalaunit.ku_datacuti', compact('data'));
+        return view('pejabat.k_index_cuti', compact('data'));
     }
 
     public function store_cuti(Request $request)
@@ -279,7 +279,7 @@ class KepalaUnitController extends Controller
             'izinkerja' => $izinkerja
         ];
 
-        return view('kepalaunit.ku_dataizin', compact('data'));
+        return view('karyawan.k_index_izin', compact('data'));
     }
 
     public function store_izin(Request $request)
@@ -357,7 +357,7 @@ class KepalaUnitController extends Controller
                 //     return getAksi($row->id_cuti, 'cuti');
                 // })
                 ->addColumn('action', function ($data) {
-                    // $delete_url = route('kepalaunit.destroyCuti', $data->id_cuti);
+                    // $delete_url = route('pejabat.destroyCuti', $data->id_cuti);
                     $edit_dd = "<div class='d-block text-center'>
                         <a data-bs-toggle='modal' class='btn btn-success align-items-center editAK fa fa-pencil' data-id='$data->id_cuti' data-original-title='Edit' data-bs-target='#ProsesCuti'></a>
                         </div>";
@@ -368,9 +368,9 @@ class KepalaUnitController extends Controller
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->approval == 1) {
-                        $apprv = '<span class="badge badge-success">Disetujui Kepala Unit</span>';
-                    } else if ($row->approval == 2) {
                         $apprv = '<span class="badge badge-success">Disetujui Atasan</span>';
+                    } else if ($row->approval == 2) {
+                        $apprv = '<span class="badge badge-success">Disetujui Kepala Unit</span>';
                     } else if ($row->approval == 3) {
                         $apprv = '<span class="badge badge-danger">Ditolak</span>';
                     } else {
@@ -381,7 +381,7 @@ class KepalaUnitController extends Controller
                 ->rawColumns(['status', 'action'])
                 ->make(true);
         }
-        return view('kepalaunit.ku_index_approval', compact('data'));
+        return view('pejabat.k_index_approval', compact('data'));
     }
 
     public function editCuti($id)
@@ -394,7 +394,7 @@ class KepalaUnitController extends Controller
     public function destroyCuti($id)
     {
         Cuti::where('id_cuti', $id)->delete();
-        return redirect()->route('kepalaunit.ku_index_approval')->with('success', 'Data berhasil dihapus!');
+        return redirect()->route('pejabat.k_index_approval')->with('success', 'Data berhasil dihapus!');
     }
 
     public function approveCuti(Request $request)

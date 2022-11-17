@@ -12,6 +12,9 @@ use App\Http\Controllers\BiometricAllController;
 use App\Http\Controllers\MesinController;
 use App\Http\Controllers\RekapitulasiController;
 use App\Http\Controllers\ListKaryawanController;
+use App\Http\Controllers\KuesionerController;
+use App\Http\Controllers\PejabatController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -85,6 +88,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/updatemesin', [MesinController::class, 'updatemesin'])->name('admin.updatemesin');
         Route::post('/createmesin', [MesinController::class, 'createmesin'])->name('admin.createmesin');
         Route::get('/destroymesin/{id}', [MesinController::class, 'destroymesin'])->name('admin.destroymesin');
+
+        Route::get('/kuesioner', [KuesionerController::class, 'kuesioner'])->name('admin.kuesioner');
+        Route::get('/storekuesioner', [KuesionerController::class, 'storekuesioner'])->name('admin.storekuesioner');
     });
     Route::prefix('karyawan')->name('karyawan.')->group(function () {
         Route::get('/', [KaryawanController::class, 'index'])->name('index');
@@ -105,16 +111,71 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('printizin/{id}', [KaryawanController::class, 'printizin'])->name('printizin');
     });
 
-    Route::group(['prefix' => 'kepalaunit'], function () {
 
-        Route::get('/kepalaunit', [KepalaUnitController::class, 'kepalaunit'])->name('kepalaunit.kepalaunit');
-        Route::get('/dataizin', [KepalaUnitController::class, 'dataizin'])->name('kepalaunit.dataizin');
-        Route::get('/editizin/{id_izinkerja}', [KepalaUnitController::class, 'editizin'])->name('kepalaunit.editizin');
-        Route::post('/updateizin', [KepalaUnitController::class, 'updateizin'])->name('kepalaunit.updateizin');
+    Route::prefix('pejabat')->name('pejabat.')->group(function () {
+        Route::get('/', [PejabatController::class, 'index'])->name('index');
 
-        Route::get('/datacuti', [KepalaUnitController::class, 'datacuti'])->name('kepalaunit.datacuti');
-        Route::get('/editcuti/{id_cuti}', [KepalaUnitController::class, 'editcuti'])->name('kepalaunit.editcuti');
-        Route::post('/updatecuti', [KepalaUnitController::class, 'updatecuti'])->name('kepalaunit.updatecuti');
-        Route::get('/batal_cuti/{id}', [KepalaUnitController::class, 'batal_cuti'])->name('kepalaunit.batal_cuti');
+        Route::get('/datapresensi', [PejabatController::class, 'index_datapresensi'])->name('datapresensi');
+        Route::get('/datarekapitulasi', [PejabatController::class, 'index_datarekapitulasi'])->name('datarekapitulasi');
+        Route::get('/listdatapresensi', [PejabatController::class, 'listdatapresensi'])->name('listdatapresensi');
+        Route::get('/rekapitulasi', [PejabatController::class, 'rekapitulasi'])->name('rekapitulasi');
+        Route::get('/listdatarekapitulasi', [PejabatController::class, 'listdatarekapitulasi'])->name('listdatarekapitulasi');
+
+        Route::get('/izin/index', [PejabatController::class, 'index_izin'])->name('izin');
+        Route::post('/izin/store', [PejabatController::class, 'store_izin'])->name('store_izin');
+        Route::get('/izin/batal{id}', [PejabatController::class, 'batal_izin'])->name('batal_izin');
+
+        Route::get('/cuti/index', [PejabatController::class, 'index_cuti'])->name('cuti');
+        Route::post('/cuti/store', [PejabatController::class, 'store_cuti'])->name('store_cuti');
+        Route::get('/cuti/batal/{id}', [PejabatController::class, 'batal_cuti'])->name('batal_cuti');
+
+        Route::get('/approval/index', [PejabatController::class, 'index_approval'])->name('approval');
+        Route::get('/approval/editCuti/{id}', [PejabatController::class, 'editCuti'])->name('editCuti');
+        Route::get('/approval/destroyCuti/{id}', [PejabatController::class, 'batal_cuti'])->name('destroyCuti');
+        Route::post('/approval/approveCuti', [PejabatController::class, 'approveCuti'])->name('approveCuti');
+
+        Route::get('createizinkehadiran/{id}', [PejabatController::class, 'createizinkehadiran'])->name('createizinkehadiran');
+        Route::post('storeizinkehadiran', [PejabatController::class, 'storeizinkehadiran'])->name('storeizinkehadiran');
+        Route::get('printizin/{id}', [PejabatController::class, 'printizin'])->name('printizin');
+    });
+
+
+
+
+
+    Route::prefix('kepalaunit')->name('kepalaunit.')->group(function () {
+        //Route::get('/', [KepalaUnitController::class, 'index'])->name('index');
+        Route::get('/kepalaunit', [KepalaUnitController::class, 'index'])->name('kepalaunit');
+
+        Route::get('/datapresensi', [KepalaUnitController::class, 'index_datapresensi'])->name('datapresensi');
+        Route::get('/datarekapitulasi', [KepalaUnitController::class, 'index_datarekapitulasi'])->name('datarekapitulasi');
+        Route::get('/listdatapresensi', [KepalaUnitController::class, 'listdatapresensi'])->name('listdatapresensi');
+        Route::get('/rekapitulasi', [KepalaUnitController::class, 'rekapitulasi'])->name('rekapitulasi');
+        Route::get('/listdatarekapitulasi', [KepalaUnitController::class, 'listdatarekapitulasi'])->name('listdatarekapitulasi');
+
+        Route::get('/izin/index', [KepalaUnitController::class, 'index_izin'])->name('izin');
+        Route::post('/izin/store', [KepalaUnitController::class, 'store_izin'])->name('store_izin');
+        Route::get('/izin/batal{id}', [KepalaUnitController::class, 'batal_izin'])->name('batal_izin');
+
+        Route::get('/cuti/index', [KepalaUnitController::class, 'index_cuti'])->name('cuti');
+        Route::post('/cuti/store', [KepalaUnitController::class, 'store_cuti'])->name('store_cuti');
+        Route::get('/cuti/batal/{id}', [KepalaUnitController::class, 'batal_cuti'])->name('batal_cuti');
+
+        Route::get('/approval/index', [KepalaUnitController::class, 'index_approval'])->name('approval');
+        Route::get('/approval/editCuti/{id}', [KepalaUnitController::class, 'editCuti'])->name('editCuti');
+        Route::get('/approval/destroyCuti/{id}', [KepalaUnitController::class, 'batal_cuti'])->name('destroyCuti');
+        Route::post('/approval/approveCuti', [KepalaUnitController::class, 'approveCuti'])->name('approveCuti');
+
+        Route::get('createizinkehadiran/{id}', [KepalaUnitController::class, 'createizinkehadiran'])->name('createizinkehadiran');
+        Route::post('storeizinkehadiran', [KepalaUnitController::class, 'storeizinkehadiran'])->name('storeizinkehadiran');
+        Route::get('printizin/{id}', [KepalaUnitController::class, 'printizin'])->name('printizin');
+        // Route::get('/dataizin', [KepalaUnitController::class, 'dataizin'])->name('kepalaunit.dataizin');
+        // Route::get('/editizin/{id_izinkerja}', [KepalaUnitController::class, 'editizin'])->name('kepalaunit.editizin');
+        // Route::post('/updateizin', [KepalaUnitController::class, 'updateizin'])->name('kepalaunit.updateizin');
+
+        // Route::get('/datacuti', [KepalaUnitController::class, 'datacuti'])->name('kepalaunit.datacuti');
+        // Route::get('/editcuti/{id_cuti}', [KepalaUnitController::class, 'editcuti'])->name('kepalaunit.editcuti');
+        // Route::post('/updatecuti', [KepalaUnitController::class, 'updatecuti'])->name('kepalaunit.updatecuti');
+        // Route::get('/batal_cuti/{id}', [KepalaUnitController::class, 'batal_cuti'])->name('kepalaunit.batal_cuti');
     });
 });

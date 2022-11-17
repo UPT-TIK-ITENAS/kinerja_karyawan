@@ -205,7 +205,9 @@ class KaryawanController extends Controller
 
     public function index_cuti()
     {
-        $cuti = Cuti::select('cuti.*', 'jenis_cuti.jenis_cuti as nama_cuti')->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')->where('nopeg', auth()->user()->nopeg)->get();
+        $cuti = Cuti::select('cuti.*', 'jenis_cuti.jenis_cuti as nama_cuti')
+            ->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
+            ->where('nopeg', auth()->user()->nopeg)->get();
         $jeniscuti = JenisCuti::all();
         $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(cuti.total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
         FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti 
@@ -232,6 +234,8 @@ class KaryawanController extends Controller
             'alamat' => 'required',
             'no_hp' => 'required',
         ]);
+        $a = explode('|', $request->jenis_cuti);
+        // dd($a);
 
         $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
         FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . auth()->user()->nopeg . "' GROUP BY cuti.jenis_cuti");
@@ -239,14 +243,16 @@ class KaryawanController extends Controller
 
         dd($history_cuti);
         foreach ($history_cuti as $r) {
-            if ($r->id_cuti == $request->jenis_cuti) {
+            if ($r->id_cuti == $a[0]) {
                 if ($r->total_harinya == $r->max_hari) {
-                    $is_valid = 0;
+                    $is_valid = 1;
                 } else if (($r->total_harinya + $request->total_cuti) > $r->max_hari) {
                     $is_valid = 1;
+                } else {
+                    $is_valid = 0;
                 }
-            } else {
-                $is_valid = 1;
+            } else if ($r->id_cuti != $a[0]) {
+                $is_valid = 0;
             }
         }
 
@@ -264,10 +270,8 @@ class KaryawanController extends Controller
             $data->validasi = 1;
             $data->tgl_pengajuan = date('Y-m-d H:i:s');
             $data->save();
-        } else {
-            return redirect()->back()->with('error', 'Sudah Melebihi Batas Hari Cuti');
+            return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
         }
-        return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
     }
 
     public function index_izin()
