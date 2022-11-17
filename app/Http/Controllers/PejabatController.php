@@ -8,6 +8,7 @@ use App\Models\Cuti;
 use App\Models\Izin;
 use App\Models\IzinKerja;
 use App\Models\JenisCuti;
+use App\Models\Jabatan;
 use App\Models\JenisIzin;
 use App\Models\QR;
 use Illuminate\Support\Facades\DB;
@@ -338,22 +339,29 @@ class PejabatController extends Controller
     public function index_approval(Request $request)
     {
         //$data = DB::select("SELECT * from cuti inner join unit u on u.id =cuti.unit inner join jenis_cuti jc on jc.id_jeniscuti = cuti.jenis_cuti");
+        $auth = auth()->user()->nopeg;
+        $usrs = Jabatan::select('id')
+            ->where('nopeg', '=', $auth)
+            ->first();
         $data = Cuti::select('cuti.*', 'jenis_cuti.jenis_cuti as nama_cuti')
             ->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
             ->join('users', 'cuti.nopeg', '=', 'users.nopeg')
-            ->join('jabatan', 'jabatan.id', '=', 'users.atasan_lang')
-            ->where('jabatan.nopeg', auth()->user()->nopeg)
-            //->where('users.unit', auth()->user()->unit)
-            //->where('users.atasan_lang', 3)
-            ->where('cuti.approval', 1)
+            ->join('jabatan as jb1', 'jb1.id', '=', 'users.atasan_lang')
+            ->join('jabatan as jb2', 'jb2.id', '=', 'users.atasan')
+            ->where('jb1.nopeg', $auth)
+            ->where('users.atasan_lang', $usrs['id'])
+            ->orWhere('users.atasan', $usrs['id'])
+            // ->where('users.atasan_lang', auth()->user()->atasan_lang)
+            // ->where('cuti.approval', 1)
             ->where('users.role', 'karyawan')->get();
+
 
 
 
         // $jeniscuti = JenisCuti::all();
 
-        //dd($data);
-        // /Debugbar::info($data);
+        //dd($usrs['id']);
+        //Debugbar::info($usrs);
 
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -366,9 +374,6 @@ class PejabatController extends Controller
                     $edit_dd = "<div class='d-block text-center'>
                         <a data-bs-toggle='modal' class='btn btn-success align-items-center editAK fa fa-pencil' data-id='$data->id_cuti' data-original-title='Edit' data-bs-target='#ProsesCuti'></a>
                         </div>";
-
-                    Debugbar::info($data);
-
                     return $edit_dd;
                 })
                 ->addColumn('status', function ($row) {

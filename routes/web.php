@@ -73,11 +73,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/list', [ListKaryawanController::class, 'index'])->name('admin.list');
 
 
-        Route::get('editAtt/{id}', [AdminController::Class, 'editAtt'])->name('admin.editAtt');
-        Route::post('storeizinkehadiran', [AdminController::Class, 'storeizinkehadiran'])->name('admin.storeizinkehadiran');
-        Route::post('/biometric', [BiometricController::Class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
-        Route::get('/biometricall', [BiometricAllController::Class, 'SyncAndInsertBiometric'])->name('admin.biometricall');
-        Route::get('printizin/{id}', [AdminController::Class, 'printizin'])->name('admin.printizin');
+        Route::get('editAtt/{id}', [AdminController::class, 'editAtt'])->name('admin.editAtt');
+        Route::post('storeizinkehadiran', [AdminController::class, 'storeizinkehadiran'])->name('admin.storeizinkehadiran');
+        Route::post('/biometric', [BiometricController::class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
+        Route::get('/biometricall', [BiometricAllController::class, 'SyncAndInsertBiometric'])->name('admin.biometricall');
+        Route::get('printizin/{id}', [AdminController::class, 'printizin'])->name('admin.printizin');
 
 
         Route::get('/dataizin', [AdminController::class, 'dataizin'])->name('admin.dataizin');
