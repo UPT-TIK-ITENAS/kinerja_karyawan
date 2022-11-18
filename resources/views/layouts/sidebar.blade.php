@@ -47,6 +47,18 @@
                         </a>
 
                     </li>
+                    <li class="dropdown">
+                        <a class="nav-link menu-title @if (request()->routeIs('admin.pertanyaanPeriode')) active @endif "><i
+                                data-feather="file"></i><span>Kuesioner</span>
+                            <div class="according-menu"><i class="fa fa-angle-right"></i></div>
+                        </a>
+                        <ul class="nav-submenu menu-content" style="display: none;">
+                            <li><a href="" class="">Penilaian</a></li>
+                            <li><a href="{{ route('admin.pertanyaanPeriode') }}" class="">Daftar Pertanyaan</a>
+                            </li>
+                            <li><a href="" class="">Hasil Kuesioner</a></li>
+                        </ul>
+                    </li>
                 @endif
                 @if (auth()->user()->role == 'admin' || auth()->user()->role == 'admin_bsdm')
                     <li class="dropdown">
