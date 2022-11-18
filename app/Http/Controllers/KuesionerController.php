@@ -29,7 +29,7 @@ class KuesionerController extends Controller
     {
         //$kuesioner = KuesionerKinerja::forMahasiswa()->orderBy('id', 'desc')->get();
         $kuesioner = DB::table('kuisioner_periode')->get();
-        return view('kepalaunit.k_index_kuesioner', compact('kuesioner'));
+        return view('kuesioner.index_kuesioner', compact('kuesioner'));
     }
 
     public function showKuesioner($id)
@@ -37,7 +37,7 @@ class KuesionerController extends Controller
         $kuesioner = KuesionerKinerja::with(['pertanyaan' => function ($query) {
             return $query->orderBy('nomor', 'asc');
         }, 'pertanyaan.jawaban'])->find($id);
-        return view('kepalaunit.showKuesioner', compact('kuesioner'));
+        return view('kuesioner.show_kuesioner', compact('kuesioner'));
     }
 
     public function storeKuesioner(Request $request, $id)
