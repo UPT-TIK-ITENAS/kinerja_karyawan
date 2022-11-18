@@ -362,7 +362,7 @@ class KepalaUnitController extends Controller
                         <a data-bs-toggle='modal' class='btn btn-success align-items-center editAK fa fa-pencil' data-id='$data->id_cuti' data-original-title='Edit' data-bs-target='#ProsesCuti'></a>
                         </div>";
 
-                    Debugbar::info($data);
+                    // Debugbar::info($data);
 
                     return $edit_dd;
                 })

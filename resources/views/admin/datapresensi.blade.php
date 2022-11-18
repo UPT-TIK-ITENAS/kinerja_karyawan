@@ -183,7 +183,7 @@
         $().ready(function() {
             let table = $('#table-admin').DataTable({
                 fixedHeader: true,
-                pageLength: 10,
+                pageLength: 25,
                 responsive: true,
                 processing: true,
                 autoWidth: false,
