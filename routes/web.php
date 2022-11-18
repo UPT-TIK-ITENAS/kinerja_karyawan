@@ -201,8 +201,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('storeizinkehadiran', [KepalaUnitController::class, 'storeizinkehadiran'])->name('storeizinkehadiran');
         Route::get('printizin/{id}', [KepalaUnitController::class, 'printizin'])->name('printizin');
 
+        Route::get('/pertanyaanPeriode', [KuesionerController::class, 'pertanyaanPeriode'])->name('pertanyaanPeriode');
+        Route::get('/editPeriode/{id}', [KuesionerController::class, 'editPeriode'])->name('editPeriode');
+        Route::post('/updatePeriode', [KuesionerController::class, 'updatePeriode'])->name('updatePeriode');
+        Route::post('/createPeriode', [KuesionerController::class, 'createPeriode'])->name('createPeriode');
+        Route::get('/destroyPeriode/{id}', [KuesionerController::class, 'destroyPeriode'])->name('destroyPeriode');
+
         Route::get('/kuesioner/index', [KuesionerController::class, 'indexKuesioner'])->name('indexKuesioner');
-        Route::get('/kuesioner/editKuesioner/{id}', [KuesionerController::class, 'showKuesioner'])->name('showKuesioner');
+        Route::get('/kuesioner/kinerja/{id}', [KuesionerController::class, 'showKuesioner'])->name('showKuesioner');
         Route::post('/kuesioner/approveKuesioner', [KuesionerController::class, 'storeKuesioner'])->name('storeKuesioner');
         // Route::get('/dataizin', [KepalaUnitController::class, 'dataizin'])->name('kepalaunit.dataizin');
         // Route::get('/editizin/{id_izinkerja}', [KepalaUnitController::class, 'editizin'])->name('kepalaunit.editizin');

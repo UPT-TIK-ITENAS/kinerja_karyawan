@@ -41,13 +41,13 @@ class KuesionerController extends Controller
         return view('kuesioner.index_kuesioner', compact('kuesioner'));
     }
 
-    // public function showKuesioner($id)
-    // {
-    //     $kuesioner = KuesionerKinerja::with(['pertanyaan' => function ($query) {
-    //         return $query->orderBy('nomor', 'asc');
-    //     }, 'pertanyaan.jawaban'])->find($id);
-    //     return view('kuesioner.show_kuesioner', compact('kuesioner'));
-    // }
+    public function showKuesioner($id)
+    {
+        $kuesioner = KuesionerKinerja::with(['pertanyaan' => function ($query) {
+            return $query->orderBy('nomor', 'asc');
+        }, 'pertanyaan.jawaban'])->find($id);
+        return view('kuesioner.showKuesioner', compact('kuesioner'));
+    }
 
     public function storeKuesioner(Request $request, $id)
     {
@@ -68,7 +68,7 @@ class KuesionerController extends Controller
             $indeks = round($total / count($request->responden), 2);
 
             $kuesionerResponden = RespondenKinerja::create([
-                'kuesioner_kinerja_id' => $kuesioner->id,
+                'kuisioner_kinerja_id' => $kuesioner->id,
                 'nama_pegawai' =>  $request->nama_pegawai,
                 'nopeg' => $request->nopeg,
                 'unit' => $request->unit,

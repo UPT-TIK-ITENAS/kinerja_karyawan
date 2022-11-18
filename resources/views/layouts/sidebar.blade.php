@@ -204,9 +204,20 @@
                             <li><a href="{{ route('kepalaunit.approval') }}"
                                     class="{{ routeActive('kepalaunit.approval') }}">Approval</a>
                             </li>
-                            <li><a href="{{ route('kepalaunit.indexKuesioner') }}"
-                                    class="{{ routeActive('kepalaunit.indexKuesioner') }}">Kuesioner</a>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="nav-link menu-title @if (request()->routeIs('kepalaunit.pertanyaanPeriode')) active @endif "><i
+                                data-feather="file"></i><span>Kuesioner</span>
+                            <div class="according-menu"><i class="fa fa-angle-right"></i></div>
+                        </a>
+                        <ul class="nav-submenu menu-content" style="display: none;">
+                            <li><a href="{{ route('kepalaunit.indexKuesioner') }}" class="">Penilaian</a>
                             </li>
+                            <li><a href="{{ route('kepalaunit.pertanyaanPeriode') }}" class="">Daftar
+                                    Pertanyaan</a>
+                            </li>
+                            <li><a href="" class="">Hasil Kuesioner</a></li>
                         </ul>
                     </li>
                     {{-- <li class="dropdown">
