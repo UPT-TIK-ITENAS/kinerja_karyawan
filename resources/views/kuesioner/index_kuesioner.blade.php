@@ -1,44 +1,44 @@
 @extends('layouts.app')
 @section('content')
-    <div class="container-fluid">
-        <div class="page-header">
-            <div class="row">
-                <div class="col-lg-6">
-                    <h3>Kuesioner Pegawai</h3>
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">Data Kuesioner Kinerja</li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Zero Configuration  Starts-->
-            <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        {{-- <a href="{{ route('pejabat.createcuti') }}" class="btn btn-primary"><i
-                                class="icofont icofont-plus-square"></i> Tambah</a> --}}
-                        <div class="table-responsive">
-                            <table class="dataTable" id="table-cuti">
-                                <thead>
-                                    <th>No.</th>
-                                    <th>Nama</th>
-                                    <th>NIP</th>
-                                    {{-- <th>Unit</th> --}}
-                                    <th>Jenis Cuti</th>
-                                    <th>Tanggal Awal Cuti</th>
-                                    <th>Tanggal Akhir Cuti</th>
-                                    <th>Total Hari Cuti</th>
-                                    {{-- <th>Keterangan</th> --}}
-                                    <th>Aksi</th>
-                                    <th>Status</th>
-                                </thead>
-                                <tbody>
+    <div class="container-xl">
 
-                                </tbody>
-                            </table>
+        <h1 class="app-page-title">Kuesioner Akademik</h1>
+        @if (session('success'))
+            <div class="success-session" data-flashdata="{{ session('success') }}"></div>
+        @elseif (session('error'))
+            <div class="error-session" data-flashdata="{{ session('error') }}"></div>
+        @endif
+        <div class="app-card alert shadow-sm mb-4 border-left-decoration">
+            <div class="inner">
+                <div class="app-card-body p-3 p-lg-4">
+                    <h3 class="mb-3">Instrumen Penilaian Efektivitas Proses Pembelajaran</h3>
+                    <div class="row gx-5 gy-3">
+                        <div class="col-12">
+                            <div>
+                                Kuesioner ini menanyakan pendapat anda mengenai Pembelajaran dan Suasana Akademik selama
+                                semester ini. Pengumpulan data menggunakan kuesioner ini bertujuan mengukur keefektifan
+                                kegiatan belajar yang telah dilakukan. Berikan tanggapan berdasarkan pendapat sendiri
+                                dan bukan pandangan/pendapat orang lain. Kami mengucapkan banyak terima kasih atas
+                                partisipasinya dalam pengisian kuesioner ini.
+                            </div>
+                        </div>
+                        <!--//col-->
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col col-md-3">
+                            <label class="mt-1 fs-4 fw-bold form-control-label">
+                                Pilih Semester
+                            </label>
+                        </div>
+                        <div class="col-12 col-md-9">
+                            <select class="form-select my-2" id="select-kuesioner">
+                                @foreach ($kuesioner as $kue)
+                                    <option value="{{ $kue->id }}">
+                                        {{ substr_replace($kue->semester, '/', 4, 0) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <button class="mt-3 btn btn-lg app-btn-primary" id="btn-start">Mulai</button>
                         </div>
                     </div>
                 </div>
@@ -58,7 +58,8 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('pejabat.approveCuti') }}" method="POST">
+                <form class="needs-validation" novalidate="" action="{{ route('kepalaunit.storeKuesioner') }}"
+                    method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-1 mb-3">
@@ -99,8 +100,8 @@
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="total_cuti">Total Hari</span>
-                                <input class="form-control" id="total_cuti" name="total_cuti" type="number" required=""
-                                    disabled>
+                                <input class="form-control" id="total_cuti" name="total_cuti" type="number"
+                                    required="" disabled>
                             </div>
                         </div>
                         <div class="row g-2 mb-3">
@@ -220,7 +221,7 @@
                     targets: 1,
                     width: "200px !important",
                 }, ],
-                ajax: "{{ route('pejabat.approval') }}",
+                ajax: "{{ route('kepalaunit.indexKuesioner') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',

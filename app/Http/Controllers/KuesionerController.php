@@ -25,20 +25,29 @@ use Illuminate\Support\Facades\DB;
 
 class KuesionerController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function indexKuesioner()
     {
-        //$kuesioner = KuesionerKinerja::forMahasiswa()->orderBy('id', 'desc')->get();
-        $kuesioner = DB::table('kuisioner_periode')->get();
+        //$kuesioner = KuesionerKinerja::get();
+
+        //$kuesioner = DB::table('kuisioner_periode')->get();
+        $kuesioner = KuesionerKinerja::all();
+        //dd($kuesioner);
         return view('kuesioner.index_kuesioner', compact('kuesioner'));
     }
 
-    public function showKuesioner($id)
-    {
-        $kuesioner = KuesionerKinerja::with(['pertanyaan' => function ($query) {
-            return $query->orderBy('nomor', 'asc');
-        }, 'pertanyaan.jawaban'])->find($id);
-        return view('kuesioner.show_kuesioner', compact('kuesioner'));
-    }
+    // public function showKuesioner($id)
+    // {
+    //     $kuesioner = KuesionerKinerja::with(['pertanyaan' => function ($query) {
+    //         return $query->orderBy('nomor', 'asc');
+    //     }, 'pertanyaan.jawaban'])->find($id);
+    //     return view('kuesioner.show_kuesioner', compact('kuesioner'));
+    // }
 
     public function storeKuesioner(Request $request, $id)
     {

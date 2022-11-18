@@ -204,9 +204,9 @@
                             <li><a href="{{ route('kepalaunit.approval') }}"
                                     class="{{ routeActive('kepalaunit.approval') }}">Approval</a>
                             </li>
-                            {{-- <li><a href="{{ route('kuesioner.indexKuesioner') }}"
-                                    class="{{ routeActive('kuesioner.indexKuesioner') }}">Kuesioner</a>
-                            </li> --}}
+                            <li><a href="{{ route('kepalaunit.indexKuesioner') }}"
+                                    class="{{ routeActive('kepalaunit.indexKuesioner') }}">Kuesioner</a>
+                            </li>
                         </ul>
                     </li>
                     {{-- <li class="dropdown">
