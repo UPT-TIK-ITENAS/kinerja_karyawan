@@ -84,44 +84,4 @@ class KuesionerController extends Controller
         });
         return redirect()->back()->with('success', 'Berhasil mengirimkan kuesioner!');
     }
-
-    public function pertanyaanPeriode()
-    {
-        $kuesioner = KuesionerKinerja::get();
-        return view('kuesioner.index_periode', compact('kuesioner'));
-    }
-
-    public function editPeriode($id)
-    {
-        $kue = KuesionerKinerja::where('id', $id)->first();
-        return response()->json($kue);
-    }
-
-    public function updatePeriode(Request $request)
-    {
-        KuesionerKinerja::where('id', $request->id)->update([
-            'judul' => $request->judul,
-            'keterangan' => $request->keterangan,
-            'semester' => $request->semester,
-        ]);
-
-        return redirect()->route('admin.pertanyaanPeriode')->with('success', 'Edit Data Berhasil!');
-    }
-
-    public function createPeriode(Request $request)
-    {
-        KuesionerKinerja::create([
-            'judul' => $request->judull,
-            'keterangan' => $request->keterangann,
-            'semester' => $request->semesterr,
-        ]);
-
-        return redirect()->route('admin.pertanyaanPeriode')->with('success', 'Add Data Berhasil!');
-    }
-
-    public function destroyPeriode($id)
-    {
-        KuesionerKinerja::where('id', $id)->delete();
-        return redirect()->route('admin.pertanyaanPeriode')->with('success', 'Data berhasil dihapus!');
-    }
 }

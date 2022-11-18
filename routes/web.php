@@ -112,11 +112,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/createmesin', [MesinController::class, 'createmesin'])->name('admin.createmesin');
         Route::get('/destroymesin/{id}', [MesinController::class, 'destroymesin'])->name('admin.destroymesin');
 
-        Route::get('/pertanyaanPeriode', [KuesionerController::class, 'pertanyaanPeriode'])->name('admin.pertanyaanPeriode');
-        Route::get('/editPeriode/{id}', [KuesionerController::class, 'editPeriode'])->name('admin.editPeriode');
-        Route::post('/updatePeriode', [KuesionerController::class, 'updatePeriode'])->name('admin.updatePeriode');
-        Route::post('/createPeriode', [KuesionerController::class, 'createPeriode'])->name('admin.createPeriode');
-        Route::get('/destroyPeriode/{id}', [KuesionerController::class, 'destroyPeriode'])->name('admin.destroyPeriode');
+        Route::get('/kuesioner', [KuesionerController::class, 'kuesioner'])->name('admin.kuesioner');
+        Route::get('/storekuesioner', [KuesionerController::class, 'storekuesioner'])->name('admin.storekuesioner');
     });
     Route::prefix('karyawan')->name('karyawan.')->group(function () {
         Route::get('/', [KaryawanController::class, 'index'])->name('index');
