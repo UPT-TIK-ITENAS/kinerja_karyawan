@@ -51,20 +51,22 @@
                                                             class="form-check-input" disabled="">Sangat
                                                         Baik (Sangat Puas)
                                                     </label>
-                                                </div>
-                                                <div class="radio">
-                                                    <label for="radio3" class="form-check-label " style="color:green">
-                                                        <input type="radio" id="radio3" name="radios" value="option3"
-                                                            class="form-check-input" checked="" disabled="">Baik
-                                                        (Puas)
-                                                    </label>
-                                                </div>
-                                                <div class="radio">
-                                                    <label for="radio1" class="form-check-label " style="color:green">
-                                                        <input type="radio" id="radio1" name="radios" value="option1"
-                                                            class="form-check-input" disabled="">Kurang
-                                                        (Tidak Puas)
-                                                    </label>
+                                                    <div class="radio">
+                                                        <label for="radio3" class="form-check-label " style="color:green">
+                                                            <input type="radio" id="radio3" name="radios"
+                                                                value="option3" class="form-check-input" checked=""
+                                                                disabled="">Baik
+                                                            (Puas)
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label for="radio1" class="form-check-label " style="color:green">
+                                                            <input type="radio" id="radio1" name="radios"
+                                                                value="option1" class="form-check-input"
+                                                                disabled="">Kurang
+                                                            (Tidak Puas)
+                                                        </label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -75,115 +77,206 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row align-items-center gx-3">
-                            <div class="col-auto">
-                                <div class="app-icon-holder">
-                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-receipt"
-                                        fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27zm.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0l-.509-.51z">
-                                        </path>
-                                        <path fill-rule="evenodd"
-                                            d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z">
-                                        </path>
-                                    </svg>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row align-items-center gx-3">
+                                <div class="col-auto">
+                                    <div class="app-icon-holder">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-receipt"
+                                            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27zm.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0l-.509-.51z">
+                                            </path>
+                                            <path fill-rule="evenodd"
+                                                d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <h4 class="app-card-title">Pertanyaan</h4>
                                 </div>
                             </div>
-                            <div class="col-auto">
-                                <h4 class="app-card-title">Pertanyaan</h4>
-                            </div>
                         </div>
-                    </div>
 
-                    <form class="settings-form" action="{{ route('kepalaunit.storeKuesioner', $kuesioner->id) }}"
-                        method="POST">
-                        @csrf
-                        <input type="hidden" readonly class="form-control-plaintext" name="kode_matkul" id="kode_matkul">
-                        <input type="hidden" readonly class="form-control-plaintext" name="nama_matkul" id="nama_matkul">
-                        <input type="hidden" readonly class="form-control-plaintext" name="kelas" id="kelas">
-                        <input type="hidden" readonly class="form-control-plaintext" name="kelas_asistensi"
-                            id="kelas_asistensi">
-                        <input type="hidden" readonly class="form-control-plaintext" name="kode_rek" id="kode_rek">
-                        <input type="hidden" readonly class="form-control-plaintext" name="kode_fakultas"
-                            id="kode_fakultas">
-                        <input type="hidden" readonly class="form-control-plaintext" name="kode_prodi" id="kode_prodi">
-                        <div class="app-card-body py-2 px-4">
-                            @foreach ($kuesioner->pertanyaan as $key => $pertanyaan)
-                                <div class="row mt-3">
-                                    <div class="col col-md-3">
-                                        <label class=" form-control-label" style="font-weight:bold">
-                                            Pertanyaan {{ $key + 1 }}
-                                        </label>
+                        <form class="settings-form" action="{{ route('kepalaunit.storeKuesioner', $kuesioner->id) }}"
+                            method="POST">
+                            @csrf
+                            <div class="app-card-body py-2 px-4">
+                                <div class="row g-2 mb-3">
+                                    <div class="row g-1 mb-3">
+
+                                        {{-- <div class="col-md-12">
+                                            <span class="form-label" for="nama_pegawai">nama pegawai</span>
+                                            <select
+                                                class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                                id="nama_pegawai" name="nama_pegawai" required="">
+                                                <option selected="" disabled="" value="">-- Pilih ---</option>
+                                                @foreach ($data['User'] as $r)
+                                                    <option value="{{ $r->id }}">
+                                                        {{ $r->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <div class="invalid-feedback">Pilih salah satu !</div>
+                                        </div> --}}
+
+                                        <div class="col-md-10">
+                                            <span class="form-label" for="nama_penilai">Nama Penilai</span>
+                                            <div class="input-group">
+                                                @foreach ($data['Jabatan'] as $j)
+                                                    <input class="form-control" name="nama_penilai" id="nama_penilai"
+                                                        required readonly
+                                                        value="{{ $j->nopeg }}-{{ $j->nama }}-{{ $j->jabatan }}">
+                                                    </input>
+                                                @endforeach
+                                                <div class="invalid-feedback">Wajib Diisi !</div>
+                                            </div>
+                                        </div>
+
                                     </div>
-                                    <div class="col-12 col-md-9">
-                                        <p class="form-control-static" style="">
-                                            {{ $pertanyaan->pertanyaan }}
-                                        </p>
-                                        @foreach ($pertanyaan->jawaban as $jawaban)
-                                            <div class="form-check mb-1">
-                                                <div class="radio">
-                                                    <label for="jawaban{{ $jawaban->id }}" class="form-check-label "
-                                                        style="">
+                                    {{-- 
+                                    <div class="col-md-6">
+                                        <span class="form-label" for="unit">unit</span>
+                                        <div class="input-group">
+                                            @foreach ($data['User'] as $u)
+                                                <input class="form-control" name="unit" id="unit" required disabled
+                                                    value="{{ $u->nama_unit }}">
+                                                </input>
+                                            @endforeach
+                                            <div class="invalid-feedback">Wajib Diisi !</div>
+                                        </div>
+                                    </div> --}}
+
+                                    <div class="col-md-12">
+                                        <span class="form-label" for="nama_pegawai">Nama Pegawai</span>
+                                        <select
+                                            class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                            id="nama_pegawai" name="nama_pegawai" required="">
+                                            <option selected="" disabled="" value="">-- Pilih ---</option>
+                                            @foreach ($data['User'] as $r)
+                                                <option value="{{ $r->nopeg }}-{{ $r->name }}-{{ $r->nama_unit }}">
+                                                    {{ $r->nopeg }}-{{ $r->name }}-{{ $r->nama_unit }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+
+
+
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <span class="form-label" for="jabatan">jabatan</span>
+                                            <input class="form-control" id="jabatan" name="jabatan" required="">
+                                            <div class="invalid-feedback">Wajib Diisi !</div>
+                                        </div>
+                                    </div>
+                                    {{-- <div class="col-md-6">
+                                        <span class="form-label" for="nopeg_penilai">Nopeg Penilai</span>
+                                        <div class="input-group">
+                                            @foreach ($data['Jabatan'] as $j)
+                                                <input class="form-control" name="nopeg_penilai" id="nopeg_penilai"
+                                                    required disabled value="{{ $j->nopeg }}">
+                                                </input>
+                                            @endforeach
+                                            <div class="invalid-feedback">Wajib Diisi !</div>
+                                        </div>
+                                    </div> --}}
+                                    {{-- <div class="col-md-6">
+                                        <span class="form-label" for="nopeg">nopeg</span>
+                                        <div class="input-group">
+                                            @foreach ($data['User'] as $j)
+                                                <input class="form-control" name="nopeg" id="nopeg" required
+                                                    disabled value="{{ $j->nopeg }}">
+                                                </input>
+                                            @endforeach
+                                            <div class="invalid-feedback">Wajib Diisi !</div>
+                                        </div>
+                                    </div> --}}
+                                    {{-- <div class="col-md-6">
+                                        <span class="form-label" for="jabatan_penilai">Jabatan Penilai</span>
+                                        <div class="input-group">
+                                            @foreach ($data['Jabatan'] as $j)
+                                                <input class="form-control" name="jabatan_penilai" id="jabatan_penilai"
+                                                    required disabled value="{{ $j->jabatan }}">
+                                                </input>
+                                            @endforeach
+                                            <div class="invalid-feedback">Wajib Diisi !</div>
+                                        </div>
+                                    </div> --}}
+                                </div>
+                            </div>
+                            <div class="app-card-body py-2 px-4">
+                                @foreach ($kuesioner->pertanyaan as $key => $pertanyaan)
+                                    <div class="row mt-3">
+                                        <div class="col col-md-3">
+                                            <label class=" form-control-label" style="font-weight:bold">
+                                                Pertanyaan {{ $key + 1 }}
+                                            </label>
+                                        </div>
+                                        <div class="col-12 col-md-9">
+                                            <p class="form-control-static" style="font-weight:bold">
+                                                {{ $pertanyaan->pertanyaan }}
+                                            </p>
+                                            @foreach ($pertanyaan->jawaban as $jawaban)
+                                                <div class="form-check">
+                                                    <label for="jawaban{{ $jawaban->id }}" class="form-check-label"
+                                                        style="font-weight:normal">
                                                         <input type="radio" id="jawaban{{ $jawaban->id }}"
                                                             class="form-check-input"
-                                                            name="responden[{{ $key }}][jawaban_akademik_id]"
+                                                            name="responden[{{ $key }}][jawaban_kinerja_id]"
                                                             value="{{ $jawaban->id }}"
-                                                            {{ old('responden.' . $key . '.jawaban_akademik_id') == $jawaban->id ? 'checked' : '' }}
+                                                            {{ old('responden.' . $key . '.jawaban_kinerja_id') == $jawaban->id ? 'checked' : '' }}
                                                             required>{{ $jawaban->jawaban }}
                                                     </label>
+                                                    <input type="hidden"
+                                                        name="responden[{{ $key }}][pertanyaan_kinerja_id]"
+                                                        value="{{ $pertanyaan->id }}">
                                                 </div>
-                                                <input type="hidden"
-                                                    name="responden[{{ $key }}][pertanyaan_kinerja_id]"
-                                                    value="{{ $pertanyaan->id }}">
-                                            </div>
-                                            <div>
-                                                <small class="text-danger">
-                                                    {{ $errors->first('responden.' . $key . '.jawaban_akademik_id') }}
-                                                </small>
-                                            </div>
-                                        @endforeach
+
+                                                <div>
+                                                    <small class="text-danger">
+                                                        {{ $errors->first('responden.' . $key . '.jawaban_kinerja_id') }}
+                                                    </small>
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
-                                </div>
-                            @endforeach
-                        </div>
-                        <div class="app-card-footer p-4 mt-auto">
-                            <button type="submit" class="btn app-btn-primary">Submit Kuesioner</button>
-                        </div>
-                    </form>
+                                @endforeach
+                            </div>
+                            <div class="app-card-footer p-4 mt-auto">
+                                <button type="submit" class="btn btn-primary">Submit Kuesioner</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-@endsection
+    @endsection
 
-@push('scripts')
-    <script>
-        $(document).ready(function() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $("#select-matkul").change(function(e) {
+                    e.preventDefault();
+                    const values = e.target.value;
+                    $('#nopeg').val(objectArray.nopeg[0]);
+                    $("#nama_pegawai").val(objectArray.nama_pegawai[1])
+                    $("#unit").val(objectArray.unit[2])
+                    $("#jabatan").val(data.jabatan)
+                    $("#nopeg_penilai").val(objectArray.nopeg_penilai[0])
+                    $("#nama_penilai").val(objectArray.nama_penilai[1])
+                    $("#jabatan_penilai").val(objectArray.jabatan_penilai[2])
+                });
             });
-            $("#select-matkul").change(function(e) {
-                e.preventDefault();
-                const values = e.target.value;
-                $("#nodos").val(objectArray.dosen[0])
-                $("#nama_dosen").val(objectArray.dosen[1])
-                $("#kode_fakultas").val(objectArray.prodi[0])
-                $("#kode_prodi").val(objectArray.prodi[1])
-                $("#kode_matkul").val(objectArray.mataKuliah[0])
-                $("#kelas").val(objectArray.mataKuliah[1])
-                $("#kelas_asistensi").val(objectArray.mataKuliah[2] == 'null' ? '' : objectArray.mataKuliah[
-                    2])
-                $("#nama_matkul").val(objectArray.mataKuliah[3])
-                $("#kode_rek").val(objectArray.mataKuliah[4])
-            });
-        });
-    </script>
-@endpush
+        </script>
+    @endpush
