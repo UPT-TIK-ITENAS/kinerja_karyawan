@@ -133,6 +133,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/izin/index', [KaryawanController::class, 'index_izin'])->name('izin');
         Route::post('/izin/store', [KaryawanController::class, 'store_izin'])->name('store_izin');
         Route::get('/izin/batal{id}', [KaryawanController::class, 'batal_izin'])->name('batal_izin');
+
         Route::get('/cuti/index', [KaryawanController::class, 'index_cuti'])->name('cuti');
         Route::post('/cuti/store', [KaryawanController::class, 'store_cuti'])->name('store_cuti');
         Route::get('/cuti/batal/{id}', [KaryawanController::class, 'batal_cuti'])->name('batal_cuti');
