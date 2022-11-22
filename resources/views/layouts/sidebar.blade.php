@@ -217,7 +217,8 @@
                             <li><a href="{{ route('kepalaunit.pertanyaanPeriode') }}" class="">Daftar
                                     Pertanyaan</a>
                             </li>
-                            <li><a href="" class="">Hasil Kuesioner</a></li>
+                            <li><a href="{{ route('kepalaunit.hasilKuesioner') }}" class="">Hasil Kuesioner</a>
+                            </li>
                         </ul>
                     </li>
                     {{-- <li class="dropdown">

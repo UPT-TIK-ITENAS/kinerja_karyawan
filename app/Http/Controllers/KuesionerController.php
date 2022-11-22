@@ -173,4 +173,44 @@ class KuesionerController extends Controller
         KuesionerKinerja::where('id', $id)->delete();
         return redirect()->route('admin.pertanyaanPeriode')->with('success', 'Data berhasil dihapus!');
     }
+
+    public function index_penilaian(Request $request)
+    {
+        $auth = auth()->user()->unit;
+        $data = RespondenKinerja::select('*')
+            ->join('kuisioner_periode', 'kuisioner_periode.id', '=', 'responden_kuisioner.kuisioner_kinerja_id')
+            ->join('unit', 'unit.nama_unit', '=', 'responden_kuisioner.unit')
+            ->where('unit.id', auth()->user()->unit)
+            ->get();
+
+        //Debugbar::info($data);
+
+        //$data = RespondenKinerja::all();
+
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+
+                // ->addColumn('action', function ($data) {
+                //     $edit_dd = "<div class='d-block text-center'>
+                //         <a data-bs-toggle='modal' class='btn btn-success align-items-center editAK fa fa-pencil' data-id='$data->id_cuti' data-original-title='Edit' data-bs-target='#ProsesCuti'></a>
+                //         </div>";
+
+                //     return $edit_dd;
+                // })
+                ->addColumn('status', function ($row) {
+                    if ($row->indeks <= 1.5) {
+                        $apprv = '<span class="badge badge-warning">Kurang puas</span>';
+                    } else if ($row->indeks < 2 || $row->indeks <= 2.5) {
+                        $apprv = '<span class="badge badge-success">Puas</span>';
+                    } else if ($row->indeks >= 2.6) {
+                        $apprv = '<span class="badge badge-success">Sangat Puas</span>';
+                    }
+                    return $apprv;
+                })
+                ->rawColumns(['status'])
+                ->make(true);
+        }
+        return view('kuesioner.hasil_penilaian', compact('data'));
+    }
 }
