@@ -53,12 +53,13 @@ class AdminController extends Controller
 
     public function listkaryawan(Request $request)
     {
-        $data = Attendance::selectRaw('attendance.*, users.name, users.awal_tugas, users.akhir_tugas')
+        $data = Attendance::selectRaw('attendance.*, users.name')
             ->join('users', 'attendance.nip', '=', 'users.nopeg')
             ->where('users.status', '1')
             ->where('attendance.nip', $request->get('filter1'), '', 'and')
             ->where('attendance.tanggal', $request->get('filter2'), '', 'and')
             ->orderby('attendance.tanggal', 'asc');
+        // dd(strtotime($data->get()[0]->jam_pulang) - strtotime($data->get()[0]->jam_masuk));
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -73,39 +74,38 @@ class AdminController extends Controller
                     } else if ($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang == NULL) {
                         $durationwork = date('00:00:00');
                     } else if ($row->jam_masuk == NULL && $row->jam_siang != NULL && $row->jam_pulang != NULL) {
-                        $duration = strtotime($row->jam_pulang) - strtotime($row->jam_siang);
-                        $durationwork = date("H:i:s", $duration);
+                        $akhir = Carbon::createFromFormat("Y-m-d H:i:s", $row->jam_pulang);
+                        $awal = Carbon::createFromFormat("Y-m-d H:i:s", $row->jam_siang);
+                        $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
                     } else if ($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL) {
                         if ($row->hari == '5') {
-                            $duration = strtotime("13:30:00") - strtotime($row->jam_masuk);
-                            $durationwork = date("H:i:s", $duration);
+                            $akhir = Carbon::createFromTimestamp(strtotime("13:00:00"));
+                            $awal = Carbon::createFromTimestamp(strtotime($row->jam_masuk));
+                            $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
                         } else {
-                            $duration = strtotime("13:00:00") - strtotime($row->jam_masuk);
-                            $durationwork = date("H:i:s", $duration);
+                            $akhir = Carbon::createFromTimestamp(strtotime("13:30:00"));
+                            $awal = Carbon::createFromTimestamp(strtotime($row->jam_masuk));
+                            $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
                         }
                     } else if ($row->jam_masuk != NULL && $row->jam_siang != NULL && $row->jam_pulang == NULL) {
-                        $duration = strtotime($row->jam_siang) - strtotime($row->jam_masuk);
-                        $durationwork = date("H:i:s", $duration);
+                        $akhir = Carbon::createFromFormat("Y-m-d H:i:s", $row->jam_siang);
+                        $awal = Carbon::createFromFormat("Y-m-d H:i:s", $row->jam_masuk);
+                        $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
                     } else {
-                        $duration = strtotime($row->jam_pulang) - strtotime($row->jam_masuk) - strtotime('01:00:00');
-                        $durationwork = date("H:i:s", $duration);
+                        $akhir = Carbon::createFromFormat("Y-m-d H:i:s", $row->jam_pulang)->subHour(1);
+                        $awal = Carbon::createFromFormat("Y-m-d H:i:s", $row->jam_masuk);
+                        $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
                     }
                     return $durationwork;
                 })
 
                 ->addColumn('latemasuk', function ($row) {
-                    $durasi = '';
-                    if ($row->hari != 6 && $row->hari != 0) {
-                        if ($row->jam_masuk == NULL && $row->jam_siang != NULL) {
-                            $durasitelat = strtotime($row->jam_siang) - strtotime('08:00:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                        } else if ($row->jam_masuk == NULL && $row->jam_siang == NULL) {
-                            $durasitelat = strtotime('12:45:00') - strtotime('08:00:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                        } else if (date("H:i:s", strtotime($row->jam_masuk)) > '08:00:00') {
-                            $durasitelat = strtotime($row->jam_masuk) - strtotime('08:00:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                        }
+                    if (Carbon::createFromTimestamp(strtotime($row->jam_masuk))->format('%H:%I:%S') > Carbon::createFromTimestamp(strtotime("08:00:00"))->format('%H:%I:%S')) {
+                        $akhir = Carbon::createFromTimestamp(strtotime("08:033:00"));
+                        $awal = Carbon::createFromTimestamp(strtotime("08:00:00"));
+                        $durasi = $akhir->diff($awal)->format('%H:%I:%S');
+                    } else {
+                        return 'kosong';
                     }
                     return $durasi;
                 })
