@@ -317,7 +317,7 @@ class PejabatController extends Controller
         if ($delete) {
             return redirect()->back()->with('success', 'Berhasil membatalkan izin');
         } else {
-            return redirect()->back()->with('error', 'Gagal membatalkan izin');
+            return redirect()->back()->with('danger', 'Gagal membatalkan izin');
         }
     }
 
@@ -327,7 +327,7 @@ class PejabatController extends Controller
         if ($delete) {
             return redirect()->back()->with('success', 'Berhasil membatalkan izin');
         } else {
-            return redirect()->back()->with('error', 'Gagal membatalkan izin');
+            return redirect()->back()->with('danger', 'Gagal membatalkan izin');
         }
     }
 
@@ -424,7 +424,7 @@ class PejabatController extends Controller
             Cuti::where('id_cuti', $request->id_cuti)->update([
                 'alasan_tolak' => $request->alasan_tolak,
             ]);
-            return redirect()->back()->with('error', 'Cuti ditolak');
+            return redirect()->back()->with('danger', 'Cuti ditolak');
         }
     }
 }

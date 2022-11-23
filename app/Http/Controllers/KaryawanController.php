@@ -238,7 +238,12 @@ class KaryawanController extends Controller
         $a = explode('|', $request->jenis_cuti);
         // dd($a);
 
-        $history_cuti = DB::table('jenis_cuti')->select(DB::raw("jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari"))->join('cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')->where('cuti.nopeg', auth()->user()->nopeg)->groupBy('cuti.jenis_cuti')->get();
+        $history_cuti = DB::table('jenis_cuti')
+            ->select(DB::raw("jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari"))
+            ->join('cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
+            ->where('cuti.nopeg', auth()->user()->nopeg)
+            ->groupBy('cuti.jenis_cuti')
+            ->get();
 
 
         //dd($request->all());
@@ -273,6 +278,7 @@ class KaryawanController extends Controller
             //dd($data);
             return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
         }
+        return redirect()->back()->with('danger', 'Saldo Cuti Tidak Mencukupi');
     }
 
     public function index_izin()
@@ -340,7 +346,7 @@ class KaryawanController extends Controller
         if ($delete) {
             return redirect()->back()->with('success', 'Berhasil membatalkan izin');
         } else {
-            return redirect()->back()->with('error', 'Gagal membatalkan izin');
+            return redirect()->back()->with('danger', 'Gagal membatalkan izin');
         }
     }
 
