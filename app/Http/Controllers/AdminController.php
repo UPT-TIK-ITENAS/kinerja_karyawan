@@ -171,19 +171,15 @@ class AdminController extends Controller
                 // }
             })
             ->addColumn('status', function ($row) {
-                $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id', $row->id)->get();
-
-                foreach ($dataizin as $izin) {
-                    if ($row->id == $izin->id_attendance) {
-                        if ($row->approval == 1) {
-                            $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
-                        } else {
-                            $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
-                        }
-                        return $apprv;
+                if ($row->izin != NULL) {
+                    if ($row->approval == 1) {
+                        $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
                     } else {
-                        return $apprv = '';
+                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
                     }
+                    return $apprv;
+                } else {
+                    return $apprv = '';
                 }
             })
             ->rawColumns(['latemasuk', 'days', 'latesiang', 'latesore', 'action', 'status', 'note'])
