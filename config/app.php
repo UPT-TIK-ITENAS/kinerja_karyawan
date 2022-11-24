@@ -3,7 +3,15 @@
 use Illuminate\Support\Facades\Facade;
 
 return [
-    'days' => ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'],
+    'days' => [
+        '1' => 'SENIN',
+        '2' => 'SELASA',
+        '3' => 'RABU',
+        '4' => 'KAMIS',
+        '5' => 'JUMAT',
+        '6' => 'SABTU',
+        '7' => 'MINGGU',
+    ],
     /*
     |--------------------------------------------------------------------------
     | Application Name
