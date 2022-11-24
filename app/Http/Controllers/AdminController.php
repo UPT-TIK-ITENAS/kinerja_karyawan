@@ -64,7 +64,8 @@ class AdminController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->editColumn('hari', function ($row) {
-                    return config('app.days')[$row->hari];
+                    $days =  ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
+                    return $days[$row->hari];
                 })
                 ->addColumn('duration', function ($row) {
                     if ($row->jam_masuk == NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL) {
@@ -78,14 +79,14 @@ class AdminController extends Controller
                         $awal = Carbon::createFromFormat("Y-m-d H:i:s", $row->jam_siang);
                         $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
                     } else if ($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL) {
-                        if ($row->hari == '5') {
-                            $akhir = Carbon::parse('13:00:00')->format('H:i:s');
-                            $awal = Carbon::parse($row->jam_masuk)->format('H:i:s');
+                        if ($row->hari == 5) {
+                            $akhir = Carbon::parse('17:00:00')->format('H:i:s');
+                            $awal = Carbon::parse('13:30:00')->format('H:i:s');
                             $durasi = strtotime($akhir) - strtotime($awal);
                             $durationwork = Carbon::parse($durasi)->format('H:i:s');
                         } else {
-                            $akhir = Carbon::parse('13:30:00')->format('H:i:s');
-                            $awal = Carbon::parse($row->jam_masuk)->format('H:i:s');
+                            $akhir = Carbon::parse('17:00:00')->format('H:i:s');
+                            $awal = Carbon::parse('13:00:00')->format('H:i:s');
                             $durasi = strtotime($akhir) - strtotime($awal);
                             $durationwork = Carbon::parse($durasi)->format('H:i:s');
                         }
