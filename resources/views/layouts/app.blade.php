@@ -44,7 +44,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
     <link id="color" rel="stylesheet" href="{{ asset('assets/css/color-1.css') }}" media="screen">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}">
+    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}"> --}}
     @stack('styles')
     <style>
         .clockpicker-popover {
@@ -175,10 +175,10 @@
         <script src="{{ asset('assets/js/clipboard/clipboard.min.js') }}"></script>
         <script src="{{ asset('assets/js/custom-card/custom-card.js') }}"></script>
         <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
-
+        {{-- 
         <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.js') }}"></script>
         <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.en.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.custom.js') }}"></script>
+        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.custom.js') }}"></script> --}}
         <script src="{{ asset('assets/js/time-picker/jquery-clockpicker.min.js') }}"></script>
         <script src="{{ asset('assets/js/time-picker/highlight.min.js') }}"></script>
         <script src="{{ asset('assets/js/time-picker/clockpicker.js') }}"></script>

@@ -198,10 +198,10 @@
                     @csrf
                     <div class="modal-body">
                         <div class="row g-1 mb-3">
-                            <div class="col-md-12">
+                            <div class="col-md-8">
                                 <span class="form-label" for="jenis_izin">Karyawan</span>
                                 <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
-                                    id="nip" name="nip" required="">
+                                    id="nip" name="nip" required>
                                     <option selected="" disabled="" value="">-- Pilih ---</option>
                                     @foreach ($user as $u)
                                         <option value="{{ $u->nopeg }}">{{ $u->nopeg }} -
@@ -209,42 +209,64 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="tanggal">Tanggal</span>
+                                <div class="input-group date" id="dt-date" data-target-input="nearest">
+                                    <input class="form-control col-sm-12 datetimepicker-input digits" type="text"
+                                        data-target="#dt-date" id="tanggal" name="tanggal" required>
+                                    <div class="input-group-text" data-target="#dt-date" data-toggle="datetimepicker"><i
+                                            class="fa fa-calendar"></i></div>
+                                </div>
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
                         </div>
                         <div class="row g-2 mb-3">
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_masuk">Jam Masuk</span>
-                                <div class="input-group date" id="dt-minimum" data-target-input="nearest">
+                                <div class="input-group date" id="dt-jam_masuk" data-target-input="nearest">
                                     <input class="form-control datetimepicker-input digits" type="text"
-                                        data-target="#dt-minimum">
-                                    <div class="input-group-text" data-target="#dt-minimum" data-toggle="datetimepicker">
+                                        data-target="#dt-jam_masuk" id="jam_masuk" name="jam_masuk">
+                                    <div class="input-group-text" data-target="#dt-jam_masuk"
+                                        data-toggle="datetimepicker">
                                         <i class="fa fa-calendar"> </i>
                                     </div>
                                 </div>
+                                <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_siang">Jam Siang</span>
-                                <input class="form-control" id="jam_siang" name="jam_siang" type="date"
-                                    required="">
+                                <div class="input-group date" id="dt-jam_siang" data-target-input="nearest">
+                                    <input class="form-control datetimepicker-input digits" type="text"
+                                        data-target="#dt-jam_siang" id="jam_siang" name="jam_siang">
+                                    <div class="input-group-text" data-target="#dt-jam_siang"
+                                        data-toggle="datetimepicker">
+                                        <i class="fa fa-calendar"> </i>
+                                    </div>
+                                </div>
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_pulang">Jam Pulang</span>
-                                <input class="form-control" id="jam_pulang" name="jam_pulang" type="date"
-                                    required="">
+                                <div class="input-group date" id="dt-jam_pulang" data-target-input="nearest">
+                                    <input class="form-control datetimepicker-input digits" type="text"
+                                        data-target="#dt-jam_pulang" id="jam_pulang" name="jam_pulang">
+                                    <div class="input-group-text" data-target="#dt-jam_pulang"
+                                        data-toggle="datetimepicker">
+                                        <i class="fa fa-calendar"> </i>
+                                    </div>
+                                </div>
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <div class="checkbox p-0">
-                                    <div class="checkbox checkbox-dark">
-                                        <input id="cb_valid" class="form-check-input" type="checkbox" required>
-                                        <label class="form-check-label" for="cb_valid">Pengajuan izin dilakukan oleh diri
-                                            sendiri dan secara sadar sesuai dengan ketentuan yang berlaku</label>
-                                    </div>
-                                    <div class="invalid-feedback">Wajib di centang !</div>
-                                </div>
+
+                            <div class="col-md-7">
+                                <span class="form-label" for="status">Status</span>
+                                <select name="status" id="status" class="form-control">
+                                    <option value='' disabled selected>Pilih Status</option>
+                                    <option value="1">Lengkap</option>
+                                    <option value="0">Kurang</option>
+                                </select>
                             </div>
+
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">

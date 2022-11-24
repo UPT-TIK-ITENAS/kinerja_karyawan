@@ -172,7 +172,7 @@ class AdminController extends Controller
             })
             ->addColumn('status', function ($row) {
                 if ($row->izin != NULL) {
-                    if ($row->approval == 1) {
+                    if ($row->izin->approval == '1') {
                         $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
                     } else {
                         $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
@@ -184,6 +184,21 @@ class AdminController extends Controller
             })
             ->rawColumns(['latemasuk', 'days', 'latesiang', 'latesore', 'action', 'status', 'note'])
             ->toJson();
+    }
+
+    public function storeAttendance(Request $request)
+    {
+        Attendance::insert([
+            'nip' => $request->nip,
+            'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
+            'hari' => date('w', strtotime($request->tanggal)),
+            'jam_masuk' => $request->jam_masuk == NULL ? NULL :  Carbon::parse($request->jam_masuk)->format('Y-m-d H:i:s'),
+            'jam_siang' => $request->jam_siang == NULL ? NULL :  Carbon::parse($request->jam_siang)->format('Y-m-d H:i:s'),
+            'jam_pulang' => $request->jam_pulang == NULL ? NULL :  Carbon::parse($request->jam_pulang)->format('Y-m-d H:i:s'),
+            'status' => $request->status
+        ]);
+
+        return redirect()->route('admin.datapresensi')->with('success', 'Data Attendance berhasil disimpan');
     }
 
     public function listkaryawan_duration(Request $request)
