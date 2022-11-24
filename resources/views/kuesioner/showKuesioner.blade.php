@@ -158,53 +158,18 @@
                                             id="nama_pegawai" name="nama_pegawai" required="">
                                             <option selected="" disabled="" value="">-- Pilih ---</option>
                                             @foreach ($data['User'] as $r)
-                                                <option value="{{ $r->nopeg }}-{{ $r->name }}-{{ $r->nama_unit }}">
-                                                    {{ $r->nopeg }}-{{ $r->name }}-{{ $r->nama_unit }}
+                                                <option
+                                                    value="{{ $r->nopeg }}-{{ $r->name }}-{{ $r->nama_unit }}-{{ $r->jabatan }}">
+                                                    {{ $r->nopeg }}-{{ $r->name }}-{{ $r->nama_unit }}-{{ $r->jabatan }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
-
-
-
-
-                                    <div class="col-md-6">
+                                    {{-- <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <span class="form-label" for="jabatan">jabatan</span>
-                                            <input class="form-control" id="jabatan" name="jabatan" required="">
-                                            <div class="invalid-feedback">Wajib Diisi !</div>
-                                        </div>
-                                    </div>
-                                    {{-- <div class="col-md-6">
-                                        <span class="form-label" for="nopeg_penilai">Nopeg Penilai</span>
-                                        <div class="input-group">
-                                            @foreach ($data['Jabatan'] as $j)
-                                                <input class="form-control" name="nopeg_penilai" id="nopeg_penilai"
-                                                    required disabled value="{{ $j->nopeg }}">
-                                                </input>
-                                            @endforeach
-                                            <div class="invalid-feedback">Wajib Diisi !</div>
-                                        </div>
-                                    </div> --}}
-                                    {{-- <div class="col-md-6">
-                                        <span class="form-label" for="nopeg">nopeg</span>
-                                        <div class="input-group">
-                                            @foreach ($data['User'] as $j)
-                                                <input class="form-control" name="nopeg" id="nopeg" required
-                                                    disabled value="{{ $j->nopeg }}">
-                                                </input>
-                                            @endforeach
-                                            <div class="invalid-feedback">Wajib Diisi !</div>
-                                        </div>
-                                    </div> --}}
-                                    {{-- <div class="col-md-6">
-                                        <span class="form-label" for="jabatan_penilai">Jabatan Penilai</span>
-                                        <div class="input-group">
-                                            @foreach ($data['Jabatan'] as $j)
-                                                <input class="form-control" name="jabatan_penilai" id="jabatan_penilai"
-                                                    required disabled value="{{ $j->jabatan }}">
-                                                </input>
-                                            @endforeach
+                                            <span class="form-label" for="jabatan">Jabatan</span>
+                                            <input class="form-control" id="jabatan" name="jabatan" readonly
+                                                required="">
                                             <div class="invalid-feedback">Wajib Diisi !</div>
                                         </div>
                                     </div> --}}
@@ -266,17 +231,17 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-                $("#select-matkul").change(function(e) {
-                    e.preventDefault();
-                    const values = e.target.value;
-                    $('#nopeg').val(objectArray.nopeg[0]);
-                    $("#nama_pegawai").val(objectArray.nama_pegawai[1])
-                    $("#unit").val(objectArray.unit[2])
-                    $("#jabatan").val(data.jabatan)
-                    $("#nopeg_penilai").val(objectArray.nopeg_penilai[0])
-                    $("#nama_penilai").val(objectArray.nama_penilai[1])
-                    $("#jabatan_penilai").val(objectArray.jabatan_penilai[2])
-                });
+                // $("#select-matkul").change(function(e) {
+                //     e.preventDefault();
+                //     const values = e.target.value;
+                //     $('#nopeg').val(objectArray.nopeg[0]);
+                //     $("#nama_pegawai").val(objectArray.nama_pegawai[1])
+                //     $("#unit").val(objectArray.unit[2])
+                //     $("#nopeg_penilai").val(objectArray.nopeg_penilai[0])
+                //     $("#nama_penilai").val(objectArray.nama_penilai[1])
+                //     $("#jabatan_penilai").val(objectArray.jabatan_penilai[2])
+                // });
+
             });
         </script>
     @endpush

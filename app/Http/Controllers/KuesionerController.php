@@ -105,11 +105,12 @@ class KuesionerController extends Controller
                 'nopeg' => explode('-', $request->nama_pegawai)[0],
                 'nama_pegawai' =>  explode('-', $request->nama_pegawai)[1],
                 'unit' =>  explode('-', $request->nama_pegawai)[2],
+                'jabatan' =>  explode('-', $request->nama_pegawai)[3],
 
                 // 'nama_pegawai' =>  $request->nama_pegawai,
                 // 'nopeg' => auth()->user()->nopeg,
                 // 'unit' => $request->unit,
-                'jabatan' => $request->jabatan,
+                // 'jabatan' => $request->jabatan,
 
                 // 'nopeg_penilai' => $request->nopeg_penilai,
                 // 'nama_penilai' => $request->nama_penilai,
