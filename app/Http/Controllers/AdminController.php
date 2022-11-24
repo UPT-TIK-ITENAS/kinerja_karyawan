@@ -50,6 +50,14 @@ class AdminController extends Controller
         return view('admin.datapresensi', compact('user', 'attendance'));
     }
 
+    public function datapresensi_duration()
+    {
+        $user = User::where('fungsi', 'Admin')->get();
+        $attendance = Attendance::select('tanggal')->groupby('tanggal')->get();
+        // dd($attendance[1]);
+        return view('admin.datapresensi_duration', compact('user', 'attendance'));
+    }
+
 
     public function listkaryawan(Request $request)
     {
@@ -156,6 +164,102 @@ class AdminController extends Controller
                 })
                 ->addColumn('status', function ($row) {
                     $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id', $row->id)->get();
+
+                    foreach ($dataizin as $izin) {
+                        if ($row->id == $izin->id_attendance) {
+                            if ($row->approval == 1) {
+                                $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
+                            } else {
+                                $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                            }
+                            return $apprv;
+                        } else {
+                            return $apprv = '';
+                        }
+                    }
+                })
+                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'latesore', 'action', 'status', 'note'])
+
+                ->make(true);
+        }
+        return DataTables::queryBuilder($data)->toJson();
+    }
+
+    public function listkaryawan_duration(Request $request)
+    {
+        $data = DB::table('attendance_baru')->selectRaw('attendance_baru.*, users.name')
+            ->join('users', 'attendance_baru.nip', '=', 'users.nopeg')
+            ->where('users.status', '1')
+            ->where('attendance_baru.nip', $request->get('filter1'), '', 'and')
+            ->where('attendance_baru.tanggal', $request->get('filter2'), '', 'and')
+            ->orderby('attendance_baru.tanggal', 'asc');
+        // dd(strtotime($data->get()[0]->jam_pulang) - strtotime($data->get()[0]->jam_masuk));
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->editColumn('hari', function ($row) {
+                    return config('app.days')[$row->hari];
+                })
+                ->addColumn('duration', function ($row) {
+                    return Carbon::parse($row->durasi)->format("H:i:s");
+                })
+                ->addColumn('latemasuk', function ($row) {
+                    if (Carbon::createFromTimestamp(strtotime($row->jam_masuk))->format('%H:%I:%S') > Carbon::createFromTimestamp(strtotime("08:00:00"))->format('%H:%I:%S')) {
+                        $akhir = Carbon::createFromTimestamp(strtotime("08:033:00"));
+                        $awal = Carbon::createFromTimestamp(strtotime("08:00:00"));
+                        $durasi = $akhir->diff($awal)->format('%H:%I:%S');
+                    } else {
+                        return 'kosong';
+                    }
+                    return $durasi;
+                })
+
+                ->addColumn('latesiang', function ($row) {
+                    $durasi = '';
+                    if ($row->hari == 5) {
+                        if ($row->jam_siang == NULL && $row->jam_pulang != NULL) {
+                            $durasitelat = strtotime($row->jam_pulang) - strtotime('13:30:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                        } else if ($row->jam_siang == NULL && $row->jam_pulang == NULL) {
+                            $durasitelat = strtotime('16:59:00') - strtotime('13:30:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                        } else if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
+                            $durasitelat = strtotime($row->jam_pulang) - strtotime('13:30:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                        }
+                    } else if ($row->hari != 6 && $row->hari != 0) {
+                        if ($row->jam_siang == NULL && $row->jam_pulang != NULL) {
+                            $durasitelat = strtotime($row->jam_pulang) - strtotime('13:00:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                        } else if ($row->jam_siang == NULL && $row->jam_pulang == NULL) {
+                            $durasitelat = strtotime('16:59:00') - strtotime('13:00:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                        } else if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
+                            $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
+                            $durasi = date("H:i:s", $durasitelat);
+                        }
+                    }
+                    return $durasi;
+                })
+                ->addColumn('note', function ($row) {
+                    if ($row->status == 0) {
+                        $note = 'Kurang';
+                    } else {
+                        $note = 'Lengkap';
+                    }
+                    return $note;
+                })
+                ->addColumn('action', function ($row) {
+                    // $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
+                    // if ($workingdays < 3) {
+                    return getAksi($row->id, 'att');
+                    // }else{
+                    //     return '-';
+
+                    // }
+                })
+                ->addColumn('status', function ($row) {
+                    $dataizin = DB::table('attendance_baru')->join('izin', 'izin.id_attendance', '=', 'attendance_baru.id')->where('attendance_baru.id', $row->id)->get();
 
                     foreach ($dataizin as $izin) {
                         if ($row->id == $izin->id_attendance) {
