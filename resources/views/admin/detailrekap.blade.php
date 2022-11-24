@@ -38,8 +38,8 @@
                                     <th>Izin</th>
                                     <th>Sakit</th>
                                     <th>Cuti</th>
-                                    <th>Tanpa Keterangan</th>
-                                    <th>Jumlah Hari per Bulan</th>
+                                    {{-- <th>Tanpa Keterangan</th> --}}
+                                    {{-- <th>Jumlah Hari per Bulan</th> --}}
                                 </thead>
                                 <tbody>
                                     @foreach ($data as $no => $r)
@@ -54,8 +54,13 @@
                                                 <td> 0 </td>
                                             @else
                                                 @foreach ($data2 as $d)
-                                                    <td> {{ $d->totalizin }} hari</td>
-                                                    <td> {{ $d->totalsakit }} hari</td>
+                                                    @if($d->bulan == $r->bulan)
+                                                        <td> {{ $d->totalizin }} hari</td>
+                                                        <td> {{ $d->totalsakit }} hari</td>
+                                                    @else
+                                                        <td> </td>
+                                                        <td> </td>
+                                                    @endif
                                                 @endforeach
                                             @endif
 
@@ -63,13 +68,17 @@
                                                 <td> 0 </td>
                                             @else
                                                 @foreach ($cuti as $d)
-                                                    <td> {{ $d->totalcuti }} hari</td>
+                                                    @if($d->bulan == $r->bulan)
+                                                        <td> {{ $d->totalcuti }} hari</td>
+                                                    @else
+                                                        <td></td>
+                                                    @endif
                                                 @endforeach
                                             @endif
-                                            <td> 0 </td>
+                                            {{-- <td> 0 </td>
                                             <td><span class="jumlah" data-bulan="{{ $r->bulan }}"
                                                     data-tahun="{{ $r->tahun }}" data-total="{{ $r->totalkerja }}"
-                                                    data-libur="{{ $r->jumlah_hari_libur }}"></span></td>
+                                                    data-libur="{{ $r->jumlah_hari_libur }}"></span></td> --}}
                                         </tr>
                                     @endforeach
 
