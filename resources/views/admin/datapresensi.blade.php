@@ -213,8 +213,8 @@
                         name: 'name'
                     },
                     {
-                        data: 'hari',
-                        name: 'hari'
+                        data: 'days',
+                        name: 'days'
                     },
                     {
                         data: 'jam_masuk',
