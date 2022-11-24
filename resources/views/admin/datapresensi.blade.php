@@ -256,9 +256,7 @@
     </div>
     @parent
 
-    <script src="{{ asset('assets/js/datepicker/date-time-picker/moment.min.js') }}"></script>
-    <script src="{{ asset('assets/js/datepicker/date-time-picker/tempusdominus-bootstrap-4.min.js') }}"></script>
-    <script src="{{ asset('assets/js/datepicker/date-time-picker/datetimepicker.custom.js') }}"></script>
+
     <script>
         $(document).ready(function() {
             $("#kt_datetimepicker_1").datepicker();

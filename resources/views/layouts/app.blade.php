@@ -44,7 +44,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
     <link id="color" rel="stylesheet" href="{{ asset('assets/css/color-1.css') }}" media="screen">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive.css') }}">
-    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}"> --}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}">
     @stack('styles')
     <style>
         .clockpicker-popover {
@@ -191,6 +191,9 @@
         <script src="{{ asset('assets/js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
         <script src="{{ asset('assets/js/datatable/datatables/datatable.custom.js') }}"></script>
 
+        <script src="{{ asset('assets/js/datepicker/date-time-picker/moment.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datepicker/date-time-picker/tempusdominus-bootstrap-4.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datepicker/date-time-picker/datetimepicker.custom.js') }}"></script>
 
         <script src="{{ asset('assets/js/datatable/datatable-extension/dataTables.buttons.min.js') }}"></script>
         <script src="{{ asset('assets/js/datatable/datatable-extension/jszip.min.js') }}"></script>
