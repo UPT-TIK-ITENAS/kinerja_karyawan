@@ -57,11 +57,14 @@ Route::group(['middleware' => 'auth'], function () {
         });
 
         Route::get('/datapresensi', [AdminController::class, 'datapresensi'])->name('admin.datapresensi');
+        Route::get('/datapresensi-duration', [AdminController::class, 'datapresensi_duration'])->name('admin.datapresensi-duration');
         Route::get('/listkaryawan', [AdminController::class, 'listkaryawan'])->name('admin.listkaryawan');
+        Route::get('/listkaryawan-duration', [AdminController::class, 'listkaryawan_duration'])->name('admin.listkaryawan-duration');
 
         Route::get('createizinkehadiran/{id}', [AdminController::class, 'createizinkehadiran'])->name('admin.createizinkehadiran');
         Route::post('storeizinkehadiran', [AdminController::class, 'storeizinkehadiran'])->name('admin.storeizinkehadiran');
         Route::post('/biometric', [BiometricController::class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
+        Route::post('/biometric-duration', [BiometricController::class, 'SyncBiometricWithDuration'])->name('admin.SyncBiometricWithDuration');
         Route::get('/biometricall', [BiometricAllController::class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
         Route::get('printizin/{id}', [AdminController::class, 'printizin'])->name('admin.printizin');
         Route::get('/rekapitulasi', [RekapitulasiController::class, 'index'])->name('admin.rekapitulasi');
