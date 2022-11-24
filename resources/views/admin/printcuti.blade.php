@@ -297,7 +297,7 @@
             </tr>
             <tr>
                 <td>
-                    <u><b>{{ $atasan_lang->nama }}</u></b><br>
+                    <u><b>{{ $atasan_lang->name }}</u></b><br>
                     Atasan dari Atasan Langsung
                 </td>
             </tr>

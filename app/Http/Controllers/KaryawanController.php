@@ -230,6 +230,7 @@ class KaryawanController extends Controller
         $is_valid = 0;
         $this->validate($request, [
             'jenis_cuti' => 'required',
+            'request->' => 'required',
             'tgl_akhir_cuti' => 'required',
             'total_cuti' => 'required',
             'alamat' => 'required',
@@ -241,7 +242,7 @@ class KaryawanController extends Controller
         $history_cuti = DB::table('jenis_cuti')->select(DB::raw("jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari"))->join('cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')->where('cuti.nopeg', auth()->user()->nopeg)->groupBy('cuti.jenis_cuti')->get();
 
 
-        //dd($request->all());
+        dd($history_cuti);
         foreach ($history_cuti as $r) {
             if ($r->id_cuti == $a[0]) {
                 if ($r->total_harinya == $r->max_hari) {
@@ -270,7 +271,6 @@ class KaryawanController extends Controller
             $data->validasi = 1;
             $data->tgl_pengajuan = date('Y-m-d H:i:s');
             $data->save();
-            //dd($data);
             return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
         }
     }

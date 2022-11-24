@@ -30,6 +30,6 @@ class IzinKerja extends Model
 
     public function jenisizin()
     {
-        return $this->belongsTo(JenisIzin::class, 'id_izin', 'id_jenisizin');
+        return $this->belongsTo(JenisIzin::class, 'jenis_izin', 'id_jenisizin');
     }
 }

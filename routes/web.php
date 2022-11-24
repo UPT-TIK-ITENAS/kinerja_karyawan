@@ -14,7 +14,7 @@ use App\Http\Controllers\RekapitulasiController;
 use App\Http\Controllers\ListKaryawanController;
 use App\Http\Controllers\KuesionerController;
 use App\Http\Controllers\PejabatController;
-use Carbon\Carbon;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -37,13 +37,6 @@ Route::group(['name' => 'auth'], function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
 
-Route::get('/test', function () {
-    $akhir = Carbon::parse("17:00:00")->format('H:i:s');
-    $awal = Carbon::parse("13:30:00")->format("H:i:s");
-    $durasi = strtotime($akhir) - strtotime($awal);
-    return Carbon::parse($durasi)->format('H:i:s');
-});
-
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.admin_v');
     Route::get('/kepalaunit', [KepalaUnitController::class, 'index'])->name('kepalaunit.kepalaunit_v');
@@ -64,14 +57,11 @@ Route::group(['middleware' => 'auth'], function () {
         });
 
         Route::get('/datapresensi', [AdminController::class, 'datapresensi'])->name('admin.datapresensi');
-        Route::get('/datapresensi-duration', [AdminController::class, 'datapresensi_duration'])->name('admin.datapresensi-duration');
         Route::get('/listkaryawan', [AdminController::class, 'listkaryawan'])->name('admin.listkaryawan');
-        Route::get('/listkaryawan-duration', [AdminController::class, 'listkaryawan_duration'])->name('admin.listkaryawan-duration');
 
         Route::get('createizinkehadiran/{id}', [AdminController::class, 'createizinkehadiran'])->name('admin.createizinkehadiran');
         Route::post('storeizinkehadiran', [AdminController::class, 'storeizinkehadiran'])->name('admin.storeizinkehadiran');
         Route::post('/biometric', [BiometricController::class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
-        Route::post('/biometric-duration', [BiometricController::class, 'SyncBiometricWithDuration'])->name('admin.SyncBiometricWithDuration');
         Route::get('/biometricall', [BiometricAllController::class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
         Route::get('printizin/{id}', [AdminController::class, 'printizin'])->name('admin.printizin');
         Route::get('/rekapitulasi', [RekapitulasiController::class, 'index'])->name('admin.rekapitulasi');
@@ -143,7 +133,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/izin/index', [KaryawanController::class, 'index_izin'])->name('izin');
         Route::post('/izin/store', [KaryawanController::class, 'store_izin'])->name('store_izin');
         Route::get('/izin/batal{id}', [KaryawanController::class, 'batal_izin'])->name('batal_izin');
-
         Route::get('/cuti/index', [KaryawanController::class, 'index_cuti'])->name('cuti');
         Route::post('/cuti/store', [KaryawanController::class, 'store_cuti'])->name('store_cuti');
         Route::get('/cuti/batal/{id}', [KaryawanController::class, 'batal_cuti'])->name('batal_cuti');
@@ -212,16 +201,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('storeizinkehadiran', [KepalaUnitController::class, 'storeizinkehadiran'])->name('storeizinkehadiran');
         Route::get('printizin/{id}', [KepalaUnitController::class, 'printizin'])->name('printizin');
 
-        Route::get('/pertanyaanPeriode', [KuesionerController::class, 'pertanyaanPeriode'])->name('pertanyaanPeriode');
-        Route::get('/editPeriode/{id}', [KuesionerController::class, 'editPeriode'])->name('editPeriode');
-        Route::post('/updatePeriode', [KuesionerController::class, 'updatePeriode'])->name('updatePeriode');
-        Route::post('/createPeriode', [KuesionerController::class, 'createPeriode'])->name('createPeriode');
-        Route::get('/destroyPeriode/{id}', [KuesionerController::class, 'destroyPeriode'])->name('destroyPeriode');
-
         Route::get('/kuesioner/index', [KuesionerController::class, 'indexKuesioner'])->name('indexKuesioner');
-        Route::get('/kuesioner/kinerja/{id}', [KuesionerController::class, 'showKuesioner'])->name('showKuesioner');
-        Route::post('/kuesioner/approveKuesioner/{id}', [KuesionerController::class, 'storeKuesioner'])->name('storeKuesioner');
-        Route::get('/kuesioner/hasilKuesioner', [KuesionerController::class, 'index_penilaian'])->name('hasilKuesioner');
+        Route::get('/kuesioner/editKuesioner/{id}', [KuesionerController::class, 'showKuesioner'])->name('showKuesioner');
+        Route::post('/kuesioner/approveKuesioner', [KuesionerController::class, 'storeKuesioner'])->name('storeKuesioner');
         // Route::get('/dataizin', [KepalaUnitController::class, 'dataizin'])->name('kepalaunit.dataizin');
         // Route::get('/editizin/{id_izinkerja}', [KepalaUnitController::class, 'editizin'])->name('kepalaunit.editizin');
         // Route::post('/updateizin', [KepalaUnitController::class, 'updateizin'])->name('kepalaunit.updateizin');
