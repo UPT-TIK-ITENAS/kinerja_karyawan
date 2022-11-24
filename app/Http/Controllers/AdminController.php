@@ -67,12 +67,13 @@ class AdminController extends Controller
             ->where('attendance.nip', $request->get('filter1'), '', 'and')
             ->where('attendance.tanggal', $request->get('filter2'), '', 'and')
             ->orderby('attendance.tanggal', 'asc');
+        $days = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
         // dd(strtotime($data->get()[0]->jam_pulang) - strtotime($data->get()[0]->jam_masuk));
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->editColumn('hari', function ($row) {
-                    return config('app.days')[$row->hari];
+                ->editColumn('hari', function ($row) use ($days) {
+                    return $days[$row->hari];
                 })
                 ->addColumn('duration', function ($row) {
                     if ($row->jam_masuk == NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL) {

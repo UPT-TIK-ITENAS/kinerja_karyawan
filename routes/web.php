@@ -14,7 +14,7 @@ use App\Http\Controllers\RekapitulasiController;
 use App\Http\Controllers\ListKaryawanController;
 use App\Http\Controllers\KuesionerController;
 use App\Http\Controllers\PejabatController;
-
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +35,13 @@ Route::group(['name' => 'auth'], function () {
     Route::get('/', [AuthController::class, 'index'])->name('auth.login_v');
     Route::post('login', [AuthController::class, 'login'])->name('auth.login');
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
+});
+
+Route::get('/test', function () {
+    $akhir = Carbon::parse("17:00:00")->format('H:i:s');
+    $awal = Carbon::parse("13:30:00")->format("H:i:s");
+    $durasi = strtotime($akhir) - strtotime($awal);
+    return Carbon::parse($durasi)->format('H:i:s');
 });
 
 Route::group(['middleware' => 'auth'], function () {
