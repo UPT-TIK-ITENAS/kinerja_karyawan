@@ -95,7 +95,7 @@
 
     .ttd {
         bottom: 250;
-        margin-left: 23em;
+        margin-left: 20em;
         margin-right: 0;
         /* position:fixed; */
     }
@@ -103,7 +103,7 @@
     .ttd2 {
 
         bottom: 250;
-        margin-left: 14em;
+        margin-left: 15em;
         margin-right: 5em;
 
         /* position:fixed; */
