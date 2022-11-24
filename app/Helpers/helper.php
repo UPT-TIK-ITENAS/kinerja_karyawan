@@ -190,6 +190,15 @@ if (!function_exists('getAprv')) {
                     $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalcuti" title="Batal Cuti" href="' . $batal_cuti . '">X</a>';
                 }
             }
+        } else if ($tipe == 'att') {
+            $getIzin = Izin::where('id_attendance', $id)->first();
+            if ($getIzin) {
+                if ($getIzin->approval == 1) {
+                    $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
+                } else {
+                    $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                }
+            }
         }
         return $for_html;
     }

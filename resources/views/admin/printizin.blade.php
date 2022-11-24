@@ -178,13 +178,13 @@
                 </tr>
                 <tr>
                     <td>
-                        {{-- <img src="data:image/png;base64, {!! $qrcode !!}"> --}}
-                        <img src="">
+                        <img src="{{ url('qrcode/' . $data->qrcode_kepala) }}" width="80" height="80"
+                            alt="">
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <u><b>Epih Haryanti, A.Md.</u></b>
+                        <u><b>{{ $atasan->nama }}</u></b>
                     </td>
                 </tr>
             </table>
@@ -206,7 +206,6 @@
                     <td>
                         <img src="{{ url('qrcode/' . $data->qrcode_peg) }}" width="80" height="80"
                             alt="">
-                        <img src="">
                     </td>
                 </tr>
                 <tr>

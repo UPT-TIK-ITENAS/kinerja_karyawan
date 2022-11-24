@@ -79,13 +79,15 @@ class AdminController extends Controller
                         $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
                     } else if ($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL) {
                         if ($row->hari == '5') {
-                            $akhir = Carbon::createFromTimestamp(strtotime("13:00:00"));
-                            $awal = Carbon::createFromTimestamp(strtotime($row->jam_masuk));
-                            $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
+                            $akhir = Carbon::parse('13:00:00')->format('H:i:s');
+                            $awal = Carbon::parse($row->jam_masuk)->format('H:i:s');
+                            $durasi = strtotime($akhir) - strtotime($awal);
+                            $durationwork = Carbon::parse($durasi)->format('H:i:s');
                         } else {
-                            $akhir = Carbon::createFromTimestamp(strtotime("13:30:00"));
-                            $awal = Carbon::createFromTimestamp(strtotime($row->jam_masuk));
-                            $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
+                            $akhir = Carbon::parse('13:30:00')->format('H:i:s');
+                            $awal = Carbon::parse($row->jam_masuk)->format('H:i:s');
+                            $durasi = strtotime($akhir) - strtotime($awal);
+                            $durationwork = Carbon::parse($durasi)->format('H:i:s');
                         }
                     } else if ($row->jam_masuk != NULL && $row->jam_siang != NULL && $row->jam_pulang == NULL) {
                         $akhir = Carbon::createFromFormat("Y-m-d H:i:s", $row->jam_siang);
@@ -100,42 +102,54 @@ class AdminController extends Controller
                 })
 
                 ->addColumn('latemasuk', function ($row) {
-                    if (Carbon::createFromTimestamp(strtotime($row->jam_masuk))->format('%H:%I:%S') > Carbon::createFromTimestamp(strtotime("08:00:00"))->format('%H:%I:%S')) {
-                        $akhir = Carbon::createFromTimestamp(strtotime("08:033:00"));
-                        $awal = Carbon::createFromTimestamp(strtotime("08:00:00"));
-                        $durasi = $akhir->diff($awal)->format('%H:%I:%S');
+
+                    $masuk = Carbon::parse($row->jam_masuk)->format('H:i:s');
+                    $keluar = Carbon::parse('08:00:00')->format('H:i:s');
+
+                    if ($row->jam_masuk == NULL &&  $row->jam_siang != NULL) {
+                        $durasi = strtotime(Carbon::parse($row->jam_siang)->format('H:i:s')) - strtotime($keluar);
+                        $total = Carbon::parse($durasi)->format('H:i:s');
                     } else {
-                        return 'kosong';
+                        if ($masuk > $keluar) {
+                            $durasi = strtotime($masuk) - strtotime($keluar);
+                            $total = Carbon::parse($durasi)->format('H:i:s');
+                        } else {
+                            $total = '';
+                        }
                     }
-                    return $durasi;
+                    return $total;
                 })
 
                 ->addColumn('latesiang', function ($row) {
-                    $durasi = '';
-                    if ($row->hari == 5) {
-                        if ($row->jam_siang == NULL && $row->jam_pulang != NULL) {
-                            $durasitelat = strtotime($row->jam_pulang) - strtotime('13:30:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                        } else if ($row->jam_siang == NULL && $row->jam_pulang == NULL) {
-                            $durasitelat = strtotime('16:59:00') - strtotime('13:30:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                        } else if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
-                            $durasitelat = strtotime($row->jam_pulang) - strtotime('13:30:00');
-                            $durasi = date("H:i:s", $durasitelat);
+                    $siang = Carbon::parse($row->jam_siang)->format('H:i:s');
+                    $keluar1 = Carbon::parse('13:00:00')->format('H:i:s');
+                    $keluar2 = Carbon::parse('13:30:00')->format('H:i:s');
+
+                    if ($row->hari = '5') {
+                        if ($row->jam_siang == NULL) {
+                            $total = '';
+                        } else {
+                            if ($siang > $keluar2) {
+                                $durasi = strtotime($siang) - strtotime($keluar2);
+                                $total = Carbon::parse($durasi)->format('H:i:s');
+                            } else {
+                                $total = '';
+                            }
                         }
-                    } else if ($row->hari != 6 && $row->hari != 0) {
-                        if ($row->jam_siang == NULL && $row->jam_pulang != NULL) {
-                            $durasitelat = strtotime($row->jam_pulang) - strtotime('13:00:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                        } else if ($row->jam_siang == NULL && $row->jam_pulang == NULL) {
-                            $durasitelat = strtotime('16:59:00') - strtotime('13:00:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                        } else if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
-                            $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
-                            $durasi = date("H:i:s", $durasitelat);
+                    } else {
+                        if ($row->jam_siang == NULL) {
+                            $total = '';
+                        } else {
+                            if ($siang > $keluar1) {
+                                $durasi = strtotime($siang) - strtotime($keluar1);
+                                $total = Carbon::parse($durasi)->format('H:i:s');
+                            } else {
+                                $total = '';
+                            }
                         }
                     }
-                    return $durasi;
+
+                    return $total;
                 })
                 ->addColumn('note', function ($row) {
                     if ($row->status == 0) {
@@ -210,9 +224,11 @@ class AdminController extends Controller
 
     public function printizin($id)
     {
-        $data = Izin::where('id_attendance', $id)->first();
+        $data = Izin::join('users', 'izin.nopeg', '=', 'users.nopeg')->where('id_attendance', $id)->first();
+        $atasan = Jabatan::selectRaw('users.atasan,jabatan.*')->join('users', 'users.atasan', '=', 'jabatan.id')->where('users.atasan', $data->atasan)->first();
+        // dd($atasan);
 
-        $pdf = PDF::loadview('admin.printizin', compact('data'))->setPaper('A5', 'landscape');
+        $pdf = PDF::loadview('admin.printizin', compact('data', 'atasan'))->setPaper('A5', 'landscape');
         return $pdf->stream();
     }
     //END DATA PRESENSI
@@ -335,7 +351,7 @@ class AdminController extends Controller
     {
         $data = IzinKerja::join('users', 'izin_kerja.nopeg', '=', 'users.nopeg')->join('unit', 'izin_kerja.unit', '=', 'unit.id')->where('id_izinkerja', $id)->first();
         // $atasan = User::selectRaw('jabatan.*')->join('jabatan', 'jabatan.id', 'users.atasan')->where('jabatan.nopeg', $data->atasan)->first();
-        $atasan = Jabatan::join('users', 'users.atasan', '=', 'jabatan.id')->where('users.atasan', $data->atasan)->first();
+        $atasan = Jabatan::selectRaw('users.atasan,jabatan.*')->join('users', 'users.atasan', '=', 'jabatan.id')->where('users.atasan', $data->atasan)->first();
         $jenisizin = JenisIzin::where('jenis_izin', '!=', 'sakit')->get();
 
         $pdf = PDF::loadview('admin.printizinkerja', compact('data', 'jenisizin', 'atasan'))->setPaper('potrait');
@@ -502,8 +518,8 @@ class AdminController extends Controller
     {
 
         $data = Cuti::join('unit', 'cuti.unit', '=', 'unit.id')->join('users', 'cuti.nopeg', '=', 'users.nopeg')->join('jenis_cuti', 'cuti.jenis_cuti', '=', 'jenis_cuti.id_jeniscuti')->where('id_cuti', $id)->first();
-        $atasan = Jabatan::join('users', 'users.atasan', '=', 'jabatan.id')->where('users.atasan', $data->atasan)->first();
-        $atasan_lang = Jabatan::join('users', 'users.atasan_lang', '=', 'jabatan.id')->where('users.atasan_lang', $data->atasan_lang)->first();
+        $atasan = Jabatan::selectRaw('users.atasan,jabatan.*')->join('users', 'users.atasan', '=', 'jabatan.id')->where('users.atasan', $data->atasan)->first();
+        $atasan_lang = Jabatan::selectRaw('users.atasan_lang,jabatan.*')->join('users', 'users.atasan_lang', '=', 'jabatan.id')->where('users.atasan_lang', $data->atasan_lang)->first();
         // dd($data);
 
         $pdf = PDF::loadview('admin.printcuti', compact('data', 'atasan', 'atasan_lang'))->setPaper('potrait');
