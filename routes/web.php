@@ -111,7 +111,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/updatemesin', [MesinController::class, 'updatemesin'])->name('admin.updatemesin');
         Route::post('/createmesin', [MesinController::class, 'createmesin'])->name('admin.createmesin');
         Route::get('/destroymesin/{id}', [MesinController::class, 'destroymesin'])->name('admin.destroymesin');
-
+        
+        Route::get('/admHasilKuesioner', [KuesionerController::class, 'admHasilKuesioner'])->name('admin.admHasilKuesioner');
         Route::get('/pertanyaanPeriode', [KuesionerController::class, 'pertanyaanPeriode'])->name('admin.pertanyaanPeriode');
         Route::get('/editPeriode/{id}', [KuesionerController::class, 'editPeriode'])->name('admin.editPeriode');
         Route::post('/updatePeriode', [KuesionerController::class, 'updatePeriode'])->name('admin.updatePeriode');

@@ -221,7 +221,7 @@
         <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
         <script src="{{ asset('assets/js/select2/select2.full.min.js') }}"></script>
         <script src="{{ asset('assets/js/select2/select2-custom.js') }}"></script>
-        <<<<<<< HEAD <script src="{{ asset('assets/js/daterangepicker.js') }}"></script>
+        <script src="{{ asset('assets/js/daterangepicker.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"
             integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -230,9 +230,7 @@
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js"
             integrity="sha256-GcByKJnun2NoPMzoBsuCb4O2MKiqJZLlHTw3PJeqSkI=" crossorigin="anonymous"></script>
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        =======
         <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
-        >>>>>>> origin/dev
 
 
         <script type="text/javascript">
