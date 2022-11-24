@@ -209,12 +209,12 @@
                         searchable: false,
                     },
                     {
-                        data: 'name',
-                        name: 'name'
+                        data: 'user.name',
+                        name: 'user.name'
                     },
                     {
-                        data: 'hari',
-                        name: 'hari'
+                        data: 'days',
+                        name: 'days'
                     },
                     {
                         data: 'jam_masuk',

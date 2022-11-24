@@ -15,4 +15,9 @@ class Attendance extends Model
     {
         return $this->belongsTo(User::class, 'nip', 'nopeg');
     }
+
+    public function izin()
+    {
+        return $this->hasOne(Izin::class, 'id_attendance', 'id');
+    }
 }
