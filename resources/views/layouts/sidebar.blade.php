@@ -54,7 +54,7 @@
                         </a>
                         <ul class="nav-submenu menu-content" style="display: none;">
                             {{-- <li><a href="{{ route('admin.indexKuesioner') }}" class="">Penilaian</a></li> --}}
-                            <li><a href="{{ route('admin.pertanyaanPeriode') }}" class="">Daftar Pertanyaan</a>
+                            <li><a href="{{ route('admin.pertanyaanPeriode') }}" class="">Daftar Periode</a>
                             </li>
                             <li><a href="{{ route('admin.admHasilKuesioner') }}" class="">Hasil Kuesioner</a></li>
                         </ul>
