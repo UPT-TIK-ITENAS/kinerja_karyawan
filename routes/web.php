@@ -197,6 +197,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/approval/destroyCuti/{id}', [KepalaUnitController::class, 'batal_cuti'])->name('destroyCuti');
         Route::post('/approval/approveCuti', [KepalaUnitController::class, 'approveCuti'])->name('approveCuti');
 
+        Route::get('/approval/indexIzin', [KepalaUnitController::class, 'index_approvalIzin'])->name('approvalIzin');
+        Route::get('/approval/editIzin/{id}', [KepalaUnitController::class, 'editIzin'])->name('editIzin');
+        Route::get('/approval/destroyIzin/{id}', [KepalaUnitController::class, 'batal_izin'])->name('destroyIzin');
+        Route::post('/approval/approveIzin', [KepalaUnitController::class, 'approveIzin'])->name('approveIzin');
+
+
         Route::get('createizinkehadiran/{id}', [KepalaUnitController::class, 'createizinkehadiran'])->name('createizinkehadiran');
         Route::post('storeizinkehadiran', [KepalaUnitController::class, 'storeizinkehadiran'])->name('storeizinkehadiran');
         Route::get('printizin/{id}', [KepalaUnitController::class, 'printizin'])->name('printizin');

@@ -59,14 +59,27 @@ class KuesionerController extends Controller
             $indeks = round($total / count($request->responden), 2);
 
             $kuesionerResponden = RespondenKinerja::create([
-                'kuesioner_kinerja_id' => $kuesioner->id,
-                'nama_pegawai' =>  $request->nama_pegawai,
-                'nopeg' => $request->nopeg,
-                'unit' => $request->unit,
-                'jabatan' => $request->jabatan,
-                'nopeg_nilai' => $request->nopeg_nilai,
-                'nama_penilai' => $request->nama_penilai,
-                'jabatan_penilai' => $request->kode_rek,
+                'kuisioner_kinerja_id' => $kuesioner->id,
+
+                'nopeg_penilai' => explode('-', $request->nama_penilai)[0],
+                'nama_penilai' =>  explode('-', $request->nama_penilai)[1],
+                'jabatan_penilai' =>  explode('-', $request->nama_penilai)[2],
+
+                'nopeg' => explode('-', $request->nama_pegawai)[0],
+                'nama_pegawai' =>  explode('-', $request->nama_pegawai)[1],
+                'unit' =>  explode('-', $request->nama_pegawai)[2],
+                'jabatan' =>  explode('-', $request->nama_pegawai)[3],
+
+                // 'nama_pegawai' =>  $request->nama_pegawai,
+                // 'nopeg' => auth()->user()->nopeg,
+                // 'unit' => $request->unit,
+                // 'jabatan' => $request->jabatan,
+
+                // 'nopeg_penilai' => $request->nopeg_penilai,
+                // 'nama_penilai' => $request->nama_penilai,
+                // 'jabatan_penilai' => $request->jabatan_penilai,
+
+                'indeks' => $indeks,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

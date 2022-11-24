@@ -412,4 +412,66 @@ class KepalaUnitController extends Controller
             return redirect()->back()->with('error', 'Cuti ditolak');
         }
     }
+
+
+    public function index_approvalIzin(Request $request)
+    {
+        //$data = DB::select("SELECT * from cuti inner join unit u on u.id =cuti.unit inner join jenis_cuti jc on jc.id_jeniscuti = cuti.jenis_cuti");
+        $data = IzinKerja::select('*')
+            ->where('unit', auth()->user()->unit)->get();
+
+
+        $jenisizin = JenisIzin::all();
+
+        //dd($data);
+        //Debugbar::info($data);
+
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    // $delete_url = route('kepalaunit.destroyCuti', $data->id_cuti);
+                    $edit_dd = "<div class='d-block text-center'>
+                        <a data-bs-toggle='modal' class='btn btn-success align-items-center editAK fa fa-pencil' data-id='$data->id_izinkerja' data-original-title='Edit' data-bs-target='#ProsesIzin'></a>
+                        </div>";
+
+                    //Debugbar::info($data);
+
+                    return $edit_dd;
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->approval == 1) {
+                        $apprv = '<span class="badge badge-success">Disetujui Kepala Unit</span>';
+                    } else {
+                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                    }
+                    return $apprv;
+                })
+                ->rawColumns(['status', 'action'])
+                ->make(true);
+        }
+        return view('kepalaunit.ku_index_approval_izin', compact('data'));
+    }
+
+    public function editIzin($id)
+    {
+        $data = IzinKerja::where('id_izinkerja', $id)
+            ->join('jenis_izin', 'jenis_izin.id_izin', '=', 'izin_kerja.jenis_izin')->first();
+        return response()->json($data);
+    }
+
+    public function destroyIzin($id)
+    {
+        IzinKerja::where('id_izinkerja', $id)->delete();
+        return redirect()->route('kepalaunit.ku_index_approval_izin')->with('success', 'Data berhasil dihapus!');
+    }
+
+    public function approveIzin(Request $request)
+    {
+        IzinKerja::where('id_izinkerja', $request->id_izinkerja)->update([
+            'approval' => '1',
+        ]);
+
+        return redirect()->back()->with('success', 'Cuti disetujui');
+    }
 }
