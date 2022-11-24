@@ -66,6 +66,13 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col">
+                                <a href="#" class="btn btn-primary" data-bs-target="#tambahAtt" data-bs-toggle="modal"
+                                    style="float: right">+ Tambah</a>
+                            </div>
+                        </div>
+
                         <div class="table-responsive">
                             <table class="dataTable" id="table-admin">
                                 <thead>
@@ -75,7 +82,7 @@
                                     <th>Jam Masuk</th>
                                     <th>Jam Siang</th>
                                     <th>Jam Keluar</th>
-                                    <th>Durasi</th>
+                                    {{-- <th>Durasi</th> --}}
                                     <th>Telat Masuk</th>
                                     <th>Telat Siang</th>
                                     <th>Note</th>
@@ -176,10 +183,88 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade bd-example-modal-lg" id="tambahAtt" aria-labelledby="myLargeModalLabel" aria-modal="true"
+        role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myLargeModalLabel">Form Pengajuan Izin</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
+                        data-bs-original-title="" title=""></button>
+                </div>
+                <form class="needs-validation" novalidate="" action="{{ route('admin.storeAttendance') }}"
+                    method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row g-1 mb-3">
+                            <div class="col-md-12">
+                                <span class="form-label" for="jenis_izin">Karyawan</span>
+                                <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                    id="nip" name="nip" required="">
+                                    <option selected="" disabled="" value="">-- Pilih ---</option>
+                                    @foreach ($user as $u)
+                                        <option value="{{ $u->nopeg }}">{{ $u->nopeg }} -
+                                            {{ $u->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-4">
+                                <span class="form-label" for="jam_masuk">Jam Masuk</span>
+                                <div class="input-group date" id="dt-minimum" data-target-input="nearest">
+                                    <input class="form-control datetimepicker-input digits" type="text"
+                                        data-target="#dt-minimum">
+                                    <div class="input-group-text" data-target="#dt-minimum" data-toggle="datetimepicker">
+                                        <i class="fa fa-calendar"> </i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="jam_siang">Jam Siang</span>
+                                <input class="form-control" id="jam_siang" name="jam_siang" type="date"
+                                    required="">
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="jam_pulang">Jam Pulang</span>
+                                <input class="form-control" id="jam_pulang" name="jam_pulang" type="date"
+                                    required="">
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <div class="checkbox p-0">
+                                    <div class="checkbox checkbox-dark">
+                                        <input id="cb_valid" class="form-check-input" type="checkbox" required>
+                                        <label class="form-check-label" for="cb_valid">Pengajuan izin dilakukan oleh diri
+                                            sendiri dan secara sadar sesuai dengan ketentuan yang berlaku</label>
+                                    </div>
+                                    <div class="invalid-feedback">Wajib di centang !</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     @parent
 
-
+    <script src="{{ asset('assets/js/datepicker/date-time-picker/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/js/datepicker/date-time-picker/tempusdominus-bootstrap-4.min.js') }}"></script>
+    <script src="{{ asset('assets/js/datepicker/date-time-picker/datetimepicker.custom.js') }}"></script>
     <script>
+        $(document).ready(function() {
+            $("#kt_datetimepicker_1").datepicker();
+        });
+        // $('#kt_datetimepicker_1').datetimepicker();
+
         $().ready(function() {
             let table = $('#table-admin').DataTable({
                 fixedHeader: true,
@@ -227,10 +312,6 @@
                     {
                         data: 'jam_pulang',
                         name: 'jam_pulang'
-                    },
-                    {
-                        data: 'duration',
-                        name: 'duration'
                     },
                     {
                         data: 'latemasuk',

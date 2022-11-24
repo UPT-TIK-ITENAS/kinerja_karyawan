@@ -98,7 +98,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('printizinkerja/{id}', [AdminController::class, 'printizinkerja'])->name('admin.printizinkerja');
         Route::get('/getWorkingDays/{startDate}/{endDate}', [AdminController::class, 'getWorkingDays'])->name('admin.getWorkingDays');
         Route::get('/historycuti/{nopeg}/{jenis}', [AdminController::class, 'historycuti'])->name('admin.historycuti');
-
+        Route::post('storeAttendance', [AdminController::class, 'storeAttendance'])->name('admin.storeAttendance');
 
         Route::get('/datacuti', [AdminController::class, 'datacuti'])->name('admin.datacuti');
         Route::get('/datacuti/{id}', [AdminController::class, 'datacuti_show'])->name('admin.datacuti.show');
