@@ -25,17 +25,55 @@
                         <span>Daftar hasil rekapitulasi presensi karyawan terhitung dari tanggal 01 Juli 2022</span>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="dataTable" id="table-rekapitulasi">
+                        <div class="dt-ext table-responsive">
+                            <table class="table table-bordered" id="table-rekapitulasi">
                                 <thead>
                                     <th width="5%">No.</th>
                                     <th>Bulan</th>
                                     <th>Tahun</th>
-                                    <th>Total Telat Pagi</th>
-                                    <th>Total Telat Siang</th>
-                                    <th>Total Telat Keseluruhan</th>
+                                    <th>Hadir</th>
+                                    <th>Izin</th>
+                                    <th>Sakit</th>
+                                    <th>Cuti</th>
+                                    {{-- <th>Tanpa Keterangan</th> --}}
+                                    {{-- <th>Jumlah Hari per Bulan</th> --}}
                                 </thead>
                                 <tbody>
+                                    @foreach ($data as $no => $r)
+                                        <tr>
+                                            <td align="center">{{ $no + 1 }}</td>
+                                            <td>{{ getNamaBulan($r->bulan) }}</td>
+                                            <td>{{ $r->tahun }}</td>
+                                            <td> {{ $r->totalkerja }} hari</td>
+
+                                            @if ($data2 == null)
+                                                <td> 0 </td>
+                                                <td> 0 </td>
+                                            @else
+                                                @foreach ($data2 as $d)
+                                                    @if ($d->bulan == $r->bulan)
+                                                        <td> {{ $d->totalizin }} hari</td>
+                                                        <td> {{ $d->totalsakit }} hari</td>
+                                                    @else
+                                                        <td> </td>
+                                                        <td> </td>
+                                                    @endif
+                                                @endforeach
+                                            @endif
+
+                                            @if ($cuti == null)
+                                                <td> 0 </td>
+                                            @else
+                                                @foreach ($cuti as $d)
+                                                    @if ($d->bulan == $r->bulan)
+                                                        <td> {{ $d->totalcuti }} hari</td>
+                                                    @else
+                                                        <td></td>
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                        </tr>
+                                    @endforeach
 
                                 </tbody>
                             </table>

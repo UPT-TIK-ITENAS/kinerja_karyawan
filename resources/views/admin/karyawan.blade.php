@@ -34,7 +34,6 @@
                                     <th>Atasan Langsung</th>
                                     <th>Atasan dari Atasan Langsung</th>
                                     <th>TMT</th>
-                                    <th>Fungsi</th>
                                 </thead>
                                 <tbody>
                                     @foreach ($peg as $no => $p)
@@ -49,7 +48,6 @@
                                             <td>{{ $p->name_jab }}</td>
                                             <td>{{ $p->name_jab2 }}</td>
                                             <td>{{ $p->masuk_kerja }}</td>
-                                            <td>{{ $p->fungsi }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

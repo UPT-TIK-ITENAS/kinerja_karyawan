@@ -95,7 +95,7 @@
 
     .ttd {
         bottom: 250;
-        margin-left: 23em;
+        margin-left: 20em;
         margin-right: 0;
         /* position:fixed; */
     }
@@ -103,7 +103,7 @@
     .ttd2 {
 
         bottom: 250;
-        margin-left: 14em;
+        margin-left: 15em;
         margin-right: 5em;
 
         /* position:fixed; */
@@ -178,13 +178,13 @@
                 </tr>
                 <tr>
                     <td>
-                        {{-- <img src="data:image/png;base64, {!! $qrcode !!}"> --}}
-                        <img src="">
+                        <img src="{{ url('qrcode/' . $data->qrcode_kepala) }}" width="80" height="80"
+                            alt="">
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <u><b>Epih Haryanti, A.Md.</u></b>
+                        <u><b>{{ $atasan->nama }}</u></b>
                     </td>
                 </tr>
             </table>
@@ -206,7 +206,6 @@
                     <td>
                         <img src="{{ url('qrcode/' . $data->qrcode_peg) }}" width="80" height="80"
                             alt="">
-                        <img src="">
                     </td>
                 </tr>
                 <tr>

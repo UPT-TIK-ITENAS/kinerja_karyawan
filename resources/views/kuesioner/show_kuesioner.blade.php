@@ -18,27 +18,26 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        {{-- <h3 class="row mb-2">Instrumen Penilaian Efektivitas Proses Pembelajaran</h3>
-                        <div class="row gx-5 gy-3">
-                            <div class="col-12">
-                                <div>
-                                    Kuesioner ini menanyakan pendapat anda mengenai Pembelajaran dan Suasana Akademik selama
-                                    semester ini. Pengumpulan data menggunakan kuesioner ini bertujuan mengukur keefektifan
-                                    kegiatan belajar yang telah dilakukan. Berikan tanggapan berdasarkan pendapat sendiri
-                                    dan bukan pandangan/pendapat orang lain. Kami mengucapkan banyak terima kasih atas
-                                    partisipasinya dalam pengisian kuesioner ini.
-                                </div>
-                            </div>
-                            <!--//col-->
-                        </div> --}}
-                        <div class="row mt-1">
-                            <div class="col col-md-3">
-                                <label class="mt-1 fs-4 fw-bold form-control-label">
-                                    Pilih Semester
-                                </label>
-                            </div>
+                        {{-- <a href="{{ route('pejabat.createcuti') }}" class="btn btn-primary"><i
+                                class="icofont icofont-plus-square"></i> Tambah</a> --}}
+                        <div class="table-responsive">
+                            <table class="dataTable" id="table-cuti">
+                                <thead>
+                                    <th>No.</th>
+                                    <th>Nama</th>
+                                    <th>NIP</th>
+                                    {{-- <th>Unit</th> --}}
+                                    <th>Jenis Cuti</th>
+                                    <th>Tanggal Awal Cuti</th>
+                                    <th>Tanggal Akhir Cuti</th>
+                                    <th>Total Hari Cuti</th>
+                                    {{-- <th>Keterangan</th> --}}
+                                    <th>Aksi</th>
+                                    <th>Status</th>
+                                </thead>
+                                <tbody>
 
-                            </tbody>
+                                </tbody>
                             </table>
                         </div>
                     </div>
