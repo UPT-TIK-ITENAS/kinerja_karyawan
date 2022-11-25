@@ -472,6 +472,68 @@ class KepalaUnitController extends Controller
             'approval' => '1',
         ]);
 
-        return redirect()->back()->with('success', 'Cuti disetujui');
+        return redirect()->back()->with('success', 'Izin Disetujui');
+    }
+
+
+    public function index_approvalIzinTelat(Request $request)
+    {
+        //$data = DB::select("SELECT * from cuti inner join unit u on u.id =cuti.unit inner join jenis_cuti jc on jc.id_jeniscuti = cuti.jenis_cuti");
+        $data = Izin::select('*')
+            ->where('unit', auth()->user()->unit)->get();
+
+
+        // $jenisizin = JenisIzin::all();
+
+        // dd($data);
+        //Debugbar::info($data);
+
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    // $delete_url = route('kepalaunit.destroyCuti', $data->id_cuti);
+                    $edit_dd = "<div class='d-block text-center'>
+                        <a data-bs-toggle='modal' class='btn btn-success align-items-center editAK fa fa-pencil' data-id='$data->id_izin' data-original-title='Edit' data-bs-target='#ProsesIzin'></a>
+                        </div>";
+
+                    //Debugbar::info($data);
+
+                    return $edit_dd;
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->approval == 1) {
+                        $apprv = '<span class="badge badge-success">Disetujui Kepala Unit</span>';
+                    } else {
+                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                    }
+                    return $apprv;
+                })
+                ->rawColumns(['status', 'action'])
+                ->make(true);
+        }
+        return view('kepalaunit.ku_index_approval_izin_telat', compact('data'));
+    }
+
+    public function editIzinTelat($id)
+    {
+        // $data = Izin::where('id_izinkerja', $id)
+        //     ->join('jenis_izin', 'jenis_izin.id_izin', '=', 'izin_kerja.jenis_izin')->first();
+        $data = Izin::where('id_izin', $id)->first();
+        return response()->json($data);
+    }
+
+    public function approveIzinTelat(Request $request)
+    {
+
+        $qrcode_filenameat = 'qr-' . $request->nopeg . '-' . auth()->user()->nopeg . '-' . $request->id_attendance . '.svg';
+        QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . auth()->user()->name . '-' . auth()->user()->nopeg . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenameat));
+
+        Izin::where('id_izin', $request->id_izin)->update([
+            'approval' => '1',
+            'qrcode_kepala' => $qrcode_filenameat,
+        ]);
+
+        return redirect()->back()->with('success', 'Izin Disetujui');
     }
 }

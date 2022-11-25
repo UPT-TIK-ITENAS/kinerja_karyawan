@@ -133,6 +133,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/listdatapresensi', [KaryawanController::class, 'listdatapresensi'])->name('listdatapresensi');
         Route::get('/rekapitulasi', [KaryawanController::class, 'rekapitulasi'])->name('rekapitulasi');
         Route::get('/listdatarekapitulasi', [KaryawanController::class, 'listdatarekapitulasi'])->name('listdatarekapitulasi');
+
         Route::get('/izin/index', [KaryawanController::class, 'index_izin'])->name('izin');
         Route::post('/izin/store', [KaryawanController::class, 'store_izin'])->name('store_izin');
         Route::get('/izin/batal{id}', [KaryawanController::class, 'batal_izin'])->name('batal_izin');
@@ -140,6 +141,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/cuti/index', [KaryawanController::class, 'index_cuti'])->name('cuti');
         Route::post('/cuti/store', [KaryawanController::class, 'store_cuti'])->name('store_cuti');
         Route::get('/cuti/batal/{id}', [KaryawanController::class, 'batal_cuti'])->name('batal_cuti');
+
+        Route::get('/izinTelat/index', [KaryawanController::class, 'index_izin_telat'])->name('izinTelat');
+        Route::post('/izinTelat/store', [KaryawanController::class, 'store_izinTelat'])->name('store_izinTelat');
+        Route::get('/izinTelat/batal{id}', [KaryawanController::class, 'batal_izinTelat'])->name('batal_izinTelat');
 
         Route::get('createizinkehadiran/{id}', [KaryawanController::class, 'createizinkehadiran'])->name('createizinkehadiran');
         Route::post('storeizinkehadiran', [KaryawanController::class, 'storeizinkehadiran'])->name('storeizinkehadiran');
@@ -206,6 +211,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/approval/destroyIzin/{id}', [KepalaUnitController::class, 'batal_izin'])->name('destroyIzin');
         Route::post('/approval/approveIzin', [KepalaUnitController::class, 'approveIzin'])->name('approveIzin');
 
+        Route::get('/approval/indexIzinTelat', [KepalaUnitController::class, 'index_approvalIzinTelat'])->name('approvalIzinTelat');
+        Route::get('/approval/editIzinTelat/{id}', [KepalaUnitController::class, 'editIzinTelat'])->name('editIzinTelat');
+        Route::post('/approval/approveIzinTelat', [KepalaUnitController::class, 'approveIzinTelat'])->name('approveIzinTelat');
 
         Route::get('createizinkehadiran/{id}', [KepalaUnitController::class, 'createizinkehadiran'])->name('createizinkehadiran');
         Route::post('storeizinkehadiran', [KepalaUnitController::class, 'storeizinkehadiran'])->name('storeizinkehadiran');
