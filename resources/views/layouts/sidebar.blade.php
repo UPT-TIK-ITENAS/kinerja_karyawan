@@ -183,7 +183,7 @@
                         <ul class="nav-submenu menu-content"
                             style="display: @if (request()->routeIs('kepalaunit.izin'))  @endif;">
                             <li><a href="{{ route('kepalaunit.approval') }}"
-                                    class="{{ routeActive('kepalaunit.approval') }}">Approval</a>
+                                    class="{{ routeActive('kepalaunit.approval') }}">Approval Cuti</a>
                             </li>
                             <li><a href="{{ route('kepalaunit.approvalIzin') }}"
                                     class="{{ routeActive('kepalaunit.approvalIzin') }}">Approval Izin</a>

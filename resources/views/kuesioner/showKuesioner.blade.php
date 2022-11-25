@@ -6,32 +6,11 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <h1 class="app-page-title">Kuesioner Akademik
+                        <h1 class="app-page-title">Kuesioner Kinerja
                             {{ substr_replace($kuesioner->semester, '/', 4, 0) }}</h1>
                         <div class="app-card alert shadow-sm mb-4 border-left-decoration">
                             <div class="inner">
                                 <div class="app-card-body p-3 p-lg-4">
-                                    <h3 class="mb-3">Instrumen Penilaian Efektivitas Proses Pembelajaran
-                                        {{ substr_replace($kuesioner->semester, '/', 4, 0) }}
-                                    </h3>
-                                    <div class="row gx-5 gy-3">
-                                        <div class="col-12">
-                                            <div>Kuesioner ini menanyakan pendapat anda mengenai Pembelajaran dan Suasana
-                                                Akademik
-                                                selama
-                                                semester ini. Pengumpulan data menggunakan kuesioner ini bertujuan mengukur
-                                                keefektifan
-                                                kegiatan belajar yang telah dilakukan. Berikan tanggapan berdasarkan
-                                                pendapat
-                                                sendiri
-                                                dan bukan pandangan/pendapat orang lain. Kami mengucapkan banyak terima
-                                                kasih
-                                                atas
-                                                partisipasinya dalam pengisian kuesioner ini.
-                                            </div>
-                                        </div>
-                                        <!--//col-->
-                                    </div>
                                     <div class="row mt-3">
                                         <div class="col col-md-3">
                                             <label class=" form-control-label" style="color:green; font-weight:bold">
@@ -130,7 +109,7 @@
                                                 @foreach ($data['Jabatan'] as $j)
                                                     <input class="form-control" name="nama_penilai" id="nama_penilai"
                                                         required readonly
-                                                        value="{{ $j->nopeg }}-{{ $j->nama }}-{{ $j->jabatan }}">
+                                                        value="{{ $j->nopeg }}  -   {{ $j->nama }}  -   {{ $j->jabatan }}">
                                                     </input>
                                                 @endforeach
                                                 <div class="invalid-feedback">Wajib Diisi !</div>
@@ -160,7 +139,7 @@
                                             @foreach ($data['User'] as $r)
                                                 <option
                                                     value="{{ $r->nopeg }}-{{ $r->name }}-{{ $r->nama_unit }}-{{ $r->jabatan }}">
-                                                    {{ $r->nopeg }}-{{ $r->name }}-{{ $r->nama_unit }}-{{ $r->jabatan }}
+                                                    {{ $r->nopeg }} -   {{ $r->name }}  -   {{ $r->nama_unit }} -   {{ $r->jabatan }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -221,6 +200,7 @@
                 </div>
             </div>
         </div>
+    </div>
     @endsection
 
     @push('scripts')

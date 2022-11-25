@@ -359,7 +359,7 @@ class KepalaUnitController extends Controller
                 ->addColumn('action', function ($data) {
                     // $delete_url = route('kepalaunit.destroyCuti', $data->id_cuti);
                     $edit_dd = "<div class='d-block text-center'>
-                        <a data-bs-toggle='modal' class='btn btn-success align-items-center editAK fa fa-pencil' data-id='$data->id_cuti' data-original-title='Edit' data-bs-target='#ProsesCuti'></a>
+                        <a data-bs-toggle='modal' class='btn btn-success btn-xs align-items-center editAK fa fa-pencil' data-id='$data->id_cuti' data-original-title='Edit' data-bs-target='#ProsesCuti'></a>
                         </div>";
 
                     // Debugbar::info($data);
@@ -418,13 +418,13 @@ class KepalaUnitController extends Controller
     {
         //$data = DB::select("SELECT * from cuti inner join unit u on u.id =cuti.unit inner join jenis_cuti jc on jc.id_jeniscuti = cuti.jenis_cuti");
         $data = IzinKerja::select('*')
+            ->join('jenis_izin', 'jenis_izin.id_izin', '=','izin_kerja.jenis_izin')
             ->where('unit', auth()->user()->unit)->get();
-
-
-        $jenisizin = JenisIzin::all();
+        //$jenisizin = JenisIzin::all();
 
         //dd($data);
         //Debugbar::info($data);
+        
 
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -432,7 +432,7 @@ class KepalaUnitController extends Controller
                 ->addColumn('action', function ($data) {
                     // $delete_url = route('kepalaunit.destroyCuti', $data->id_cuti);
                     $edit_dd = "<div class='d-block text-center'>
-                        <a data-bs-toggle='modal' class='btn btn-success align-items-center editAK fa fa-pencil' data-id='$data->id_izinkerja' data-original-title='Edit' data-bs-target='#ProsesIzin'></a>
+                        <a data-bs-toggle='modal' class='btn btn-success btn-xs align-items-center editAK fa fa-pencil' data-id='$data->id_izinkerja' data-original-title='Edit' data-bs-target='#ProsesIzin'></a>
                         </div>";
 
                     //Debugbar::info($data);
@@ -478,8 +478,26 @@ class KepalaUnitController extends Controller
     public function index_approvalIzinTelat(Request $request)
     {
         //$data = DB::select("SELECT * from cuti inner join unit u on u.id =cuti.unit inner join jenis_cuti jc on jc.id_jeniscuti = cuti.jenis_cuti");
-        $data = Izin::where('unit', auth()->user()->unit)->get();
+        $data = Izin::where('unit', auth()->user()->unit)
+        ->get();
 
+        // dd($data);
+
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('status', function ($row) {
+                    if ($row->approval == 1) {
+                        $apprv = '<span class="badge badge-success">Disetujui Kepala Unit</span>';
+                    } else {
+                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                    }
+                    return $apprv;
+                })
+                ->rawColumns(['status'])
+                ->make(true);
+        }
+        
         return view('kepalaunit.ku_index_approval_izin_telat', compact('data'));
     }
 

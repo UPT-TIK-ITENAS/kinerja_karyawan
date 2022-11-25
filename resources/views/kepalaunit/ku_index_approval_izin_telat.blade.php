@@ -4,10 +4,10 @@
         <div class="page-header">
             <div class="row">
                 <div class="col-lg-6">
-                    <h3>Data Pengajuan Izin</h3>
+                    <h3>Data Pengajuan Izin Pehari</h3>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">Pengajuan</li>
-                        <li class="breadcrumb-item active">Izin</li>
+                        <li class="breadcrumb-item active">Izin Perhari</li>
                     </ol>
                 </div>
             </div>
@@ -19,47 +19,65 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-
-                    </div>
-                    <div class="row">
-                        <div class="table-responsive">
-                            <table class="dataTable" id="table-izin">
-                                <thead>
-                                    <tr align="center">
-                                        <th width="5%">No.</th>
-                                        <th>Alasan</th>
-                                        <th>Jam Awal</th>
-                                        <th>Jam Akhir</th>
-                                        <th>Tanggal</th>
-                                        <th>Status</th>
-                                        {{-- <th>Approval</th> --}}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($data as $no => $r)
-                                        <tr>
-                                            <td align="center">{{ $no + 1 }}</td>
-                                            <td>{{ $r->alasan }}</td>
-                                            <td align="center">{{ $r->jam_awal }}</td>
-                                            <td align="center">{{ $r->jam_akhir }}</td>
-                                            <td align="center">{{ $r->tanggal }}</td>
-                                            <td>
-                                                <div class='d-block text-center'>
-                                                    <a href='#' data-toggle='tooltip'
-                                                        class='btn btn btn-warning btn-xs align-items-center tambahIzin'
-                                                        data-id='{{ $r->id_izin }}' title='Edit Izin'>
-                                                        <i class='icofont icofont-edit-alt'></i>
-                                                    </a>
-                                                </div>
-
-                                            </td>
-                                            {{-- <td align="center">{{   $r->approval }}</td> --}}
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table class="dataTable" id="table-izin">
+                                    <thead>
+                                        <tr align="center">
+                                            <th width="5%">No.</th>
+                                            <th>Nama</th>
+                                            <th>Alasan</th>
+                                            <th>Jam Awal</th>
+                                            <th>Jam Akhir</th>
+                                            <th>Tanggal</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($data as $no => $r)
+                                            <tr>
+                                                <td align="center">{{ $no + 1 }}</td>
+                                                <td>{{ $r->name }}</td>
+                                                <td>{{ $r->alasan }}</td>
+                                                <td align="center">{{ $r->jam_awal }}</td>
+                                                <td align="center">{{ $r->jam_akhir }}</td>
+                                                <td align="center">{{ $r->tanggal }}</td>
+                                                @if($r->approval == 1)
+                                                    <td>
+                                                        <div class='d-block text-center'>
+                                                            <a class='badge badge-success align-items-center' 
+                                                                > Disetujui Kepala Unit
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                @else
+                                                    <td>
+                                                        <div class='d-block text-center'>
+                                                            <a class='badge badge-warning align-items-center' 
+                                                                > Menunggu Persetujuan
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                @endif
+                                                <td>
+                                                    <div class='d-block text-center'>
+                                                        <a href='#' data-toggle='tooltip'
+                                                            class='btn btn btn-warning btn-xs align-items-center tambahIzin'
+                                                            data-id='{{ $r->id_izin }}' title='Edit Izin'>
+                                                            <i class='icofont icofont-edit-alt'></i>
+                                                        </a>
+                                                    </div>
+    
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -90,28 +108,28 @@
                                 <input type="hidden" id="id_attendance" name="id_attendance">
                                 <input type="hidden" id="nopeg" name="nopeg">
                                 <span class="form-label" for="alasan">Alasan</span>
-                                <textarea name="alasan" id="alasan" name="alasan" class="form-control" required></textarea>
+                                <textarea name="alasan" id="alasan" name="alasan" class="form-control" required readonly></textarea>
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                         </div>
                         <div class="row g-2 mb-3">
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_awal">Tanggal Awal</span>
-                                <input class="form-control" id="jam_awal" name="jam_awal" type="text" required="">
+                                <input class="form-control" id="jam_awal" name="jam_awal" type="text" required="" readonly>
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_akhir">Tanggal Akhir</span>
-                                <input class="form-control" id="jam_akhir" name="jam_akhir" type="text" required="">
+                                <input class="form-control" id="jam_akhir" name="jam_akhir" type="text" required="" readonly>
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="tanggal">Tanggal</span>
-                                <input class="form-control" id="tanggal" name="tanggal" type="date" required="">
+                                <input class="form-control" id="tanggal" name="tanggal" type="date" required="" readonly>
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                         </div>
-                        <div class="mb-3">
+                        <!-- <div class="mb-3">
                             <div class="form-check">
                                 <div class="checkbox p-0">
                                     <div class="checkbox checkbox-dark">
@@ -122,11 +140,11 @@
                                     <div class="invalid-feedback">Wajib di centang !</div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
-                            dihitung</span>
+                        <!-- <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
+                            dihitung</span> -->
                         <button class="btn btn-primary" type="submit" id="btnSubmit">Setuju</button>
                     </div>
                 </form>
@@ -177,5 +195,7 @@
                 console.log('data :', data);
             })
         });
+
+        
     </script>
 @endsection

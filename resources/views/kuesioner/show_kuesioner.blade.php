@@ -1,293 +1,247 @@
 @extends('layouts.app')
+
 @section('content')
     <div class="container-fluid">
-        <div class="page-header">
-            <div class="row">
-                <div class="col-lg-6">
-                    <h3>Kuesioner Pegawai</h3>
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">Data Kuesioner Kinerja</li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container-fluid">
         <div class="row">
-            <!-- Zero Configuration  Starts-->
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        {{-- <a href="{{ route('pejabat.createcuti') }}" class="btn btn-primary"><i
-                                class="icofont icofont-plus-square"></i> Tambah</a> --}}
-                        <div class="table-responsive">
-                            <table class="dataTable" id="table-cuti">
-                                <thead>
-                                    <th>No.</th>
-                                    <th>Nama</th>
-                                    <th>NIP</th>
-                                    {{-- <th>Unit</th> --}}
-                                    <th>Jenis Cuti</th>
-                                    <th>Tanggal Awal Cuti</th>
-                                    <th>Tanggal Akhir Cuti</th>
-                                    <th>Total Hari Cuti</th>
-                                    {{-- <th>Keterangan</th> --}}
-                                    <th>Aksi</th>
-                                    <th>Status</th>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endsection
-
-
-@section('scripts')
-    <div class="modal fade bd-example-modal-lg" id="ProsesCuti" aria-labelledby="myLargeModalLabel" aria-modal="true"
-        role="dialog">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myLargeModalLabel">Form Pengajuan Cuti</h4>
-                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
-                        data-bs-original-title="" title=""></button>
-                </div>
-                <form class="needs-validation" novalidate="" action="{{ route('pejabat.approveCuti') }}" method="POST">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="row g-1 mb-3">
-                            <div class="col-md-12">
-                                <span class="form-label" for="jenis_cuti">Jenis Cuti</span>
-                                <input class="form-control" id="jenis_cuti" name="jenis_cuti" type="text" required=""
-                                    disabled>
-                                <input type="hidden" id="lama_cuti">
-                            </div>
-                        </div>
-
-                        <input type="hidden" id="id_cuti" name="id_cuti">
-                        <div class="col-md-12">
-                            <span class="form-label" for="approval">Persetujuan</span>
-                            <select class="form-control col-sm-12" onchange="yesnoCheck(this);" id="approval"
-                                name="approval" required="">
-                                <option selected="" disabled="" value="">-- Pilih ---</option>
-                                <option value="2">Disetujui</option>
-                                <option value="3">Ditolak</option>
-                            </select>
-                            <input type="hidden" id="lama_cuti">
-                            <div class="invalid-feedback">Pilih salah satu !</div>
-                        </div>
-                        <div class="col-md-12" id="ifYes" style="display: none;">
-                            <span class="form-label" for="alasan_tolak">Alasan Tolak</span>
-                            <textarea name="alasan_tolak" id="alasan_tolak" name="alasan_tolak" class="form-control col-12" required=""></textarea>
-                        </div>
-                        <div class="row g-2 mb-3">
-                            <div class="col-md-4">
-                                <span class="form-label" for="tgl_awal_cuti">Tanggal Awal</span>
-                                <input class="form-control" id="tgl_awal_cuti" name="tgl_awal_cuti" type="date"
-                                    required="" disabled>
-                            </div>
-                            <div class="col-md-4">
-                                <span class="form-label" for="tgl_akhir_cuti">Tanggal Akhir</span>
-                                <input class="form-control" id="tgl_akhir_cuti" name="tgl_akhir_cuti" type="date"
-                                    required="" disabled>
-                            </div>
-                            <div class="col-md-4">
-                                <span class="form-label" for="total_cuti">Total Hari</span>
-                                <input class="form-control" id="total_cuti" name="total_cuti" type="number" required=""
-                                    disabled>
-                            </div>
-                        </div>
-                        <div class="row g-2 mb-3">
-                            <div class="col-md-6">
-                                <span class="form-label" for="alamat">Alamat</span>
-                                <textarea name="alamat" id="alamat" name="alamat" class="form-control" required="" disabled></textarea>
-                            </div>
-                            <div class="col-md-6">
-                                <span class="form-label" for="no_hp">No HP</span>
-                                <div class="input-group">
-                                    <span class="input-group-text" id="no_hp_input">+62</span>
-                                    <input class="form-control" id="no_hp" name="no_hp" type="text"
-                                        aria-describedby="no_hp_input" required="" disabled>
+                        <h1 class="app-page-title">Kuesioner Akademik
+                            {{ substr_replace($kuesioner->semester, '/', 4, 0) }}</h1>
+                        <div class="app-card alert shadow-sm mb-4 border-left-decoration">
+                            <div class="inner">
+                                <div class="app-card-body p-3 p-lg-4">
+                                    <h3 class="mb-3">Instrumen Penilaian Efektivitas Proses Pembelajaran
+                                        {{ substr_replace($kuesioner->semester, '/', 4, 0) }}
+                                    </h3>
+                                    <div class="row gx-5 gy-3">
+                                        <div class="col-12">
+                                            <div>Kuesioner ini menanyakan pendapat anda mengenai Pembelajaran dan Suasana
+                                                Akademik
+                                                selama
+                                                semester ini. Pengumpulan data menggunakan kuesioner ini bertujuan mengukur
+                                                keefektifan
+                                                kegiatan belajar yang telah dilakukan. Berikan tanggapan berdasarkan
+                                                pendapat
+                                                sendiri
+                                                dan bukan pandangan/pendapat orang lain. Kami mengucapkan banyak terima
+                                                kasih
+                                                atas
+                                                partisipasinya dalam pengisian kuesioner ini.
+                                            </div>
+                                        </div>
+                                        <!--//col-->
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col col-md-3">
+                                            <label class=" form-control-label" style="color:green; font-weight:bold">
+                                                Petunjuk Pengisian
+                                            </label>
+                                        </div>
+                                        <div class="col-12 col-md-9">
+                                            <p class="form-control-static" style="color:green">Kuesioner ini terdiri
+                                                dari {{ count($kuesioner->pertanyaan) }} butir
+                                                pertanyaan dengan bentuk jawaban pilihan ganda yang terdiri dari 4
+                                                (empat) pilihan jawaban.
+                                                Anda dapat memilih satu pilihan sesuai pendapat pribadi.</p>
+                                            <div class="form-check">
+                                                <div class="radio">
+                                                    <label for="radio3" class="form-check-label " style="color:green">
+                                                        <input type="radio" id="radio4" name="radios" value="option4"
+                                                            class="form-check-input" disabled="">Sangat
+                                                        Baik (Sangat Puas)
+                                                    </label>
+                                                    <div class="radio">
+                                                        <label for="radio3" class="form-check-label " style="color:green">
+                                                            <input type="radio" id="radio3" name="radios"
+                                                                value="option3" class="form-check-input" checked=""
+                                                                disabled="">Baik
+                                                            (Puas)
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label for="radio1" class="form-check-label " style="color:green">
+                                                            <input type="radio" id="radio1" name="radios"
+                                                                value="option1" class="form-check-input"
+                                                                disabled="">Kurang
+                                                            (Tidak Puas)
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer justify-content-between">
-                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
-                            dihitung</span>
-                        <button class="btn btn-primary" type="submit" id="btnSubmit">Setuju</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row align-items-center gx-3">
+                                <div class="col-auto">
+                                    <div class="app-icon-holder">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-receipt"
+                                            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27zm.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0l-.509-.51z">
+                                            </path>
+                                            <path fill-rule="evenodd"
+                                                d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <h4 class="app-card-title">Pertanyaan</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form class="settings-form" action="{{ route('kepalaunit.storeKuesioner', $kuesioner->id) }}"
+                            method="POST">
+                            @csrf
+                            <div class="app-card-body py-2 px-4">
+                                <div class="row g-2 mb-3">
+                                    <div class="row g-1 mb-3">
+
+                                        {{-- <div class="col-md-12">
+                                            <span class="form-label" for="nama_pegawai">nama pegawai</span>
+                                            <select
+                                                class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                                id="nama_pegawai" name="nama_pegawai" required="">
+                                                <option selected="" disabled="" value="">-- Pilih ---</option>
+                                                @foreach ($data['User'] as $r)
+                                                    <option value="{{ $r->id }}">
+                                                        {{ $r->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <div class="invalid-feedback">Pilih salah satu !</div>
+                                        </div> --}}
+
+                                        <div class="col-md-10">
+                                            <span class="form-label" for="nama_penilai">Nama Penilai</span>
+                                            <div class="input-group">
+                                                @foreach ($data['Jabatan'] as $j)
+                                                    <input class="form-control" name="nama_penilai" id="nama_penilai"
+                                                        required readonly
+                                                        value="{{ $j->nopeg }}-{{ $j->nama }}-{{ $j->jabatan }}">
+                                                    </input>
+                                                @endforeach
+                                                <div class="invalid-feedback">Wajib Diisi !</div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    {{-- 
+                                    <div class="col-md-6">
+                                        <span class="form-label" for="unit">unit</span>
+                                        <div class="input-group">
+                                            @foreach ($data['User'] as $u)
+                                                <input class="form-control" name="unit" id="unit" required disabled
+                                                    value="{{ $u->nama_unit }}">
+                                                </input>
+                                            @endforeach
+                                            <div class="invalid-feedback">Wajib Diisi !</div>
+                                        </div>
+                                    </div> --}}
+
+                                    <div class="col-md-12">
+                                        <span class="form-label" for="nama_pegawai">Nama Pegawai</span>
+                                        <select
+                                            class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                            id="nama_pegawai" name="nama_pegawai" required="">
+                                            <option selected="" disabled="" value="">-- Pilih ---</option>
+                                            @foreach ($data['User'] as $r)
+                                                <option
+                                                    value="{{ $r->nopeg }}-{{ $r->name }}-{{ $r->nama_unit }}-{{ $r->jabatan }}">
+                                                    {{ $r->nopeg }}-{{ $r->name }}-{{ $r->nama_unit }}-{{ $r->jabatan }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    {{-- <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <span class="form-label" for="jabatan">Jabatan</span>
+                                            <input class="form-control" id="jabatan" name="jabatan" readonly
+                                                required="">
+                                            <div class="invalid-feedback">Wajib Diisi !</div>
+                                        </div>
+                                    </div> --}}
+                                </div>
+                            </div>
+                            <div class="app-card-body py-2 px-4">
+                                @foreach ($kuesioner->pertanyaan as $key => $pertanyaan)
+                                    <div class="row mt-3">
+                                        <div class="col col-md-3">
+                                            <label class=" form-control-label" style="font-weight:bold">
+                                                Pertanyaan {{ $key + 1 }}
+                                            </label>
+                                        </div>
+                                        <div class="col-12 col-md-9">
+                                            <p class="form-control-static" style="font-weight:bold">
+                                                {{ $pertanyaan->pertanyaan }}
+                                            </p>
+                                            @foreach ($pertanyaan->jawaban as $jawaban)
+                                                <div class="form-check">
+                                                    <label for="jawaban{{ $jawaban->id }}" class="form-check-label"
+                                                        style="font-weight:normal">
+                                                        <input type="radio" id="jawaban{{ $jawaban->id }}"
+                                                            class="form-check-input"
+                                                            name="responden[{{ $key }}][jawaban_kinerja_id]"
+                                                            value="{{ $jawaban->id }}"
+                                                            {{ old('responden.' . $key . '.jawaban_kinerja_id') == $jawaban->id ? 'checked' : '' }}
+                                                            required>{{ $jawaban->jawaban }}
+                                                    </label>
+                                                    <input type="hidden"
+                                                        name="responden[{{ $key }}][pertanyaan_kinerja_id]"
+                                                        value="{{ $pertanyaan->id }}">
+                                                </div>
+
+                                                <div>
+                                                    <small class="text-danger">
+                                                        {{ $errors->first('responden.' . $key . '.jawaban_kinerja_id') }}
+                                                    </small>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <div class="app-card-footer p-4 mt-auto">
+                                <button type="submit" class="btn btn-primary">Submit Kuesioner</button>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
-    @parent
+    @endsection
 
-@section('scripts')
-    @parent
-    <script>
-        // $('body').on('click', '.editAK', function() {
-        //     id = $(this).data('id');
-        //     console.log(id)
-        //     $('#approval').prop('disabled', false);
-        //     $('#alasan_tolak').prop('disabled', false);
-        //     $('#approval').val(null);
-        //     $('#btnSubmit').prop('disabled', false);
-        //     console.log("approval", $("#approval"))
-        //     $.get("{{ url('/pejabat/approval/editCuti') }}/" + id, function(data, jeniscuti) {
-        //         if (data.approval != 0) {
-        //             $('#approval').prop('disabled', true);
-        //             $('#alasan_tolak').prop('disabled', true);
-        //         }
-        //         if (data.approval == 2) {
-        //             document.getElementById("ifYes").style.display = "block";
-        //             $('#btnSubmit').prop('disabled', true);
-        //         }
-        //         if (data.approval == 1) {
-        //             document.getElementById("ifYes").style.display = "none";
-        //             $('#btnSubmit').prop('disabled', true);
-        //         }
-        //         $('#approval').val(data.approval);
-        //         $('#ModalTitle').html("Edit Jenis Kegiatan");
-        //         $('#ProsesCuti').modal('show');
-        //         $("#token").val($("meta[name=csrf-token]").attr("content"));
-        //         $('#id_cuti').val(data.id_cuti);
-        //         $('#alasan_tolak').val(data.alasan_tolak);
-        //         $('#jenis_cuti').val(data.jenis_cuti);
-        //         $('#tgl_awal_cuti').val(data.tgl_awal_cuti);
-        //         $('#tgl_akhir_cuti').val(data.tgl_akhir_cuti);
-        //         $('#total_cuti').val(data.total_cuti);
-        //         $('#alamat').val(data.alamat);
-        //         $('#no_hp').val(data.no_hp);
-        //         console.log(data);
-        //         //console.log(jeniscuti);
-        //     })
-        // });
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                // $("#select-matkul").change(function(e) {
+                //     e.preventDefault();
+                //     const values = e.target.value;
+                //     $('#nopeg').val(objectArray.nopeg[0]);
+                //     $("#nama_pegawai").val(objectArray.nama_pegawai[1])
+                //     $("#unit").val(objectArray.unit[2])
+                //     $("#nopeg_penilai").val(objectArray.nopeg_penilai[0])
+                //     $("#nama_penilai").val(objectArray.nama_penilai[1])
+                //     $("#jabatan_penilai").val(objectArray.jabatan_penilai[2])
+                // });
 
-        $('body').on('click', '.editAK', function() {
-            id = $(this).data('id');
-            console.log(id)
-            $('#approval').prop('disabled', false);
-            $('#alasan_tolak').prop('disabled', false);
-            $('#approval').val(null);
-            $('#btnSubmit').prop('disabled', false);
-            console.log("approval", $("#approval"))
-            $.get("{{ url('/kepalaunit/approval/editCuti') }}/" + id, function(data, jeniscuti) {
-                if (data.approval == 2) {
-                    document.getElementById("ifYes").style.display = "block";
-                    $('#btnSubmit').prop('disabled', true);
-                    $('#approval').prop('disabled', true);
-                    $('#alasan_tolak').prop('disabled', true);
-                }
-                if (data.approval == 1) {
-                    document.getElementById("ifYes").style.display = "none";
-                    $('#btnSubmit').prop('disabled', false);
-                    $('#approval').prop('disabled', false);
-                    $('#alasan_tolak').prop('disabled', false);
-                }
-                $('#approval').val(data.approval);
-                $('#ModalTitle').html("Edit Jenis Kegiatan");
-                $('#ProsesCuti').modal('show');
-                $("#token").val($("meta[name=csrf-token]").attr("content"));
-                $('#id_cuti').val(data.id_cuti);
-                $('#alasan_tolak').val(data.alasan_tolak);
-                $('#jenis_cuti').val(data.jenis_cuti);
-                $('#tgl_awal_cuti').val(data.tgl_awal_cuti);
-                $('#tgl_akhir_cuti').val(data.tgl_akhir_cuti);
-                $('#total_cuti').val(data.total_cuti);
-                $('#alamat').val(data.alamat);
-                $('#no_hp').val(data.no_hp);
-                console.log(data);
-                //console.log(jeniscuti);
-            })
-        });
-
-        $().ready(function() {
-            let table = $('#table-cuti').DataTable({
-                fixedHeader: true,
-                pageLength: 10,
-                responsive: true,
-                processing: true,
-                autoWidth: false,
-                serverSide: true,
-                columnDefs: [{
-                    targets: 1,
-                    width: "200px !important",
-                }, ],
-                ajax: "{{ route('pejabat.approval') }}",
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        className: 'text-center',
-                        orderable: false,
-                        searchable: false,
-                    },
-                    {
-                        data: 'name',
-                        name: 'name'
-                    },
-                    {
-                        data: 'nopeg',
-                        name: 'nopeg'
-                    },
-                    // {
-                    //     data: 'nama_unit',
-                    //     name: 'nama_unit'
-                    // },
-                    {
-                        data: 'nama_cuti',
-                        name: 'nama_cuti'
-                    },
-                    {
-                        data: 'tgl_awal_cuti',
-                        name: 'tgl_awal_cuti'
-                    },
-                    {
-                        data: 'tgl_akhir_cuti',
-                        name: 'tgl_akhir_cuti'
-                    },
-                    {
-                        data: 'total_cuti',
-                        name: 'total_cuti'
-                    },
-
-                    {
-                        data: 'action',
-                        name: 'action'
-                    },
-
-                    {
-                        data: 'status',
-                        name: 'status'
-                    },
-
-                ],
-                // dom: 'Bfrtip',
-                // buttons: [
-                //     'copy', 'csv', 'print'
-                // ]
             });
-
-            $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
-                console.log(message);
-            };
-
-        });
-
-        function yesnoCheck(that) {
-            if (that.value == "3") {
-                document.getElementById("ifYes").style.display = "block";
-                $('#alasan_tolak').prop('required', true);
-            } else {
-                document.getElementById("ifYes").style.display = "none";
-                $('#alasan_tolak').prop('required', false);
-            }
-        }
-    </script>
-@endsection
+        </script>
+    @endpush
