@@ -78,14 +78,14 @@ class BiometricController extends Controller
                                             'hari' => $day,
                                             'jam_masuk' => $datetime,
                                         ]);
-                                    } else if ($time >= '12:45:00' && $time < '16:59:00') {
+                                    } else if ($time >= '12:45:00' && $time < '15:00:00') {
                                         $insert_att = DB::table('attendance')->insert([
                                             'nip' => $employee_id,
                                             'tanggal' => $date,
                                             'hari' => $day,
                                             'jam_siang' => $datetime,
                                         ]);
-                                    } else if ($time >= '16:59:00' && $time <= '23:59:00') {
+                                    } else if ($time >= '15:00:01' && $time <= '23:59:00') {
                                         $insert_att = DB::table('attendance')->insert([
                                             'nip' => $employee_id,
                                             'tanggal' => $date,
@@ -98,11 +98,11 @@ class BiometricController extends Controller
                                         $upd_att = DB::table('attendance')->where('nip', $employee_id)->where('tanggal', $date)->update([
                                             'jam_masuk' => $datetime,
                                         ]);
-                                    } else if ($time >= '12:45:00' && $time < '16:59:00') {
+                                    } else if ($time >= '12:45:00' && $time < '15:00:00') {
                                         $upd_att = DB::table('attendance')->where('nip', $employee_id)->where('tanggal', $date)->update([
                                             'jam_siang' => $datetime,
                                         ]);
-                                    } else if ($time >= '16:59:00' && $time <= '23:59:00') {
+                                    } else if ($time >= '15:00:01' && $time <= '23:59:00') {
                                         $upd_att = DB::table('attendance')->where('nip', $employee_id)->where('tanggal', $date)->update([
                                             'jam_pulang' => $datetime,
                                         ]);
