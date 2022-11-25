@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="container-fluid">
-        <hr>
+        {{-- <hr>
         <h6>Rekap untuk bulan {{ \Carbon\Carbon::parse(date('Y-m-d'))->isoFormat('MMMM Y') }}</h6>
         <div class="row">
             <!-- Zero Configuration  Starts-->
@@ -63,6 +63,6 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 @endsection

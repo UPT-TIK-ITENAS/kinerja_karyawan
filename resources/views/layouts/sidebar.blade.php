@@ -160,7 +160,7 @@
                         </div>
                     </li>
 
-                    <li class="dropdown">
+                    {{-- <li class="dropdown">
                         <a class="nav-link menu-title @if (request()->routeIs('kepalaunit.datapresensi') || request()->routeIs('kepalaunit.datarekapitulasi')) active @endif"><i
                                 data-feather="book-open"></i><span>Data
                                 Kehadiran</span>
@@ -178,7 +178,7 @@
                                     Rekapitulasi</a>
                             </li>
                         </ul>
-                    </li>
+                    </li> --}}
 
                     <li class="dropdown">
                         <a class="nav-link menu-title @if (request()->routeIs('kepalaunit.izin') ||
@@ -195,17 +195,20 @@
                                 request()->routeIs('kepalaunit.store_cuti')) block
                         @else
                             none @endif;">
-                            <li><a href="{{ route('kepalaunit.izin') }}"
+                            {{-- <li><a href="{{ route('kepalaunit.izin') }}"
                                     class="{{ routeActive('kepalaunit.izin') }}">Izin</a>
                             </li>
                             <li><a href="{{ route('kepalaunit.cuti') }}"
                                     class="{{ routeActive('kepalaunit.cuti') }}">Cuti</a>
-                            </li>
+                            </li> --}}
                             <li><a href="{{ route('kepalaunit.approval') }}"
-                                    class="{{ routeActive('kepalaunit.approval') }}">Approval</a>
+                                    class="{{ routeActive('kepalaunit.approval') }}">Approval Cuti</a>
                             </li>
                             <li><a href="{{ route('kepalaunit.approvalIzin') }}"
                                     class="{{ routeActive('kepalaunit.approvalIzin') }}">Approval Izin</a>
+                            </li>
+                            <li><a href="{{ route('kepalaunit.approvalIzinTelat') }}"
+                                    class="{{ routeActive('kepalaunit.approvalIzinTelat') }}">Approval Izin</a>
                             </li>
                         </ul>
                     </li>

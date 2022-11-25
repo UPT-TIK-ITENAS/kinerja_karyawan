@@ -11,7 +11,7 @@
                         <div class="app-card alert shadow-sm mb-4 border-left-decoration">
                             <div class="inner">
                                 <div class="app-card-body p-3 p-lg-4">
-                                    <h3 class="mb-3">Instrumen Penilaian Efektivitas Proses Pembelajaran
+                                    {{-- <h3 class="mb-3">Instrumen Penilaian Efektivitas Proses Pembelajaran
                                         {{ substr_replace($kuesioner->semester, '/', 4, 0) }}
                                     </h3>
                                     <div class="row gx-5 gy-3">
@@ -31,7 +31,7 @@
                                             </div>
                                         </div>
                                         <!--//col-->
-                                    </div>
+                                    </div> --}}
                                     <div class="row mt-3">
                                         <div class="col col-md-3">
                                             <label class=" form-control-label" style="color:green; font-weight:bold">
@@ -41,8 +41,8 @@
                                         <div class="col-12 col-md-9">
                                             <p class="form-control-static" style="color:green">Kuesioner ini terdiri
                                                 dari {{ count($kuesioner->pertanyaan) }} butir
-                                                pertanyaan dengan bentuk jawaban pilihan ganda yang terdiri dari 4
-                                                (empat) pilihan jawaban.
+                                                pertanyaan dengan bentuk jawaban pilihan ganda yang terdiri dari 3
+                                                (tiga) pilihan jawaban.
                                                 Anda dapat memilih satu pilihan sesuai pendapat pribadi.</p>
                                             <div class="form-check">
                                                 <div class="radio">
@@ -221,27 +221,28 @@
                 </div>
             </div>
         </div>
-    @endsection
+    </div>
+@endsection
 
-    @push('scripts')
-        <script>
-            $(document).ready(function() {
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                // $("#select-matkul").change(function(e) {
-                //     e.preventDefault();
-                //     const values = e.target.value;
-                //     $('#nopeg').val(objectArray.nopeg[0]);
-                //     $("#nama_pegawai").val(objectArray.nama_pegawai[1])
-                //     $("#unit").val(objectArray.unit[2])
-                //     $("#nopeg_penilai").val(objectArray.nopeg_penilai[0])
-                //     $("#nama_penilai").val(objectArray.nama_penilai[1])
-                //     $("#jabatan_penilai").val(objectArray.jabatan_penilai[2])
-                // });
-
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
             });
-        </script>
-    @endpush
+            // $("#select-matkul").change(function(e) {
+            //     e.preventDefault();
+            //     const values = e.target.value;
+            //     $('#nopeg').val(objectArray.nopeg[0]);
+            //     $("#nama_pegawai").val(objectArray.nama_pegawai[1])
+            //     $("#unit").val(objectArray.unit[2])
+            //     $("#nopeg_penilai").val(objectArray.nopeg_penilai[0])
+            //     $("#nama_penilai").val(objectArray.nama_penilai[1])
+            //     $("#jabatan_penilai").val(objectArray.jabatan_penilai[2])
+            // });
+
+        });
+    </script>
+@endpush

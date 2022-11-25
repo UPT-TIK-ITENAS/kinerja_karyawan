@@ -17,7 +17,7 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <h3 class="row mb-2">Instrumen Penilaian Efektivitas Proses Pembelajaran</h3>
+                        {{-- <h3 class="row mb-2">Instrumen Penilaian Efektivitas Proses Pembelajaran</h3>
                         <div class="row gx-5 gy-3">
                             <div class="col-12">
                                 <div>
@@ -29,7 +29,7 @@
                                 </div>
                             </div>
                             <!--//col-->
-                        </div>
+                        </div> --}}
                         <div class="row mt-1">
                             <div class="col col-md-3">
                                 <label class="mt-1 fs-4 fw-bold form-control-label">
