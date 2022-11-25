@@ -111,7 +111,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/updatemesin', [MesinController::class, 'updatemesin'])->name('admin.updatemesin');
         Route::post('/createmesin', [MesinController::class, 'createmesin'])->name('admin.createmesin');
         Route::get('/destroymesin/{id}', [MesinController::class, 'destroymesin'])->name('admin.destroymesin');
-        
+
         Route::get('/admHasilKuesioner', [KuesionerController::class, 'admHasilKuesioner'])->name('admin.admHasilKuesioner');
         Route::get('/pertanyaanPeriode', [KuesionerController::class, 'pertanyaanPeriode'])->name('admin.pertanyaanPeriode');
         Route::get('/editPeriode/{id}', [KuesionerController::class, 'editPeriode'])->name('admin.editPeriode');
@@ -203,14 +203,25 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/approval/destroyIzin/{id}', [KepalaUnitController::class, 'batal_izin'])->name('destroyIzin');
         Route::post('/approval/approveIzin', [KepalaUnitController::class, 'approveIzin'])->name('approveIzin');
 
+        Route::get('/approval/indexIzinTelat', [KepalaUnitController::class, 'index_approvalIzinTelat'])->name('approvalIzinTelat');
+        Route::get('/approval/editIzinTelat/{id}', [KepalaUnitController::class, 'editIzinTelat'])->name('editIzinTelat');
+        Route::post('/approval/approveIzinTelat', [KepalaUnitController::class, 'approveIzinTelat'])->name('approveIzinTelat');
 
         Route::get('createizinkehadiran/{id}', [KepalaUnitController::class, 'createizinkehadiran'])->name('createizinkehadiran');
         Route::post('storeizinkehadiran', [KepalaUnitController::class, 'storeizinkehadiran'])->name('storeizinkehadiran');
         Route::get('printizin/{id}', [KepalaUnitController::class, 'printizin'])->name('printizin');
 
+        Route::get('/pertanyaanPeriode', [KuesionerController::class, 'pertanyaanPeriode'])->name('pertanyaanPeriode');
+        Route::get('/editPeriode/{id}', [KuesionerController::class, 'editPeriode'])->name('editPeriode');
+        Route::post('/updatePeriode', [KuesionerController::class, 'updatePeriode'])->name('updatePeriode');
+        Route::post('/createPeriode', [KuesionerController::class, 'createPeriode'])->name('createPeriode');
+        Route::get('/destroyPeriode/{id}', [KuesionerController::class, 'destroyPeriode'])->name('destroyPeriode');
+
         Route::get('/kuesioner/index', [KuesionerController::class, 'indexKuesioner'])->name('indexKuesioner');
-        Route::get('/kuesioner/editKuesioner/{id}', [KuesionerController::class, 'showKuesioner'])->name('showKuesioner');
-        Route::post('/kuesioner/approveKuesioner', [KuesionerController::class, 'storeKuesioner'])->name('storeKuesioner');
+        Route::get('/kuesioner/kinerja/{id}', [KuesionerController::class, 'showKuesioner'])->name('showKuesioner');
+        Route::post('/kuesioner/approveKuesioner/{id}', [KuesionerController::class, 'storeKuesioner'])->name('storeKuesioner');
+        Route::get('/kuesioner/hasilKuesioner', [KuesionerController::class, 'index_penilaian'])->name('hasilKuesioner');
+
         // Route::get('/dataizin', [KepalaUnitController::class, 'dataizin'])->name('kepalaunit.dataizin');
         // Route::get('/editizin/{id_izinkerja}', [KepalaUnitController::class, 'editizin'])->name('kepalaunit.editizin');
         // Route::post('/updateizin', [KepalaUnitController::class, 'updateizin'])->name('kepalaunit.updateizin');
