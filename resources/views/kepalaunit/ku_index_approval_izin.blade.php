@@ -87,6 +87,7 @@
                             </div>
                         </div>
                     </div>
+                    {{-- <div></div> --}}
                     <div class="modal-footer justify-content-between">
                         <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
                             dihitung</span>
