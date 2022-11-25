@@ -176,7 +176,11 @@ class KaryawanController extends Controller
     public function index_datarekapitulasi()
     {
         // dd(DB::select("exec getTotalTelatPerBulan('" . auth()->user()->nopeg . "')"));
-        return view('karyawan.k_datarekapitulasi');
+        $data = DB::select('CALL getTotalTelatPerBulan(' . auth()->user()->nopeg . ')');
+        $data2 = DB::select('CALL getIzinSakit(' . auth()->user()->nopeg . ')');
+        $cuti = DB::Select('SELECT cuti.nopeg, cuti.jenis_cuti , MONTH(cuti.tgl_awal_cuti) AS bulan,  YEAR(cuti.tgl_awal_cuti) AS tahun, SUM(cuti.total_cuti) AS totalcuti
+        FROM cuti WHERE cuti.nopeg = ' . auth()->user()->nopeg . ' AND cuti.approval = 2 GROUP BY nopeg,bulan,tahun');
+        return view('karyawan.k_datarekapitulasi', compact('data', 'data2', 'cuti'));
     }
 
     public function listdatarekapitulasi(Request $request)
