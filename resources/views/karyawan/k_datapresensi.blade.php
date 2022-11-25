@@ -55,16 +55,16 @@
                             <table class="dataTable" id="table-kehadiran">
                                 <thead>
                                     <th>No.</th>
+                                    <th>Nama</th>
                                     <th>Hari</th>
-                                    <th>Awal Tugas</th>
-                                    <th>Akhir Tugas</th>
                                     <th>Jam Masuk</th>
                                     <th>Jam Siang</th>
                                     <th>Jam Keluar</th>
+                                    {{-- <th>Durasi</th> --}}
                                     <th>Telat Masuk</th>
                                     <th>Telat Siang</th>
+                                    <th>Note</th>
                                     <th>Aksi</th>
-                                    <th>File</th>
                                     <th>Status</th>
                                 </thead>
                                 <tbody>
