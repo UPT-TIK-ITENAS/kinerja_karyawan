@@ -311,19 +311,37 @@ class AdminController extends Controller
 
         $qrcode_filenamepeg = 'qr-' . $request->nip . '-' . $request->id . '.svg';
         QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nip . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
-        Izin::insert([
-            'id_attendance' => $request->id,
-            'nopeg' => $request->nip,
-            'name' => $request->name,
-            'unit' => $request->unit,
-            'tanggal' => $request->tanggall,
-            'jam_awal' => $request->jam_awal,
-            'jam_akhir' => $request->jam_akhir,
-            'alasan' => $request->alasan,
-            'validasi' => 1,
-            'approval' => 0,
-            'qrcode_peg' => $qrcode_filenamepeg,
-        ]);
+
+        if ($request->jenis == 2) {
+            Izin::insert([
+                'id_attendance' => $request->id,
+                'nopeg' => $request->nip,
+                'name' => $request->name,
+                'unit' => $request->unit,
+                'tanggal_izin' => date('Y-m-d H:i:s', strtotime($request->tanggal_izin)),
+                'alasan' => $request->alasan,
+                'validasi' => 1,
+                'approval' => 0,
+                'jenis' => $request->jenis,
+                'qrcode_peg' => $qrcode_filenamepeg,
+            ]);
+        } else {
+            Izin::insert([
+                'id_attendance' => $request->id,
+                'nopeg' => $request->nip,
+                'name' => $request->name,
+                'unit' => $request->unit,
+                'tanggal' => $request->tanggall,
+                'jam_awal' => $request->jam_awal,
+                'jam_akhir' => $request->jam_akhir,
+                'alasan' => $request->alasan,
+                'validasi' => 1,
+                'approval' => 0,
+                'jenis' => $request->jenis,
+                'qrcode_peg' => $qrcode_filenamepeg,
+            ]);
+        }
+
 
         return redirect()->route('admin.datapresensi')->with('success', 'Pengajuan Izin Berhasil!');
     }
@@ -334,8 +352,13 @@ class AdminController extends Controller
         $atasan = Jabatan::selectRaw('users.atasan,jabatan.*')->join('users', 'users.atasan', '=', 'jabatan.id')->where('users.atasan', $data->atasan)->first();
         // dd($data);
 
-        $pdf = PDF::loadview('admin.printizin', compact('data', 'atasan'))->setPaper('A5', 'landscape');
-        return $pdf->stream();
+        if ($data->jenis == 1) {
+            $pdf = PDF::loadview('admin.printizin', compact('data', 'atasan'))->setPaper('A5', 'landscape');
+            return $pdf->stream();
+        } else {
+            $pdf = PDF::loadview('admin.printizinsj', compact('data', 'atasan'))->setPaper('A5', 'landscape');
+            return $pdf->stream();
+        }
     }
     //END DATA PRESENSI
 

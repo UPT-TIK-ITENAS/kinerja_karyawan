@@ -142,18 +142,39 @@
 
                             </div>
                             <div class="col-md-4">
+                                <span class="form-label" for="jenis">Jenis</span>
+                                <select name="jenis" id="jenis" class="form-control">
+                                    <option value='' disabled selected>Pilih Status</option>
+                                    <option value="1">Izin</option>
+                                    <option value="2">Sidik Jari</option>
+                                </select>
+
+                            </div>
+                            <div class="col-md-4 jamawal">
                                 <span class="form-label" for="jam_masuk">Jam Keluar </span>
                                 <div class="input-group clockpicker" data-autoclose="true">
                                     <input class="form-control" type="text" id="jam_awal" name="jam_awal"><span
                                         class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <span class="form-label" for="jam_masuk">Jam Kembali </span>
+                            <div class="col-md-4 jamakhir">
+                                <span class="form-label" for="jam_akhir">Jam Kembali </span>
                                 <div class="input-group clockpicker" data-autoclose="true">
                                     <input class="form-control" type="text" id="jam_akhir" name="jam_akhir"><span
                                         class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                 </div>
+                            </div>
+                            <div class="col-md-4 jamizin">
+                                <span class="form-label" for="tanggal_izin">Tanggal</span>
+                                <div class="input-group date" id="dt-tanggal_izin" data-target-input="nearest">
+                                    <input class="form-control datetimepicker-input digits" type="text"
+                                        data-target="#dt-tanggal_izin" id="tanggal_izin" name="tanggal_izin">
+                                    <div class="input-group-text" data-target="#dt-tanggal_izin"
+                                        data-toggle="datetimepicker">
+                                        <i class="fa fa-calendar"> </i>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
 
                         </div>
@@ -280,11 +301,6 @@
 
 
     <script>
-        $(document).ready(function() {
-            $("#kt_datetimepicker_1").datepicker();
-        });
-        // $('#kt_datetimepicker_1').datetimepicker();
-
         $().ready(function() {
             let table = $('#table-admin').DataTable({
                 fixedHeader: true,
@@ -392,6 +408,25 @@
 
                 console.log(data);
             })
+        });
+
+        $(".jamawal").hide();
+        $(".jamakhir").hide();
+        $(".jamizin").hide();
+
+        $('#jenis').on('change', function(e) {
+            var optionSelected = $("option:selected", this);
+            var valueSelected = this.value;
+            console.log(valueSelected);
+            if (valueSelected == 1) {
+                $(".jamawal").show();
+                $(".jamakhir").show();
+                $(".jamizin").hide();
+            } else {
+                $(".jamizin").show();
+                $(".jamawal").hide();
+                $(".jamakhir").hide();
+            }
         });
     </script>
 @endsection
