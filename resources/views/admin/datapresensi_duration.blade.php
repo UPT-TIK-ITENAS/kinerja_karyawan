@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-header">
                         <p><b>Sinkronisasi Mesin Sidik Jari</b> </p>
-                        <form action="{{ route('admin.SyncAndInsertBiometric') }}" method="POST">
+                        <form action="{{ route('admin.SyncBiometricWithDuration') }}" method="POST">
                             @csrf
                             <div class="form-group row">
                                 <label class="col-sm-1 col-form-label">Tanggal</label>
@@ -194,7 +194,7 @@
                     width: "200px !important",
                 }, ],
                 ajax: {
-                    url: "{{ route('admin.listkaryawan') }}",
+                    url: "{{ route('admin.listkaryawan-duration') }}",
                     data: function(d) {
                         d.filter1 = $('#filter1').val() ? $('#filter1').val() : '<>';
                         d.filter2 = $('#filter2').val() ? $('#filter2').val() : '<>';

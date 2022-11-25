@@ -16,6 +16,8 @@ use App\Models\KuesionerKinerja;
 use App\Models\DetailRespondenKinerja;
 use App\Models\PertanyaanKinerja;
 use App\Models\RespondenKinerja;
+use App\Models\User;
+use App\Models\Unit;
 use App\Models\QR;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Yajra\DataTables\Facades\DataTables;
@@ -25,39 +27,74 @@ use Illuminate\Support\Facades\DB;
 
 class KuesionerController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function indexKuesioner()
     {
-        //$kuesioner = KuesionerKinerja::forMahasiswa()->orderBy('id', 'desc')->get();
-        $kuesioner = DB::table('kuisioner_periode')->get();
+        //$kuesioner = KuesionerKinerja::get();
+
+        //$kuesioner = DB::table('kuisioner_periode')->get();
+        $kuesioner = KuesionerKinerja::all();
+        //dd($kuesioner);
         return view('kuesioner.index_kuesioner', compact('kuesioner'));
     }
 
     public function showKuesioner($id)
     {
+        $auth = auth()->user()->unit;
+
+        // $user = User::where('unit', '=', $auth)->get();
+
+        $user = User::select('*')
+            ->join('unit', 'unit.id', '=', 'users.unit')
+            ->where('users.unit', auth()->user()->unit)
+            ->get();
+
+        //$unit = Unit::where('id', '=', $auth)->get();
+        $jabatan = Jabatan::select('jabatan.*', 'jabatan.jabatan as j')
+            ->join('users', 'jabatan.nopeg', '=', 'users.nopeg')
+            ->where('users.unit', auth()->user()->unit)
+            ->get();
+
+        // $jabatan = Jabatan::select('id', '=', $auth)
+        //     ->join('user as u', 'u.nopeg', '=', 'j.nopeg')
+        //     ->get();
+        $data = [
+            'User' => $user,
+            // 'Unit' => $unit,
+            'Jabatan' => $jabatan
+        ];
+        // dd($user);
         $kuesioner = KuesionerKinerja::with(['pertanyaan' => function ($query) {
             return $query->orderBy('nomor', 'asc');
         }, 'pertanyaan.jawaban'])->find($id);
-        return view('kuesioner.show_kuesioner', compact('kuesioner'));
+        return view('kuesioner.showKuesioner', compact('kuesioner', 'data'));
     }
 
     public function storeKuesioner(Request $request, $id)
     {
-        $request->validate([
-            'responden.*.jawaban_kinerja' => 'required',
-            'responden.*.pertanyaan_kuisioner_id' => 'required',
-            'nopeg' => 'required',
-            'nama_pegawai' => 'required',
-        ]);
+
+        // $request->validate([
+        //     'responden.*.jawaban_kinerja_id' => 'required',
+        //     'responden.*.pertanyaan_kinerja_id' => 'required',
+        //     'nopeg' => 'required',
+        //     'nama_pegawai' => 'required',
+        // ]);
 
         $kuesioner = KuesionerKinerja::find($id);
 
         DB::transaction(function () use ($kuesioner, $request) {
             $total = 0;
             foreach ($request->responden as $key => $value) {
-                $total += DB::table('jawaban_kinerja')->where('id', $value['jawaban_kinerja'])->value('nilai');
+                $total += DB::table('jawaban_kinerja')->where('id', $value['jawaban_kinerja_id'])->value('nilai');
             }
             $indeks = round($total / count($request->responden), 2);
-
+            // $penilai = explode('-', $request->nama_penilai);
+            // dd(explode('-', $request->nama_penilai)[1]);
             $kuesionerResponden = RespondenKinerja::create([
                 'kuisioner_kinerja_id' => $kuesioner->id,
 
@@ -87,9 +124,9 @@ class KuesionerController extends Controller
             // insert detail_respon_akademik
             foreach ($request->responden as $key => $value) {
                 DB::table('detail_respon_kinerja')->insert([
-                    'responden_kuisioner_id' => $kuesionerResponden->id,
-                    'pertanyaan_kuisioner_id' => $value['pertanyaan_kuisioner_id'],
-                    'jawaban_kinerja' => $value['jawaban_kinerja'],
+                    'responden_kinerja_id' => $kuesionerResponden->id,
+                    'pertanyaan_kinerja_id' => $value['pertanyaan_kinerja_id'],
+                    'jawaban_kinerja_id' => $value['jawaban_kinerja_id'],
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -176,18 +213,5 @@ class KuesionerController extends Controller
                 ->make(true);
         }
         return view('kuesioner.hasil_penilaian', compact('data'));
-    }
-
-
-    public function admHasilKuesioner()
-    {
-        $data = RespondenKinerja::select('*')
-            ->join('kuisioner_periode', 'kuisioner_periode.id', '=', 'responden_kuisioner.kuisioner_kinerja_id')
-            ->join('unit', 'unit.nama_unit', '=', 'responden_kuisioner.unit')
-            ->get();
-
-        // dd($data)
-
-        return view('kuesioner.admhasil_penilaian', compact('data'));
     }
 }

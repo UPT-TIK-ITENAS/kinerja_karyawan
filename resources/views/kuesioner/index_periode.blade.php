@@ -4,9 +4,9 @@
         <div class="page-header">
             <div class="row">
                 <div class="col-lg-6">
-                    <h3>Periode Kuesioner Kinerja Pegawai</h3>
+                    <h3>Kuesioner Pegawai</h3>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item">Daftar Periode Kuesioner Kinerja</li>
+                        <li class="breadcrumb-item">Daftar Pertanyaan Kuesioner Kinerja</li>
                     </ol>
                 </div>
             </div>

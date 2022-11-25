@@ -64,14 +64,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(JadwalSatpam::class, 'nip', 'nopeg');
     }
-
-    public function attendance()
-    {
-        return $this->hasMany(Attendance::class, 'nip', 'nopeg');
-    }
-
-    public function izin()
-    {
-        return $this->hasMany(Izin::class, 'nopeg', 'nopeg');
-    }
 }

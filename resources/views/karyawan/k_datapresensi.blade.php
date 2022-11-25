@@ -32,21 +32,13 @@
                             <span>Daftar hasil monitoring kehadiran karyawan terhitung dari tanggal 01 Juli 2022</span>
                         </div>
                         <hr>
-                        <div class="form-group row">
-                            <label class="col-sm-1 col-form-label">Filter</label>
-                            <div class="col-xl-4">
-                                <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
-                                    name="filter1" id="filter1" required="">
-                                    <option selected="" disabled="" value="">Pilih Bulan </option>
-                                    @foreach ($attendance as $a)
-                                        <option value="{{ $a->month_index }}">{{ $a->month_name }}</option>
-                                    @endforeach
-                                </select>
+                        <div class="row justify-content-start">
+                            <label class="form-label" for="validationDefault01">Pilih Bulan</label>
+                            <div class="col-sm-12 col-md-12 col-lg-6">
+                                <input class="date-picker form-control" type="text" id="bulan_hadir">
                             </div>
                             <div class="col-sm-12 col-md-12 col-lg-6">
-                                <button class="btn btn-outline-danger txt-red" type="button" id="clear"><i
-                                        class="icofont icofont-ui-delete"></i> Hapus</button>
-                                {{-- <button class="btn btn-danger" type="submit" id="clear">Hapus</button> --}}
+                                <button type="button" class="btn btn-info" id="btn-filter">Filter</button>
                             </div>
                         </div>
                     </div>
@@ -55,16 +47,17 @@
                             <table class="dataTable" id="table-kehadiran">
                                 <thead>
                                     <th>No.</th>
-                                    <th>Nama</th>
                                     <th>Hari</th>
+                                    <th>Awal Tugas</th>
+                                    <th>Akhir Tugas</th>
                                     <th>Jam Masuk</th>
                                     <th>Jam Siang</th>
                                     <th>Jam Keluar</th>
-                                    {{-- <th>Durasi</th> --}}
+                                    <th>Durasi</th>
                                     <th>Telat Masuk</th>
                                     <th>Telat Siang</th>
-                                    <th>Note</th>
                                     <th>Aksi</th>
+                                    <th>File</th>
                                     <th>Status</th>
                                 </thead>
                                 <tbody>
@@ -124,9 +117,9 @@
                 ajax: {
                     url: "{{ route('karyawan.listdatapresensi') }}",
                     data: function(d) {
-                        d.filter1 = $('#filter1').val() ? $('#filter1').val() : '<>';
-                        // d.search = $('input[type="search"]').val();
-                    }
+                        d.bulan = $('#bulan_hadir').val() ? $('#bulan_hadir').val() : '';
+                        // d.tahun = ('#bulan_hadir').val()
+                    },
                 },
                 columns: [{
                         data: 'DT_RowIndex',
@@ -136,12 +129,16 @@
                         searchable: false,
                     },
                     {
-                        data: 'user.name',
-                        name: 'user.name'
+                        data: 'hari',
+                        name: 'hari'
                     },
                     {
-                        data: 'days',
-                        name: 'days'
+                        data: 'awal_tugas',
+                        name: 'awal_tugas'
+                    },
+                    {
+                        data: 'akhir_tugas',
+                        name: 'akhir_tugas'
                     },
                     {
                         data: 'jam_masuk',
@@ -156,6 +153,10 @@
                         name: 'jam_pulang'
                     },
                     {
+                        data: 'duration',
+                        name: 'duration'
+                    },
+                    {
                         data: 'latemasuk',
                         name: 'latemasuk'
                     },
@@ -164,12 +165,13 @@
                         name: 'latesiang'
                     },
                     {
-                        data: 'note',
-                        name: 'note'
-                    },
-                    {
                         data: 'action',
                         name: 'action'
+                    },
+
+                    {
+                        data: 'file',
+                        name: 'file'
                     },
                     {
                         data: 'status',
@@ -181,20 +183,11 @@
                     'copy', 'csv', 'print'
                 ]
             });
-
-
-            $("#clear").on('click', function(e) {
-                e.preventDefault();
-                // location.reload();
-                $("#filter1").val('').trigger('change');
-            });
-            $("#filter1").on('change', function() {
+            $("#btn-filter").on('click', function() {
+                document.getElementById('btn-filter').style.pointerEvents = 'none';
                 table.draw();
+                document.getElementById('btn-filter').style.pointerEvents = 'auto';
             });
-
-            $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
-                console.log(message);
-            };
         });
     </script>
 @endsection

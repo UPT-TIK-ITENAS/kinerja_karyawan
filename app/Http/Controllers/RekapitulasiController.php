@@ -43,7 +43,7 @@ class RekapitulasiController extends Controller
         $data = DB::select('CALL getTotalTelatPerBulan(' . $nopeg . ')');
         $data2 = DB::select('CALL getIzinSakit(' . $nopeg . ')');
         $cuti = DB::Select('SELECT cuti.nopeg, cuti.jenis_cuti , MONTH(cuti.tgl_awal_cuti) AS bulan,  YEAR(cuti.tgl_awal_cuti) AS tahun, SUM(cuti.total_cuti) AS totalcuti
-        FROM cuti WHERE cuti.nopeg = ' . $nopeg . ' AND cuti.approval = 2 GROUP BY nopeg,bulan,tahun');
+        FROM cuti WHERE cuti.nopeg = ' . $nopeg . ' GROUP BY nopeg,bulan,tahun');
         // dd($cuti);
 
         return view('admin.detailrekap', compact('data', 'data2', 'cuti'));

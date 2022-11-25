@@ -8,6 +8,7 @@ use App\Models\JenisIzin;
 use App\Models\IzinKerja;
 use App\Models\User;
 use App\Models\Izin;
+use Carbon\Carbon;
 
 if (!function_exists('getCheck')) {
     function getCheck($jenis_izin, $id, $tipe)
@@ -190,15 +191,6 @@ if (!function_exists('getAprv')) {
                     $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalcuti" title="Batal Cuti" href="' . $batal_cuti . '">X</a>';
                 }
             }
-        } else if ($tipe == 'att') {
-            $getIzin = Izin::where('id_attendance', $id)->first();
-            if ($getIzin) {
-                if ($getIzin->approval == 1) {
-                    $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
-                } else {
-                    $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
-                }
-            }
         }
         return $for_html;
     }
@@ -286,5 +278,41 @@ if (!function_exists('getNama')) {
     {
         $nama = User::select('name')->where('nopeg', $nopeg)->first();
         return $nama;
+    }
+}
+
+if (!function_exists('durationWorks')) {
+    function durationWorks($jam_masuk, $jam_siang, $jam_pulang, $hari)
+    {
+        if ($jam_masuk == NULL && $jam_siang == NULL && $jam_pulang != NULL) {
+            $durationwork = date('00:00:00');
+        } else if ($jam_masuk == NULL && $jam_siang != NULL && $jam_pulang == NULL) {
+            $durationwork = date('00:00:00');
+        } else if ($jam_masuk != NULL && $jam_siang == NULL && $jam_pulang == NULL) {
+            $durationwork = date('00:00:00');
+        } else if ($jam_masuk == NULL && $jam_siang != NULL && $jam_pulang != NULL) {
+            $akhir = Carbon::createFromFormat("Y-m-d H:i:s", $jam_pulang);
+            $awal = Carbon::createFromFormat("Y-m-d H:i:s", $jam_siang);
+            $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
+        } else if ($jam_masuk != NULL && $jam_siang == NULL && $jam_pulang != NULL) {
+            if ($hari == '5') {
+                $akhir = Carbon::createFromTimestamp(strtotime("13:00:00"));
+                $awal = Carbon::createFromTimestamp(strtotime($jam_masuk));
+                $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
+            } else {
+                $akhir = Carbon::createFromTimestamp(strtotime("13:30:00"));
+                $awal = Carbon::createFromTimestamp(strtotime($jam_masuk));
+                $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
+            }
+        } else if ($jam_masuk != NULL && $jam_siang != NULL && $jam_pulang == NULL) {
+            $akhir = Carbon::createFromFormat("Y-m-d H:i:s", $jam_siang);
+            $awal = Carbon::createFromFormat("Y-m-d H:i:s", $jam_masuk);
+            $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
+        } else {
+            $akhir = Carbon::createFromFormat("Y-m-d H:i:s", $jam_pulang)->subHour(1);
+            $awal = Carbon::createFromFormat("Y-m-d H:i:s", $jam_masuk);
+            $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
+        }
+        return $durationwork;
     }
 }
