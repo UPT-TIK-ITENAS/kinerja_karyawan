@@ -208,7 +208,8 @@
                                     class="{{ routeActive('kepalaunit.approvalIzin') }}">Approval Izin</a>
                             </li>
                             <li><a href="{{ route('kepalaunit.approvalIzinTelat') }}"
-                                    class="{{ routeActive('kepalaunit.approvalIzinTelat') }}">Approval Izin</a>
+                                    class="{{ routeActive('kepalaunit.approvalIzinTelat') }}">Approval Izin
+                                    Perhari</a>
                             </li>
                         </ul>
                     </li>
