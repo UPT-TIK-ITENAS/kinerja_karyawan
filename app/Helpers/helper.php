@@ -8,6 +8,7 @@ use App\Models\JenisIzin;
 use App\Models\IzinKerja;
 use App\Models\User;
 use App\Models\Izin;
+use Carbon\Carbon;
 
 if (!function_exists('getCheck')) {
     function getCheck($jenis_izin, $id, $tipe)
@@ -286,5 +287,105 @@ if (!function_exists('getNama')) {
     {
         $nama = User::select('name')->where('nopeg', $nopeg)->first();
         return $nama;
+    }
+}
+
+if (!function_exists('actualDurationWorks')) {
+    function actualDurationWorks($jam_masuk, $jam_siang, $jam_pulang, $hari)
+    {
+        if ($jam_masuk == NULL && $jam_siang == NULL && $jam_pulang != NULL) {
+            $durationwork = date('00:00:00');
+        } else if ($jam_masuk == NULL && $jam_siang != NULL && $jam_pulang == NULL) {
+            $durationwork = date('00:00:00');
+        } else if ($jam_masuk != NULL && $jam_siang == NULL && $jam_pulang == NULL) {
+            $durationwork = date('00:00:00');
+        } else if ($jam_masuk == NULL && $jam_siang != NULL && $jam_pulang != NULL) {
+            $akhir = Carbon::createFromFormat("Y-m-d H:i:s", $jam_pulang);
+            $awal = Carbon::createFromFormat("Y-m-d H:i:s", $jam_siang);
+            $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
+        } else if ($jam_masuk != NULL && $jam_siang == NULL && $jam_pulang != NULL) {
+            if ($hari == '5') {
+                $akhir = Carbon::parse('13:00:00')->format('H:i:s');
+                $awal = Carbon::parse($jam_masuk)->format('H:i:s');
+                $durasi = strtotime($akhir) - strtotime($awal);
+                $durationwork = Carbon::parse($durasi)->format('H:i:s');
+            } else {
+                $akhir = Carbon::parse('13:30:00')->format('H:i:s');
+                $awal = Carbon::parse($jam_masuk)->format('H:i:s');
+                $durasi = strtotime($akhir) - strtotime($awal);
+                $durationwork = Carbon::parse($durasi)->format('H:i:s');
+            }
+        } else if ($jam_masuk != NULL && $jam_siang != NULL && $jam_pulang == NULL) {
+            $akhir = Carbon::createFromFormat("Y-m-d H:i:s", $jam_siang);
+            $awal = Carbon::createFromFormat("Y-m-d H:i:s", $jam_masuk);
+            $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
+        } else {
+            $akhir = Carbon::createFromFormat("Y-m-d H:i:s", $jam_pulang)->subHour(1);
+            $awal = Carbon::createFromFormat("Y-m-d H:i:s", $jam_masuk);
+            $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
+        }
+        return $durationwork;
+    }
+}
+
+if (!function_exists('lateMasuk')) {
+    function lateMasuk($jam_masuk, $jam_siang, $hari)
+    {
+        $masuk = Carbon::parse($jam_masuk)->format('H:i:s');
+        $keluar = Carbon::parse('08:00:00')->format('H:i:s');
+        if ($hari != '6' && $hari != '0') {
+            if ($jam_masuk == NULL &&  $jam_siang != NULL) {
+                $durasi = strtotime(Carbon::parse($jam_siang)->format('H:i:s')) - strtotime($keluar);
+                $total = Carbon::parse($durasi)->format('H:i:s');
+            } else {
+                if ($masuk > $keluar) {
+                    $durasi = strtotime($masuk) - strtotime($keluar);
+                    $total = Carbon::parse($durasi)->format('H:i:s');
+                } else {
+                    $total = '';
+                }
+            }
+        } else {
+            $total = '';
+        }
+        return $total;
+    }
+}
+
+if (!function_exists('lateSiang')) {
+    function lateSiang($jam_siang, $jam_pulang, $hari)
+    {
+        $siang = Carbon::parse($jam_siang)->format('H:i:s');
+        $keluar1 = Carbon::parse('13:00:00')->format('H:i:s');
+        $keluar2 = Carbon::parse('13:30:00')->format('H:i:s');
+
+        if ($hari == '5') {
+            if ($jam_siang == NULL && $jam_pulang != NULL) {
+                $durasi = strtotime(Carbon::parse($jam_pulang)->format('H:i:s')) - strtotime($keluar2);
+                $total = Carbon::parse($durasi)->format('H:i:s');
+            } else {
+                if ($siang > $keluar2) {
+                    $durasi = strtotime($siang) - strtotime($keluar2);
+                    $total = Carbon::parse($durasi)->format('H:i:s');
+                } else {
+                    $total = '';
+                }
+            }
+        } elseif ($hari != '6' && $hari != '0') {
+            if ($jam_siang == NULL && $jam_pulang != NULL) {
+                $durasi = strtotime(Carbon::parse($jam_pulang)->format('H:i:s')) - strtotime($keluar1);
+                $total = Carbon::parse($durasi)->format('H:i:s');
+            } else {
+                if ($siang > $keluar1) {
+                    $durasi = strtotime($siang) - strtotime($keluar1);
+                    $total = Carbon::parse($durasi)->format('H:i:s');
+                } else {
+                    $total = '';
+                }
+            }
+        } else {
+            $total = '';
+        }
+        return $total;
     }
 }
