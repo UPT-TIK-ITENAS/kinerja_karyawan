@@ -256,7 +256,6 @@ class BiometricController extends Controller
                                 DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 1,
                                     'durasi' => '08:00:00',
-                                    'durasi_aktual' => actualDurationWorks($cs->jam_masuk, $cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
                                     'telat_siang' => lateSiang($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
@@ -266,7 +265,6 @@ class BiometricController extends Controller
                                 DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '00:00:00',
-                                    'durasi_aktual' => actualDurationWorks($cs->jam_masuk, $cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
                                     'telat_siang' => lateSiang($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
@@ -276,7 +274,6 @@ class BiometricController extends Controller
                                 DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '00:00:00',
-                                    'durasi_aktual' => actualDurationWorks($cs->jam_masuk, $cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
                                     'telat_siang' => lateSiang($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
@@ -286,7 +283,6 @@ class BiometricController extends Controller
                                 DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '00:00:00',
-                                    'durasi_aktual' => actualDurationWorks($cs->jam_masuk, $cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
                                     'telat_siang' => lateSiang($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
@@ -296,7 +292,6 @@ class BiometricController extends Controller
                                 DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '00:00:00',
-                                    'durasi_aktual' => actualDurationWorks($cs->jam_masuk, $cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
                                     'telat_siang' => lateSiang($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
@@ -306,7 +301,6 @@ class BiometricController extends Controller
                                 DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '04:00:00',
-                                    'durasi_aktual' => actualDurationWorks($cs->jam_masuk, $cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
                                     'telat_siang' => lateSiang($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
@@ -316,7 +310,6 @@ class BiometricController extends Controller
                                 DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '04:00:00',
-                                    'durasi_aktual' => actualDurationWorks($cs->jam_masuk, $cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
                                     'telat_siang' => lateSiang($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
@@ -326,7 +319,6 @@ class BiometricController extends Controller
                                 DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '04:00:00',
-                                    'durasi_aktual' => actualDurationWorks($cs->jam_masuk, $cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
                                     'telat_siang' => lateSiang($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
