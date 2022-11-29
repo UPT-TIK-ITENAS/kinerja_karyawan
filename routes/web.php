@@ -14,7 +14,7 @@ use App\Http\Controllers\RekapitulasiController;
 use App\Http\Controllers\ListKaryawanController;
 use App\Http\Controllers\KuesionerController;
 use App\Http\Controllers\PejabatController;
-
+use Illuminate\Support\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +36,26 @@ Route::group(['name' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login'])->name('auth.login');
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
+Route::get('/test', function () {
+    // $durasi = "08:00:00";
+    $durasi = "04:00:00";
+    // $durasi = "00:00:00";
+    $telat_masuk = "00:22:42";
+    $telat_siang = "01:20:00";
 
+    $telat_masuk = Carbon::createFromFormat("H:i:s", $telat_masuk);
+    $telat_siang = Carbon::createFromFormat("H:i:s", $telat_siang);
+    list($addHour, $addMinutes, $addSeconds) = explode(':', $telat_siang->format('H:i:s'));
+    $telat = $telat_masuk->addHours($addHour)->addMinutes($addMinutes)->addSeconds($addSeconds)->format('H:i:s');
+
+    $durasi = Carbon::createFromFormat("H:i:s", $durasi);
+    if ($durasi->greaterThanOrEqualTo($telat) && $durasi->notEqualTo("00:00:00")) {
+        $durasi_kerja = $durasi->diff($telat)->format("%H:%I:%S");
+    } else {
+        $durasi_kerja = "00:00:00";
+    }
+    return dd($durasi_kerja);
+});
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.admin_v');
     Route::get('/kepalaunit', [KepalaUnitController::class, 'index'])->name('kepalaunit.kepalaunit_v');
@@ -58,10 +77,13 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/datapresensi', [AdminController::class, 'datapresensi'])->name('admin.datapresensi');
         Route::get('/listkaryawan', [AdminController::class, 'listkaryawan'])->name('admin.listkaryawan');
+        Route::get('/datapresensi-duration', [AdminController::class, 'datapresensi_duration'])->name('admin.datapresensi-duration');
+        Route::get('/listkaryawan-duration', [AdminController::class, 'listkaryawan_duration'])->name('admin.listkaryawan-duration');
 
         Route::get('createizinkehadiran/{id}', [AdminController::class, 'createizinkehadiran'])->name('admin.createizinkehadiran');
         Route::post('storeizinkehadiran', [AdminController::class, 'storeizinkehadiran'])->name('admin.storeizinkehadiran');
         Route::post('/biometric', [BiometricController::class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
+        Route::post('/biometric-duration', [BiometricController::class, 'SyncAndInsertBiometricWithDuration'])->name('admin.SyncAndInsertBiometricWithDuration');
         Route::get('/biometricall', [BiometricAllController::class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
         Route::get('printizin/{id}', [AdminController::class, 'printizin'])->name('admin.printizin');
         Route::get('/rekapitulasi', [RekapitulasiController::class, 'index'])->name('admin.rekapitulasi');
