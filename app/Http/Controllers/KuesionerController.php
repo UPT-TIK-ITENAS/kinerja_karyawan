@@ -215,4 +215,16 @@ class KuesionerController extends Controller
         }
         return view('kuesioner.hasil_penilaian', compact('data'));
     }
+
+    public function admHasilKuesioner()
+    {
+        $data = RespondenKinerja::select('*')
+            ->join('kuisioner_periode', 'kuisioner_periode.id', '=', 'responden_kuisioner.kuisioner_kinerja_id')
+            ->join('unit', 'unit.nama_unit', '=', 'responden_kuisioner.unit')
+            ->get();
+
+        // dd($data)
+
+        return view('kuesioner.admhasil_penilaian', compact('data'));
+    }
 }

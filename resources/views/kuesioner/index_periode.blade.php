@@ -47,7 +47,7 @@
                                                         data-id='{{ $p->id }}' title='Edit Periode'>
                                                         <i class='icofont icofont-edit-alt'></i>
                                                     </a>
-                                                    <a href='{{ route('admin.destroyPeriode', $p->id) }}'
+                                                    <a href='{{ route('admin.kuesioner.destroyPeriode', $p->id) }}'
                                                         title='Hapus Periode'
                                                         class='btn btn-sm btn-danger btn-xs align-items-center hapusPertanyaan'><i
                                                             class='icofont icofont-trash'></i></a>
@@ -78,7 +78,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" action="{{ route('admin.updatePeriode') }}" method="POST">
+                <form class="needs-validation" action="{{ route('admin.kuesioner.updatePeriode') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-2 mb-3">
@@ -116,7 +116,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" action="{{ route('admin.createPeriode') }}" method="POST">
+                <form class="needs-validation" action="{{ route('admin.kuesioner.createPeriode') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-2 mb-3">
@@ -159,7 +159,7 @@
         $('body').on('click', '.editPertanyaan', function() {
             var id = $(this).data('id');
 
-            $.get("{{ route('admin.admin_v') }}" + '/editPeriode/' + id, function(data) {
+            $.get(`${window.baseurl}/admin/kuesioner/editPeriode/${id}`, function(data) {
                 $('#ModalTitle').html("Pertanyaan");
                 $('#show-pertanyaan').modal('show');
                 $('#id').val(data.id);

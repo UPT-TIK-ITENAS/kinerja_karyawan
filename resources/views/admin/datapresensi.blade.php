@@ -25,9 +25,11 @@
                             <div class="form-group row">
                                 <label class="col-sm-1 col-form-label">Tanggal</label>
                                 <div class="col-xl-2">
-                                    <div class="input-group">
-                                        <input class="datepicker-here form-control digits" id="tanggal" name="tanggal"
-                                            type="text" data-language="en" required>
+                                    <div class="input-group date" id="dt-date" data-target-input="nearest">
+                                        <input class="form-control datetimepicker-input digits" type="text"
+                                            data-target="#dt-date" id="tanggal" name="tanggal">
+                                        <div class="input-group-text" data-target="#dt-date" data-toggle="datetimepicker"><i
+                                                class="fa fa-calendar"></i></div>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-12 col-lg-6">
@@ -87,6 +89,9 @@
                                     <th>Telat Siang</th>
                                     <th>Note</th>
                                     <th>Aksi</th>
+                                    @if (auth()->user()->role == 'admin_bsdm' || auth()->user()->role == 'admin')
+                                        <th>Aksi BSDM</th>
+                                    @endif
                                     <th>Status</th>
                                 </thead>
                                 <tbody>
@@ -111,7 +116,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('admin.storeizinkehadiran') }}"
+                <form class="needs-validation" novalidate="" action="{{ route('admin.presensi.storeizinkehadiran') }}"
                     method="POST">
                     @csrf
                     <div class="modal-body">
@@ -136,7 +141,7 @@
                         </div>
                         <div class="row g-2 mb-3">
                             <div class="col-md-4">
-                                <span class="form-label" for="jam_masuk">Tanggal</span>
+                                <span class="form-label" for="tanggal">Tanggal</span>
                                 <input class="form-control" id="tanggall" name="tanggall" type="text" readonly
                                     required="">
 
@@ -214,7 +219,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('admin.storeAttendance') }}"
+                <form class="needs-validation" novalidate="" action="{{ route('admin.presensi.storeAttendance') }}"
                     method="POST">
                     @csrf
                     <div class="modal-body">
@@ -297,6 +302,89 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade bd-example-modal-lg" id="show-att" aria-labelledby="myLargeModalLabel" aria-modal="true"
+        role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myLargeModalLabel">Form Pengajuan Izin</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
+                        data-bs-original-title="" title=""></button>
+                </div>
+                <form class="needs-validation" novalidate="" action="{{ route('admin.presensi.updateAttendance') }}"
+                    method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row g-1 mb-3">
+                            <div class="col-md-2">
+                                <span class="form-label" for="nip2">No Pegawai</span>
+                                <input class="form-control" id="nip2" name="nip2" type="text" required=""
+                                    readonly>
+                                <input id="id2" name="id2" hidden />
+                            </div>
+                            <div class="col-md-5">
+                                <span class="form-label" for="name2">No Pegawai</span>
+                                <input class="form-control" id="name2" name="name2" type="text" required=""
+                                    readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="jam_masuk1">Jam Masuk</span>
+                                <div class="input-group date" id="dt-jam_masuk1" data-target-input="nearest">
+                                    <input class="form-control datetimepicker-input digits" type="text"
+                                        data-target="#dt-jam_masuk1" id="jam_masuk1" name="jam_masuk1">
+                                    <div class="input-group-text" data-target="#dt-jam_masuk1"
+                                        data-toggle="datetimepicker">
+                                        <i class="fa fa-calendar"> </i>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+
+                            <div class="col-md-4">
+                                <span class="form-label" for="jam_siang1">Jam Siang</span>
+                                <div class="input-group date" id="dt-jam_siang1" data-target-input="nearest">
+                                    <input class="form-control datetimepicker-input digits" type="text"
+                                        data-target="#dt-jam_siang1" id="jam_siang1" name="jam_siang1">
+                                    <div class="input-group-text" data-target="#dt-jam_siang1"
+                                        data-toggle="datetimepicker">
+                                        <i class="fa fa-calendar"> </i>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="jam_pulang1">Jam Pulang</span>
+                                <div class="input-group date" id="dt-jam_pulang1" data-target-input="nearest">
+                                    <input class="form-control datetimepicker-input digits" type="text"
+                                        data-target="#dt-jam_pulang1" id="jam_pulang1" name="jam_pulang1">
+                                    <div class="input-group-text" data-target="#dt-jam_pulang1"
+                                        data-toggle="datetimepicker">
+                                        <i class="fa fa-calendar"> </i>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+                            <div class="col-md-7">
+                                <span class="form-label" for="status">Status</span>
+                                <select name="status1" id="status1" class="form-control">
+                                    <option value='' disabled selected>Pilih Status</option>
+                                    <option value="1">Lengkap</option>
+                                    <option value="0">Kurang</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     @parent
 
 
@@ -315,7 +403,7 @@
                     width: "200px !important",
                 }, ],
                 ajax: {
-                    url: "{{ route('admin.listkaryawan') }}",
+                    url: "{{ route('admin.presensi.listkaryawan') }}",
                     data: function(d) {
                         d.filter1 = $('#filter1').val() ? $('#filter1').val() : '<>';
                         d.filter2 = $('#filter2').val() ? $('#filter2').val() : '<>';
@@ -366,6 +454,10 @@
                         name: 'action'
                     },
                     {
+                        data: 'action_edit',
+                        name: 'action_edit',
+                    },
+                    {
                         data: 'status',
                         name: 'status'
                     },
@@ -393,7 +485,7 @@
         $('body').on('click', '.editAtt', function() {
             var id = $(this).data('id');
 
-            $.get("{{ route('admin.admin_v') }}" + '/editAtt/' + id, function(data) {
+            $.get(`${window.baseurl}/admin/presensi/editAtt/${id}`, function(data) {
                 $('#ModalTitle').html('Attendance');
                 $('#show-izin').modal('show');
                 $('#id').val(data.id);
@@ -427,6 +519,26 @@
                 $(".jamawal").hide();
                 $(".jamakhir").hide();
             }
+        });
+
+        $('body').on('click', '.editAttendance', function() {
+            var id = $(this).data('id');
+            console.log(`${window.baseurl}/admin/presensi/editAtt/${id}`);
+            $.get(`${window.baseurl}/admin/presensi/editAtt/${id}`, function(data) {
+                $('#ModalTitle').html('Attendance');
+                $('#show-att').modal('show');
+                $('#id2').val(data.id);
+                $('#nip2').val(data.nip);
+                $('#name2').val(data.name);
+                $('#unit').val(data.unit);
+                $('#nama_unit').val(data.nama_unit);
+                $('#jam_masuk1').val(data.jam_masuk);
+                $('#jam_siang1').val(data.jam_siang);
+                $('#jam_pulang1').val(data.jam_pulang);
+                $('#status1').val(data.status);
+
+                console.log(data);
+            })
         });
     </script>
 @endsection

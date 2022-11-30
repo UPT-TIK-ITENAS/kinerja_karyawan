@@ -170,6 +170,9 @@ class AdminController extends Controller
 
                 // }
             })
+            ->addColumn('action_edit', function ($row) {
+                return getAksi($row->id, 'att_edit');
+            })
             ->addColumn('status', function ($row) {
                 if ($row->izin != NULL) {
                     if ($row->izin->approval == '1') {
@@ -182,7 +185,7 @@ class AdminController extends Controller
                     return $apprv = '';
                 }
             })
-            ->rawColumns(['latemasuk', 'days', 'latesiang', 'latesore', 'action', 'status', 'note'])
+            ->rawColumns(['latemasuk', 'days', 'latesiang', 'latesore', 'action_edit', 'action', 'status', 'note'])
             ->toJson();
     }
 
@@ -199,6 +202,19 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('admin.datapresensi')->with('success', 'Data Attendance berhasil disimpan');
+    }
+
+    public function updateAttendance(Request $request)
+    {
+        Attendance::where('id', $request->id2)->update([
+            'jam_masuk' => Carbon::parse($request->jam_masuk1)->format('Y-m-d H:i:s'),
+            'jam_siang' => Carbon::parse($request->jam_siang1)->format('Y-m-d H:i:s'),
+            'jam_pulang' => Carbon::parse($request->jam_pulang1)->format('Y-m-d H:i:s'),
+            'modify_by' => '1',
+            'status' => $request->status1,
+        ]);
+
+        return redirect()->route('admin.datapresensi')->with('success', 'Data Attendance berhasil diupdate');
     }
 
     public function listkaryawan_duration(Request $request)

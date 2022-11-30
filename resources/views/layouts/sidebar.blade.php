@@ -20,62 +20,109 @@
 
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title @if (request()->routeIs('admin.datapresensi') || request()->routeIs('admin.rekapitulasi')) active @endif"><i
+                        <a class="nav-link menu-title @if (request()->routeIs('dmin.presensi.master') || request()->routeIs('admin.rekapitulasi.rekap')) active @endif"><i
                                 data-feather="monitor"></i><span>Master Data Presensi</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
                         <ul class="nav-submenu menu-content" style="display: none;">
-                            <li><a href="{{ route('admin.datapresensi') }}" class="">Monitor Kehadiran</a>
+                            <li><a href="{{ route('admin.presensi.master') }}" class="">Monitor Kehadiran</a>
                             </li>
-                            <li><a href="{{ route('admin.rekapitulasi') }}" class="">Rekapitulasi</a>
+                            <li><a href="{{ route('admin.rekapitulasi.rekap') }}" class="">Rekapitulasi</a>
                             <li><a href="{{ route('admin.jadwal-satpam.index') }}" class="">Jadwal Satpam</a>
                             </li>
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title link-nav @if (request()->routeIs('admin.mesinsidikjari')) active @endif"
-                            href="{{ route('admin.mesinsidikjari') }}"><i data-feather="tablet"></i><span>Mesin Sidik
+                        <a class="nav-link menu-title link-nav @if (request()->routeIs('admin.mesin-sidikjari.mesin')) active @endif"
+                            href="{{ route('admin.mesin-sidikjari.mesin') }}"><i data-feather="tablet"></i><span>Mesin
+                                Sidik
                                 Jari</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
 
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title link-nav @if (request()->routeIs('admin.list')) active @endif"
-                            href="{{ route('admin.list') }}"><i data-feather="users"></i><span>Data Karyawan</span>
+                        <a class="nav-link menu-title link-nav @if (request()->routeIs('admin.karyawan.list')) active @endif"
+                            href="{{ route('admin.karyawan.list') }}"><i data-feather="users"></i><span>Data
+                                Karyawan</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
 
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title @if (request()->routeIs('admin.pertanyaanPeriode')) active @endif "><i
+                        <a class="nav-link menu-title @if (request()->routeIs('admin.kuesioner.pertanyaanPeriode') ||
+                            request()->routeIs('admin.kuesioner.admHasilKuesioner')) active @endif "><i
                                 data-feather="file"></i><span>Kuesioner</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
                         <ul class="nav-submenu menu-content" style="display: none;">
                             {{-- <li><a href="{{ route('admin.indexKuesioner') }}" class="">Penilaian</a></li> --}}
-                            <li><a href="{{ route('admin.pertanyaanPeriode') }}" class="">Daftar Periode</a>
+                            <li><a href="{{ route('admin.kuesioner.pertanyaanPeriode') }}" class="">Daftar
+                                    Periode</a>
                             </li>
-                            <li><a href="{{ route('admin.admHasilKuesioner') }}" class="">Hasil Kuesioner</a></li>
+                            <li><a href="{{ route('admin.kuesioner.admHasilKuesioner') }}" class="">Hasil
+                                    Kuesioner</a></li>
                         </ul>
                     </li>
-                @endif
-                @if (auth()->user()->role == 'admin' || auth()->user()->role == 'admin_bsdm')
                     <li class="dropdown">
-                        <a class="nav-link menu-title @if (request()->routeIs('admin.dataizin') || request()->routeIs('admin.datacuti')) active @endif"><i
+                        <a class="nav-link menu-title @if (request()->routeIs('admin.izin-resmi.dataizin') || request()->routeIs('admin.cuti.datacuti')) active @endif"><i
                                 data-feather="edit-3"></i><span>Pengajuan</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
                         <ul class="nav-submenu menu-content" style="display: none;">
-                            <li><a href="{{ route('admin.dataizin') }}" class="">Izin</a>
+                            <li><a href="{{ route('admin.izin-resmi.dataizin') }}" class="">Izin</a>
                             </li>
-                            <li><a href="{{ route('admin.datacuti') }}" class="">Cuti</a>
+                            <li><a href="{{ route('admin.cuti.datacuti') }}" class="">Cuti</a>
                             </li>
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title link-nav @if (request()->routeIs('admin.liburnasional')) active @endif"
-                            href="{{ route('admin.liburnasional') }}"><i data-feather="calendar"></i><span>Pendataan
+                        <a class="nav-link menu-title link-nav @if (request()->routeIs('admin.libur-nasional.libur')) active @endif"
+                            href="{{ route('admin.libur-nasional.libur') }}"><i
+                                data-feather="calendar"></i><span>Pendataan
+                                Hari Libur </span>
+                            <div class="according-menu"><i class="fa fa-angle-right"></i></div>
+                        </a>
+
+                    </li>
+                @endif
+                @if (auth()->user()->role == 'admin_bsdm')
+                    <li class="dropdown">
+                        <a class="nav-link menu-title link-nav @if (request()->routeIs('admin_bsdm.admin_v')) active @endif"
+                            href="{{ route('admin_bsdm.admin_v') }}"><i data-feather="home"></i><span>Dashboard</span>
+                            <div class="according-menu"><i class="fa fa-angle-right"></i></div>
+                        </a>
+
+                    </li>
+                    <li class="dropdown">
+                        <a class="nav-link menu-title @if (request()->routeIs('admin_bsdm.presensi.master') || request()->routeIs('admin_bsdm.rekapitulasi.rekap')) active @endif"><i
+                                data-feather="monitor"></i><span>Master Data Presensi</span>
+                            <div class="according-menu"><i class="fa fa-angle-right"></i></div>
+                        </a>
+                        <ul class="nav-submenu menu-content" style="display: none;">
+                            <li><a href="{{ route('admin_bsdm.presensi.master') }}" class="">Monitor
+                                    Kehadiran</a>
+                            </li>
+                            <li><a href="{{ route('admin_bsdm.rekapitulasi.rekap') }}" class="">Rekapitulasi</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="nav-link menu-title @if (request()->routeIs('admin_bsdm.izin-resmi.dataizin') || request()->routeIs('admin_bsdm.cuti.datacuti')) active @endif"><i
+                                data-feather="edit-3"></i><span>Pengajuan</span>
+                            <div class="according-menu"><i class="fa fa-angle-right"></i></div>
+                        </a>
+                        <ul class="nav-submenu menu-content" style="display: none;">
+                            <li><a href="{{ route('admin_bsdm.izin-resmi.dataizin') }}" class="">Izin</a>
+                            </li>
+                            <li><a href="{{ route('admin_bsdm.cuti.datacuti') }}" class="">Cuti</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="nav-link menu-title link-nav @if (request()->routeIs('admin_bsdm.libur-nasional.libur')) active @endif"
+                            href="{{ route('admin_bsdm.libur-nasional.libur') }}"><i
+                                data-feather="calendar"></i><span>Pendataan
                                 Hari Libur </span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
@@ -85,7 +132,8 @@
 
                 @if (auth()->user()->role == 'karyawan')
                     <li class="dropdown">
-                        <a id="karyawan_index" class="nav-link menu-title link-nav {{ routeActive('karyawan.index') }}"
+                        <a id="karyawan_index"
+                            class="nav-link menu-title link-nav {{ routeActive('karyawan.index') }}"
                             href="{{ route('karyawan.index') }}"><i data-feather="users"></i><span>Dashboard</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>

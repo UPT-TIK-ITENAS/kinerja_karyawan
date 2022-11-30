@@ -49,7 +49,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" action="{{ route('admin.updatelibur') }}" method="POST">
+                <form class="needs-validation" action="{{ route('admin.libur-nasional.updatelibur') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-2 mb-3">
@@ -84,7 +84,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" action="{{ route('admin.createlibur') }}" method="POST">
+                <form class="needs-validation" action="{{ route('admin.libur-nasional.createlibur') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-2 mb-3">
@@ -124,7 +124,7 @@
                     targets: 1,
                     width: "200px !important",
                 }, ],
-                ajax: "{{ route('admin.listlibur') }}",
+                ajax: "{{ route('admin.libur-nasional.listlibur') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -152,7 +152,7 @@
             $('body').on('click', '.editLibur', function() {
                 var id = $(this).data('id');
 
-                $.get("{{ route('admin.admin_v') }}" + '/editlibur/' + id, function(data) {
+                $.get(`${window.baseurl}/admin//libur-nasional/editlibur/${id}`, function(data) {
                     $('#ModalTitle').html("Pertanyaan");
                     $('#show-libur').modal('show');
                     $('#id').val(data.id);
