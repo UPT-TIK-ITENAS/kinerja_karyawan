@@ -61,8 +61,6 @@
                                     <th>Telat Masuk</th>
                                     <th>Telat Siang</th>
                                     <th>Note</th>
-                                    <th>Aksi</th>
-                                    <th>Status</th>
                                 </thead>
                                 <tbody>
 
@@ -140,14 +138,6 @@
                     {
                         data: 'note',
                         name: 'note'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action'
-                    },
-                    {
-                        data: 'status',
-                        name: 'status'
                     },
                 ],
             });

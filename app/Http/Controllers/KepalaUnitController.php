@@ -156,28 +156,7 @@ class KepalaUnitController extends Controller
                 }
                 return $note;
             })
-            ->addColumn('action', function ($row) {
-                // $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
-                // if ($workingdays < 3) {
-                return getAksiKu($row->id, 'att');
-                // }else{
-                //     return '-';
-
-                // }
-            })
-            ->addColumn('status', function ($row) {
-                if ($row->izin != NULL) {
-                    if ($row->izin->approval == '1') {
-                        $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
-                    } else {
-                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
-                    }
-                    return $apprv;
-                } else {
-                    return $apprv = '';
-                }
-            })
-            ->rawColumns(['latemasuk', 'days', 'latesiang', 'latesore', 'action', 'status', 'note'])
+            ->rawColumns(['latemasuk', 'days', 'latesiang', 'latesore', 'note'])
             ->toJson();
     }
 
