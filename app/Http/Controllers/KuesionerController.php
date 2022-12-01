@@ -227,4 +227,49 @@ class KuesionerController extends Controller
 
         return view('kuesioner.admhasil_penilaian', compact('data'));
     }
+
+    public function pertanyaan()
+    {
+        $data = PertanyaanKinerja::get();
+        $periode = KuesionerKinerja::get();
+        return view('kuesioner.pertanyaan', compact('data', 'periode'));
+    }
+
+    public function editPertanyaan($id)
+    {
+        $kue = PertanyaanKinerja::where('id', $id)->first();
+        return response()->json($kue);
+    }
+
+    public function updatePertanyaan(Request $request)
+    {
+        PertanyaanKinerja::where('id', $request->id)->update([
+            'pertanyaan' => $request->pertanyaan,
+            'kuesioner_kinerja_id' => $request->kuesioner_kinerja_id,
+        ]);
+
+        return redirect()->route('admin.pertanyaanPeriode')->with('success', 'Edit Data Berhasil!');
+    }
+
+    public function jawaban($id)
+    {
+        $data = JawabanKinerja::where('pertanyaan_kinerja_id', $id)->get();
+        return view('kuesioner.jawaban', compact('data'));
+    }
+
+    public function editJawaban($id)
+    {
+        $kue = JawabanKinerja::where('id', $id)->first();
+        return response()->json($kue);
+    }
+
+    public function updateJawaban(Request $request)
+    {
+        JawabanKinerja::where('id', $request->id)->update([
+            'jawaban' => $request->jawaban,
+            'nilai' => $request->nilai,
+        ]);
+
+        return redirect()->route('admin.jawaban')->with('success', 'Edit Data Berhasil!');
+    }
 }

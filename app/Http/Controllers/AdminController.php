@@ -62,40 +62,6 @@ class AdminController extends Controller
             ->addColumn('days', function ($row) use ($days) {
                 return $days[$row->hari];
             })
-            ->addColumn('duration', function ($row) {
-                if ($row->jam_masuk == NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL) {
-                    $durationwork = date('00:00:00');
-                } else if ($row->jam_masuk == NULL && $row->jam_siang != NULL && $row->jam_pulang == NULL) {
-                    $durationwork = date('00:00:00');
-                } else if ($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang == NULL) {
-                    $durationwork = date('00:00:00');
-                } else if ($row->jam_masuk == NULL && $row->jam_siang != NULL && $row->jam_pulang != NULL) {
-                    $akhir = Carbon::createFromFormat("Y-m-d H:i:s", $row->jam_pulang);
-                    $awal = Carbon::createFromFormat("Y-m-d H:i:s", $row->jam_siang);
-                    $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
-                } else if ($row->jam_masuk != NULL && $row->jam_siang == NULL && $row->jam_pulang != NULL) {
-                    if ($row->hari == '5') {
-                        $akhir = Carbon::parse('13:00:00')->format('H:i:s');
-                        $awal = Carbon::parse($row->jam_masuk)->format('H:i:s');
-                        $durasi = strtotime($akhir) - strtotime($awal);
-                        $durationwork = Carbon::parse($durasi)->format('H:i:s');
-                    } else {
-                        $akhir = Carbon::parse('13:30:00')->format('H:i:s');
-                        $awal = Carbon::parse($row->jam_masuk)->format('H:i:s');
-                        $durasi = strtotime($akhir) - strtotime($awal);
-                        $durationwork = Carbon::parse($durasi)->format('H:i:s');
-                    }
-                } else if ($row->jam_masuk != NULL && $row->jam_siang != NULL && $row->jam_pulang == NULL) {
-                    $akhir = Carbon::createFromFormat("Y-m-d H:i:s", $row->jam_siang);
-                    $awal = Carbon::createFromFormat("Y-m-d H:i:s", $row->jam_masuk);
-                    $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
-                } else {
-                    $akhir = Carbon::createFromFormat("Y-m-d H:i:s", $row->jam_pulang)->subHour(1);
-                    $awal = Carbon::createFromFormat("Y-m-d H:i:s", $row->jam_masuk);
-                    $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
-                }
-                return $durationwork;
-            })
 
             ->addColumn('latemasuk', function ($row) {
                 $masuk = Carbon::parse($row->jam_masuk)->format('H:i:s');

@@ -117,6 +117,12 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/updatePeriode', [KuesionerController::class, 'updatePeriode'])->name('updatePeriode');
             Route::post('/createPeriode', [KuesionerController::class, 'createPeriode'])->name('createPeriode');
             Route::get('/destroyPeriode/{id}', [KuesionerController::class, 'destroyPeriode'])->name('destroyPeriode');
+            Route::get('/pertanyaan', [KuesionerController::class, 'pertanyaan'])->name('pertanyaan');
+            Route::get('/editPertanyaan/{id}', [KuesionerController::class, 'editPertanyaan'])->name('editPertanyaan');
+            Route::post('/updatePertanyaan', [KuesionerController::class, 'updatePertanyaan'])->name('updatePertanyaan');
+            Route::get('/jawaban/{id}', [KuesionerController::class, 'jawaban'])->name('jawaban');
+            Route::get('/editJawaban/{id}', [KuesionerController::class, 'editJawaban'])->name('editJawaban');
+            Route::post('/updateJawaban', [KuesionerController::class, 'updateJawaban'])->name('updateJawaban');
         });
 
         Route::prefix('karyawan')->name('admin.karyawan.')->group(function () {
