@@ -8,6 +8,7 @@ use App\Models\JenisIzin;
 use App\Models\IzinKerja;
 use App\Models\User;
 use App\Models\Izin;
+use Carbon\Carbon;
 
 if (!function_exists('getCheck')) {
     function getCheck($jenis_izin, $id, $tipe)
@@ -152,6 +153,59 @@ if (!function_exists('getAksi')) {
     }
 }
 
+
+if (!function_exists('getAksiKu')) {
+    function getAksiKu($id, $tipe, $user = null)
+    {
+        $printizin =  route('admin.printizinkerja', $id);
+        $printcuti =  route('admin.printcuti', $id);
+        $print =  route('admin.printizin', $id);
+        $batal_cuti = route('admin.batal_cuti', $id);
+        $batal_izin = route('admin.batal_izin', $id);
+        $delete_url = route('admin.destroylibur', $id);
+
+        $for_html = "";
+        if ($tipe == 'izin') {
+            if (auth()->user()->role == "admin" || auth()->user()->role == "admin_bsdm") {
+                $for_html = '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a>';
+            } elseif (auth()->user()->role == "kepalaunit") {
+                $data = IzinKerja::where('id_izinkerja', $id)->first();
+                $for_html = '
+                        <a href="#" class="btn btn-primary btn-xs apprvIzin" data-bs-target="#apprvIzin" data-bs-toggle="modal" data-id="' . $data->id_izinkerja . '"><i class="icofont icofont-pencil-alt-2"></i></a>
+                        <a class="btn btn-secondary btn-xs" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a> 
+                        <a class="btn btn-danger btn-xs batalizin" href="' . $batal_izin . '">X</a> ';
+            }
+        } elseif ($tipe == 'cuti') {
+            if (auth()->user()->role == "admin" || auth()->user()->role == "admin_bsdm") {
+                $for_html = '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a> ';
+            } elseif (auth()->user()->role == "kepalaunit") {
+                $data = Cuti::where('id_cuti', $id)->first();
+                $for_html = '
+                    <a href="#" class="btn btn-primary btn-xs apprvCuti" data-bs-target="#apprvCuti" data-bs-toggle="modal" data-id="' . $data->id_cuti . '"><i class="icofont icofont-pencil-alt-2"></i></a>
+                    <a class="btn btn-success btn-xs" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a> ';
+            }
+        } else if ($tipe == 'liburnasional') {
+            $for_html = "
+                    <div class='d-block text-center'>
+                    <a href='javascript:void(0)' data-toggle='tooltip' class='btn btn btn-warning btn-xs align-items-center editLibur' 
+                    data-id='$id' data-original-title='Edit' title='Edit Libur'><i class='icofont icofont-edit-alt'></i></a>
+                    <a href='$delete_url' title='Hapus Libur' class='btn btn-sm btn-danger btn-xs align-items-center hapusLibur'><i class='icofont icofont-trash'></i></a>
+                    </div>
+                    ";
+        } else if ($tipe == 'att') {
+            $data = Attendance::where('id', $id)->first();
+            $izin = Izin::where('id_attendance', $id)->first();
+            if ($izin == NULL) {
+            } else {
+                $for_html = '
+                <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
+            }
+        }
+        return $for_html;
+    }
+}
+
+
 if (!function_exists('getAprv')) {
     function getAprv($id, $tipe, $alasan = "")
     {
@@ -276,5 +330,105 @@ if (!function_exists('getNama')) {
     {
         $nama = User::select('name')->where('nopeg', $nopeg)->first();
         return $nama;
+    }
+}
+
+if (!function_exists('actualDurationWorks')) {
+    function actualDurationWorks($jam_masuk, $jam_siang, $jam_pulang, $hari)
+    {
+        if ($jam_masuk == NULL && $jam_siang == NULL && $jam_pulang != NULL) {
+            $durationwork = date('00:00:00');
+        } else if ($jam_masuk == NULL && $jam_siang != NULL && $jam_pulang == NULL) {
+            $durationwork = date('00:00:00');
+        } else if ($jam_masuk != NULL && $jam_siang == NULL && $jam_pulang == NULL) {
+            $durationwork = date('00:00:00');
+        } else if ($jam_masuk == NULL && $jam_siang != NULL && $jam_pulang != NULL) {
+            $akhir = Carbon::createFromFormat("Y-m-d H:i:s", $jam_pulang);
+            $awal = Carbon::createFromFormat("Y-m-d H:i:s", $jam_siang);
+            $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
+        } else if ($jam_masuk != NULL && $jam_siang == NULL && $jam_pulang != NULL) {
+            if ($hari == '5') {
+                $akhir = Carbon::parse('13:00:00')->format('H:i:s');
+                $awal = Carbon::parse($jam_masuk)->format('H:i:s');
+                $durasi = strtotime($akhir) - strtotime($awal);
+                $durationwork = Carbon::parse($durasi)->format('H:i:s');
+            } else {
+                $akhir = Carbon::parse('13:30:00')->format('H:i:s');
+                $awal = Carbon::parse($jam_masuk)->format('H:i:s');
+                $durasi = strtotime($akhir) - strtotime($awal);
+                $durationwork = Carbon::parse($durasi)->format('H:i:s');
+            }
+        } else if ($jam_masuk != NULL && $jam_siang != NULL && $jam_pulang == NULL) {
+            $akhir = Carbon::createFromFormat("Y-m-d H:i:s", $jam_siang);
+            $awal = Carbon::createFromFormat("Y-m-d H:i:s", $jam_masuk);
+            $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
+        } else {
+            $akhir = Carbon::createFromFormat("Y-m-d H:i:s", $jam_pulang)->subHour(1);
+            $awal = Carbon::createFromFormat("Y-m-d H:i:s", $jam_masuk);
+            $durationwork = $akhir->diff($awal)->format('%H:%I:%S');
+        }
+        return $durationwork;
+    }
+}
+
+if (!function_exists('lateMasuk')) {
+    function lateMasuk($jam_masuk, $jam_siang, $hari)
+    {
+        $masuk = Carbon::parse($jam_masuk)->format('H:i:s');
+        $keluar = Carbon::parse('08:00:00')->format('H:i:s');
+        if ($hari != '6' && $hari != '0') {
+            if ($jam_masuk == NULL &&  $jam_siang != NULL) {
+                $durasi = strtotime(Carbon::parse($jam_siang)->format('H:i:s')) - strtotime($keluar);
+                $total = Carbon::parse($durasi)->format('H:i:s');
+            } else {
+                if ($masuk > $keluar) {
+                    $durasi = strtotime($masuk) - strtotime($keluar);
+                    $total = Carbon::parse($durasi)->format('H:i:s');
+                } else {
+                    $total = '';
+                }
+            }
+        } else {
+            $total = '';
+        }
+        return $total;
+    }
+}
+
+if (!function_exists('lateSiang')) {
+    function lateSiang($jam_siang, $jam_pulang, $hari)
+    {
+        $siang = Carbon::parse($jam_siang)->format('H:i:s');
+        $keluar1 = Carbon::parse('13:00:00')->format('H:i:s');
+        $keluar2 = Carbon::parse('13:30:00')->format('H:i:s');
+
+        if ($hari == '5') {
+            if ($jam_siang == NULL && $jam_pulang != NULL) {
+                $durasi = strtotime(Carbon::parse($jam_pulang)->format('H:i:s')) - strtotime($keluar2);
+                $total = Carbon::parse($durasi)->format('H:i:s');
+            } else {
+                if ($siang > $keluar2) {
+                    $durasi = strtotime($siang) - strtotime($keluar2);
+                    $total = Carbon::parse($durasi)->format('H:i:s');
+                } else {
+                    $total = '';
+                }
+            }
+        } elseif ($hari != '6' && $hari != '0') {
+            if ($jam_siang == NULL && $jam_pulang != NULL) {
+                $durasi = strtotime(Carbon::parse($jam_pulang)->format('H:i:s')) - strtotime($keluar1);
+                $total = Carbon::parse($durasi)->format('H:i:s');
+            } else {
+                if ($siang > $keluar1) {
+                    $durasi = strtotime($siang) - strtotime($keluar1);
+                    $total = Carbon::parse($durasi)->format('H:i:s');
+                } else {
+                    $total = '';
+                }
+            }
+        } else {
+            $total = '';
+        }
+        return $total;
     }
 }

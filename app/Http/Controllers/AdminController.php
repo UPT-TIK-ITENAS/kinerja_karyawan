@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\Attendance;
+use App\Models\AttendanceBaru;
 use App\Models\Izin;
 use App\Models\Cuti;
 use App\Models\IzinKerja;
@@ -50,6 +51,16 @@ class AdminController extends Controller
         // get attendance limit 10
         // dd(Attendance::with('user')->limit(10)->get());
         return view('admin.datapresensi', compact('user', 'attendance'));
+    }
+
+    public function datapresensi_duration()
+    {
+        $user = User::SelectRaw('users.*,unit.*,jabatan.nopeg as peg_jab, jabatan.nama as name_jab')->join('unit', 'users.unit', '=', 'unit.id')->join('jabatan', 'users.atasan', '=', 'jabatan.id')->where('status', '1')->get();
+
+        $attendance = AttendanceBaru::select('tanggal')->groupby('tanggal')->get();
+        // get attendance limit 10
+        // dd(Attendance::with('user')->limit(10)->get());
+        return view('admin.datapresensi-duration', compact('user', 'attendance'));
     }
 
 
@@ -152,6 +163,71 @@ class AdminController extends Controller
                 }
             })
             ->rawColumns(['latemasuk', 'days', 'latesiang', 'latesore', 'action_edit', 'action', 'status', 'note'])
+            ->toJson();
+    }
+
+    public function listkaryawan_duration(Request $request)
+    {
+        $data = AttendanceBaru::query()->with(['user', 'izin'])->whereRelation('user', 'status', '=', 1)->where('nip', $request->get('filter1'), '', 'and')->where('tanggal', $request->get('filter2'), '', 'and')->orderby('tanggal', 'asc');
+        $days = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('days', function ($row) use ($days) {
+                return $days[$row->hari];
+            })
+            ->addColumn('duration', function ($row) {
+                $telat_masuk = Carbon::createFromFormat("H:i:s", $row->telat_masuk);
+                $telat_siang = Carbon::createFromFormat("H:i:s", $row->telat_siang);
+                list($addHour, $addMinutes, $addSeconds) = explode(':', $telat_siang->format('H:i:s'));
+                $telat = $telat_masuk->addHours($addHour)->addMinutes($addMinutes)->addSeconds($addSeconds)->format('H:i:s');
+
+                $durasi = Carbon::createFromFormat("H:i:s", $row->durasi);
+                $durasi_kerja = $durasi->diff($telat)->format("%H:%I:%S");
+                if ($durasi->greaterThanOrEqualTo($telat) && $durasi->notEqualTo("00:00:00")) {
+                    $durasi_kerja = $durasi->diff($telat)->format("%H:%I:%S");
+                } else {
+                    $durasi_kerja = "00:00:00";
+                }
+                return $durasi_kerja;
+            })
+
+            ->addColumn('latemasuk', function ($row) {
+                return $row->telat_masuk;
+            })
+
+            ->addColumn('latesiang', function ($row) {
+                return $row->telat_siang;
+            })
+            ->addColumn('note', function ($row) {
+                if ($row->status == 0) {
+                    $note = 'Kurang';
+                } else {
+                    $note = 'Lengkap';
+                }
+                return $note;
+            })
+            ->addColumn('action', function ($row) {
+                // $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
+                // if ($workingdays < 3) {
+                return getAksi($row->id, 'att');
+                // }else{
+                //     return '-';
+
+                // }
+            })
+            ->addColumn('status', function ($row) {
+                if ($row->izin != NULL) {
+                    if ($row->izin->approval == '1') {
+                        $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
+                    } else {
+                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                    }
+                    return $apprv;
+                } else {
+                    return $apprv = '';
+                }
+            })
+            ->rawColumns(['latemasuk', 'days', 'latesiang', 'latesore', 'action', 'status', 'note'])
             ->toJson();
     }
 
