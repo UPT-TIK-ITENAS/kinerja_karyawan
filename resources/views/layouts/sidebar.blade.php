@@ -20,7 +20,9 @@
 
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title @if (request()->routeIs('admin.presensi.master') || request()->routeIs('admin.rekapitulasi.rekap')) active @endif"><i
+                        <a class="nav-link menu-title @if (request()->routeIs('admin.presensi.master') ||
+                            request()->routeIs('admin.rekapitulasi.rekap') ||
+                            request()->routeIs('admin.jadwal-satpam.index')) active @endif"><i
                                 data-feather="monitor"></i><span>Master Data Presensi</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
