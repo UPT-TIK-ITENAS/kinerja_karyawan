@@ -455,7 +455,7 @@ class AdminController extends Controller
         }
 
 
-        return redirect()->route('admin.dataizin')->with('success', 'Pengajuan Izin Berhasil!');
+        return redirect()->route('admin.izin-resmi.dataizin')->with('success', 'Pengajuan Izin Berhasil!');
     }
 
     public function printizinkerja($id)
@@ -622,7 +622,7 @@ class AdminController extends Controller
         }
 
 
-        return redirect()->route('admin.datacuti')->with('success', 'Add Data Berhasil!');
+        return redirect()->route('admin.cuti.datacuti')->with('success', 'Add Data Berhasil!');
     }
 
     public function printcuti($id)
@@ -686,7 +686,7 @@ class AdminController extends Controller
             'keterangan' => $request->keterangan,
         ]);
 
-        return redirect()->route('admin.liburnasional')->with('success', 'Edit Data Berhasil!');
+        return redirect()->route('admin.libur-nasional.libur')->with('success', 'Edit Data Berhasil!');
     }
 
     public function createlibur(Request $request)
@@ -696,12 +696,12 @@ class AdminController extends Controller
             'keterangan' => $request->keterangan,
         ]);
 
-        return redirect()->route('admin.liburnasional')->with('success', 'Add Data Berhasil!');
+        return redirect()->route('admin.libur-nasional.libur')->with('success', 'Add Data Berhasil!');
     }
 
     public function destroylibur($id)
     {
         LiburNasional::where('id', $id)->delete();
-        return redirect()->route('admin.liburnasional')->with('success', 'Data berhasil dihapus!');
+        return redirect()->route('admin.libur-nasional.libur')->with('success', 'Data berhasil dihapus!');
     }
 }

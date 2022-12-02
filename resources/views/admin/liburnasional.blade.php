@@ -152,7 +152,7 @@
             $('body').on('click', '.editLibur', function() {
                 var id = $(this).data('id');
 
-                $.get(`${window.baseurl}/admin//libur-nasional/editlibur/${id}`, function(data) {
+                $.get(`${window.baseurl}/admin/libur-nasional/editlibur/${id}`, function(data) {
                     $('#ModalTitle').html("Pertanyaan");
                     $('#show-libur').modal('show');
                     $('#id').val(data.id);

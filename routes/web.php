@@ -38,24 +38,27 @@ Route::group(['name' => 'auth'], function () {
 });
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.admin_v');
-    Route::get('/kepalaunit', [KepalaUnitController::class, 'index'])->name('kepalaunit.kepalaunit_v');
 
-    Route::post('/biometric', [BiometricController::class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
-    Route::get('/biometricall', [BiometricAllController::class, 'SyncAndInsertBiometric'])->name('admin.biometricall');
-
-    Route::get('/getWorkingDays/{startDate}/{endDate}', [AdminController::class, 'getWorkingDays'])->name('admin.getWorkingDays');
-    Route::get('/historycuti/{nopeg}/{jenis}', [AdminController::class, 'historycuti'])->name('admin.historycuti');
-
-    Route::get('/datacuti/{id}', [AdminController::class, 'datacuti_show'])->name('admin.datacuti.show');
-    Route::post('/datacuti/pengganti', [AdminController::class, 'datacuti_pengganti'])->name('admin.datacuti.pengganti');
-    Route::get('/datacuti/calendar/{id}/{nopeg}', [AdminController::class, 'datacuti_calendar'])->name('admin.datacuti.calendar');
 
     Route::get('printizin/{id}', [AdminController::class, 'printizin'])->name('admin.printizin');
     Route::get('printizinkerja/{id}', [AdminController::class, 'printizinkerja'])->name('admin.printizinkerja');
     Route::get('printcuti/{id}', [AdminController::class, 'printcuti'])->name('admin.printcuti');
 
     Route::group(['prefix' => 'admin'], function () {
+
+        Route::get('/', [AdminController::class, 'index'])->name('admin.admin_v');
+        Route::get('/kepalaunit', [KepalaUnitController::class, 'index'])->name('kepalaunit.kepalaunit_v');
+
+        Route::post('/biometric', [BiometricController::class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
+        Route::get('/biometricall', [BiometricAllController::class, 'SyncAndInsertBiometric'])->name('admin.biometricall');
+
+        Route::get('/getWorkingDays/{startDate}/{endDate}', [AdminController::class, 'getWorkingDays'])->name('admin.getWorkingDays');
+        Route::get('/historycuti/{nopeg}/{jenis}', [AdminController::class, 'historycuti'])->name('admin.historycuti');
+
+        Route::get('/datacuti/{id}', [AdminController::class, 'datacuti_show'])->name('admin.datacuti.show');
+        Route::post('/datacuti/pengganti', [AdminController::class, 'datacuti_pengganti'])->name('admin.datacuti.pengganti');
+        Route::get('/datacuti/calendar/{id}/{nopeg}', [AdminController::class, 'datacuti_calendar'])->name('admin.datacuti.calendar');
+
         Route::prefix('jadwal-satpam')->name('admin.jadwal-satpam.')->group(function () {
             Route::get('/list', [\App\Http\Controllers\JadwalSatpamController::class, 'list'])->name('list');
             Route::get('/', [\App\Http\Controllers\JadwalSatpamController::class, 'index'])->name('index');

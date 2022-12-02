@@ -51,7 +51,8 @@
                     </li>
                     <li class="dropdown">
                         <a class="nav-link menu-title @if (request()->routeIs('admin.kuesioner.pertanyaanPeriode') ||
-                            request()->routeIs('admin.kuesioner.admHasilKuesioner')) active @endif "><i
+                            request()->routeIs('admin.kuesioner.admHasilKuesioner') ||
+                            request()->routeIs('admin.kuesioner.pertanyaan')) active @endif "><i
                                 data-feather="file"></i><span>Kuesioner</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
