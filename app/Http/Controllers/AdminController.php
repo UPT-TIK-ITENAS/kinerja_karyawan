@@ -490,10 +490,12 @@ class AdminController extends Controller
 
     public function historycuti($nopeg, $jenis)
     {
+        // dd(Carbon::now()->year);
         $history_cuti =
             cuti::join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
             ->where('cuti.nopeg', $nopeg)
             ->where('cuti.jenis_cuti', $jenis)
+            ->where(DB::raw("(DATE_FORMAT(created_at,'%Y'))"),Carbon::now()->year)
             ->GROUPBY('cuti.jenis_cuti')->sum('total_cuti');
 
         return response()->json($history_cuti);
