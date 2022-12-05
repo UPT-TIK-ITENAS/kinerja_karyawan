@@ -429,5 +429,7 @@ class BiometricController extends Controller
                 ]);
             }
         }
+
+        return redirect()->back()->with('success', 'Berhasil mengupdate data telat pada absensi!');
     }
 }
