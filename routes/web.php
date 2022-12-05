@@ -69,6 +69,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/kepalaunit', [KepalaUnitController::class, 'index'])->name('kepalaunit.kepalaunit_v');
 
         Route::post('/biometric', [BiometricController::class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
+        Route::post('/biometric-duration', [BiometricController::class, 'SyncAndInsertBiometricWithDuration'])->name('admin.SyncAndInsertBiometricWithDuration');
         Route::get('/biometricall', [BiometricAllController::class, 'SyncAndInsertBiometric'])->name('admin.biometricall');
 
         Route::get('/getWorkingDays/{startDate}/{endDate}', [AdminController::class, 'getWorkingDays'])->name('admin.getWorkingDays');
@@ -94,7 +95,9 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::prefix('presensi')->name('admin.presensi.')->group(function () {
             Route::get('/', [AdminController::class, 'datapresensi'])->name('master');
+            Route::get('/with-duration', [AdminController::class, 'datapresensi_duration'])->name('master.duration');
             Route::get('/listkaryawan', [AdminController::class, 'listkaryawan'])->name('listkaryawan');
+            Route::get('/listkaryawan-duration', [AdminController::class, 'listkaryawan_duration'])->name('listkaryawan-duration');
             Route::post('/storeizinkehadiran', [AdminController::class, 'storeizinkehadiran'])->name('storeizinkehadiran');
             Route::post('/storeAttendance', [AdminController::class, 'storeAttendance'])->name('storeAttendance');
             Route::post('/updateAttendance', [AdminController::class, 'updateAttendance'])->name('updateAttendance');

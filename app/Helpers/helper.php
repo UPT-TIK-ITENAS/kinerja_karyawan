@@ -18,7 +18,7 @@ if (!function_exists('getCheck')) {
             if (empty($cek)) {
                 $td = "";
             } else {
-                $td = \Carbon\Carbon::parse($cek->tgl_awal_izin)->isoFormat('D MMMM')  . ' s/d ' . \Carbon\Carbon::parse($cek->tgl_akhir_izin)->isoFormat('D MMMM Y') ;
+                $td = \Carbon\Carbon::parse($cek->tgl_awal_izin)->isoFormat('D MMMM')  . ' s/d ' . \Carbon\Carbon::parse($cek->tgl_akhir_izin)->isoFormat('D MMMM Y');
             }
         } elseif ($tipe == 'sakit') {
             if ($cek->jenis_izin == 'sakit') {
@@ -430,5 +430,81 @@ if (!function_exists('lateSiang')) {
             $total = '';
         }
         return $total;
+    }
+}
+
+if (!function_exists('lateSiang2')) {
+    function lateSiang2($jam_siang, $jam_pulang, $hari)
+    {
+        if ($hari != 6 && $hari != 0) {
+            if ($jam_pulang != null &&  $jam_siang != null) {
+                $tanggal = Carbon::parse($jam_pulang)->format('Y-m-d');
+                $base_time_siang_akhir = ($hari == 5) ? Carbon::parse("$tanggal 13:30:00") : Carbon::parse("$tanggal 13:00:00");
+                $base_time_siang_awal = ($hari == 5) ? Carbon::parse("$tanggal 13:15:00") : Carbon::parse("$tanggal 12:45:00");
+                $base_time_keluar = Carbon::parse("$tanggal 17:00:00");
+                $jam_siang = Carbon::parse($jam_siang);
+                $jam_pulang = Carbon::parse($jam_pulang);
+
+                if ($jam_siang->greaterThan($base_time_siang_akhir)) {
+                    $telat_siang = $jam_siang->diff($base_time_siang_akhir)->format("%H:%I:%S");
+                    $telat_siang = Carbon::parse($telat_siang);
+                } else if ($jam_siang->lessThan($base_time_siang_awal)) {
+                    $telat_siang = $jam_siang->diff($base_time_siang_awal)->format("%H:%I:%S");
+                    $telat_siang = Carbon::parse($telat_siang);
+                } else {
+                    $telat_siang = Carbon::parse("$tanggal 00:00:00");
+                }
+                if ($jam_pulang->lessThan($base_time_keluar)) {
+                    $telat_pulang = $jam_pulang->diff($base_time_keluar)->format("%H:%I:%S");
+                    $telat_pulang = Carbon::parse($telat_pulang);
+                } else {
+                    $telat_pulang = Carbon::parse("$tanggal 00:00:00");
+                }
+                $total = $telat_siang->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'))->format("H:i:s");
+                return $total;
+            } else if ($jam_siang == null && $jam_pulang != null) {
+                $tanggal = Carbon::parse($jam_pulang)->format('Y-m-d');
+                $base_time_siang_akhir = ($hari == 5) ? Carbon::parse("$tanggal 13:30:00") : Carbon::parse("$tanggal 13:00:00");
+                $base_time_siang_awal = ($hari == 5) ? Carbon::parse("$tanggal 13:15:00") : Carbon::parse("$tanggal 12:45:00");
+                $base_time_keluar = Carbon::parse("$tanggal 17:00:00");
+                $jam_siang = $base_time_siang_akhir;
+                $jam_pulang = Carbon::parse($jam_pulang);
+                $telat_siang = Carbon::parse("$tanggal 00:00:00");
+
+                if ($jam_pulang->lessThan($base_time_keluar)) {
+                    $telat_pulang = $jam_pulang->diff($base_time_keluar)->format("%H:%I:%S");
+                    $telat_pulang = Carbon::parse($telat_pulang);
+                } else {
+                    $telat_pulang = Carbon::parse("$tanggal 00:00:00");
+                }
+
+                $total = $telat_siang->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'))->format("H:i:s");
+                return $total;
+            } else if ($jam_siang != null && $jam_pulang == null) {
+                $tanggal = Carbon::parse($jam_siang)->format('Y-m-d');
+                $base_time_siang_akhir = ($hari == 5) ? Carbon::parse("$tanggal 13:30:00") : Carbon::parse("$tanggal 13:00:00");
+                $base_time_siang_awal = ($hari == 5) ? Carbon::parse("$tanggal 13:15:00") : Carbon::parse("$tanggal 12:45:00");
+                $base_time_keluar = Carbon::parse("$tanggal 17:00:00");
+                $jam_siang = Carbon::parse($jam_siang);
+                $jam_pulang = $base_time_keluar;
+                $telat_pulang = Carbon::parse("$tanggal 00:00:00");
+
+                if ($jam_siang->greaterThan($base_time_siang_akhir)) {
+                    $telat_siang = $jam_siang->diff($base_time_siang_akhir)->format("%H:%I:%S");
+                    $telat_siang = Carbon::parse($telat_siang);
+                } else {
+                    $telat_siang = Carbon::parse("$tanggal 00:00:00");
+                }
+
+                $total = $telat_siang->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'))->format("H:i:s");
+                return $total;
+            } else {
+                $total = Carbon::parse('00:00:00')->format('H:i:s');
+                return $total;
+            }
+        } else {
+            $total = Carbon::parse('00:00:00')->format('H:i:s');
+            return $total;
+        }
     }
 }

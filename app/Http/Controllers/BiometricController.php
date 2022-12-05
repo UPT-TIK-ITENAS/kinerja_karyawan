@@ -257,7 +257,7 @@ class BiometricController extends Controller
                                     'status' => 1,
                                     'durasi' => '08:00:00',
                                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-                                    'telat_siang' => lateSiang($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
                             }
                             // Jika tidak ada sama sekali
@@ -266,7 +266,7 @@ class BiometricController extends Controller
                                     'status' => 0,
                                     'durasi' => '00:00:00',
                                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-                                    'telat_siang' => lateSiang($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
                             }
                             // Jika hanya ada sore yang terisi
@@ -275,7 +275,7 @@ class BiometricController extends Controller
                                     'status' => 0,
                                     'durasi' => '00:00:00',
                                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-                                    'telat_siang' => lateSiang($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
                             }
                             // Jika hanya ada siang yang terisi
@@ -284,7 +284,7 @@ class BiometricController extends Controller
                                     'status' => 0,
                                     'durasi' => '00:00:00',
                                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-                                    'telat_siang' => lateSiang($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
                             }
                             // Jika hanya ada pagi yang terisi
@@ -293,7 +293,7 @@ class BiometricController extends Controller
                                     'status' => 0,
                                     'durasi' => '00:00:00',
                                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-                                    'telat_siang' => lateSiang($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
                             }
                             // Jika hanya ada siang dan sore terisi
@@ -302,7 +302,7 @@ class BiometricController extends Controller
                                     'status' => 0,
                                     'durasi' => '04:00:00',
                                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-                                    'telat_siang' => lateSiang($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
                             }
                             // Jika hanya ada pagi dan sore terisi
@@ -311,7 +311,7 @@ class BiometricController extends Controller
                                     'status' => 0,
                                     'durasi' => '04:00:00',
                                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-                                    'telat_siang' => lateSiang($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
                             }
                             // Jika hanya ada pagi dan siang terisi
@@ -320,7 +320,7 @@ class BiometricController extends Controller
                                     'status' => 0,
                                     'durasi' => '04:00:00',
                                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-                                    'telat_siang' => lateSiang($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
                             }
                         }
