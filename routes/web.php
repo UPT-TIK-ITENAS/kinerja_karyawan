@@ -37,24 +37,7 @@ Route::group(['name' => 'auth'], function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
 Route::get('/test', function () {
-    // $durasi = "08:00:00";
-    $durasi = "04:00:00";
-    // $durasi = "00:00:00";
-    $telat_masuk = "00:22:42";
-    $telat_siang = "01:20:00";
-
-    $telat_masuk = Carbon::createFromFormat("H:i:s", $telat_masuk);
-    $telat_siang = Carbon::createFromFormat("H:i:s", $telat_siang);
-    list($addHour, $addMinutes, $addSeconds) = explode(':', $telat_siang->format('H:i:s'));
-    $telat = $telat_masuk->addHours($addHour)->addMinutes($addMinutes)->addSeconds($addSeconds)->format('H:i:s');
-
-    $durasi = Carbon::createFromFormat("H:i:s", $durasi);
-    if ($durasi->greaterThanOrEqualTo($telat) && $durasi->notEqualTo("00:00:00")) {
-        $durasi_kerja = $durasi->diff($telat)->format("%H:%I:%S");
-    } else {
-        $durasi_kerja = "00:00:00";
-    }
-    return dd($durasi_kerja);
+    dd(lateMasuk(null, "2021-05-01 13:00:48", 3));
 });
 Route::group(['middleware' => 'auth'], function () {
 
@@ -70,6 +53,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/biometric', [BiometricController::class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
         Route::post('/biometric-duration', [BiometricController::class, 'SyncAndInsertBiometricWithDuration'])->name('admin.SyncAndInsertBiometricWithDuration');
+        Route::post('/biometric-recalculate-telat', [BiometricController::class, 'recalculateTelat'])->name('admin.recalculateTelat');
         Route::get('/biometricall', [BiometricAllController::class, 'SyncAndInsertBiometric'])->name('admin.biometricall');
 
         Route::get('/getWorkingDays/{startDate}/{endDate}', [AdminController::class, 'getWorkingDays'])->name('admin.getWorkingDays');

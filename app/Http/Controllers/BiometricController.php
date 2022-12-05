@@ -256,8 +256,6 @@ class BiometricController extends Controller
                                 DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 1,
                                     'durasi' => '08:00:00',
-                                    'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-                                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
                             }
                             // Jika tidak ada sama sekali
@@ -265,8 +263,6 @@ class BiometricController extends Controller
                                 DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '00:00:00',
-                                    'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-                                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
                             }
                             // Jika hanya ada sore yang terisi
@@ -274,8 +270,6 @@ class BiometricController extends Controller
                                 DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '00:00:00',
-                                    'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-                                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
                             }
                             // Jika hanya ada siang yang terisi
@@ -283,8 +277,6 @@ class BiometricController extends Controller
                                 DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '00:00:00',
-                                    'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-                                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
                             }
                             // Jika hanya ada pagi yang terisi
@@ -292,8 +284,6 @@ class BiometricController extends Controller
                                 DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '00:00:00',
-                                    'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-                                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
                             }
                             // Jika hanya ada siang dan sore terisi
@@ -301,8 +291,6 @@ class BiometricController extends Controller
                                 DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '04:00:00',
-                                    'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-                                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
                             }
                             // Jika hanya ada pagi dan sore terisi
@@ -310,8 +298,6 @@ class BiometricController extends Controller
                                 DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '04:00:00',
-                                    'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-                                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
                             }
                             // Jika hanya ada pagi dan siang terisi
@@ -319,8 +305,6 @@ class BiometricController extends Controller
                                 DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '04:00:00',
-                                    'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-                                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
                                 ]);
                             }
                         }
@@ -347,7 +331,7 @@ class BiometricController extends Controller
             ]);
         }
         $gagalMesin = implode("<br>", $gagalMesin);
-        return redirect()->route('admin.datapresensi')->with(array('warning' => $gagalMesin ?? 'Berhasil Mengambil data dari semua mesin sidik jari', 'success' => 'Sinkronisasi Berhasil'));
+        return redirect()->route('admin.presensi.master.duration')->with(array('warning' => $gagalMesin ?? 'Berhasil Mengambil data dari semua mesin sidik jari', 'success' => 'Sinkronisasi Berhasil'));
     }
 
     public function Parse_Data($data, $p1, $p2)
@@ -362,5 +346,90 @@ class BiometricController extends Controller
             }
         }
         return $hasil;
+    }
+
+    public function recalculateTelat(Request $request)
+    {
+        $request->validate([
+            'tanggal' => 'required',
+        ]);
+        $date = $request->tanggal;
+        $cek_status = DB::table('attendance_baru')->where(['tanggal' => $date])->get();
+        foreach ($cek_status as $cs) {
+            // Jika full terisi
+            if (!empty($cs->jam_masuk) && !empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
+                DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
+                    'status' => 1,
+                    'durasi' => '08:00:00',
+                    'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
+                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                ]);
+            }
+            // Jika tidak ada sama sekali
+            else if (empty($cs->jam_masuk) && empty($cs->jam_siang) && empty($cs->jam_pulang)) {
+                DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
+                    'status' => 0,
+                    'durasi' => '00:00:00',
+                    'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
+                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                ]);
+            }
+            // Jika hanya ada sore yang terisi
+            else if (empty($cs->jam_masuk) && empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
+                DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
+                    'status' => 0,
+                    'durasi' => '00:00:00',
+                    'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
+                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                ]);
+            }
+            // Jika hanya ada siang yang terisi
+            else if (empty($cs->jam_masuk) && !empty($cs->jam_siang) && empty($cs->jam_pulang)) {
+                DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
+                    'status' => 0,
+                    'durasi' => '00:00:00',
+                    'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
+                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                ]);
+            }
+            // Jika hanya ada pagi yang terisi
+            else if (!empty($cs->jam_masuk) && empty($cs->jam_siang) && empty($cs->jam_pulang)) {
+                DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
+                    'status' => 0,
+                    'durasi' => '00:00:00',
+                    'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
+                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                ]);
+            }
+            // Jika hanya ada siang dan sore terisi
+            else if (empty($cs->jam_masuk) && !empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
+                DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
+                    'status' => 0,
+                    'durasi' => '04:00:00',
+                    'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
+                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                ]);
+            }
+            // Jika hanya ada pagi dan sore terisi
+            else if (!empty($cs->jam_masuk) && empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
+                DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
+                    'status' => 0,
+                    'durasi' => '04:00:00',
+                    'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
+                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                ]);
+            }
+            // Jika hanya ada pagi dan siang terisi
+            else if (!empty($cs->jam_masuk) && !empty($cs->jam_siang) && empty($cs->jam_pulang)) {
+                DB::table('attendance_baru')->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
+                    'status' => 0,
+                    'durasi' => '04:00:00',
+                    'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
+                    'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'Berhasil mengupdate data telat pada absensi!');
     }
 }

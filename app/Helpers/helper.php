@@ -130,17 +130,6 @@ if (!function_exists('getAksi')) {
                     <a href='$delete_url' title='Hapus Libur' class='btn btn-sm btn-danger btn-xs align-items-center hapusLibur'><i class='icofont icofont-trash'></i></a>
                     </div>
                     ";
-        } else if ($tipe == 'att') {
-            $data = Attendance::where('id', $id)->first();
-            $izin = Izin::where('id_attendance', $id)->first();
-            if ($izin == NULL) {
-                $for_html = '
-                <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $data->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
-            } else {
-                $for_html = '
-                <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $data->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
-                <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
-            }
         } else if ($tipe == 'att_edit') {
             $data = Attendance::where('id', $id)->first();
             if (auth()->user()->role == "admin" || auth()->user()->role == "admin_bsdm") {
@@ -378,8 +367,7 @@ if (!function_exists('lateMasuk')) {
         $keluar = Carbon::parse('08:00:00')->format('H:i:s');
         if ($hari != '6' && $hari != '0') {
             if ($jam_masuk == NULL &&  $jam_siang != NULL) {
-                $durasi = strtotime(Carbon::parse($jam_siang)->format('H:i:s')) - strtotime($keluar);
-                $total = Carbon::parse($durasi)->format('H:i:s');
+                $total = Carbon::parse("00:00:00")->format('H:i:s');
             } else {
                 if ($masuk > $keluar) {
                     $durasi = strtotime($masuk) - strtotime($keluar);

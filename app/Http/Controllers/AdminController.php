@@ -235,7 +235,18 @@ class AdminController extends Controller
                 return $note;
             })
             ->addColumn('action', function ($row) {
-                return getAksi($row->id, 'att');
+                $hasIzin = $row->izin?->count();
+                $print =  route('admin.printizin', $row->id);
+                if ($hasIzin == null) {
+                    $for_html = '
+                    <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
+                } else {
+                    $for_html = '
+                    <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
+                    <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
+                }
+
+                return $for_html;
             })
             ->addColumn('status', function ($row) {
                 if ($row->izin != NULL) {
