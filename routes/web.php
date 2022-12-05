@@ -37,7 +37,7 @@ Route::group(['name' => 'auth'], function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
 Route::get('/test', function () {
-    dd(lateMasuk(null, "2021-05-01 13:00:48", 3));
+    dd(lateMasuk(null, null, 3));
 });
 Route::group(['middleware' => 'auth'], function () {
 
