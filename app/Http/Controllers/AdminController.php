@@ -139,13 +139,18 @@ class AdminController extends Controller
                 return $note;
             })
             ->addColumn('action', function ($row) {
-                // $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
-                // if ($workingdays < 3) {
-                return getAksi($row->id, 'att');
-                // }else{
-                //     return '-';
+                $hasIzin = $row->izin?->count();
+                $print =  route('admin.printizin', $row->id);
+                if ($hasIzin == null) {
+                    $for_html = '
+                    <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
+                } else {
+                    $for_html = '
+                    <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
+                    <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
+                }
 
-                // }
+                return $for_html;
             })
             ->addColumn('action_edit', function ($row) {
                 return getAksi($row->id, 'att_edit');
@@ -495,7 +500,7 @@ class AdminController extends Controller
             cuti::join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
             ->where('cuti.nopeg', $nopeg)
             ->where('cuti.jenis_cuti', $jenis)
-            ->where(DB::raw("(DATE_FORMAT(created_at,'%Y'))"),Carbon::now()->year)
+            ->where(DB::raw("(DATE_FORMAT(created_at,'%Y'))"), Carbon::now()->year)
             ->GROUPBY('cuti.jenis_cuti')->sum('total_cuti');
 
         return response()->json($history_cuti);
