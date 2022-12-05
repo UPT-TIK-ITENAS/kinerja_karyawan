@@ -111,7 +111,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('admin.storeizinkehadiran') }}"
+                <form class="needs-validation" novalidate="" action="{{ route('admin.presensi.storeizinkehadiran') }}"
                     method="POST">
                     @csrf
                     <div class="modal-body">
@@ -193,7 +193,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('admin.storeAttendance') }}"
+                <form class="needs-validation" novalidate="" action="{{ route('admin.presensi.storeAttendance') }}"
                     method="POST">
                     @csrf
                     <div class="modal-body">
@@ -299,7 +299,7 @@
                     width: "200px !important",
                 }, ],
                 ajax: {
-                    url: "{{ route('admin.listkaryawan-duration') }}",
+                    url: "{{ route('admin.presensi.listkaryawan-duration') }}",
                     data: function(d) {
                         d.filter1 = $('#filter1').val() ? $('#filter1').val() : '<>';
                         d.filter2 = $('#filter2').val() ? $('#filter2').val() : '<>';
