@@ -347,7 +347,7 @@ class BiometricController extends Controller
             ]);
         }
         $gagalMesin = implode("<br>", $gagalMesin);
-        return redirect()->route('admin.datapresensi')->with(array('warning' => $gagalMesin ?? 'Berhasil Mengambil data dari semua mesin sidik jari', 'success' => 'Sinkronisasi Berhasil'));
+        return redirect()->route('admin.presensi.master.duration')->with(array('warning' => $gagalMesin ?? 'Berhasil Mengambil data dari semua mesin sidik jari', 'success' => 'Sinkronisasi Berhasil'));
     }
 
     public function Parse_Data($data, $p1, $p2)
