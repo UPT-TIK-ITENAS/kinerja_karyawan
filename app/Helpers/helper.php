@@ -366,7 +366,7 @@ if (!function_exists('lateMasuk')) {
         $masuk = Carbon::parse($jam_masuk)->format('H:i:s');
         $keluar = Carbon::parse('08:00:00')->format('H:i:s');
         if ($hari != '6' && $hari != '0') {
-            if ($jam_masuk == NULL &&  $jam_siang != NULL) {
+            if ($jam_masuk == NULL &&  $jam_siang != NULL || $jam_masuk == NULL && $jam_siang == NULL) {
                 $total = Carbon::parse("00:00:00")->format('H:i:s');
             } else {
                 if ($masuk > $keluar) {
