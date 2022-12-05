@@ -36,6 +36,22 @@
                                 </div>
                             </div>
                         </form>
+                        <form action="{{ route('admin.recalculateTelat') }}" method="POST">
+                            @csrf
+                            <div class="form-group row">
+                                <label class="col-sm-1 col-form-label">Tanggal</label>
+                                <div class="col-xl-2">
+                                    <div class="input-group">
+                                        <input class="datepicker-here form-control digits" id="tanggal" name="tanggal"
+                                            type="text" data-language="en" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                    <button class="btn btn-outline-success-2x" type="submit"><i class="fa fa-refresh"></i>
+                                        Recalculate Telat</button>
+                                </div>
+                            </div>
+                        </form>
                         <hr>
                         <div class="form-group row">
                             <label class="col-sm-1 col-form-label">Filter</label>
