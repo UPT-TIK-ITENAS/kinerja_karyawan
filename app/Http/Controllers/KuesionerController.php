@@ -152,22 +152,25 @@ class KuesionerController extends Controller
     {
         KuesionerKinerja::where('id', $request->id)->update([
             'judul' => $request->judul,
-            'keterangan' => $request->keterangan,
             'semester' => $request->semester,
+            'batas_awal' => $request->batas_awal,
+            'batas_akhir' => $request->batas_akhir,
+            'status' => $request->status
         ]);
 
-        return redirect()->route('admin.pertanyaanPeriode')->with('success', 'Edit Data Berhasil!');
+        return redirect()->back()->with('success', 'Edit Data Berhasil!');
     }
 
     public function createPeriode(Request $request)
     {
         KuesionerKinerja::create([
             'judul' => $request->judull,
-            'keterangan' => $request->keterangann,
             'semester' => $request->semesterr,
+            'batas_awal' => $request->batas_awall,
+            'batas_akhir' => $request->batas_akhirr,
+            'status' => $request->statuss
         ]);
-
-        return redirect()->route('admin.pertanyaanPeriode')->with('success', 'Add Data Berhasil!');
+        return redirect()->back()->with('success', 'Add Data Berhasil!');
     }
 
     public function destroyPeriode($id)
