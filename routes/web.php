@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\BiometricController;
+use App\Http\Controllers\BsdmController;
 use App\Http\Controllers\PengajuanIzinController;
 use App\Http\Controllers\PengajuanCutiController;
 use App\Http\Controllers\KepalaUnitController;
@@ -173,8 +174,8 @@ Route::group(['middleware' => 'auth'], function () {
         });
 
         Route::prefix('presensi')->name('presensi.')->group(function () {
-            Route::get('/', [AdminController::class, 'datapresensi'])->name('master');
-            Route::get('/listkaryawan', [AdminController::class, 'listkaryawan'])->name('listkaryawan');
+            Route::get('/', [BsdmController::class, 'bsdm_datapresensi'])->name('master');
+            Route::get('/listkaryawan', [BsdmController::class, 'bsdm_listkaryawan'])->name('bsdm_listkaryawan');
             Route::post('/storeAttendance', [AdminController::class, 'storeAttendance'])->name('storeAttendance');
             Route::post('/storeizinkehadiran', [AdminController::class, 'storeizinkehadiran'])->name('storeizinkehadiran');
             Route::post('/updateAttendance', [AdminController::class, 'updateAttendance'])->name('updateAttendance');
