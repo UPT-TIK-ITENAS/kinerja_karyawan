@@ -21,66 +21,44 @@
             <!-- Zero Configuration  Starts-->
             <div class="col-sm-12">
                 <div class="card">
-                    {{-- <div class="card-header">
-                        <h5>Daftar Detail Rekapitulasi Kehadiran Karyawan</h5>
-                        <span>Daftar hasil rekapitulasi kehadiran karyawan terhitung dari tanggal 01 Juli 2022</span>
-                    </div> --}}
+                    <div class="card-header">
+                        <h5>Silakan pilih periode untuk melihat jumlah kehadiran</h5>
+                        <form action="{{ route('admin.SyncAndInsertBiometric') }}" method="POST" class="mt-3">
+                            @csrf
+                            <div class="form-group row">
+                                <label class="col-lg-1 col-md-12 col-form-label">Periode</label>
+                                <div class="col-lg-6 col-md-12">
+                                    <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                        name="filter1" id="filter1" required="">
+                                        @foreach ($periode as $p)
+                                            @if ($p->id == 2)
+                                                <option value="{{ $p->id }}" selected>{{ $p->judul }}</option>
+                                            @else
+                                                <option value="{{ $p->id }}">{{ $p->judul }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                        <hr>
+                    </div>
                     <div class="card-body">
-
                         <h6 class="font-primary">Rekapitulasi Kehadiran</h6>
                         <div class="dt-ext table-responsive">
                             <table class="table table-bordered" id="table-rekapitulasi">
                                 <thead>
-                                    <th width="5%">No.</th>
+                                    <th>No.</th>
                                     <th>Bulan</th>
-                                    <th>Tahun</th>
-                                    <th>Hadir</th>
-                                    <th>Izin</th>
-                                    <th>Sakit</th>
+                                    <th>Total Hari Hadir Kerja</th>
+                                    <th>Total Hari Kerja</th>
+                                    <th>Total Hari Mangkir</th>
                                     <th>Cuti</th>
-                                    {{-- <th>Tanpa Keterangan</th> --}}
-                                    {{-- <th>Jumlah Hari per Bulan</th> --}}
+                                    <th>Izin</th>
+                                    <th>Izin Kerja</th>
+                                    <th>Kurang Jam</th>
                                 </thead>
                                 <tbody>
-                                    @foreach ($data as $no => $r)
-                                        <tr>
-                                            <td align="center">{{ $no + 1 }}</td>
-                                            <td>{{ getNamaBulan($r->bulan) }}</td>
-                                            <td>{{ $r->tahun }}</td>
-                                            <td> {{ $r->totalkerja }} hari</td>
-
-                                            @if ($data2 == null)
-                                                <td> 0 </td>
-                                                <td> 0 </td>
-                                            @else
-                                                @foreach ($data2 as $d)
-                                                    @if($d->bulan == $r->bulan)
-                                                        <td> {{ $d->totalizin }} hari</td>
-                                                        <td> {{ $d->totalsakit }} hari</td>
-                                                    @else
-                                                        <td> </td>
-                                                        <td> </td>
-                                                    @endif
-                                                @endforeach
-                                            @endif
-
-                                            @if ($cuti == null)
-                                                <td> 0 </td>
-                                            @else
-                                                @foreach ($cuti as $d)
-                                                    @if($d->bulan == $r->bulan)
-                                                        <td> {{ $d->totalcuti }} hari</td>
-                                                    @else
-                                                        <td></td>
-                                                    @endif
-                                                @endforeach
-                                            @endif
-                                            {{-- <td> 0 </td>
-                                            <td><span class="jumlah" data-bulan="{{ $r->bulan }}"
-                                                    data-tahun="{{ $r->tahun }}" data-total="{{ $r->totalkerja }}"
-                                                    data-libur="{{ $r->jumlah_hari_libur }}"></span></td> --}}
-                                        </tr>
-                                    @endforeach
 
                                 </tbody>
                             </table>
@@ -133,5 +111,69 @@
             $(this).text(totalhari + ' hari');
             console.log(totalhari);
         })
+
+        console.log($("#filter1").val());
+
+        $(document).ready(function() {
+            let table = $('#table-rekapitulasi').DataTable({
+                fixedHeader: true,
+                pageLength: 25,
+                responsive: true,
+                processing: true,
+                autoWidth: false,
+                serverSide: true,
+                searching: false,
+                ajax: {
+                    url: "{{ route('admin.rekapitulasi.listdetailrekap', $nopeg) }}",
+                    data: function(d) {
+                        d.periode = $('#filter1').val() ? $('#filter1').val() : '2';
+                    }
+                },
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        className: 'text-center',
+                        orderable: false,
+                        searchable: false,
+                    },
+                    {
+                        data: 'nama_bulan',
+                        name: 'nama_bulan'
+                    },
+                    {
+                        data: 'total_masuk_karyawan',
+                        name: 'total_masuk_karyawan'
+                    },
+                    {
+                        data: 'total_hari_kerja_per_bulan',
+                        name: 'total_hari_kerja_per_bulan'
+                    },
+                    {
+                        data: 'total_hari_mangkir',
+                        name: 'total_hari_mangkir'
+                    },
+                    {
+                        data: 'cuti',
+                        name: 'cuti'
+                    },
+                    {
+                        data: 'izin_kerja',
+                        name: 'izin_kerja'
+                    },
+                    {
+                        data: 'izin',
+                        name: 'izin'
+                    },
+                    {
+                        data: 'kurang_jam',
+                        name: 'kurang_jam'
+                    },
+                ],
+            });
+
+            $("#filter1").on('change', function() {
+                table.draw();
+            });
+        });
     </script>
 @endsection
