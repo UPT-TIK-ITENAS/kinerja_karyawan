@@ -182,8 +182,7 @@ class AdminController extends Controller
             'jam_pulang' => $request->jam_pulang == NULL ? NULL :  Carbon::parse($request->jam_pulang)->format('Y-m-d H:i:s'),
             'status' => $request->status
         ]);
-
-        return redirect()->route('admin.datapresensi')->with('success', 'Data Attendance berhasil disimpan');
+        return redirect()->back()->with('success', 'Data Attendance berhasil disimpan');
     }
 
     public function updateAttendance(Request $request)
@@ -195,8 +194,7 @@ class AdminController extends Controller
             'modify_by' => '1',
             'status' => $request->status1,
         ]);
-
-        return redirect()->route('admin.datapresensi')->with('success', 'Data Attendance berhasil diupdate');
+        return redirect()->back()->with('success', 'Data Attendance berhasil diupdate');
     }
 
     public function listkaryawan_duration(Request $request)
