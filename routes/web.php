@@ -137,6 +137,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::prefix('karyawan')->name('admin.karyawan.')->group(function () {
             Route::get('/', [ListKaryawanController::class, 'index'])->name('list');
+            Route::get('/editKaryawan/{id}', [ListKaryawanController::class, 'editKaryawan'])->name('editKaryawan');
         });
 
         Route::prefix('rekapitulasi')->name('admin.rekapitulasi.')->group(function () {
