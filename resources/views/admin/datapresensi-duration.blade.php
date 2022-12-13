@@ -25,10 +25,12 @@
                             <div class="form-group row">
                                 <label class="col-sm-1 col-form-label">Tanggal</label>
                                 <div class="col-xl-2">
-                                    <div class="input-group">
-                                        <input class="datepicker-here form-control digits" id="tanggal" name="tanggal"
-                                            type="text" data-language="en" required>
-                                    </div>
+                                    <input type="text"
+                                        class="ts-datepicker form-control @error('tanggal') is-invalid @enderror"
+                                        id="tanggal" name="tanggal" value="" />
+                                    @error('tanggal')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="col-sm-12 col-md-12 col-lg-6">
                                     <button class="btn btn-outline-success-2x" type="submit"><i class="fa fa-refresh"></i>
@@ -41,10 +43,12 @@
                             <div class="form-group row">
                                 <label class="col-sm-1 col-form-label">Tanggal</label>
                                 <div class="col-xl-2">
-                                    <div class="input-group">
-                                        <input class="datepicker-here form-control digits" id="tanggal" name="tanggal"
-                                            type="text" data-language="en" required>
-                                    </div>
+                                    <input type="text"
+                                        class="ts-datepicker form-control @error('tanggal') is-invalid @enderror"
+                                        id="tanggal" name="tanggal" value="" />
+                                    @error('tanggal')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="col-sm-12 col-md-12 col-lg-6">
                                     <button class="btn btn-outline-success-2x" type="submit"><i class="fa fa-refresh"></i>
@@ -89,7 +93,7 @@
                             </div>
                         </div>
 
-                        <div class="table-responsive">
+                        <div class="dt-ext table-responsive">
                             <table class="dataTable" id="table-admin">
                                 <thead>
                                     <th>No.</th>
@@ -299,7 +303,8 @@
         $(document).ready(function() {
             $("#kt_datetimepicker_1").datepicker();
         });
-        // $('#kt_datetimepicker_1').datetimepicker();
+
+
 
         $().ready(function() {
             let table = $('#table-admin').DataTable({
@@ -392,6 +397,33 @@
             $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
                 console.log(message);
             };
+
+            $('.ts-datepicker').daterangepicker({
+                singleDatePicker: true,
+                timePicker: false,
+                showDropdowns: true,
+                autoUpdateInput: true,
+                autoApply: true,
+                locale: {
+                    cancelLabel: 'Hapus',
+                    applyLabel: 'Terapkan',
+                    format: 'YYYY-MM-DD'
+                }
+            });
+
+            $('.ts-datetimepicker').daterangepicker({
+                singleDatePicker: true,
+                timePicker: true,
+                timePicker24Hour: true,
+                showDropdowns: true,
+                autoUpdateInput: true,
+                autoApply: true,
+                locale: {
+                    cancelLabel: 'Hapus',
+                    applyLabel: 'Terapkan',
+                    format: 'YYYY-MM-DD HH:mm:ss'
+                }
+            });
         });
 
         $('body').on('click', '.editAtt', function() {

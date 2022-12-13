@@ -21,7 +21,7 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="table-responsive my-5">
+                        <div class="dt-ext table-responsive my-5">
                             <table class="dataTable" id="table-jadwal-satpam">
                                 <thead>
                                     <th>No.</th>
@@ -246,13 +246,14 @@
                     },
                 }],
                 eventClick: function(info) {
+                    info.jsEvent.preventDefault();
+                    console.log("clicked")
                     let id = info.event.id
                     $.ajax({
                         url: "{{ url('admin/jadwal-satpam/by-id') }}/" + id,
                         type: 'GET',
                         dataType: 'JSON',
                         success: function(response) {
-                            console.log(response)
                             const hasCuti = response.tagable?.hasOwnProperty('id_cuti');
                             const hasIzin = response.tagable?.hasOwnProperty('id_izin');
                             const capitalize = (s) => {
@@ -285,7 +286,9 @@
                                 $("#detail-jadwal").html('Detail Jadwal')
                             }
                             var myModal = new bootstrap.Modal(document.getElementById(
-                                'modal-detail'))
+                                'modal-detail'), {
+                                backdrop: 'static',
+                            })
                             myModal.show()
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
@@ -299,6 +302,8 @@
                     })
                 },
                 dateClick: function(info) {
+                    info.jsEvent.preventDefault();
+
                     $('.ts-datepicker').daterangepicker({
                         singleDatePicker: true,
                         timePicker: true,

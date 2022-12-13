@@ -174,11 +174,6 @@
         <script src="{{ asset('assets/js/prism/prism.min.js') }}"></script>
         <script src="{{ asset('assets/js/clipboard/clipboard.min.js') }}"></script>
         <script src="{{ asset('assets/js/custom-card/custom-card.js') }}"></script>
-        <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
-        {{-- 
-        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.en.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.custom.js') }}"></script> --}}
         <script src="{{ asset('assets/js/time-picker/jquery-clockpicker.min.js') }}"></script>
         <script src="{{ asset('assets/js/time-picker/highlight.min.js') }}"></script>
         <script src="{{ asset('assets/js/time-picker/clockpicker.js') }}"></script>
@@ -190,11 +185,6 @@
         <script src="{{ asset('assets/js/form-validation-custom.js') }}"></script>
         <script src="{{ asset('assets/js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
         <script src="{{ asset('assets/js/datatable/datatables/datatable.custom.js') }}"></script>
-
-        <script src="{{ asset('assets/js/datepicker/date-time-picker/moment.min.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-time-picker/tempusdominus-bootstrap-4.min.js') }}"></script>
-        <script src="{{ asset('assets/js/datepicker/date-time-picker/datetimepicker.custom.js') }}"></script>
-
         <script src="{{ asset('assets/js/datatable/datatable-extension/dataTables.buttons.min.js') }}"></script>
         <script src="{{ asset('assets/js/datatable/datatable-extension/jszip.min.js') }}"></script>
         <script src="{{ asset('assets/js/datatable/datatable-extension/buttons.colVis.min.js') }}"></script>
@@ -214,11 +204,14 @@
         <script src="{{ asset('assets/js/datatable/datatable-extension/dataTables.rowReorder.min.js') }}"></script>
         <script src="{{ asset('assets/js/datatable/datatable-extension/dataTables.scroller.min.js') }}"></script>
 
+        <script src="{{ asset('assets/js/datepicker/date-time-picker/moment.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datepicker/date-time-picker/tempusdominus-bootstrap-4.min.js') }}"></script>
+        <script src="{{ asset('assets/js/datepicker/date-time-picker/datetimepicker.custom.js') }}"></script>
+
         <script src="{{ asset('assets/js/script.js') }}"></script>
         <script src="{{ asset('assets/js/theme-customizer/customizer.js') }}"></script>
         <script src="{{ asset('assets/js/notify/bootstrap-notify.min.js') }}"></script>
         <script src="{{ asset('assets/js/notify/notify-script.js') }}"></script>
-        <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
         <script src="{{ asset('assets/js/select2/select2.full.min.js') }}"></script>
         <script src="{{ asset('assets/js/select2/select2-custom.js') }}"></script>
         <script src="{{ asset('assets/js/daterangepicker.js') }}"></script>
@@ -231,6 +224,7 @@
             integrity="sha256-GcByKJnun2NoPMzoBsuCb4O2MKiqJZLlHTw3PJeqSkI=" crossorigin="anonymous"></script>
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
+        <script src="{{ asset('assets/js/init-plugins.js') }}"></script>
 
 
         <script type="text/javascript">
