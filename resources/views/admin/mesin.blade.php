@@ -54,7 +54,8 @@
                                                         data-id='{{ $b->id }}' title='Edit Mesin'>
                                                         <i class='icofont icofont-edit-alt'></i>
                                                     </a>
-                                                    <a href='{{ route('admin.destroymesin', $b->id) }}' title='Hapus Mesin'
+                                                    <a href='{{ route('admin.mesin-sidikjari.destroymesin', $b->id) }}'
+                                                        title='Hapus Mesin'
                                                         class='btn btn-sm btn-danger btn-xs align-items-center hapusMesin'><i
                                                             class='icofont icofont-trash'></i></a>
 
@@ -83,7 +84,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" action="{{ route('admin.updatemesin') }}" method="POST">
+                <form class="needs-validation" action="{{ route('admin.mesin-sidikjari.updatemesin') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-2 mb-3">
@@ -136,7 +137,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" action="{{ route('admin.createmesin') }}" method="POST">
+                <form class="needs-validation" action="{{ route('admin.mesin-sidikjari.createmesin') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-2 mb-3">
@@ -193,7 +194,7 @@
         $('body').on('click', '.editMesin', function() {
             var id = $(this).data('id');
 
-            $.get("{{ route('admin.admin_v') }}" + '/editmesin/' + id, function(data) {
+            $.get(`${window.baseurl}/admin/mesin-sidikjari/editmesin/${id}`, function(data) {
                 $('#ModalTitle').html("Pertanyaan");
                 $('#show-mesin').modal('show');
                 $('#id').val(data.id);

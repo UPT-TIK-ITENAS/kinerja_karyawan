@@ -228,13 +228,13 @@ class KaryawanController extends Controller
     public function store_cuti(Request $request)
     {
         $is_valid = 0;
-        $this->validate($request, [
-            'jenis_cuti' => 'required',
-            'tgl_akhir_cuti' => 'required',
-            'total_cuti' => 'required',
-            'alamat' => 'required',
-            'no_hp' => 'required',
-        ]);
+        // $this->validate($request, [
+        //     'jenis_cuti' => 'required',
+        //     'tgl_akhir_cuti' => 'required',
+        //     'total_cuti' => 'required',
+        //     'alamat' => 'required',
+        //     'no_hp' => 'required',
+        // ]);
         $a = explode('|', $request->jenis_cuti);
         // dd($a);
 
@@ -246,7 +246,7 @@ class KaryawanController extends Controller
             ->get();
 
 
-        //dd($request->all());
+        //dd($history_cuti);
         foreach ($history_cuti as $r) {
             if ($r->id_cuti == $a[0]) {
                 if ($r->total_harinya == $r->max_hari) {
@@ -275,7 +275,6 @@ class KaryawanController extends Controller
             $data->validasi = 1;
             $data->tgl_pengajuan = date('Y-m-d H:i:s');
             $data->save();
-            //dd($data);
             return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
         }
         return redirect()->back()->with('danger', 'Saldo Cuti Tidak Mencukupi');

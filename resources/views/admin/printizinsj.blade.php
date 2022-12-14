@@ -153,9 +153,10 @@
     </div>
 
     <div class="isi">
-        <p style="font-size: 16px;align:left;"> Dengan ini menyatakan bahwa saya tidak hadir di tanggal
-            <b>{{ $data->tanggal }}</b> pada jam <b> {{ $data->jam_awal }} </b> sampai dengan jam <b>
-                {{ $data->jam_akhir }} </b> dikarenakan <b> {{ $data->alasan }} </b>
+        <p style="font-size: 16px;align:left;"> Dengan ini menyatakan bahwa saya hadir di itenas untuk melakukan tugas,
+            tetapi <u><b>tidak dapat melakukan absen sidik jari pada</b></u> tanggal
+            <b><?php echo \Carbon\Carbon::parse($data->tanggal_izin)->format('Y-m-d'); ?> </b> jam <b><?php echo \Carbon\Carbon::parse($data->tanggal_izin)->format('H:i:s'); ?></b> dikarenakan <b> {{ $data->alasan }} </b>
+
         </p>
 
     </div>

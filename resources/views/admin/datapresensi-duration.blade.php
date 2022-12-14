@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-header">
                         <p><b>Sinkronisasi Mesin Sidik Jari</b> </p>
-                        <form action="{{ route('admin.SyncBiometricWithDuration') }}" method="POST">
+                        <form action="{{ route('admin.SyncAndInsertBiometricWithDuration') }}" method="POST">
                             @csrf
                             <div class="form-group row">
                                 <label class="col-sm-1 col-form-label">Tanggal</label>
@@ -33,6 +33,22 @@
                                 <div class="col-sm-12 col-md-12 col-lg-6">
                                     <button class="btn btn-outline-success-2x" type="submit"><i class="fa fa-refresh"></i>
                                         Sinkron</button>
+                                </div>
+                            </div>
+                        </form>
+                        <form action="{{ route('admin.recalculateTelat') }}" method="POST">
+                            @csrf
+                            <div class="form-group row">
+                                <label class="col-sm-1 col-form-label">Tanggal</label>
+                                <div class="col-xl-2">
+                                    <div class="input-group">
+                                        <input class="datepicker-here form-control digits" id="tanggal" name="tanggal"
+                                            type="text" data-language="en" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                    <button class="btn btn-outline-success-2x" type="submit"><i class="fa fa-refresh"></i>
+                                        Recalculate Telat</button>
                                 </div>
                             </div>
                         </form>
@@ -66,6 +82,13 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col">
+                                <a href="#" class="btn btn-primary" data-bs-target="#tambahAtt" data-bs-toggle="modal"
+                                    style="float: right">+ Tambah</a>
+                            </div>
+                        </div>
+
                         <div class="table-responsive">
                             <table class="dataTable" id="table-admin">
                                 <thead>
@@ -104,7 +127,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('admin.storeizinkehadiran') }}"
+                <form class="needs-validation" novalidate="" action="{{ route('admin.presensi.storeizinkehadiran') }}"
                     method="POST">
                     @csrf
                     <div class="modal-body">
@@ -176,10 +199,108 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade bd-example-modal-lg" id="tambahAtt" aria-labelledby="myLargeModalLabel" aria-modal="true"
+        role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myLargeModalLabel">Form Pengajuan Izin</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
+                        data-bs-original-title="" title=""></button>
+                </div>
+                <form class="needs-validation" novalidate="" action="{{ route('admin.presensi.storeAttendance') }}"
+                    method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row g-1 mb-3">
+                            <div class="col-md-8">
+                                <span class="form-label" for="jenis_izin">Karyawan</span>
+                                <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                    id="nip" name="nip" required>
+                                    <option selected="" disabled="" value="">-- Pilih ---</option>
+                                    @foreach ($user as $u)
+                                        <option value="{{ $u->nopeg }}">{{ $u->nopeg }} -
+                                            {{ $u->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="tanggal">Tanggal</span>
+                                <div class="input-group date" id="dt-date" data-target-input="nearest">
+                                    <input class="form-control col-sm-12 datetimepicker-input digits" type="text"
+                                        data-target="#dt-date" id="tanggal" name="tanggal" required>
+                                    <div class="input-group-text" data-target="#dt-date" data-toggle="datetimepicker"><i
+                                            class="fa fa-calendar"></i></div>
+                                </div>
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-4">
+                                <span class="form-label" for="jam_masuk">Jam Masuk</span>
+                                <div class="input-group date" id="dt-jam_masuk" data-target-input="nearest">
+                                    <input class="form-control datetimepicker-input digits" type="text"
+                                        data-target="#dt-jam_masuk" id="jam_masuk" name="jam_masuk">
+                                    <div class="input-group-text" data-target="#dt-jam_masuk"
+                                        data-toggle="datetimepicker">
+                                        <i class="fa fa-calendar"> </i>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="jam_siang">Jam Siang</span>
+                                <div class="input-group date" id="dt-jam_siang" data-target-input="nearest">
+                                    <input class="form-control datetimepicker-input digits" type="text"
+                                        data-target="#dt-jam_siang" id="jam_siang" name="jam_siang">
+                                    <div class="input-group-text" data-target="#dt-jam_siang"
+                                        data-toggle="datetimepicker">
+                                        <i class="fa fa-calendar"> </i>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="jam_pulang">Jam Pulang</span>
+                                <div class="input-group date" id="dt-jam_pulang" data-target-input="nearest">
+                                    <input class="form-control datetimepicker-input digits" type="text"
+                                        data-target="#dt-jam_pulang" id="jam_pulang" name="jam_pulang">
+                                    <div class="input-group-text" data-target="#dt-jam_pulang"
+                                        data-toggle="datetimepicker">
+                                        <i class="fa fa-calendar"> </i>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+
+                            <div class="col-md-7">
+                                <span class="form-label" for="status">Status</span>
+                                <select name="status" id="status" class="form-control">
+                                    <option value='' disabled selected>Pilih Status</option>
+                                    <option value="1">Lengkap</option>
+                                    <option value="0">Kurang</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     @parent
 
 
     <script>
+        $(document).ready(function() {
+            $("#kt_datetimepicker_1").datepicker();
+        });
+        // $('#kt_datetimepicker_1').datetimepicker();
+
         $().ready(function() {
             let table = $('#table-admin').DataTable({
                 fixedHeader: true,
@@ -194,7 +315,7 @@
                     width: "200px !important",
                 }, ],
                 ajax: {
-                    url: "{{ route('admin.listkaryawan-duration') }}",
+                    url: "{{ route('admin.presensi.listkaryawan-duration') }}",
                     data: function(d) {
                         d.filter1 = $('#filter1').val() ? $('#filter1').val() : '<>';
                         d.filter2 = $('#filter2').val() ? $('#filter2').val() : '<>';
@@ -209,12 +330,12 @@
                         searchable: false,
                     },
                     {
-                        data: 'name',
-                        name: 'name'
+                        data: 'user.name',
+                        name: 'user.name'
                     },
                     {
-                        data: 'hari',
-                        name: 'hari'
+                        data: 'days',
+                        name: 'days'
                     },
                     {
                         data: 'jam_masuk',

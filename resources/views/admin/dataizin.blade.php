@@ -66,7 +66,8 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('admin.storeizin') }}" method="POST">
+                <form class="needs-validation" novalidate="" action="{{ route('admin.izin-resmi.storeizin') }}"
+                    method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="alert alert-danger" id="lebihHari" style="display: none;">
@@ -164,7 +165,7 @@
                     targets: 1,
                     width: "200px !important",
                 }, ],
-                ajax: "{{ route('admin.listizin') }}",
+                ajax: "{{ route('admin.izin-resmi.listizin') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
