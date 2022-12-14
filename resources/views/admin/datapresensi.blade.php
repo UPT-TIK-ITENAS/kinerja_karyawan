@@ -26,12 +26,12 @@
                                 <div class="form-group row">
                                     <label class="col-sm-1 col-form-label">Tanggal</label>
                                     <div class="col-xl-2">
-                                        <div class="input-group date" id="dt-date" data-target-input="nearest">
-                                            <input class="form-control datetimepicker-input digits" type="text"
-                                                data-target="#dt-date" id="tanggal" name="tanggal">
-                                            <div class="input-group-text" data-target="#dt-date"
-                                                data-toggle="datetimepicker"><i class="fa fa-calendar"></i></div>
-                                        </div>
+                                        <input type="text"
+                                            class="ts-datepicker form-control @error('tanggal') is-invalid @enderror"
+                                            id="tanggal" name="tanggal" value="" />
+                                        @error('tanggal')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     <div class="col-sm-12 col-md-12 col-lg-6">
                                         <button class="btn btn-outline-success-2x" type="submit"><i
@@ -79,7 +79,7 @@
                             </div>
                         </div>
 
-                        <div class="table-responsive">
+                        <div class="dt-ext table-responsive">
                             <table class="dataTable" id="table-admin">
                                 <thead>
                                     <th>No.</th>
@@ -110,7 +110,7 @@
     </div>
 @endsection
 
-@section('scripts')
+@push('modal')
     <div class="modal fade bd-example-modal-lg" id="show-izin" aria-labelledby="myLargeModalLabel" aria-modal="true"
         tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -175,14 +175,8 @@
                             </div>
                             <div class="col-md-4 jamizin">
                                 <span class="form-label" for="tanggal_izin">Tanggal</span>
-                                <div class="input-group date" id="dt-tanggal_izin" data-target-input="nearest">
-                                    <input class="form-control datetimepicker-input digits" type="text"
-                                        data-target="#dt-tanggal_izin" id="tanggal_izin" name="tanggal_izin">
-                                    <div class="input-group-text" data-target="#dt-tanggal_izin"
-                                        data-toggle="datetimepicker">
-                                        <i class="fa fa-calendar"> </i>
-                                    </div>
-                                </div>
+                                <input type="text" class="form-control" id="tanggal_izin" name="tanggal_izin"
+                                    value="" />
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
 
@@ -191,7 +185,7 @@
                             <span class="form-label" for="alasan">Alasan</span>
                             <textarea class="form-control" id="alasan" name="alasan" rows="3" placeholder="Alasan" required></textarea>
                             {{-- <input class="form-control" id="jam_masuk" name="jam_masuk" type="date"
-                                required=""> --}}
+                        required=""> --}}
                         </div>
                         <div class="mb-3">
                             <div class="form-check">
@@ -223,7 +217,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('admin.presensi.storeAttendance') }}"
+                <form class="needs-validation my-5" novalidate="" action="{{ route('admin.presensi.storeAttendance') }}"
                     method="POST">
                     @csrf
                     <div class="modal-body">
@@ -241,50 +235,28 @@
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="tanggal">Tanggal</span>
-                                <div class="input-group date" id="dt-date" data-target-input="nearest">
-                                    <input class="form-control col-sm-12 datetimepicker-input digits" type="text"
-                                        data-target="#dt-date" id="tanggal" name="tanggal" required>
-                                    <div class="input-group-text" data-target="#dt-date" data-toggle="datetimepicker"><i
-                                            class="fa fa-calendar"></i></div>
-                                </div>
+                                <input type="text" class="form-control" id="tanggal-tambah" name="tanggal"
+                                    value="" />
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                         </div>
                         <div class="row g-2 mb-3">
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_masuk">Jam Masuk</span>
-                                <div class="input-group date" id="dt-jam_masuk" data-target-input="nearest">
-                                    <input class="form-control datetimepicker-input digits" type="text"
-                                        data-target="#dt-jam_masuk" id="jam_masuk" name="jam_masuk">
-                                    <div class="input-group-text" data-target="#dt-jam_masuk"
-                                        data-toggle="datetimepicker">
-                                        <i class="fa fa-calendar"> </i>
-                                    </div>
-                                </div>
+                                <input type="text" class="form-control" id="jam_masuk" name="jam_masuk"
+                                    value="" />
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_siang">Jam Siang</span>
-                                <div class="input-group date" id="dt-jam_siang" data-target-input="nearest">
-                                    <input class="form-control datetimepicker-input digits" type="text"
-                                        data-target="#dt-jam_siang" id="jam_siang" name="jam_siang">
-                                    <div class="input-group-text" data-target="#dt-jam_siang"
-                                        data-toggle="datetimepicker">
-                                        <i class="fa fa-calendar"> </i>
-                                    </div>
-                                </div>
+                                <input type="text" class="form-control" id="jam_siang" name="jam_siang"
+                                    value="" />
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_pulang">Jam Pulang</span>
-                                <div class="input-group date" id="dt-jam_pulang" data-target-input="nearest">
-                                    <input class="form-control datetimepicker-input digits" type="text"
-                                        data-target="#dt-jam_pulang" id="jam_pulang" name="jam_pulang">
-                                    <div class="input-group-text" data-target="#dt-jam_pulang"
-                                        data-toggle="datetimepicker">
-                                        <i class="fa fa-calendar"> </i>
-                                    </div>
-                                </div>
+                                <input type="text" class="form-control" id="jam_pulang" name="jam_pulang"
+                                    value="" />
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
 
@@ -334,14 +306,8 @@
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_masuk1">Jam Masuk</span>
-                                <div class="input-group date" id="dt-jam_masuk1" data-target-input="nearest">
-                                    <input class="form-control datetimepicker-input digits" type="text"
-                                        data-target="#dt-jam_masuk1" id="jam_masuk1" name="jam_masuk1">
-                                    <div class="input-group-text" data-target="#dt-jam_masuk1"
-                                        data-toggle="datetimepicker">
-                                        <i class="fa fa-calendar"> </i>
-                                    </div>
-                                </div>
+                                <input type="text" class="form-control" id="jam_masuk1" name="jam_masuk1"
+                                    value="" />
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                         </div>
@@ -349,26 +315,14 @@
 
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_siang1">Jam Siang</span>
-                                <div class="input-group date" id="dt-jam_siang1" data-target-input="nearest">
-                                    <input class="form-control datetimepicker-input digits" type="text"
-                                        data-target="#dt-jam_siang1" id="jam_siang1" name="jam_siang1">
-                                    <div class="input-group-text" data-target="#dt-jam_siang1"
-                                        data-toggle="datetimepicker">
-                                        <i class="fa fa-calendar"> </i>
-                                    </div>
-                                </div>
+                                <input type="text" class="form-control" id="jam_siang1" name="jam_siang1"
+                                    value="" />
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_pulang1">Jam Pulang</span>
-                                <div class="input-group date" id="dt-jam_pulang1" data-target-input="nearest">
-                                    <input class="form-control datetimepicker-input digits" type="text"
-                                        data-target="#dt-jam_pulang1" id="jam_pulang1" name="jam_pulang1">
-                                    <div class="input-group-text" data-target="#dt-jam_pulang1"
-                                        data-toggle="datetimepicker">
-                                        <i class="fa fa-calendar"> </i>
-                                    </div>
-                                </div>
+                                <input type="text" class="form-control" id="jam_pulang1" name="jam_pulang1"
+                                    value="" />
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                             <div class="col-md-7">
@@ -389,6 +343,9 @@
         </div>
     </div>
 
+@endpush
+
+@section('scripts')
     @parent
 
 
@@ -484,7 +441,21 @@
             $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
                 console.log(message);
             };
+
+            // init daterangepicker
+            daterangepicker('.ts-datepicker');
+            daterangepicker('.ts-datetimepicker', true);
+            daterangepicker('#tanggal-tambah', "auto", false, '#tambahAtt');
+            daterangepicker('#jam_masuk', "auto", true, '#tambahAtt');
+            daterangepicker('#jam_siang', "auto", true, '#tambahAtt');
+            daterangepicker('#jam_pulang', "auto", true, '#tambahAtt');
+            daterangepicker('#tanggal_izin', "auto", true, '#show-izin');
+            daterangepicker('#jam_masuk1', "auto", true, '#show-att');
+            daterangepicker('#jam_siang1', "auto", true, '#show-att');
+            daterangepicker('#jam_pulang1', "auto", true, '#show-att');
         });
+
+
 
         $('body').on('click', '.editAtt', function() {
             var id = $(this).data('id');

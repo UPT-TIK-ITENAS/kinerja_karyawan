@@ -173,16 +173,28 @@ class AdminController extends Controller
 
     public function storeAttendance(Request $request)
     {
-        Attendance::insert([
-            'nip' => $request->nip,
-            'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
-            'hari' => date('w', strtotime($request->tanggal)),
-            'jam_masuk' => $request->jam_masuk == NULL ? NULL :  Carbon::parse($request->jam_masuk)->format('Y-m-d H:i:s'),
-            'jam_siang' => $request->jam_siang == NULL ? NULL :  Carbon::parse($request->jam_siang)->format('Y-m-d H:i:s'),
-            'jam_pulang' => $request->jam_pulang == NULL ? NULL :  Carbon::parse($request->jam_pulang)->format('Y-m-d H:i:s'),
-            'status' => $request->status
+        $request->validate([
+            'nip' => 'required',
+            'tanggal' => 'required',
         ]);
-        return redirect()->back()->with('success', 'Data Attendance berhasil disimpan');
+
+        $currentData = Attendance::where('nip', $request->nip)->where('tanggal', Carbon::parse($request->tanggal)->format('Y-m-d'))->first();
+
+        // if currentData is null, then create new data
+        if (!$currentData) {
+            Attendance::insert([
+                'nip' => $request->nip,
+                'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
+                'hari' => date('w', strtotime($request->tanggal)),
+                'jam_masuk' => $request->jam_masuk == NULL ? NULL :  Carbon::parse($request->jam_masuk)->format('Y-m-d H:i:s'),
+                'jam_siang' => $request->jam_siang == NULL ? NULL :  Carbon::parse($request->jam_siang)->format('Y-m-d H:i:s'),
+                'jam_pulang' => $request->jam_pulang == NULL ? NULL :  Carbon::parse($request->jam_pulang)->format('Y-m-d H:i:s'),
+                'status' => $request->status
+            ]);
+            return redirect()->back()->with('success', 'Data Attendance berhasil disimpan');
+        } else {
+            return redirect()->back()->with('error', "Data Attendance pada NIP $request->nip Tanggal $request->tanggal sudah ada! Mohon edit attendance.");
+        }
     }
 
     public function updateAttendance(Request $request)

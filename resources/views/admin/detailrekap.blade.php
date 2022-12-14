@@ -117,7 +117,7 @@
         $(document).ready(function() {
             let table = $('#table-rekapitulasi').DataTable({
                 fixedHeader: true,
-                pageLength: 25,
+                pageLength: 10,
                 responsive: true,
                 processing: true,
                 autoWidth: false,
