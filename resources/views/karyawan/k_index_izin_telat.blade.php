@@ -13,62 +13,58 @@
             </div>
         </div>
     </div>
+
+
     <div class="container-fluid">
         <div class="row">
             <!-- Zero Configuration  Starts-->
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-
-                    </div>
-                    <div class="row">
-                        <div class="table-responsive">
-                            <table class="dataTable" id="table-izin">
-                                <thead>
-                                    <tr align="center">
-                                        <th width="5%">No.</th>
-                                        <th>Alasan</th>
-                                        <th>Jam Awal</th>
-                                        <th>Jam Akhir</th>
-                                        <th>Tanggal</th>
-                                        <th>Status</th>
-                                        {{-- <th>Approval</th> --}}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($data as $no => $r)
-                                        <tr>
-                                            <td align="center">{{ $no + 1 }}</td>
-                                            <td>{{ $r->alasan }}</td>
-                                            <td align="center">{{ $r->jam_awal }}</td>
-                                            <td align="center">{{ $r->jam_akhir }}</td>
-                                            <td align="center">{{ $r->tanggal }}</td>
-                                            <td>
-                                                <div class='d-block text-center'>
-                                                    <a href='#' data-toggle='tooltip'
-                                                        class='btn btn btn-warning btn-xs align-items-center tambahIzin'
-                                                        data-id='{{ $r->id_izin }}' title='Edit Izin'>
-                                                        <i class='icofont icofont-edit-alt'></i>
-                                                    </a>
-                                                </div>
-
-                                            </td>
-                                            {{-- <td align="center">{{   $r->approval }}</td> --}}
+                        <div class="row mb-2">
+                            <div class="col">
+                                <a href="#" class="btn btn-primary" data-bs-target="#tambahIzin"
+                                    data-bs-toggle="modal" style="float: right">+ Tambah</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table class="dataTable" id="table-izin">
+                                    <thead>
+                                        <tr align="center">
+                                            <th width="5%">No.</th>
+                                            <th>Alasan</th>
+                                            <th>Jam Awal</th>
+                                            <th>Jam Akhir</th>
+                                            <th>Tanggal</th>
+                                            <th>Status</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($data['izin'] as $no => $r)
+                                            <tr>
+                                                <td align="center">{{ $no + 1 }}</td>
+                                                <td>{{ $r->alasan }}</td>
+                                                <td align="center">{{ $r->jam_awal }}</td>
+                                                <td align="center">{{ $r->jam_akhir }}</td>
+                                                <td align="center">{{ $r->tanggal }}</td>
+                                                <td align="center">{!! getApproval($r->id_izin, 'izin') !!}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
 @endsection
 
 @section('scripts')
-    <div class="modal fade bd-example-modal-lg" id="show-mesin" aria-labelledby="myLargeModalLabel" aria-modal="true"
+    <div class="modal fade bd-example-modal-lg" id="tambahIzin" aria-labelledby="myLargeModalLabel" aria-modal="true"
         role="dialog">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -77,18 +73,15 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('kepalaunit.approveIzinTelat') }}"
+                <form class="needs-validation" novalidate="" action="{{ route('karyawan.store_izinTelat') }}"
                     method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="alert alert-danger" id="lebihHari" style="display: none;">
-                            ⚠ Tidak boleh melebihi jumlah hari yang telah ditentukan.
+                            ⚠️ Tidak boleh melebihi jumlah hari yang telah ditentukan.
                         </div>
                         <div class="row g-1 mb-3">
                             <div class="col-md-12">
-                                <input type="hidden" id="id_izin" name="id_izin">
-                                <input type="hidden" id="id_attendance" name="id_attendance">
-                                <input type="hidden" id="nopeg" name="nopeg">
                                 <span class="form-label" for="alasan">Alasan</span>
                                 <textarea name="alasan" id="alasan" name="alasan" class="form-control" required></textarea>
                                 <div class="invalid-feedback">Wajib Diisi !</div>
@@ -127,7 +120,7 @@
                     <div class="modal-footer justify-content-between">
                         <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
                             dihitung</span>
-                        <button class="btn btn-primary" type="submit" id="btnSubmit">Setuju</button>
+                        <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
                     </div>
                 </form>
             </div>
@@ -140,42 +133,6 @@
             pageLength: 10,
             responsive: true,
             processing: true,
-        });
-
-        // $('body').on('click', '.tambahIzin', function() {
-        //     var id = $(this).data('id');
-
-        //     $.get("{{ url('/kepalaunit/approval/editIzinTelat') }}/" + id, function(data) {
-        //         $('#ModalTitle').html("Pertanyaan");
-        //         $('#show-mesin').modal('show');
-        //         $('#id_izin').val(data.id_izin);
-        //         $('#id_attendance').val(data.id_attendance);
-        //         $('#name').val(data.name);
-        //         $('#nopeg').val(data.nopeg);
-        //         $('#alasan').val(data.alasan);
-        //         $('#jam_awal').val(data.jam_awal);
-        //         $('#jam_akhir').val(data.jam_akhir);
-        //         $('#tanggal').val(data.tanggal);
-        //         console.log(data);
-        //     })
-        // });
-
-        $('body').on('click', '.tambahIzin', function() {
-            id = $(this).data('id');
-            $('#btnSubmit').prop('disabled', false);
-            console.log('id :', id)
-            $.get("{{ url('/kepalaunit/approval/editIzinTelat') }}/" + id, function(data, jenisizin) {
-                $('#show-mesin').modal('show');
-                $('#id_izin').val(data.id_izin);
-                $('#id_attendance').val(data.id_attendance);
-                $('#name').val(data.name);
-                $('#nopeg').val(data.nopeg);
-                $('#alasan').val(data.alasan);
-                $('#jam_awal').val(data.jam_awal);
-                $('#jam_akhir').val(data.jam_akhir);
-                $('#tanggal').val(data.tanggal);
-                console.log('data :', data);
-            })
         });
     </script>
 @endsection

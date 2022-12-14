@@ -61,7 +61,7 @@
                     targets: 1,
                     width: "200px !important",
                 }, ],
-                ajax: "{{ route('admin.rekapitulasi.listrekapkaryawan') }}",
+                ajax: "{{ route('admin.listrekapkaryawan') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',

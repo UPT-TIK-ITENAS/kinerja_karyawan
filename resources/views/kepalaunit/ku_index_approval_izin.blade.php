@@ -87,6 +87,7 @@
                             </div>
                         </div>
                     </div>
+                    {{-- <div></div> --}}
                     <div class="modal-footer justify-content-between">
                         <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
                             dihitung</span>
@@ -103,11 +104,9 @@
     <script>
         $('body').on('click', '.editAK', function() {
             id = $(this).data('id');
+            $('#btnSubmit').prop('disabled', false);
             console.log('id :', id)
             $.get("{{ url('/kepalaunit/approval/editIzin') }}/" + id, function(data, jenisizin) {
-                if (data.approval == 1) {
-                    $('#btnSubmit').prop('disabled', true);
-                }
                 $('#ProsesIzin').modal('show');
                 $('#approval').val(data.approval);
                 $('#id_izinkerja').val(data.id_izinkerja);
@@ -116,7 +115,6 @@
                 $('#tgl_akhir_izin').val(data.tgl_akhir_izin);
                 $('#total_izin').val(data.total_izin);
                 console.log('data :', data);
-
             })
         });
 

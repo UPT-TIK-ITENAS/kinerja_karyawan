@@ -31,7 +31,7 @@ class MesinController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect()->route('admin.mesin-sidikjari.mesin')->with('success', 'Edit Data Berhasil!');
+        return redirect()->route('admin.mesinsidikjari')->with('success', 'Edit Data Berhasil!');
     }
 
     public function createmesin(Request $request)
@@ -44,12 +44,12 @@ class MesinController extends Controller
             'status' => $request->statuss,
         ]);
 
-        return redirect()->route('admin.mesin-sidikjari.mesin')->with('success', 'Add Data Berhasil!');
+        return redirect()->route('admin.mesinsidikjari')->with('success', 'Add Data Berhasil!');
     }
 
     public function destroymesin($id)
     {
         Mesin::where('id', $id)->delete();
-        return redirect()->route('admin.mesin-sidikjari.mesin')->with('success', 'Data berhasil dihapus!');
+        return redirect()->route('admin.mesinsidikjari')->with('success', 'Data berhasil dihapus!');
     }
 }

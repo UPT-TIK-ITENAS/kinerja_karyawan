@@ -78,7 +78,6 @@
                                 name="approval" required="">
                                 <option selected="" disabled="" value="">-- Pilih ---</option>
                                 <option value="1">Disetujui</option>
-                                <option value="2" hidden>Disetujui Atasan</option>
                                 <option value="3">Ditolak</option>
                             </select>
                             <input type="hidden" id="lama_cuti">
@@ -101,8 +100,8 @@
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="total_cuti">Total Hari</span>
-                                <input class="form-control" id="total_cuti" name="total_cuti" type="number"
-                                    required="" disabled>
+                                <input class="form-control" id="total_cuti" name="total_cuti" type="number" required=""
+                                    disabled>
                             </div>
                         </div>
                         <div class="row g-2 mb-3">
@@ -175,64 +174,36 @@
         $('body').on('click', '.editAK', function() {
             id = $(this).data('id');
             console.log(id)
+            $('#approval').prop('disabled', false);
+            $('#alasan_tolak').prop('disabled', false);
+            $('#approval').val(null);
+            $('#btnSubmit').prop('disabled', false);
+            console.log("approval", $("#approval"))
             $.get("{{ url('/pejabat/approval/editCuti') }}/" + id, function(data, jeniscuti) {
-                if (data.approval == 0) {
-                    $('#approval').val(null);
-                    $('#id_cuti').val(data.id_cuti);
-                    $('#jenis_cuti').val(data.jenis_cuti);
-                    $('#tgl_awal_cuti').val(data.tgl_awal_cuti);
-                    $('#tgl_akhir_cuti').val(data.tgl_akhir_cuti);
-                    $('#total_cuti').val(data.total_cuti);
-                    $('#ifYes').hide();
-                    $('#alasan_tolak').prop('disabled', false).val(data.alasan_tolak);
-                    $('#alamat').val(data.alamat);
-                    $('#no_hp').val(data.no_hp);
-                    $('#approval').prop('disabled', false);
-                    $('#btnSubmit').prop('disabled', false);
+                if (data.approval != 0) {
+                    $('#approval').prop('disabled', true);
+                    $('#alasan_tolak').prop('disabled', true);
                 }
                 if (data.approval == 2) {
+                    document.getElementById("ifYes").style.display = "block";
                     $('#btnSubmit').prop('disabled', true);
-                    $('#approval').prop('disabled', true);
-                    $('#approval').val(data.approval);
-                    $('#id_cuti').val(data.id_cuti);
-                    $('#jenis_cuti').val(data.jenis_cuti);
-                    $('#tgl_awal_cuti').val(data.tgl_awal_cuti);
-                    $('#tgl_akhir_cuti').val(data.tgl_akhir_cuti);
-                    $('#ifYes').hide();
-                    $('#total_cuti').val(data.total_cuti);
-                    $('#alamat').val(data.alamat);
-                    $('#no_hp').val(data.no_hp);
                 }
                 if (data.approval == 1) {
+                    document.getElementById("ifYes").style.display = "none";
                     $('#btnSubmit').prop('disabled', true);
-                    $('#approval').prop('disabled', true);
-                    $('#approval').val(data.approval);
-                    $('#id_cuti').val(data.id_cuti);
-                    $('#jenis_cuti').val(data.jenis_cuti);
-                    $('#tgl_awal_cuti').val(data.tgl_awal_cuti);
-                    $('#tgl_akhir_cuti').val(data.tgl_akhir_cuti);
-                    $('#ifYes').hide();
-                    $('#total_cuti').val(data.total_cuti);
-                    $('#alamat').val(data.alamat);
-                    $('#no_hp').val(data.no_hp);
                 }
-                if (data.approval == 3) {
-                    $('#btnSubmit').prop('disabled', true);
-                    $('#alasan_tolak').prop('disabled', true).val(data.alasan_tolak);
-                    $('#ifYes').show();
-                    $('#approval').prop('disabled', true).val(data.approval);
-                    $('#id_cuti').val(data.id_cuti);
-                    $('#jenis_cuti').val(data.jenis_cuti);
-                    $('#tgl_awal_cuti').val(data.tgl_awal_cuti);
-                    $('#tgl_akhir_cuti').val(data.tgl_akhir_cuti);
-                    $('#total_cuti').val(data.total_cuti);
-                    $('#alamat').val(data.alamat);
-                    $('#no_hp').val(data.no_hp);
-                }
-                console.log("approval", $("#approval"))
+                $('#approval').val(data.approval);
                 $('#ModalTitle').html("Edit Jenis Kegiatan");
                 $('#ProsesCuti').modal('show');
                 $("#token").val($("meta[name=csrf-token]").attr("content"));
+                $('#id_cuti').val(data.id_cuti);
+                $('#alasan_tolak').val(data.alasan_tolak);
+                $('#jenis_cuti').val(data.jenis_cuti);
+                $('#tgl_awal_cuti').val(data.tgl_awal_cuti);
+                $('#tgl_akhir_cuti').val(data.tgl_akhir_cuti);
+                $('#total_cuti').val(data.total_cuti);
+                $('#alamat').val(data.alamat);
+                $('#no_hp').val(data.no_hp);
                 console.log(data);
                 //console.log(jeniscuti);
             })

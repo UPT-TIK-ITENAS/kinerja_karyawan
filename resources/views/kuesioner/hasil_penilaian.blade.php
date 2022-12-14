@@ -4,9 +4,10 @@
         <div class="page-header">
             <div class="row">
                 <div class="col-lg-6">
-                    <h3>Data Kuesioner</h3>
+                    <h3>Data Pengajuan Cuti</h3>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item">Hasil Kuesioner Kinerja</li>
+                        <li class="breadcrumb-item">Data Pengajuan Cuti</li>
+                        <li class="breadcrumb-item active">Data Cuti</li>
                     </ol>
                 </div>
             </div>

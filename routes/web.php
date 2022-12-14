@@ -5,7 +5,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\BiometricController;
-use App\Http\Controllers\BsdmController;
 use App\Http\Controllers\PengajuanIzinController;
 use App\Http\Controllers\PengajuanCutiController;
 use App\Http\Controllers\KepalaUnitController;
@@ -15,7 +14,7 @@ use App\Http\Controllers\RekapitulasiController;
 use App\Http\Controllers\ListKaryawanController;
 use App\Http\Controllers\KuesionerController;
 use App\Http\Controllers\PejabatController;
-use Illuminate\Support\Carbon;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -37,32 +36,11 @@ Route::group(['name' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login'])->name('auth.login');
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
-Route::get('/test', function () {
-    dd(lateMasuk(null, null, 3));
-});
+
 Route::group(['middleware' => 'auth'], function () {
-
-
-    Route::get('printizin/{id}', [AdminController::class, 'printizin'])->name('admin.printizin');
-    Route::get('printizinkerja/{id}', [AdminController::class, 'printizinkerja'])->name('admin.printizinkerja');
-    Route::get('printcuti/{id}', [AdminController::class, 'printcuti'])->name('admin.printcuti');
-
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.admin_v');
+    Route::get('/kepalaunit', [KepalaUnitController::class, 'index'])->name('kepalaunit.kepalaunit_v');
     Route::group(['prefix' => 'admin'], function () {
-
-        Route::get('/', [AdminController::class, 'index'])->name('admin.admin_v');
-        Route::get('/kepalaunit', [KepalaUnitController::class, 'index'])->name('kepalaunit.kepalaunit_v');
-
-        Route::post('/biometric', [BiometricController::class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
-        Route::post('/biometric-duration', [BiometricController::class, 'SyncAndInsertBiometricWithDuration'])->name('admin.SyncAndInsertBiometricWithDuration');
-        Route::post('/biometric-recalculate-telat', [BiometricController::class, 'recalculateTelat'])->name('admin.recalculateTelat');
-        Route::get('/biometricall', [BiometricAllController::class, 'SyncAndInsertBiometric'])->name('admin.biometricall');
-
-        Route::get('/getWorkingDays/{startDate}/{endDate}', [AdminController::class, 'getWorkingDays'])->name('admin.getWorkingDays');
-        Route::get('/historycuti/{nopeg}/{jenis}', [AdminController::class, 'historycuti'])->name('admin.historycuti');
-
-        Route::get('/datacuti/{id}', [AdminController::class, 'datacuti_show'])->name('admin.datacuti.show');
-        Route::post('/datacuti/pengganti', [AdminController::class, 'datacuti_pengganti'])->name('admin.datacuti.pengganti');
-        Route::get('/datacuti/calendar/{id}/{nopeg}', [AdminController::class, 'datacuti_calendar'])->name('admin.datacuti.calendar');
 
         Route::prefix('jadwal-satpam')->name('admin.jadwal-satpam.')->group(function () {
             Route::get('/list', [\App\Http\Controllers\JadwalSatpamController::class, 'list'])->name('list');
@@ -78,121 +56,75 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/check-pengganti/{id}', [\App\Http\Controllers\JadwalSatpamController::class, 'checkPengganti'])->name('checkPengganti');
         });
 
-        Route::prefix('presensi')->name('admin.presensi.')->group(function () {
-            Route::get('/', [AdminController::class, 'datapresensi'])->name('master');
-            Route::get('/with-duration', [AdminController::class, 'datapresensi_duration'])->name('master.duration');
-            Route::get('/listkaryawan', [AdminController::class, 'listkaryawan'])->name('listkaryawan');
-            Route::get('/listkaryawan-duration', [AdminController::class, 'listkaryawan_duration'])->name('listkaryawan-duration');
-            Route::post('/storeizinkehadiran', [AdminController::class, 'storeizinkehadiran'])->name('storeizinkehadiran');
-            Route::post('/storeAttendance', [AdminController::class, 'storeAttendance'])->name('storeAttendance');
-            Route::post('/updateAttendance', [AdminController::class, 'updateAttendance'])->name('updateAttendance');
-            Route::get('/editAtt/{id}', [AdminController::class, 'editAtt'])->name('editAtt');
-        });
+        Route::get('/datapresensi', [AdminController::class, 'datapresensi'])->name('admin.datapresensi');
+        Route::get('/datapresensi-duration', [AdminController::class, 'datapresensi_duration'])->name('admin.datapresensi-duration');
+        Route::get('/listkaryawan', [AdminController::class, 'listkaryawan'])->name('admin.listkaryawan');
+        Route::get('/listkaryawan-duration', [AdminController::class, 'listkaryawan_duration'])->name('admin.listkaryawan-duration');
 
-        Route::prefix('izin-resmi')->name('admin.izin-resmi.')->group(function () {
-            Route::get('/', [AdminController::class, 'dataizin'])->name('dataizin');
-            Route::get('/listizin', [AdminController::class, 'listizin'])->name('listizin');
-            Route::post('storeizin', [AdminController::class, 'storeizin'])->name('storeizin');
-            Route::get('/batal_izin/{id}', [AdminController::class, 'batal_izin'])->name('batal_izin');
-        });
+        Route::get('createizinkehadiran/{id}', [AdminController::class, 'createizinkehadiran'])->name('admin.createizinkehadiran');
+        Route::post('storeizinkehadiran', [AdminController::class, 'storeizinkehadiran'])->name('admin.storeizinkehadiran');
+        Route::post('/biometric', [BiometricController::class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
+        Route::post('/biometric-duration', [BiometricController::class, 'SyncBiometricWithDuration'])->name('admin.SyncBiometricWithDuration');
+        Route::get('/biometricall', [BiometricAllController::class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
+        Route::get('printizin/{id}', [AdminController::class, 'printizin'])->name('admin.printizin');
+        Route::get('/rekapitulasi', [RekapitulasiController::class, 'index'])->name('admin.rekapitulasi');
+        Route::get('/listrekapkaryawan', [RekapitulasiController::class, 'listrekapkaryawan'])->name('admin.listrekapkaryawan');
+        Route::get('/rekapitulasi/detailrekap/{nopeg}', [RekapitulasiController::class, 'detailrekap'])->name('admin.detailrekap');
 
-        Route::prefix('cuti')->name('admin.cuti.')->group(function () {
-            Route::get('/', [AdminController::class, 'datacuti'])->name('datacuti');
-            Route::get('/listcuti', [AdminController::class, 'listcuti'])->name('listcuti');
-            Route::post('/storecuti', [AdminController::class, 'storecuti'])->name('storecuti');
-            Route::get('/batal_cuti/{id}', [AdminController::class, 'batal_cuti'])->name('batal_cuti');
-        });
+        // Route::get('/listdetailrekapkaryawan/{nip}', [AdminController::class, 'listdetailrekapkaryawan'])->name('admin.listdetailrekapkaryawan');
 
-        Route::prefix('libur-nasional')->name('admin.libur-nasional.')->group(function () {
-            Route::get('/', [AdminController::class, 'liburnasional'])->name('libur');
-            Route::get('/listlibur', [AdminController::class, 'listlibur'])->name('listlibur');
-            Route::get('/editlibur/{id}', [AdminController::class, 'editlibur'])->name('editlibur');
-            Route::post('/updatelibur', [AdminController::class, 'updatelibur'])->name('updatelibur');
-            Route::post('/createlibur', [AdminController::class, 'createlibur'])->name('createlibur');
-            Route::get('/destroylibur/{id}', [AdminController::class, 'destroylibur'])->name('destroylibur');
-        });
+        Route::get('/list', [ListKaryawanController::class, 'index'])->name('admin.list');
 
-        Route::prefix('mesin-sidikjari')->name('admin.mesin-sidikjari.')->group(function () {
-            Route::get('/', [MesinController::class, 'index'])->name('mesin');
-            Route::get('/editmesin/{id}', [MesinController::class, 'editmesin'])->name('editmesin');
-            Route::post('/updatemesin', [MesinController::class, 'updatemesin'])->name('updatemesin');
-            Route::post('/createmesin', [MesinController::class, 'createmesin'])->name('createmesin');
-            Route::get('/destroymesin/{id}', [MesinController::class, 'destroymesin'])->name('destroymesin');
-        });
 
-        Route::prefix('kuesioner')->name('admin.kuesioner.')->group(function () {
-            Route::get('/admHasilKuesioner', [KuesionerController::class, 'admHasilKuesioner'])->name('admHasilKuesioner');
-            Route::get('/pertanyaanPeriode', [KuesionerController::class, 'pertanyaanPeriode'])->name('pertanyaanPeriode');
-            Route::get('/editPeriode/{id}', [KuesionerController::class, 'editPeriode'])->name('editPeriode');
-            Route::post('/updatePeriode', [KuesionerController::class, 'updatePeriode'])->name('updatePeriode');
-            Route::post('/createPeriode', [KuesionerController::class, 'createPeriode'])->name('createPeriode');
-            Route::get('/destroyPeriode/{id}', [KuesionerController::class, 'destroyPeriode'])->name('destroyPeriode');
-            Route::get('/pertanyaan', [KuesionerController::class, 'pertanyaan'])->name('pertanyaan');
-            Route::get('/editPertanyaan/{id}', [KuesionerController::class, 'editPertanyaan'])->name('editPertanyaan');
-            Route::post('/updatePertanyaan', [KuesionerController::class, 'updatePertanyaan'])->name('updatePertanyaan');
-            Route::get('/jawaban/{id}', [KuesionerController::class, 'jawaban'])->name('jawaban');
-            Route::get('/editJawaban/{id}', [KuesionerController::class, 'editJawaban'])->name('editJawaban');
-            Route::post('/updateJawaban', [KuesionerController::class, 'updateJawaban'])->name('updateJawaban');
-        });
+        Route::get('editAtt/{id}', [AdminController::class, 'editAtt'])->name('admin.editAtt');
+        Route::post('storeizinkehadiran', [AdminController::class, 'storeizinkehadiran'])->name('admin.storeizinkehadiran');
+        Route::post('/biometric', [BiometricController::class, 'SyncAndInsertBiometric'])->name('admin.SyncAndInsertBiometric');
+        Route::get('/biometricall', [BiometricAllController::class, 'SyncAndInsertBiometric'])->name('admin.biometricall');
+        Route::get('printizin/{id}', [AdminController::class, 'printizin'])->name('admin.printizin');
 
         Route::prefix('karyawan')->name('admin.karyawan.')->group(function () {
             Route::get('/', [ListKaryawanController::class, 'index'])->name('list');
             Route::get('/editKaryawan/{id}', [ListKaryawanController::class, 'editKaryawan'])->name('editKaryawan');
         });
 
-        Route::prefix('rekapitulasi')->name('admin.rekapitulasi.')->group(function () {
-            Route::get('/', [RekapitulasiController::class, 'index'])->name('rekap');
-            Route::get('/listrekapkaryawan', [RekapitulasiController::class, 'listrekapkaryawan'])->name('listrekapkaryawan');
-            Route::get('/detailrekap/{nopeg}', [RekapitulasiController::class, 'detailrekap'])->name('detailrekap');
-            Route::get('/detailrekap/list/{nopeg}', [RekapitulasiController::class, 'list_detail_rekap'])->name('listdetailrekap');
-        });
+        Route::get('/dataizin', [AdminController::class, 'dataizin'])->name('admin.dataizin');
+        Route::get('/dataizin/{id}', [AdminController::class, 'dataizin_show'])->name('admin.dataizin.show');
+        Route::get('/listizin', [AdminController::class, 'listizin'])->name('admin.listizin');
+        Route::post('storeizin', [AdminController::class, 'storeizin'])->name('admin.storeizin');
+        Route::get('/batal_izin/{id}', [AdminController::class, 'batal_izin'])->name('admin.batal_izin');
+        Route::get('printizinkerja/{id}', [AdminController::class, 'printizinkerja'])->name('admin.printizinkerja');
+        Route::get('/getWorkingDays/{startDate}/{endDate}', [AdminController::class, 'getWorkingDays'])->name('admin.getWorkingDays');
+        Route::get('/historycuti/{nopeg}/{jenis}', [AdminController::class, 'historycuti'])->name('admin.historycuti');
+
+
+        Route::get('/datacuti', [AdminController::class, 'datacuti'])->name('admin.datacuti');
+        Route::get('/datacuti/{id}', [AdminController::class, 'datacuti_show'])->name('admin.datacuti.show');
+        Route::post('/datacuti/pengganti', [AdminController::class, 'datacuti_pengganti'])->name('admin.datacuti.pengganti');
+        Route::get('/datacuti/calendar/{id}/{nopeg}', [AdminController::class, 'datacuti_calendar'])->name('admin.datacuti.calendar');
+        Route::get('/listcuti', [AdminController::class, 'listcuti'])->name('admin.listcuti');
+        Route::post('storecuti', [AdminController::class, 'storecuti'])->name('admin.storecuti');
+        Route::get('/batal_cuti/{id}', [AdminController::class, 'batal_cuti'])->name('admin.batal_cuti');
+        Route::get('printcuti/{id}', [AdminController::class, 'printcuti'])->name('admin.printcuti');
+
+        Route::get('/liburnasional', [AdminController::class, 'liburnasional'])->name('admin.liburnasional');
+        Route::get('/listlibur', [AdminController::class, 'listlibur'])->name('admin.listlibur');
+        Route::get('/editlibur/{id}', [AdminController::class, 'editlibur'])->name('admin.editlibur');
+        Route::post('/updatelibur', [AdminController::class, 'updatelibur'])->name('admin.updatelibur');
+        Route::post('/createlibur', [AdminController::class, 'createlibur'])->name('admin.createlibur');
+        Route::get('/destroylibur/{id}', [AdminController::class, 'destroylibur'])->name('admin.destroylibur');
+
+        Route::get('/mesinsidikjari', [MesinController::class, 'index'])->name('admin.mesinsidikjari');
+        Route::get('/editmesin/{id}', [MesinController::class, 'editmesin'])->name('admin.editmesin');
+        Route::post('/updatemesin', [MesinController::class, 'updatemesin'])->name('admin.updatemesin');
+        Route::post('/createmesin', [MesinController::class, 'createmesin'])->name('admin.createmesin');
+        Route::get('/destroymesin/{id}', [MesinController::class, 'destroymesin'])->name('admin.destroymesin');
+
+        Route::get('/pertanyaanPeriode', [KuesionerController::class, 'pertanyaanPeriode'])->name('admin.pertanyaanPeriode');
+        Route::get('/editPeriode/{id}', [KuesionerController::class, 'editPeriode'])->name('admin.editPeriode');
+        Route::post('/updatePeriode', [KuesionerController::class, 'updatePeriode'])->name('admin.updatePeriode');
+        Route::post('/createPeriode', [KuesionerController::class, 'createPeriode'])->name('admin.createPeriode');
+        Route::get('/destroyPeriode/{id}', [KuesionerController::class, 'destroyPeriode'])->name('admin.destroyPeriode');
     });
-
-    Route::prefix('admin_bsdm')->name('admin_bsdm.')->group(function () {
-        Route::get('/', [AdminController::class, 'index'])->name('admin_v');
-        Route::prefix('izin-resmi')->name('izin-resmi.')->group(function () {
-            Route::get('/', [AdminController::class, 'dataizin'])->name('dataizin');
-            Route::get('/listizin', [AdminController::class, 'listizin'])->name('listizin');
-            Route::post('storeizin', [AdminController::class, 'storeizin'])->name('storeizin');
-            Route::get('/batal_izin/{id}', [AdminController::class, 'batal_izin'])->name('batal_izin');
-            Route::get('printizinkerja/{id}', [AdminController::class, 'printizinkerja'])->name('printizinkerja');
-        });
-
-        Route::prefix('libur-nasional')->name('libur-nasional.')->group(function () {
-            Route::get('/', [AdminController::class, 'liburnasional'])->name('libur');
-            Route::get('/listlibur', [AdminController::class, 'listlibur'])->name('listlibur');
-            Route::get('/editlibur/{id}', [AdminController::class, 'editlibur'])->name('editlibur');
-            Route::post('/updatelibur', [AdminController::class, 'updatelibur'])->name('updatelibur');
-            Route::post('/createlibur', [AdminController::class, 'createlibur'])->name('createlibur');
-            Route::get('/destroylibur/{id}', [AdminController::class, 'destroylibur'])->name('destroylibur');
-        });
-
-        Route::prefix('cuti')->name('cuti.')->group(function () {
-            Route::get('/', [AdminController::class, 'datacuti'])->name('datacuti');
-            Route::get('/listcuti', [AdminController::class, 'listcuti'])->name('listcuti');
-            Route::post('/storecuti', [AdminController::class, 'storecuti'])->name('storecuti');
-            Route::get('/batal_cuti/{id}', [AdminController::class, 'batal_cuti'])->name('batal_cuti');
-            Route::get('printcuti/{id}', [AdminController::class, 'printcuti'])->name('printcuti');
-        });
-
-        Route::prefix('presensi')->name('presensi.')->group(function () {
-            Route::get('/', [BsdmController::class, 'bsdm_datapresensi'])->name('master');
-            Route::get('/listkaryawan', [BsdmController::class, 'bsdm_listkaryawan'])->name('bsdm_listkaryawan');
-            Route::post('/storeAttendance', [AdminController::class, 'storeAttendance'])->name('storeAttendance');
-            Route::post('/storeizinkehadiran', [AdminController::class, 'storeizinkehadiran'])->name('storeizinkehadiran');
-            Route::post('/updateAttendance', [AdminController::class, 'updateAttendance'])->name('updateAttendance');
-            Route::get('/editAtt/{id}', [AdminController::class, 'editAtt'])->name('editAtt');
-            Route::get('printizin/{id}', [AdminController::class, 'printizin'])->name('printizin');
-        });
-
-        Route::prefix('rekapitulasi')->name('rekapitulasi.')->group(function () {
-            Route::get('/', [RekapitulasiController::class, 'index'])->name('rekap');
-            Route::get('/listrekapkaryawan', [RekapitulasiController::class, 'listrekapkaryawan'])->name('listrekapkaryawan');
-            Route::get('/detailrekap/{nopeg}', [RekapitulasiController::class, 'detailrekap'])->name('detailrekap');
-        });
-    });
-
-
     Route::prefix('karyawan')->name('karyawan.')->group(function () {
         Route::get('/', [KaryawanController::class, 'index'])->name('index');
         Route::prefix('jadwal-satpam')->name('jadwal-satpam.')->group(function () {
@@ -205,12 +137,18 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/listdatapresensi', [KaryawanController::class, 'listdatapresensi'])->name('listdatapresensi');
         Route::get('/rekapitulasi', [KaryawanController::class, 'rekapitulasi'])->name('rekapitulasi');
         Route::get('/listdatarekapitulasi', [KaryawanController::class, 'listdatarekapitulasi'])->name('listdatarekapitulasi');
+
         Route::get('/izin/index', [KaryawanController::class, 'index_izin'])->name('izin');
         Route::post('/izin/store', [KaryawanController::class, 'store_izin'])->name('store_izin');
         Route::get('/izin/batal{id}', [KaryawanController::class, 'batal_izin'])->name('batal_izin');
+
         Route::get('/cuti/index', [KaryawanController::class, 'index_cuti'])->name('cuti');
         Route::post('/cuti/store', [KaryawanController::class, 'store_cuti'])->name('store_cuti');
         Route::get('/cuti/batal/{id}', [KaryawanController::class, 'batal_cuti'])->name('batal_cuti');
+
+        Route::get('/izinTelat/index', [KaryawanController::class, 'index_izin_telat'])->name('izinTelat');
+        Route::post('/izinTelat/store', [KaryawanController::class, 'store_izinTelat'])->name('store_izinTelat');
+        Route::get('/izinTelat/batal{id}', [KaryawanController::class, 'batal_izinTelat'])->name('batal_izinTelat');
 
         Route::get('createizinkehadiran/{id}', [KaryawanController::class, 'createizinkehadiran'])->name('createizinkehadiran');
         Route::post('storeizinkehadiran', [KaryawanController::class, 'storeizinkehadiran'])->name('storeizinkehadiran');
@@ -295,7 +233,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/kuesioner/kinerja/{id}', [KuesionerController::class, 'showKuesioner'])->name('showKuesioner');
         Route::post('/kuesioner/approveKuesioner/{id}', [KuesionerController::class, 'storeKuesioner'])->name('storeKuesioner');
         Route::get('/kuesioner/hasilKuesioner', [KuesionerController::class, 'index_penilaian'])->name('hasilKuesioner');
-
         // Route::get('/dataizin', [KepalaUnitController::class, 'dataizin'])->name('kepalaunit.dataizin');
         // Route::get('/editizin/{id_izinkerja}', [KepalaUnitController::class, 'editizin'])->name('kepalaunit.editizin');
         // Route::post('/updateizin', [KepalaUnitController::class, 'updateizin'])->name('kepalaunit.updateizin');

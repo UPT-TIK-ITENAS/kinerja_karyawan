@@ -51,7 +51,6 @@ class KuesionerController extends Controller
 
         $user = User::select('*')
             ->join('unit', 'unit.id', '=', 'users.unit')
-            ->where('role', '=', 'karyawan')
             ->where('users.unit', auth()->user()->unit)
             ->get();
 
@@ -152,25 +151,22 @@ class KuesionerController extends Controller
     {
         KuesionerKinerja::where('id', $request->id)->update([
             'judul' => $request->judul,
+            'keterangan' => $request->keterangan,
             'semester' => $request->semester,
-            'batas_awal' => $request->batas_awal,
-            'batas_akhir' => $request->batas_akhir,
-            'status' => $request->status
         ]);
 
-        return redirect()->back()->with('success', 'Edit Data Berhasil!');
+        return redirect()->route('admin.pertanyaanPeriode')->with('success', 'Edit Data Berhasil!');
     }
 
     public function createPeriode(Request $request)
     {
         KuesionerKinerja::create([
             'judul' => $request->judull,
+            'keterangan' => $request->keterangann,
             'semester' => $request->semesterr,
-            'batas_awal' => $request->batas_awall,
-            'batas_akhir' => $request->batas_akhirr,
-            'status' => $request->statuss
         ]);
-        return redirect()->back()->with('success', 'Add Data Berhasil!');
+
+        return redirect()->route('admin.pertanyaanPeriode')->with('success', 'Add Data Berhasil!');
     }
 
     public function destroyPeriode($id)
@@ -217,62 +213,5 @@ class KuesionerController extends Controller
                 ->make(true);
         }
         return view('kuesioner.hasil_penilaian', compact('data'));
-    }
-
-    public function admHasilKuesioner()
-    {
-        $data = RespondenKinerja::select('*')
-            ->join('kuisioner_periode', 'kuisioner_periode.id', '=', 'responden_kuisioner.kuisioner_kinerja_id')
-            ->join('unit', 'unit.nama_unit', '=', 'responden_kuisioner.unit')
-            ->get();
-
-        // dd($data)
-
-        return view('kuesioner.admhasil_penilaian', compact('data'));
-    }
-
-    public function pertanyaan()
-    {
-        $data = PertanyaanKinerja::get();
-        $periode = KuesionerKinerja::get();
-        return view('kuesioner.pertanyaan', compact('data', 'periode'));
-    }
-
-    public function editPertanyaan($id)
-    {
-        $kue = PertanyaanKinerja::where('id', $id)->first();
-        return response()->json($kue);
-    }
-
-    public function updatePertanyaan(Request $request)
-    {
-        PertanyaanKinerja::where('id', $request->id)->update([
-            'pertanyaan' => $request->pertanyaan,
-            'kuesioner_kinerja_id' => $request->kuesioner_kinerja_id,
-        ]);
-
-        return redirect()->route('admin.pertanyaanPeriode')->with('success', 'Edit Data Berhasil!');
-    }
-
-    public function jawaban($id)
-    {
-        $data = JawabanKinerja::where('pertanyaan_kinerja_id', $id)->get();
-        return view('kuesioner.jawaban', compact('data'));
-    }
-
-    public function editJawaban($id)
-    {
-        $kue = JawabanKinerja::where('id', $id)->first();
-        return response()->json($kue);
-    }
-
-    public function updateJawaban(Request $request)
-    {
-        JawabanKinerja::where('id', $request->id)->update([
-            'jawaban' => $request->jawaban,
-            'nilai' => $request->nilai,
-        ]);
-
-        return redirect()->route('admin.jawaban')->with('success', 'Edit Data Berhasil!');
     }
 }

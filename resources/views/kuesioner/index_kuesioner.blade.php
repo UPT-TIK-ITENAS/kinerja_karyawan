@@ -17,16 +17,29 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
+                        {{-- <h3 class="row mb-2">Instrumen Penilaian Efektivitas Proses Pembelajaran</h3>
+                        <div class="row gx-5 gy-3">
+                            <div class="col-12">
+                                <div>
+                                    Kuesioner ini menanyakan pendapat anda mengenai Pembelajaran dan Suasana Akademik selama
+                                    semester ini. Pengumpulan data menggunakan kuesioner ini bertujuan mengukur keefektifan
+                                    kegiatan belajar yang telah dilakukan. Berikan tanggapan berdasarkan pendapat sendiri
+                                    dan bukan pandangan/pendapat orang lain. Kami mengucapkan banyak terima kasih atas
+                                    partisipasinya dalam pengisian kuesioner ini.
+                                </div>
+                            </div>
+                            <!--//col-->
+                        </div> --}}
                         <div class="row mt-1">
                             <div class="col col-md-3">
                                 <label class="mt-1 fs-4 fw-bold form-control-label">
-                                    Pilih Periode
+                                    Pilih Semester
                                 </label>
                             </div>
 
                             <div class="row g-1 mb-3">
                                 <div class="col-md-12">
-                                    <span class="form-label" for="semester">Periode</span>
+                                    <span class="form-label" for="semester">Semester</span>
                                     <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
                                         id="select-kuesioner" name="select-kuesioner" required="">
                                         <option selected="" disabled="" value="">-- Pilih ---</option>
