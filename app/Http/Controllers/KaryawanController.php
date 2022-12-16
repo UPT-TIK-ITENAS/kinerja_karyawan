@@ -17,6 +17,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 
 class KaryawanController extends Controller
 {
@@ -33,29 +34,23 @@ class KaryawanController extends Controller
     {
         $durasi_telat = strtotime('00:00:00');
         $durasi_kerja = strtotime('00:00:00');
-        $data_att     = Attendance::where('nip', auth()->user()->nopeg)->whereMonth('tanggal', '=', date('m'))->get();
-        foreach ($data_att as $row) {
-            if (date("H:i:s", strtotime($row->jam_masuk)) > auth()->user()->awal_tugas && $row->hari != '6' && $row->hari != 0) {
-                $durasitelat = strtotime($row->jam_masuk) - strtotime(auth()->user()->awal_tugas);
-                $durasi_telat += $durasitelat;
-            }
-            if ($row->hari == '5') {
-                if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
-                    $durasitelat = strtotime($row->jam_siang) - strtotime('13:30:00');
-                    $durasi_telat += $durasitelat;
-                }
-            } else {
-                if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
-                    $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
-                    $durasi_telat += $durasitelat;
-                }
-            }
-            $durasi_kerja += strtotime($row->jam_keluar) - strtotime($row->jam_pulang);
-        }
+        $data_att     = Attendance::selectRaw("SUM(durasi) as total_durasi, SEC_TO_TIME(SUM(
+            CASE
+                 WHEN durasi = '04:00:00' and IS_WEEKDAY(tanggal) = 1 and
+                      IF((select if(count(*) > 0, 1, 0) from libur_nasional where tanggal = tanggal), 1, 0) = 0
+                     THEN TIME_TO_SEC(telat_masuk) + TIME_TO_SEC(telat_siang) + TIME_TO_SEC('04:00:00')
+                 WHEN durasi = '00:00:00' and IS_WEEKDAY(tanggal) = 1 and
+                      IF((select if(count(*) > 0, 1, 0) from libur_nasional where tanggal = tanggal), 1, 0) = 0
+                     THEN TIME_TO_SEC(telat_masuk) + TIME_TO_SEC(telat_siang) + TIME_TO_SEC('08:00:00')
+                ELSE TIME_TO_SEC(telat_masuk) + TIME_TO_SEC(telat_siang)
+            END)) as kurang_jam")->where('nip', auth()->user()->nopeg)->whereMonth('tanggal', '=', date('m'))->whereYear('tanggal', '=', date('Y'))->first();
 
+        $hours = floor($data_att->total_durasi / 3600);
+        $minutes = floor(($data_att->total_durasi / 60) % 60);
+        $seconds = $data_att->total_durasi % 60;
         $data = [
-            'terlambat' =>  date("H:i:s", $durasi_telat),
-            'durasi_kerja' => date("H:i:s", $durasi_kerja),
+            'terlambat' =>  $data_att->kurang_jam,
+            'durasi_kerja' => $hours . ':' . $minutes . ':' . $seconds,
         ];
         return view('karyawan.k_index', compact('data'));
     }
@@ -144,12 +139,13 @@ class KaryawanController extends Controller
         $nopeg = auth()->user()->nopeg;
         $periode = KuesionerKinerja::where('id', $request->periode ?? 2)->where('status', '1')->first();
         $data = DB::select("CALL HitungTotalHariKerja('$nopeg', '$periode->batas_awal', '$periode->batas_akhir')");
-        if ($request->ajax()) {
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->toJson();
-        }
-        return DataTables::queryBuilder($data)->toJson();
+
+        return DataTables::of($data)
+            ->editColumn('total_hari_mangkir', function ($row) {
+                return $row->total_hari_mangkir - ($row->cuti ?? 0) - ($row->izin_kerja ?? 0);
+            })
+            ->addIndexColumn()
+            ->toJson();
     }
 
     public function index_cuti()

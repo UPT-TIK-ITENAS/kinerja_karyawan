@@ -50,11 +50,11 @@ class RekapitulasiController extends Controller
     {
         $periode = KuesionerKinerja::where('id', $request->periode ?? 2)->where('status', '1')->first();
         $data = DB::select("CALL HitungTotalHariKerja('$nopeg', '$periode->batas_awal', '$periode->batas_akhir')");
-        if ($request->ajax()) {
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->toJson();
-        }
-        return DataTables::queryBuilder($data)->toJson();
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->editColumn('total_hari_mangkir', function ($row) {
+                return $row->total_hari_mangkir - ($row->cuti ?? 0) - ($row->izin_kerja ?? 0);
+            })
+            ->toJson();
     }
 }

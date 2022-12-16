@@ -35,7 +35,8 @@
                         <div class="row justify-content-start">
                             <label class="form-label" for="validationDefault01">Pilih Bulan</label>
                             <div class="col-sm-12 col-md-12 col-lg-6">
-                                <input class="date-picker form-control" type="text" id="bulan_hadir">
+                                <input class="date-picker form-control" type="text" id="bulan_hadir"
+                                    autocomplete="off" />
                             </div>
                             <div class="col-sm-12 col-md-12 col-lg-6">
                                 <button type="button" class="btn btn-info" id="btn-filter">Filter</button>
