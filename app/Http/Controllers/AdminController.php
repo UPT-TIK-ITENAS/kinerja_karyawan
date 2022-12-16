@@ -461,7 +461,7 @@ class AdminController extends Controller
 
     public function listcuti(Request $request)
     {
-        $data = cuti::join('unit', 'cuti.unit', 'unit.id')->join('jenis_cuti', 'cuti.jenis_cuti', 'jenis_cuti.id_jeniscuti')->orderby('unit.created_at')->get();
+        $data = Cuti::join('unit', 'cuti.unit', 'unit.id')->join('jenis_cuti', 'cuti.jenis_cuti', 'jenis_cuti.id_jeniscuti')->orderBy('cuti.created_at')->get();
 
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -470,7 +470,17 @@ class AdminController extends Controller
                     return getAksi($row->id_cuti, 'cuti');
                 })
                 ->addColumn('status', function ($row) {
-                    return getAprv($row->id_cuti, 'cuti', $row->alasan_tolak);
+                    $batal_cuti = route('admin.cuti.batal_cuti', $row->id);
+                    if ($row->approval == 1) {
+                        $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
+                    } elseif ($row->approval == 2) {
+                        $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
+                    } elseif ($row->approval == 3) {
+                        $for_html = '<span class="badge badge-danger">Ditolak</span><br><p><b>note</b> : ' . $row->alasan_tolak . '</p>';
+                    } else {
+                        $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalcuti" title="Batal Cuti" href="' . $batal_cuti . '">X</a>';
+                    }
+                    return $for_html;
                 })
                 ->rawColumns(['action', 'status'])
                 ->make(true);

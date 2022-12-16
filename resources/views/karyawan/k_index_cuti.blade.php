@@ -133,13 +133,13 @@
                         <div class="row g-2 mb-3">
                             <div class="col-md-4">
                                 <span class="form-label" for="tgl_awal_cuti">Tanggal Awal</span>
-                                <input class="form-control" id="tgl_awal_cuti" name="tgl_awal_cuti" type="date"
+                                <input class="form-control" id="tgl_awal_cuti" name="tgl_awal_cuti" type="text"
                                     required="">
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="tgl_akhir_cuti">Tanggal Akhir</span>
-                                <input class="form-control" id="tgl_akhir_cuti" name="tgl_akhir_cuti" type="date"
+                                <input class="form-control" id="tgl_akhir_cuti" name="tgl_akhir_cuti" type="text"
                                     required="">
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
@@ -177,6 +177,9 @@
                                     <div class="invalid-feedback">Wajib di centang !</div>
                                 </div>
                             </div>
+                            <p class="fw-bold">Bila pengajuan izin/cuti dimulai dari akhir bulan hingga awal bulan
+                                depan-nya, dilakukan
+                                pengajuan dua kali agar dapat terdata tiap bulannya.</p>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
@@ -201,6 +204,28 @@
         document.getElementById('no_hp').addEventListener('input', function(e) {
             var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,4})(\d{0,5})/);
             e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
+        });
+
+        daterangepicker('#tgl_awal_cuti', 'auto', false, '#tambahCuti');
+        $("#tgl_awal_cuti").on('change', function(e) {
+            e.preventDefault();
+            let tgl_awal = $(this).val();
+            $("#tgl_akhir_cuti").daterangepicker({
+                singleDatePicker: true,
+                timePicker: false,
+                showDropdowns: true,
+                autoUpdateInput: true,
+                autoApply: true,
+                locale: {
+                    cancelLabel: "Hapus",
+                    applyLabel: "Terapkan",
+                    format: "YYYY-MM-DD",
+                },
+                drops: "auto",
+                parentEl: "#tambahCuti",
+                minDate: moment(tgl_awal).format('YYYY-MM-DD'),
+                maxDate: moment(tgl_awal).endOf('month').format('YYYY-MM-DD')
+            });
         });
 
         $('#tgl_akhir_cuti').on('change', function() {
