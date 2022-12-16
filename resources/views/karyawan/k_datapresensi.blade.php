@@ -43,17 +43,14 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="dt-ext table-responsive">
                             <table class="dataTable" id="table-kehadiran">
                                 <thead>
                                     <th>No.</th>
                                     <th>Hari</th>
-                                    <th>Awal Tugas</th>
-                                    <th>Akhir Tugas</th>
                                     <th>Jam Masuk</th>
                                     <th>Jam Siang</th>
                                     <th>Jam Keluar</th>
-                                    <th>Durasi</th>
                                     <th>Telat Masuk</th>
                                     <th>Telat Siang</th>
                                     <th>Aksi</th>
@@ -133,14 +130,6 @@
                         name: 'hari'
                     },
                     {
-                        data: 'awal_tugas',
-                        name: 'awal_tugas'
-                    },
-                    {
-                        data: 'akhir_tugas',
-                        name: 'akhir_tugas'
-                    },
-                    {
                         data: 'jam_masuk',
                         name: 'jam_masuk'
                     },
@@ -153,16 +142,12 @@
                         name: 'jam_pulang'
                     },
                     {
-                        data: 'duration',
-                        name: 'duration'
+                        data: 'telat_masuk',
+                        name: 'telat_masuk'
                     },
                     {
-                        data: 'latemasuk',
-                        name: 'latemasuk'
-                    },
-                    {
-                        data: 'latesiang',
-                        name: 'latesiang'
+                        data: 'telat_siang',
+                        name: 'telat_siang'
                     },
                     {
                         data: 'action',

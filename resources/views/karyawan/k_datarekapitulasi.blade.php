@@ -21,19 +21,41 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5>Daftar Hasil Rekapitulasi Presensi Karyawan</h5>
-                        <span>Daftar hasil rekapitulasi presensi karyawan terhitung dari tanggal 01 Juli 2022</span>
+                        <h5>Silakan pilih periode untuk melihat jumlah kehadiran</h5>
+                        <form action="{{ route('admin.SyncAndInsertBiometric') }}" method="POST" class="mt-3">
+                            @csrf
+                            <div class="form-group row">
+                                <label class="col-lg-1 col-md-12 col-form-label">Periode</label>
+                                <div class="col-lg-6 col-md-12">
+                                    <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                        name="filter1" id="filter1" required="">
+                                        @foreach ($periode as $p)
+                                            @if ($p->id == 2)
+                                                <option value="{{ $p->id }}" selected>{{ $p->judul }}</option>
+                                            @else
+                                                <option value="{{ $p->id }}">{{ $p->judul }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                        <hr>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="dataTable" id="table-rekapitulasi">
+                        <h6 class="font-primary">Rekapitulasi Kehadiran</h6>
+                        <div class="dt-ext table-responsive">
+                            <table class="table table-bordered" id="table-rekapitulasi">
                                 <thead>
-                                    <th width="5%">No.</th>
+                                    <th>No.</th>
                                     <th>Bulan</th>
-                                    <th>Tahun</th>
-                                    <th>Total Telat Pagi</th>
-                                    <th>Total Telat Siang</th>
-                                    <th>Total Telat Keseluruhan</th>
+                                    <th>Total Hari Hadir Kerja</th>
+                                    <th>Total Hari Kerja</th>
+                                    <th>Total Hari Mangkir</th>
+                                    <th>Cuti</th>
+                                    <th>Izin</th>
+                                    <th>Izin Kerja</th>
+                                    <th>Kurang Jam</th>
                                 </thead>
                                 <tbody>
 
@@ -61,7 +83,12 @@
                 targets: 1,
                 width: "200px !important",
             }, ],
-            ajax: "{{ route('karyawan.listdatarekapitulasi') }}",
+            ajax: {
+                url: "{{ route('karyawan.listdatarekapitulasi') }}",
+                data: function(d) {
+                    d.periode = $('#filter1').val() ? $('#filter1').val() : '2';
+                }
+            },
             columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',
@@ -70,31 +97,37 @@
                     searchable: false,
                 },
                 {
-                    data: 'bulan',
-                    name: 'bulan',
+                    data: 'nama_bulan',
+                    name: 'nama_bulan'
                 },
                 {
-                    data: 'tahun',
-                    name: 'tahun',
-                    class: 'text-center',
-                },
-
-                {
-                    data: 'total_telat_pagi',
-                    name: 'total_telat_pagi',
-                    class: 'text-center',
+                    data: 'total_masuk_karyawan',
+                    name: 'total_masuk_karyawan'
                 },
                 {
-                    data: 'total_telat_siang',
-                    name: 'total_telat_siang',
-                    class: 'text-center',
+                    data: 'total_hari_kerja_per_bulan',
+                    name: 'total_hari_kerja_per_bulan'
                 },
                 {
-                    data: 'total_telat',
-                    name: 'total_telat',
-                    class: 'text-center',
+                    data: 'total_hari_mangkir',
+                    name: 'total_hari_mangkir'
                 },
-
+                {
+                    data: 'cuti',
+                    name: 'cuti'
+                },
+                {
+                    data: 'izin_kerja',
+                    name: 'izin_kerja'
+                },
+                {
+                    data: 'izin',
+                    name: 'izin'
+                },
+                {
+                    data: 'kurang_jam',
+                    name: 'kurang_jam'
+                },
             ],
             dom: 'Bfrtip',
             buttons: [

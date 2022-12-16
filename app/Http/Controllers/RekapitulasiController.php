@@ -48,7 +48,6 @@ class RekapitulasiController extends Controller
 
     public function list_detail_rekap(Request $request, $nopeg)
     {
-        Debugbar::info($request->periode);
         $periode = KuesionerKinerja::where('id', $request->periode ?? 2)->where('status', '1')->first();
         $data = DB::select("CALL HitungTotalHariKerja('$nopeg', '$periode->batas_awal', '$periode->batas_akhir')");
         if ($request->ajax()) {

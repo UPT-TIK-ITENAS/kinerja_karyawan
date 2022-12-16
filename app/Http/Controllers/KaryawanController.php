@@ -9,6 +9,7 @@ use App\Models\IzinKerja;
 use App\Models\JadwalSatpam;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
+use App\Models\KuesionerKinerja;
 use App\Models\QR;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -74,48 +75,8 @@ class KaryawanController extends Controller
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('duration', function ($row) {
-                    if ($row->jam_pulang == NULL || $row->jam_masuk == NULL) {
-                        return $durationwork = '';
-                    } else {
-                        $time_awalreal =  strtotime($row->jam_masuk);
-                        $time_akhirreal = strtotime($row->jam_pulang);
-                        $duration = ceil(abs($time_akhirreal - $time_awalreal) - strtotime('01:00:00'));
-                        $durationwork = date("H:i:s", $duration);
-                        return $durationwork;
-                    }
-                })
                 ->editColumn('hari', function ($row) {
                     return config('app.days')[$row->hari];
-                })
-                ->addColumn('latemasuk', function ($row) {
-
-                    if (date("H:i:s", strtotime($row->jam_masuk)) <= '08:00:00') {
-                        return '';
-                    } else if (date("H:i:s", strtotime($row->jam_masuk)) > '08:00:00' && $row->hari != '6') {
-                        $durasitelat = strtotime($row->jam_masuk) - strtotime('08:00:00');
-                        $durasi = date("H:i:s", $durasitelat);
-                        return $durasi;
-                    }
-                })
-                ->addColumn('latesiang', function ($row) {
-                    if ($row->hari == 5) {
-                        if (date("H:i:s", strtotime($row->jam_siang)) <= '13:15:00') {
-                            return '';
-                        } else if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
-                            $durasitelat = strtotime($row->jam_siang) - strtotime('13:30:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                            return $durasi;
-                        }
-                    } else {
-                        if ($row->hari != 6 && date("H:i:s", strtotime($row->jam_siang)) <= '12:45:00') {
-                            return '';
-                        } else if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
-                            $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                            return $durasi;
-                        }
-                    }
                 })
                 ->addColumn('action', function ($row) {
                     $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
@@ -169,38 +130,24 @@ class KaryawanController extends Controller
                 ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'action', 'file', 'status'])
                 ->make(true);
         }
-        return DataTables::queryBuilder($data)->toJson();
     }
 
 
     public function index_datarekapitulasi()
     {
-        // dd(DB::select("exec getTotalTelatPerBulan('" . auth()->user()->nopeg . "')"));
-        return view('karyawan.k_datarekapitulasi');
+        $periode = KuesionerKinerja::where('status', '1')->get();
+        return view('karyawan.k_datarekapitulasi', compact('periode'));
     }
 
     public function listdatarekapitulasi(Request $request)
     {
-        $data = DB::select('CALL getTotalTelatPerBulan(' . auth()->user()->nopeg . ')');
+        $nopeg = auth()->user()->nopeg;
+        $periode = KuesionerKinerja::where('id', $request->periode ?? 2)->where('status', '1')->first();
+        $data = DB::select("CALL HitungTotalHariKerja('$nopeg', '$periode->batas_awal', '$periode->batas_akhir')");
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('bulan', function ($row) {
-                    return getNamaBulan($row->bulan);
-                })
-                ->addColumn('tahun', function ($row) {
-                    return $row->tahun;
-                })
-                ->addColumn('total_telat_pagi', function ($row) {
-                    return date('H:i:s', strtotime($row->total_telat_pagi));
-                })
-                ->addColumn('total_telat_siang', function ($row) {
-                    return date('H:i:s', strtotime($row->total_telat_siang));
-                })
-                ->addColumn('total_telat', function ($row) {
-                    return date('H:i:s', strtotime($row->total_telat_siang) + strtotime($row->total_telat_pagi));
-                })
-                ->make(true);
+                ->toJson();
         }
         return DataTables::queryBuilder($data)->toJson();
     }
