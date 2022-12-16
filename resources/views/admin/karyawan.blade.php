@@ -69,7 +69,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myLargeModalLabel">Edit Mesin Sidik Jari</h4>
+                    <h4 class="modal-title" id="myLargeModalLabel">Edit Karyawan</h4>
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
@@ -114,15 +114,11 @@
                             </div>
                             <div class="col-md-7">
                                 <span class="form-label" for="unit">Unit</span>
-                                <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
-                                    id="unit" name="unit" required="">
-                                    <option value='' disabled selected>Pilih Unit</option>
+                                <select class="form-control col-sm-12" id="unit" name="unit">
                                     @foreach ($unit as $u)
-                                        <option value="{{ $u->id }}"
-                                            @if ($u->id == $peg->unit) { selected } @endif>{{ $u->nama_unit }}
+                                        <option value="{{ $u->id }}">{{ $u->nama_unit }}
                                         </option>
                                     @endforeach
-
                                 </select>
                             </div>
                             <div class="col-md-5">
@@ -194,6 +190,7 @@
                 $('#nama_unit').val(data.nama_unit);
                 $('#name_jab').val(data.name_jab);
                 $('#name_jab2').val(data.name_jab2);
+                $('#unit').val(data.unit);
 
                 console.log(data);
             })
