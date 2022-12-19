@@ -73,20 +73,6 @@ class KaryawanController extends Controller
                 ->editColumn('hari', function ($row) {
                     return config('app.days')[$row->hari];
                 })
-                ->addColumn('action', function ($row) {
-                    $hasIzin = $row->izin?->count();
-                    $print =  route('admin.printizin', $row->id);
-                    if ($hasIzin == null) {
-                        $for_html = '
-                        <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
-                    } else {
-                        $for_html = '
-                        <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
-                        <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
-                    }
-
-                    return $for_html;
-                })
                 ->addColumn('file', function ($row) {
                     $printsurat =  route('karyawan.printizin', $row->id);
                     if ($row->izin != null) {
@@ -101,7 +87,31 @@ class KaryawanController extends Controller
                         return $actionBtn;
                     }
                 })
+                ->addColumn('note', function ($row) {
+                    if ($row->status == 0) {
+                        $note = 'Kurang';
+                    } else {
+                        $note = 'Lengkap';
+                    }
+                    return $note;
+                })
+                ->addColumn('action', function ($row) {
+                    $hasIzin = $row->izin?->count();
+                    $print =  route('admin.printizin', $row->id);
+                    $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
 
+                    if ($hasIzin == null && $workingdays <= 2) {
+                        $for_html = '
+                    <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
+                    } elseif ($hasIzin != null) {
+                        $for_html = '
+                        <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
+                        <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
+                    } else {
+                        $for_html = '';
+                    }
+                    return $for_html;
+                })
                 ->addColumn('status', function ($row) {
                     if ($row->izin != null) {
                         if ($row->approval == 1) {
