@@ -9,6 +9,7 @@ use App\Models\IzinKerja;
 use App\Models\JadwalSatpam;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
+use App\Models\KuesionerKinerja;
 use App\Models\QR;
 use App\Models\KuesionerKinerja;
 
@@ -19,6 +20,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use Carbon\CarbonInterval;
 
 class KaryawanController extends Controller
 {
@@ -48,70 +50,48 @@ class KaryawanController extends Controller
 
     public function listdatapresensi(Request $request)
     {
-     
-        $data = Attendance::query()->with(['user', 'izin'])->whereRelation('user', 'status', '=', 1)->where('nip', auth()->user()->nopeg)->orderby('tanggal', 'asc');
-        $days = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
-        return DataTables::of($data)
-            ->addIndexColumn()
-            ->addColumn('days', function ($row) use ($days) {
-                return $days[$row->hari];
-            })
-
-            ->addColumn('latemasuk', function ($row) {
-                $masuk = Carbon::parse($row->jam_masuk)->format('H:i:s');
-                $keluar = Carbon::parse('08:00:00')->format('H:i:s');
-                if ($row->hari != '6' && $row->hari != '0') {
-                    if ($row->jam_masuk == NULL &&  $row->jam_siang != NULL) {
-                        $durasi = strtotime(Carbon::parse($row->jam_siang)->format('H:i:s')) - strtotime($keluar);
-                        $total = Carbon::parse($durasi)->format('H:i:s');
+        if ($request->bulan) {
+            $month =  explode('-', $request->bulan);
+            $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg)->whereNotIn('hari', array('6', '0'))->whereMonth('attendance.tanggal', $month[0])->whereYear('attendance.tanggal', $month[1])->orderBy('attendance.tanggal', 'desc');
+        } else {
+            $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg)->whereNotIn('hari', array('6', '0'))->orderBy('attendance.tanggal', 'desc');
+        }
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->editColumn('hari', function ($row) {
+                    return config('app.days')[$row->hari];
+                })
+                ->addColumn('action', function ($row) {
+                    $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
+                    if ($workingdays < 3) {
+                        $addsurat = route('karyawan.createizinkehadiran', $row->id);
+                        return $actionBtn = "
+                        <div class='d-block text-center'>
+                        <a href='$addsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-ui-add'></i></a>
+                        </div>
+                        ";
                     } else {
-                        if ($masuk > $keluar) {
-                            $durasi = strtotime($masuk) - strtotime($keluar);
-                            $total = Carbon::parse($durasi)->format('H:i:s');
+                        return '';
+                    }
+                })
+                ->addColumn('file', function ($row) {
+                    $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id', $row->id)->get();
+
+                    foreach ($dataizin as $izin) {
+                        $printsurat =  route('karyawan.printizin', $izin->id);
+
+                        if ($row->id == $izin->id_attendance) {
+                            $actionBtn = "
+                            <div class='d-block text-center'>
+                                <a href='$printsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-download-alt'></i></a>
+                            </div>
+                            ";
+                            return $actionBtn;
                         } else {
                             $total = '';
                         }
                     }
-                } else {
-                    $total = '';
-                }
-                return $total;
-            })
-
-            ->addColumn('latesiang', function ($row) {
-                $siang = Carbon::parse($row->jam_siang)->format('H:i:s');
-                $keluar1 = Carbon::parse('13:00:00')->format('H:i:s');
-                $keluar2 = Carbon::parse('13:30:00')->format('H:i:s');
-
-                if ($row->hari == '5') {
-                    if ($row->jam_siang == NULL && $row->jam_pulang != NULL) {
-                        $durasi = strtotime(Carbon::parse($row->jam_pulang)->format('H:i:s')) - strtotime($keluar2);
-                        $total = Carbon::parse($durasi)->format('H:i:s');
-                    } else {
-                        if ($siang > $keluar2) {
-                            $durasi = strtotime($siang) - strtotime($keluar2);
-                            $total = Carbon::parse($durasi)->format('H:i:s');
-                        } else {
-                            $total = '';
-                        }
-                    }
-                } elseif ($row->hari != '6' && $row->hari != '0') {
-                    if ($row->jam_siang == NULL && $row->jam_pulang != NULL) {
-                        $durasi = strtotime(Carbon::parse($row->jam_pulang)->format('H:i:s')) - strtotime($keluar1);
-                        $total = Carbon::parse($durasi)->format('H:i:s');
-                    } else {
-                        if ($siang > $keluar1) {
-                            $durasi = strtotime($siang) - strtotime($keluar1);
-                            $total = Carbon::parse($durasi)->format('H:i:s');
-                        } else {
-                            $total = '';
-                        }
-                    }
-                } else {
-                    $total = '';
-                }
-
-                return $total;
             })
             ->addColumn('note', function ($row) {
                 if ($row->status == 0) {

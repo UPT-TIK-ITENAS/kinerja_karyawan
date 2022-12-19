@@ -109,13 +109,13 @@
                         <div class="row g-2 mb-3">
                             <div class="col-md-4">
                                 <span class="form-label" for="tgl_awal_izin">Tanggal Awal</span>
-                                <input class="form-control" id="tgl_awal_izin" name="tgl_awal_izin" type="date"
+                                <input class="form-control" id="tgl_awal_izin" name="tgl_awal_izin" type="text"
                                     required="">
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="tgl_akhir_izin">Tanggal Akhir</span>
-                                <input class="form-control" id="tgl_akhir_izin" name="tgl_akhir_izin" type="date"
+                                <input class="form-control" id="tgl_akhir_izin" name="tgl_akhir_izin" type="text"
                                     required="">
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
@@ -137,6 +137,9 @@
                                     <div class="invalid-feedback">Wajib di centang !</div>
                                 </div>
                             </div>
+                            <p class="fw-bold">Bila pengajuan izin/cuti dimulai dari akhir bulan hingga awal bulan
+                                depan-nya, dilakukan
+                                pengajuan dua kali agar dapat terdata tiap bulannya.</p>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
@@ -237,6 +240,28 @@
                 }
             })
         })
+
+        daterangepicker('#tgl_awal_izin', 'auto', false, '#tambahIzin');
+        $("#tgl_awal_izin").on('change', function(e) {
+            e.preventDefault();
+            let tgl_awal = $(this).val();
+            $("#tgl_akhir_izin").daterangepicker({
+                singleDatePicker: true,
+                timePicker: false,
+                showDropdowns: true,
+                autoUpdateInput: true,
+                autoApply: true,
+                locale: {
+                    cancelLabel: "Hapus",
+                    applyLabel: "Terapkan",
+                    format: "YYYY-MM-DD",
+                },
+                drops: "auto",
+                parentEl: "#tambahIzin",
+                minDate: moment(tgl_awal).format('YYYY-MM-DD'),
+                maxDate: moment(tgl_awal).endOf('month').format('YYYY-MM-DD')
+            });
+        });
 
 
         $('#tgl_akhir_izin').on('change', function() {

@@ -399,12 +399,12 @@
                         name: 'jam_pulang'
                     },
                     {
-                        data: 'latemasuk',
-                        name: 'latemasuk'
+                        data: 'telat_masuk',
+                        name: 'telat_masuk'
                     },
                     {
-                        data: 'latesiang',
-                        name: 'latesiang'
+                        data: 'telat_siang',
+                        name: 'telat_siang'
                     },
                     {
                         data: 'note',

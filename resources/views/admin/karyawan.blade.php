@@ -69,7 +69,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myLargeModalLabel">Edit Mesin Sidik Jari</h4>
+                    <h4 class="modal-title" id="myLargeModalLabel">Edit Karyawan</h4>
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
@@ -186,6 +186,7 @@
                 $('#nama_unit').val(data.nama_unit);
                 $('#name_jab').val(data.name_jab);
                 $('#name_jab2').val(data.name_jab2);
+                $('#unit').val(data.unit);
 
                 console.log(data);
             })

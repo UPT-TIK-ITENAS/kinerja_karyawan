@@ -73,63 +73,6 @@ class AdminController extends Controller
             ->addColumn('days', function ($row) use ($days) {
                 return $days[$row->hari];
             })
-
-            ->addColumn('latemasuk', function ($row) {
-                $masuk = Carbon::parse($row->jam_masuk)->format('H:i:s');
-                $keluar = Carbon::parse('08:00:00')->format('H:i:s');
-                if ($row->hari != '6' && $row->hari != '0') {
-                    if ($row->jam_masuk == NULL &&  $row->jam_siang != NULL) {
-                        $durasi = strtotime(Carbon::parse($row->jam_siang)->format('H:i:s')) - strtotime($keluar);
-                        $total = Carbon::parse($durasi)->format('H:i:s');
-                    } else {
-                        if ($masuk > $keluar) {
-                            $durasi = strtotime($masuk) - strtotime($keluar);
-                            $total = Carbon::parse($durasi)->format('H:i:s');
-                        } else {
-                            $total = '';
-                        }
-                    }
-                } else {
-                    $total = '';
-                }
-                return $total;
-            })
-
-            ->addColumn('latesiang', function ($row) {
-                $siang = Carbon::parse($row->jam_siang)->format('H:i:s');
-                $keluar1 = Carbon::parse('13:00:00')->format('H:i:s');
-                $keluar2 = Carbon::parse('13:30:00')->format('H:i:s');
-
-                if ($row->hari == '5') {
-                    if ($row->jam_siang == NULL && $row->jam_pulang != NULL) {
-                        $durasi = strtotime(Carbon::parse($row->jam_pulang)->format('H:i:s')) - strtotime($keluar2);
-                        $total = Carbon::parse($durasi)->format('H:i:s');
-                    } else {
-                        if ($siang > $keluar2) {
-                            $durasi = strtotime($siang) - strtotime($keluar2);
-                            $total = Carbon::parse($durasi)->format('H:i:s');
-                        } else {
-                            $total = '';
-                        }
-                    }
-                } elseif ($row->hari != '6' && $row->hari != '0') {
-                    if ($row->jam_siang == NULL && $row->jam_pulang != NULL) {
-                        $durasi = strtotime(Carbon::parse($row->jam_pulang)->format('H:i:s')) - strtotime($keluar1);
-                        $total = Carbon::parse($durasi)->format('H:i:s');
-                    } else {
-                        if ($siang > $keluar1) {
-                            $durasi = strtotime($siang) - strtotime($keluar1);
-                            $total = Carbon::parse($durasi)->format('H:i:s');
-                        } else {
-                            $total = '';
-                        }
-                    }
-                } else {
-                    $total = '';
-                }
-
-                return $total;
-            })
             ->addColumn('note', function ($row) {
                 if ($row->status == 0) {
                     $note = 'Kurang';
@@ -518,7 +461,7 @@ class AdminController extends Controller
 
     public function listcuti(Request $request)
     {
-        $data = cuti::join('unit', 'cuti.unit', 'unit.id')->join('jenis_cuti', 'cuti.jenis_cuti', 'jenis_cuti.id_jeniscuti')->orderby('unit.created_at')->get();
+        $data = Cuti::join('unit', 'cuti.unit', 'unit.id')->join('jenis_cuti', 'cuti.jenis_cuti', 'jenis_cuti.id_jeniscuti')->orderBy('cuti.created_at')->get();
 
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -527,7 +470,17 @@ class AdminController extends Controller
                     return getAksi($row->id_cuti, 'cuti');
                 })
                 ->addColumn('status', function ($row) {
-                    return getAprv($row->id_cuti, 'cuti', $row->alasan_tolak);
+                    $batal_cuti = route('admin.cuti.batal_cuti', $row->id);
+                    if ($row->approval == 1) {
+                        $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
+                    } elseif ($row->approval == 2) {
+                        $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
+                    } elseif ($row->approval == 3) {
+                        $for_html = '<span class="badge badge-danger">Ditolak</span><br><p><b>note</b> : ' . $row->alasan_tolak . '</p>';
+                    } else {
+                        $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalcuti" title="Batal Cuti" href="' . $batal_cuti . '">X</a>';
+                    }
+                    return $for_html;
                 })
                 ->rawColumns(['action', 'status'])
                 ->make(true);

@@ -43,7 +43,8 @@
                         <hr>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <h6 class="font-primary">Rekapitulasi Kehadiran</h6>
+                        <div class="dt-ext table-responsive">
                             <table class="table table-bordered" id="table-rekapitulasi">
                                 <thead>
                                     <th>No.</th>
@@ -71,66 +72,67 @@
 @section('scripts')
     @parent
     <script>
-        $(document).ready(function() {
-            let table = $('#table-rekapitulasi').DataTable({
-                fixedHeader: true,
-                pageLength: 10,
-                responsive: true,
-                processing: true,
-                autoWidth: false,
-                serverSide: true,
-                searching: false,
-                ajax: {
-                    url: "{{ route('admin.rekapitulasi.listdetailrekap', auth()->user()->nopeg) }}",
-                    data: function(d) {
-                        d.periode = $('#filter1').val() ? $('#filter1').val() : '2';
-                    }
+        let table = $('#table-rekapitulasi').DataTable({
+            fixedHeader: true,
+            pageLength: 10,
+            responsive: true,
+            processing: true,
+            autoWidth: false,
+            serverSide: true,
+            columnDefs: [{
+                targets: 1,
+                width: "200px !important",
+            }, ],
+            ajax: {
+                url: "{{ route('karyawan.listdatarekapitulasi') }}",
+                data: function(d) {
+                    d.periode = $('#filter1').val() ? $('#filter1').val() : '2';
+                }
+            },
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    className: 'text-center',
+                    orderable: false,
+                    searchable: false,
                 },
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        className: 'text-center',
-                        orderable: false,
-                        searchable: false,
-                    },
-                    {
-                        data: 'nama_bulan',
-                        name: 'nama_bulan'
-                    },
-                    {
-                        data: 'total_masuk_karyawan',
-                        name: 'total_masuk_karyawan'
-                    },
-                    {
-                        data: 'total_hari_kerja_per_bulan',
-                        name: 'total_hari_kerja_per_bulan'
-                    },
-                    {
-                        data: 'total_hari_mangkir',
-                        name: 'total_hari_mangkir'
-                    },
-                    {
-                        data: 'cuti',
-                        name: 'cuti'
-                    },
-                    {
-                        data: 'izin_kerja',
-                        name: 'izin_kerja'
-                    },
-                    {
-                        data: 'izin',
-                        name: 'izin'
-                    },
-                    {
-                        data: 'kurang_jam',
-                        name: 'kurang_jam'
-                    },
-                ],
-            });
-
-            $("#filter1").on('change', function() {
-                table.draw();
-            });
+                {
+                    data: 'nama_bulan',
+                    name: 'nama_bulan'
+                },
+                {
+                    data: 'total_masuk_karyawan',
+                    name: 'total_masuk_karyawan'
+                },
+                {
+                    data: 'total_hari_kerja_per_bulan',
+                    name: 'total_hari_kerja_per_bulan'
+                },
+                {
+                    data: 'total_hari_mangkir',
+                    name: 'total_hari_mangkir'
+                },
+                {
+                    data: 'cuti',
+                    name: 'cuti'
+                },
+                {
+                    data: 'izin_kerja',
+                    name: 'izin_kerja'
+                },
+                {
+                    data: 'izin',
+                    name: 'izin'
+                },
+                {
+                    data: 'kurang_jam',
+                    name: 'kurang_jam'
+                },
+            ],
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'print'
+            ]
         });
     </script>
 @endsection

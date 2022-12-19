@@ -35,7 +35,8 @@
                         <div class="row justify-content-start">
                             <label class="form-label" for="validationDefault01">Pilih Bulan</label>
                             <div class="col-sm-12 col-md-12 col-lg-6">
-                                <input class="date-picker form-control" type="text" id="bulan_hadir">
+                                <input class="date-picker form-control" type="text" id="bulan_hadir"
+                                    autocomplete="off" />
                             </div>
                             <div class="col-sm-12 col-md-12 col-lg-6">
                                 <button type="button" class="btn btn-info" id="btn-filter">Filter</button>
@@ -43,7 +44,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="dt-ext table-responsive">
                             <table class="dataTable" id="table-kehadiran">
                                 <thead>
                                     <th>No.</th>
@@ -147,12 +148,12 @@
                         name: 'jam_pulang'
                     },
                     {
-                        data: 'latemasuk',
-                        name: 'latemasuk'
+                        data: 'telat_masuk',
+                        name: 'telat_masuk'
                     },
                     {
-                        data: 'latesiang',
-                        name: 'latesiang'
+                        data: 'telat_siang',
+                        name: 'telat_siang'
                     },
                     {
                         data: 'note',
