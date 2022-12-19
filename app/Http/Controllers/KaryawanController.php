@@ -51,9 +51,9 @@ class KaryawanController extends Controller
     {
         if ($request->bulan) {
             $month =  explode('-', $request->bulan);
-            $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg)->whereNotIn('hari', array('6', '0'))->whereMonth('attendance.tanggal', $month[0])->whereYear('attendance.tanggal', $month[1])->orderBy('attendance.tanggal', 'desc');
+            $data = Attendance::with(['izin'])->selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg)->whereNotIn('hari', array('6', '0'))->whereMonth('attendance.tanggal', $month[0])->whereYear('attendance.tanggal', $month[1])->orderBy('attendance.tanggal', 'desc');
         } else {
-            $data = Attendance::selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg)->whereNotIn('hari', array('6', '0'))->orderBy('attendance.tanggal', 'desc');
+            $data = Attendance::with(['izin'])->selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg)->whereNotIn('hari', array('6', '0'))->orderBy('attendance.tanggal', 'desc');
         }
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -62,34 +62,31 @@ class KaryawanController extends Controller
                     return config('app.days')[$row->hari];
                 })
                 ->addColumn('action', function ($row) {
-                    $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
-                    if ($workingdays < 3) {
-                        $addsurat = route('karyawan.createizinkehadiran', $row->id);
-                        return $actionBtn = "
-                        <div class='d-block text-center'>
-                        <a href='$addsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-ui-add'></i></a>
-                        </div>
-                        ";
+                    $hasIzin = $row->izin?->count();
+                    $print =  route('admin.printizin', $row->id);
+                    if ($hasIzin == null) {
+                        $for_html = '
+                        <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
                     } else {
-                        return '';
+                        $for_html = '
+                        <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
+                        <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
                     }
+
+                    return $for_html;
                 })
                 ->addColumn('file', function ($row) {
-                    $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id', $row->id)->get();
-
-                    foreach ($dataizin as $izin) {
-                        $printsurat =  route('karyawan.printizin', $izin->id);
-
-                        if ($row->id == $izin->id_attendance) {
-                            $actionBtn = "
+                    $printsurat =  route('karyawan.printizin', $row->id);
+                    if ($row->izin != null) {
+                        $actionBtn = "
                             <div class='d-block text-center'>
                                 <a href='$printsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-download-alt'></i></a>
                             </div>
                             ";
-                            return $actionBtn;
-                        } else {
-                            $total = '';
-                        }
+                        return $actionBtn;
+                    } else {
+                        $actionBtn = "";
+                        return $actionBtn;
                     }
             })
             ->addColumn('note', function ($row) {
@@ -112,19 +109,17 @@ class KaryawanController extends Controller
                     <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
                 }
 
-                return $for_html;
-            })
-            ->addColumn('status', function ($row) {
-                if ($row->izin != NULL) {
-                    if ($row->izin->approval == '1') {
-                        $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
+                ->addColumn('status', function ($row) {
+                    if ($row->izin != null) {
+                        if ($row->approval == 1) {
+                            $apprv = '<span class="badge badge-success">Disetujui</span>';
+                        } else {
+                            $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                        }
+                        return $apprv;
                     } else {
-                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                        return $apprv = '';
                     }
-                    return $apprv;
-                } else {
-                    return $apprv = '';
-                }
             })
             ->rawColumns(['latemasuk', 'days', 'latesiang', 'latesore', 'action', 'status', 'note'])
             ->toJson();
