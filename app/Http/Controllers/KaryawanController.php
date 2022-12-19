@@ -35,8 +35,8 @@ class KaryawanController extends Controller
     public function index(Request $request)
     {
         $periode = KuesionerKinerja::where('status', '1')->first();
-        $data = collect(DB::select("CALL HitungTotalHariKerja('". auth()->user()->nopeg ."', '$periode->batas_awal', '$periode->batas_akhir')"))->where('bulan',date('m'))->first();
-        
+        $data = collect(DB::select("CALL HitungTotalHariKerja('" . auth()->user()->nopeg . "', '$periode->batas_awal', '$periode->batas_akhir')"))->where('bulan', date('m'))->first();
+
         return view('karyawan.k_index', compact('data'));
     }
     public function index_datapresensi()
@@ -88,27 +88,27 @@ class KaryawanController extends Controller
                         $actionBtn = "";
                         return $actionBtn;
                     }
-            })
-            ->addColumn('note', function ($row) {
-                if ($row->status == 0) {
-                    $note = 'Kurang';
-                } else {
-                    $note = 'Lengkap';
-                }
-                return $note;
-            })
-            ->addColumn('action', function ($row) {
-                $hasIzin = $row->izin?->count();
-                $print =  route('admin.printizin', $row->id);
-                if ($hasIzin == null) {
-                    $for_html = '
+                })
+                ->addColumn('note', function ($row) {
+                    if ($row->status == 0) {
+                        $note = 'Kurang';
+                    } else {
+                        $note = 'Lengkap';
+                    }
+                    return $note;
+                })
+                ->addColumn('action', function ($row) {
+                    $hasIzin = $row->izin?->count();
+                    $print =  route('admin.printizin', $row->id);
+                    if ($hasIzin == null) {
+                        $for_html = '
                     <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
-                } else {
-                    $for_html = '
+                    } else {
+                        $for_html = '
                     <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
                     <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
-                }
-
+                    }
+                })
                 ->addColumn('status', function ($row) {
                     if ($row->izin != null) {
                         if ($row->approval == 1) {
@@ -120,9 +120,9 @@ class KaryawanController extends Controller
                     } else {
                         return $apprv = '';
                     }
-            })
-            ->rawColumns(['latemasuk', 'days', 'latesiang', 'latesore', 'action', 'status', 'note'])
-            ->toJson();
+                })
+                ->rawColumns(['latemasuk', 'days', 'latesiang', 'latesore', 'action', 'status', 'note'])
+                ->toJson();
         }
     }
 
@@ -130,7 +130,7 @@ class KaryawanController extends Controller
     public function index_datarekapitulasi()
     {
         $periode = KuesionerKinerja::where('status', '1')->get();
-        return view('karyawan.k_datarekapitulasi',compact('periode'));
+        return view('karyawan.k_datarekapitulasi', compact('periode'));
     }
 
     public function listdatarekapitulasi(Request $request)
