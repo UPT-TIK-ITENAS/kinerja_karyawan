@@ -32,26 +32,10 @@ class KaryawanController extends Controller
     }
     public function index()
     {
-        $durasi_telat = strtotime('00:00:00');
-        $durasi_kerja = strtotime('00:00:00');
-        $data_att     = Attendance::selectRaw("SUM(durasi) as total_durasi, SEC_TO_TIME(SUM(
-            CASE
-                 WHEN durasi = '04:00:00' and IS_WEEKDAY(tanggal) = 1 and
-                      IF((select if(count(*) > 0, 1, 0) from libur_nasional where tanggal = tanggal), 1, 0) = 0
-                     THEN TIME_TO_SEC(telat_masuk) + TIME_TO_SEC(telat_siang) + TIME_TO_SEC('04:00:00')
-                 WHEN durasi = '00:00:00' and IS_WEEKDAY(tanggal) = 1 and
-                      IF((select if(count(*) > 0, 1, 0) from libur_nasional where tanggal = tanggal), 1, 0) = 0
-                     THEN TIME_TO_SEC(telat_masuk) + TIME_TO_SEC(telat_siang) + TIME_TO_SEC('08:00:00')
-                ELSE TIME_TO_SEC(telat_masuk) + TIME_TO_SEC(telat_siang)
-            END)) as kurang_jam")->where('nip', auth()->user()->nopeg)->whereMonth('tanggal', '=', date('m'))->whereYear('tanggal', '=', date('Y'))->first();
+        $periode = KuesionerKinerja::where('status', '1')->first();
+        $data = collect(DB::select("CALL HitungTotalHariKerja('" . auth()->user()->nopeg . "', '$periode->batas_awal', '$periode->batas_akhir')"))->where('bulan', date('m'))->first();
 
-        $hours = floor($data_att->total_durasi / 3600);
-        $minutes = floor(($data_att->total_durasi / 60) % 60);
-        $seconds = $data_att->total_durasi % 60;
-        $data = [
-            'terlambat' =>  $data_att->kurang_jam,
-            'durasi_kerja' => $hours . ':' . $minutes . ':' . $seconds,
-        ];
+
         return view('karyawan.k_index', compact('data'));
     }
     public function index_datapresensi()
