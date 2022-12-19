@@ -54,7 +54,7 @@ class KaryawanController extends Controller
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->editColumn('hari', function ($row) {
+                ->editColumn('days', function ($row) {
                     return config('app.days')[$row->hari];
                 })
                 ->addColumn('file', function ($row) {
@@ -113,6 +113,53 @@ class KaryawanController extends Controller
         }
     }
 
+    public function editAtt($id)
+    {
+        $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas, unit.nama_unit')
+            ->join('users', 'attendance.nip', '=', 'users.nopeg')
+            ->join('unit', 'unit.id', '=', 'users.unit')
+            ->where('attendance.id', $id)->first();
+        return response()->json($data);
+    }
+
+    public function storeizinkehadiran(Request $request)
+    {
+
+        $qrcode_filenamepeg = 'qr-' . $request->nip . '-' . $request->id . '.svg';
+        QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nip . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
+
+        if ($request->jenis == 2) {
+            Izin::insert([
+                'id_attendance' => $request->id,
+                'nopeg' => $request->nip,
+                'name' => $request->name,
+                'unit' => $request->unit,
+                'tanggal_izin' => date('Y-m-d H:i:s', strtotime($request->tanggal_izin)),
+                'alasan' => $request->alasan,
+                'validasi' => 1,
+                'approval' => 0,
+                'jenis' => $request->jenis,
+                'qrcode_peg' => $qrcode_filenamepeg,
+            ]);
+        } else {
+            Izin::insert([
+                'id_attendance' => $request->id,
+                'nopeg' => $request->nip,
+                'name' => $request->name,
+                'unit' => $request->unit,
+                'tanggal' => $request->tanggall,
+                'jam_awal' => $request->jam_awal,
+                'jam_akhir' => $request->jam_akhir,
+                'alasan' => $request->alasan,
+                'validasi' => 1,
+                'approval' => 0,
+                'jenis' => $request->jenis,
+                'qrcode_peg' => $qrcode_filenamepeg,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Pengajuan Izin Berhasil!');
+    }
 
     public function index_datarekapitulasi()
     {
@@ -278,55 +325,5 @@ class KaryawanController extends Controller
         }
     }
 
-    public function createizinkehadiran($id)
-    {
 
-        $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas, unit.nama_unit')
-            ->join('users', 'attendance.nip', '=', 'users.nopeg')
-            ->join('unit', 'unit.id', '=', 'users.unit')
-            ->where('attendance.id', $id)->first();
-        return view('karyawan.createizinkehadiran', compact('data'));
-    }
-
-    public function storeizinkehadiran(Request $request)
-    {
-
-        if ($request->validasi == NULL) {
-            return redirect()->route('karyawan.createizinkehadiran', $request->id_izin)->with('error', 'Validasi Tidak diisi!');
-        } else {
-            Izin::insert([
-                'id_attendance' => $request->id_attendance,
-                'nopeg' => $request->nopeg,
-                'name' => $request->name,
-                'unit' => $request->idunit,
-                'tanggal' => $request->tgl,
-                'jam_awal' => date('H:i:s', strtotime($request->jam_awal)),
-                'jam_akhir' => date('H:i:s', strtotime($request->jam_akhir)),
-                'alasan' => $request->alasan,
-                'validasi' => $request->validasi,
-            ]);
-
-            $dataqr = Izin::where('nopeg', $request->nopeg)->first();
-            $qrcode_filename = 'qr-' . base64_encode($request->nopeg . date('Y-m-d H:i:s')) . '.svg';
-            // dd($qrcode_filename);
-            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nopeg . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
-
-            QR::where('nopeg', $request->nopeg)->insert([
-                'id_attendance' => $request->id_attendance,
-                'nopeg' => $request->nopeg,
-                'qr_peg' => $qrcode_filename,
-            ]);
-
-            return redirect()->route('karyawan.datapresensi')->with('success', 'Pengajuan Izin Berhasil!');
-        }
-    }
-
-    public function printizin($id)
-    {
-        $data = Izin::where('id_attendance', $id)->first();
-        $dataqr = QR::where('id_attendance', $id)->first();
-
-        $pdf = PDF::loadview('admin.printizin', compact('data', 'dataqr'))->setPaper('A5', 'landscape');
-        return $pdf->stream();
-    }
 }

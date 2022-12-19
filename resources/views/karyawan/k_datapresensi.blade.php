@@ -70,6 +70,102 @@
 @endsection
 
 @section('scripts')
+<div class="modal fade bd-example-modal-lg" id="show-izin" aria-labelledby="myLargeModalLabel" aria-modal="true"
+        tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myLargeModalLabel">Form Pengajuan Izin</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
+                        data-bs-original-title="" title=""></button>
+                </div>
+                <form class="needs-validation" novalidate="" action="{{ route('karyawan.storeizinkehadiran') }}"
+                    method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-2">
+                                <span class="form-label" for="nip">No Pegawai</span>
+                                <input class="form-control" id="nip" name="nip" type="text" required=""
+                                    readonly>
+                                <input id="id" name="id" hidden />
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="name">Nama</span>
+                                <input class="form-control" id="name" name="name" type="text" required=""
+                                    readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="form-label" for="nama_unit">Unit</span>
+                                <input class="form-control" id="nama_unit" name="nama_unit" type="text" readonly
+                                    required="">
+                                <input id="unit" name="unit" hidden />
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-4">
+                                <span class="form-label" for="tanggal">Tanggal</span>
+                                <input class="form-control" id="tanggall" name="tanggall" type="text" readonly
+                                    required="">
+
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="jenis">Jenis</span>
+                                <select name="jenis" id="jenis" class="form-control">
+                                    <option value='' disabled selected>Pilih Status</option>
+                                    <option value="1">Izin</option>
+                                    <option value="2">Sidik Jari</option>
+                                </select>
+
+                            </div>
+                            <div class="col-md-4 jamawal">
+                                <span class="form-label" for="jam_masuk">Jam Keluar </span>
+                                <div class="input-group clockpicker" data-autoclose="true">
+                                    <input class="form-control" type="text" id="jam_awal" name="jam_awal"><span
+                                        class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 jamakhir">
+                                <span class="form-label" for="jam_akhir">Jam Kembali </span>
+                                <div class="input-group clockpicker" data-autoclose="true">
+                                    <input class="form-control" type="text" id="jam_akhir" name="jam_akhir"><span
+                                        class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 jamizin">
+                                <span class="form-label" for="tanggal_izin">Tanggal</span>
+                                <input type="text" class="form-control" id="tanggal_izin" name="tanggal_izin"
+                                    value="" />
+                                <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-7">
+                            <span class="form-label" for="alasan">Alasan</span>
+                            <textarea class="form-control" id="alasan" name="alasan" rows="3" placeholder="Alasan" required></textarea>
+                            {{-- <input class="form-control" id="jam_masuk" name="jam_masuk" type="date"
+                        required=""> --}}
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <div class="checkbox p-0">
+                                    <div class="checkbox checkbox-dark">
+                                        <input id="cb_valid" class="form-check-input" type="checkbox" required>
+                                        <label class="form-check-label" for="cb_valid">Keterangan izin dilakukan oleh diri
+                                            sendiri dan secara sadar sesuai dengan ketentuan yang berlaku</label>
+                                    </div>
+                                    <div class="invalid-feedback">Wajib di centang !</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     @parent
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"
         integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q=="
@@ -173,6 +269,46 @@
                 table.draw();
                 document.getElementById('btn-filter').style.pointerEvents = 'auto';
             });
+            daterangepicker('#tanggal_izin', "auto", true, '#show-izin');
+        });
+
+        $('body').on('click', '.editAtt', function() {
+            var id = $(this).data('id');
+
+            $.get(`${window.baseurl}/karyawan/editAtt/${id}`, function(data) {
+                $('#ModalTitle').html('Attendance');
+                $('#show-izin').modal('show');
+                $('#id').val(data.id);
+                $('#nip').val(data.nip);
+                $('#name').val(data.name);
+                $('#unit').val(data.unit);
+                $('#nama_unit').val(data.nama_unit);
+                $('#tanggall').val(data.tanggal);
+                $('#jam_masuk').val(data.jam_masuk);
+                $('#jam_siang').val(data.jam_siang);
+                $('#jam_pulang').val(data.jam_pulang);
+
+                console.log(data);
+            })
+        });
+
+        $(".jamawal").hide();
+        $(".jamakhir").hide();
+        $(".jamizin").hide();
+
+        $('#jenis').on('change', function(e) {
+            var optionSelected = $("option:selected", this);
+            var valueSelected = this.value;
+            console.log(valueSelected);
+            if (valueSelected == 1) {
+                $(".jamawal").show();
+                $(".jamakhir").show();
+                $(".jamizin").hide();
+            } else {
+                $(".jamizin").show();
+                $(".jamawal").hide();
+                $(".jamakhir").hide();
+            }
         });
     </script>
 @endsection
