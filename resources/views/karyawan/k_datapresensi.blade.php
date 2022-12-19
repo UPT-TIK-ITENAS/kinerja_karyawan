@@ -47,17 +47,15 @@
                             <table class="dataTable" id="table-kehadiran">
                                 <thead>
                                     <th>No.</th>
+                                    <th>Nama</th>
                                     <th>Hari</th>
-                                    <th>Awal Tugas</th>
-                                    <th>Akhir Tugas</th>
                                     <th>Jam Masuk</th>
                                     <th>Jam Siang</th>
                                     <th>Jam Keluar</th>
-                                    <th>Durasi</th>
                                     <th>Telat Masuk</th>
                                     <th>Telat Siang</th>
+                                    <th>Note</th>
                                     <th>Aksi</th>
-                                    <th>File</th>
                                     <th>Status</th>
                                 </thead>
                                 <tbody>
@@ -129,16 +127,12 @@
                         searchable: false,
                     },
                     {
-                        data: 'hari',
-                        name: 'hari'
+                        data: 'user.name',
+                        name: 'user.name'
                     },
                     {
-                        data: 'awal_tugas',
-                        name: 'awal_tugas'
-                    },
-                    {
-                        data: 'akhir_tugas',
-                        name: 'akhir_tugas'
+                        data: 'days',
+                        name: 'days'
                     },
                     {
                         data: 'jam_masuk',
@@ -153,10 +147,6 @@
                         name: 'jam_pulang'
                     },
                     {
-                        data: 'duration',
-                        name: 'duration'
-                    },
-                    {
                         data: 'latemasuk',
                         name: 'latemasuk'
                     },
@@ -165,13 +155,12 @@
                         name: 'latesiang'
                     },
                     {
+                        data: 'note',
+                        name: 'note'
+                    },
+                    {
                         data: 'action',
                         name: 'action'
-                    },
-
-                    {
-                        data: 'file',
-                        name: 'file'
                     },
                     {
                         data: 'status',

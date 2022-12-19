@@ -113,17 +113,9 @@
                                     required="">
                             </div>
                             <div class="col-md-7">
-                                <span class="form-label" for="unit">Unit</span>
-                                <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
-                                    id="unit" name="unit" required="">
-                                    <option value='' disabled selected>Pilih Unit</option>
-                                    @foreach ($unit as $u)
-                                        <option value="{{ $u->id }}"
-                                            @if ($u->id == $peg->unit) { selected } @endif>{{ $u->nama_unit }}
-                                        </option>
-                                    @endforeach
-
-                                </select>
+                                <span class="form-label" for="nama_unit">Unit</span>
+                                <input class="form-control" id="nama_unit" name="nama_unit" type="text"
+                                    required="">
                             </div>
                             <div class="col-md-5">
                                 <input type="hidden" id="atasan" name="atasan">
