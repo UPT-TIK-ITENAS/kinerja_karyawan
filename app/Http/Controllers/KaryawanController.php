@@ -61,20 +61,6 @@ class KaryawanController extends Controller
                 ->editColumn('days', function ($row) {
                     return config('app.days')[$row->hari];
                 })
-                ->addColumn('action', function ($row) {
-                    $hasIzin = $row->izin?->count();
-                    $print =  route('admin.printizin', $row->id);
-                    if ($hasIzin == null) {
-                        $for_html = '
-                        <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
-                    } else {
-                        $for_html = '
-                        <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
-                        <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
-                    }
-
-                    return $for_html;
-                })
                 ->addColumn('file', function ($row) {
                     $printsurat =  route('karyawan.printizin', $row->id);
                     if ($row->izin != null) {
@@ -100,14 +86,19 @@ class KaryawanController extends Controller
                 ->addColumn('action', function ($row) {
                     $hasIzin = $row->izin?->count();
                     $print =  route('admin.printizin', $row->id);
-                    if ($hasIzin == null) {
+                    $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
+
+                    if ($hasIzin == null && $workingdays <= 2) {
                         $for_html = '
                     <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
-                    } else {
+                    } elseif ($hasIzin != null) {
                         $for_html = '
-                    <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
-                    <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
+                        <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
+                        <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
+                    } else {
+                        $for_html = '';
                     }
+                    return $for_html;
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->izin != null) {
@@ -136,15 +127,15 @@ class KaryawanController extends Controller
     public function listdatarekapitulasi(Request $request)
     {
         $month =  explode('-', $request->bulan);
-        Debugbar::info($request->periode);
+        $nopeg = auth()->user()->nopeg;
         $periode = KuesionerKinerja::where('id', $request->periode ?? 2)->where('status', '1')->first();
-        $data = DB::select("CALL HitungTotalHariKerja('auth()->user()->nopeg', '$periode->batas_awal', '$periode->batas_akhir')");
-        if ($request->ajax()) {
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->toJson();
-        }
-        return DataTables::queryBuilder($data)->toJson();
+        $data = DB::select("CALL HitungTotalHariKerja('$nopeg', '$periode->batas_awal', '$periode->batas_akhir')");
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->editColumn('total_hari_mangkir', function ($row) {
+                return $row->total_hari_mangkir - ($row->cuti ?? 0) - ($row->izin_kerja ?? 0);
+            })
+            ->toJson();
     }
 
     public function index_cuti()
