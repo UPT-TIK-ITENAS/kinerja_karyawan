@@ -11,14 +11,12 @@ use App\Models\JenisCuti;
 use App\Models\JenisIzin;
 use App\Models\KuesionerKinerja;
 use App\Models\QR;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Carbon\CarbonInterval;
 
 class KaryawanController extends Controller
@@ -32,18 +30,32 @@ class KaryawanController extends Controller
     {
         $this->middleware('auth');
     }
-    public function index(Request $request)
+    public function index()
     {
-        $periode = KuesionerKinerja::where('status', '1')->first();
-        $data = collect(DB::select("CALL HitungTotalHariKerja('" . auth()->user()->nopeg . "', '$periode->batas_awal', '$periode->batas_akhir')"))->where('bulan', date('m'))->first();
+        $durasi_telat = strtotime('00:00:00');
+        $durasi_kerja = strtotime('00:00:00');
+        $data_att     = Attendance::selectRaw("SUM(durasi) as total_durasi, SEC_TO_TIME(SUM(
+            CASE
+                 WHEN durasi = '04:00:00' and IS_WEEKDAY(tanggal) = 1 and
+                      IF((select if(count(*) > 0, 1, 0) from libur_nasional where tanggal = tanggal), 1, 0) = 0
+                     THEN TIME_TO_SEC(telat_masuk) + TIME_TO_SEC(telat_siang) + TIME_TO_SEC('04:00:00')
+                 WHEN durasi = '00:00:00' and IS_WEEKDAY(tanggal) = 1 and
+                      IF((select if(count(*) > 0, 1, 0) from libur_nasional where tanggal = tanggal), 1, 0) = 0
+                     THEN TIME_TO_SEC(telat_masuk) + TIME_TO_SEC(telat_siang) + TIME_TO_SEC('08:00:00')
+                ELSE TIME_TO_SEC(telat_masuk) + TIME_TO_SEC(telat_siang)
+            END)) as kurang_jam")->where('nip', auth()->user()->nopeg)->whereMonth('tanggal', '=', date('m'))->whereYear('tanggal', '=', date('Y'))->first();
 
+        $hours = floor($data_att->total_durasi / 3600);
+        $minutes = floor(($data_att->total_durasi / 60) % 60);
+        $seconds = $data_att->total_durasi % 60;
+        $data = [
+            'terlambat' =>  $data_att->kurang_jam,
+            'durasi_kerja' => $hours . ':' . $minutes . ':' . $seconds,
+        ];
         return view('karyawan.k_index', compact('data'));
     }
     public function index_datapresensi()
     {
-
-        // $data = Attendance::query()->with(['user', 'izin'])->whereRelation('user', 'status', '=', 1)->where('nip', auth()->user()->nopeg)->orderby('tanggal', 'asc');
-        // dd($data);
         return view('karyawan.k_datapresensi');
     }
 
@@ -58,7 +70,7 @@ class KaryawanController extends Controller
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->editColumn('days', function ($row) {
+                ->editColumn('hari', function ($row) {
                     return config('app.days')[$row->hari];
                 })
                 ->addColumn('action', function ($row) {
@@ -89,26 +101,7 @@ class KaryawanController extends Controller
                         return $actionBtn;
                     }
                 })
-                ->addColumn('note', function ($row) {
-                    if ($row->status == 0) {
-                        $note = 'Kurang';
-                    } else {
-                        $note = 'Lengkap';
-                    }
-                    return $note;
-                })
-                ->addColumn('action', function ($row) {
-                    $hasIzin = $row->izin?->count();
-                    $print =  route('admin.printizin', $row->id);
-                    if ($hasIzin == null) {
-                        $for_html = '
-                    <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
-                    } else {
-                        $for_html = '
-                    <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
-                    <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
-                    }
-                })
+
                 ->addColumn('status', function ($row) {
                     if ($row->izin != null) {
                         if ($row->approval == 1) {
@@ -121,8 +114,8 @@ class KaryawanController extends Controller
                         return $apprv = '';
                     }
                 })
-                ->rawColumns(['latemasuk', 'days', 'latesiang', 'latesore', 'action', 'status', 'note'])
-                ->toJson();
+                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'action', 'file', 'status'])
+                ->make(true);
         }
     }
 
@@ -135,16 +128,16 @@ class KaryawanController extends Controller
 
     public function listdatarekapitulasi(Request $request)
     {
-        $month =  explode('-', $request->bulan);
-        Debugbar::info($request->periode);
+        $nopeg = auth()->user()->nopeg;
         $periode = KuesionerKinerja::where('id', $request->periode ?? 2)->where('status', '1')->first();
-        $data = DB::select("CALL HitungTotalHariKerja('auth()->user()->nopeg', '$periode->batas_awal', '$periode->batas_akhir')");
-        if ($request->ajax()) {
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->toJson();
-        }
-        return DataTables::queryBuilder($data)->toJson();
+        $data = DB::select("CALL HitungTotalHariKerja('" . auth()->user()->nopeg . "', '$periode->batas_awal', '$periode->batas_akhir')");
+
+        return DataTables::of($data)
+            ->editColumn('total_hari_mangkir', function ($row) {
+                return $row->total_hari_mangkir - ($row->cuti ?? 0) - ($row->izin_kerja ?? 0);
+            })
+            ->addIndexColumn()
+            ->toJson();
     }
 
     public function index_cuti()
