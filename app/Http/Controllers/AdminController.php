@@ -348,7 +348,14 @@ class AdminController extends Controller
                     return getAksi($row->id_izinkerja, 'izin');
                 })
                 ->addColumn('status', function ($row) {
-                    return getAprv($row->id_izinkerja, 'izin', '');
+                    if ($row->approval == 1) {
+                        $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
+                    } else {
+                        $batal_izin = route('admin.izin-resmi.batal_izin', $row->id_izinkerja);
+                        $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalizin" title="Batal Izin" href="' . $batal_izin . '">X</a>';
+                    }
+
+                    return $for_html;
                 })
                 ->rawColumns(['print', 'status'])
                 ->make(true);
@@ -455,7 +462,6 @@ class AdminController extends Controller
             ->where('cuti.jenis_cuti', $jenis)
             ->where(DB::raw("(DATE_FORMAT(created_at,'%Y'))"), Carbon::now()->year)
             ->GROUPBY('cuti.jenis_cuti')->sum('total_cuti');
-
         return response()->json($history_cuti);
     }
 
