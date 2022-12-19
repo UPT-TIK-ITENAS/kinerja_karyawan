@@ -54,7 +54,7 @@ class KaryawanController extends Controller
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->editColumn('hari', function ($row) {
+                ->editColumn('days', function ($row) {
                     return config('app.days')[$row->hari];
                 })
                 ->addColumn('file', function ($row) {
@@ -108,7 +108,7 @@ class KaryawanController extends Controller
                         return $apprv = '';
                     }
                 })
-                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'action', 'file', 'status'])
+                ->rawColumns(['duration', 'latemasuk', 'days', 'latesiang', 'action', 'file', 'status'])
                 ->make(true);
         }
     }
