@@ -48,7 +48,6 @@
                             <table class="dataTable" id="table-kehadiran">
                                 <thead>
                                     <th>No.</th>
-                                    <th>Nama</th>
                                     <th>Hari</th>
                                     <th>Jam Masuk</th>
                                     <th>Jam Siang</th>
@@ -126,10 +125,6 @@
                         className: 'text-center',
                         orderable: false,
                         searchable: false,
-                    },
-                    {
-                        data: 'user.name',
-                        name: 'user.name'
                     },
                     {
                         data: 'days',

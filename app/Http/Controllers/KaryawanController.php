@@ -11,7 +11,6 @@ use App\Models\JenisCuti;
 use App\Models\JenisIzin;
 use App\Models\KuesionerKinerja;
 use App\Models\QR;
-use App\Models\KuesionerKinerja;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -59,7 +58,7 @@ class KaryawanController extends Controller
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->editColumn('hari', function ($row) {
+                ->editColumn('days', function ($row) {
                     return config('app.days')[$row->hari];
                 })
                 ->addColumn('action', function ($row) {
@@ -129,6 +128,7 @@ class KaryawanController extends Controller
             })
             ->rawColumns(['latemasuk', 'days', 'latesiang', 'latesore', 'action', 'status', 'note'])
             ->toJson();
+        }
     }
 
 
