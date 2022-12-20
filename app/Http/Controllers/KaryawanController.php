@@ -130,6 +130,34 @@ class KaryawanController extends Controller
             ->editColumn('total_hari_mangkir', function ($row) {
                 return $row->total_hari_mangkir - ($row->cuti ?? 0) - ($row->izin_kerja ?? 0);
             })
+            ->editColumn('kurang_jam', function ($row) {
+                return $row->kurang_jam . ' ' . 'Menit';
+            })
+            ->editColumn('total_izin', function ($row) {
+                if ($row->total_izin != NULL) {
+                    $total = $row->total_izin . ' ' . 'Jam';
+                } else {
+                    $total = ' ';
+                }
+                return $total;
+            })
+            ->editColumn('cuti', function ($row) {
+                if ($row->cuti != NULL) {
+                    $total = $row->cuti . ' ' . 'Hari';
+                } else {
+                    $total = ' ';
+                }
+                return $total;
+            })
+            ->editColumn('izin_kerja', function ($row) {
+                if ($row->izin_kerja != NULL) {
+                    $total = $row->izin_kerja . ' ' . 'Hari';
+                } else {
+                    $total = ' ';
+                }
+                return $total;
+            })
+
             ->addIndexColumn()
             ->toJson();
     }

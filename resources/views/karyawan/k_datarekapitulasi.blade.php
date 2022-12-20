@@ -121,8 +121,8 @@
                     name: 'izin_kerja'
                 },
                 {
-                    data: 'izin',
-                    name: 'izin'
+                    data: 'total_izin',
+                    name: 'total_izin'
                 },
                 {
                     data: 'kurang_jam',
