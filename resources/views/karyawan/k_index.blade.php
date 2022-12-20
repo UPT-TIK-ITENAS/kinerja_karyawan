@@ -18,24 +18,21 @@
         <h6>Rekap untuk bulan {{ \Carbon\Carbon::parse(date('Y-m-d'))->isoFormat('MMMM Y') }}</h6>
         <div class="row">
             <!-- Zero Configuration  Starts-->
-
-            {{-- @if ($data->kurang_jam != null)
-                <div class="col-lg-4 col-md-4 col-sm-12">
-                    <div class="card o-hidden border-0">
-                        <div class="bg-secondary b-r-4 card-body">
-                            <div class="media static-top-widget">
-                                <div class="align-self-center text-center">
-                                    <i data-feather="clock"></i>
-                                </div>
-                                <div class="media-body">
-                                    <span class="m-0">Total Keterlambatan</span>
-                                    <h4 class="mb-0 counter">{{ $data->kurang_jam }} Jam</h4>
-                                </div>
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <div class="card o-hidden border-0">
+                    <div class="bg-secondary b-r-4 card-body">
+                        <div class="media static-top-widget">
+                            <div class="align-self-center text-center">
+                                <i data-feather="clock"></i>
+                            </div>
+                            <div class="media-body">
+                                <span class="m-0">Total Keterlambatan</span>
+                                <h4 class="mb-0 counter">{{ $data->kurang_jam }} Jam</h4>
                             </div>
                         </div>
                     </div>
                 </div>
-            @endif --}}
+            </div>
             <div class="col-lg-4 col-md-4 col-sm-12">
                 <div class="card o-hidden border-0">
                     <div class="bg-primary b-r-4 card-body">
