@@ -19,7 +19,7 @@
         <div class="row">
             <!-- Zero Configuration  Starts-->
 
-            @if ($data->kurang_jam != null)
+            {{-- @if ($data->kurang_jam != null)
                 <div class="col-lg-4 col-md-4 col-sm-12">
                     <div class="card o-hidden border-0">
                         <div class="bg-secondary b-r-4 card-body">
@@ -35,7 +35,7 @@
                         </div>
                     </div>
                 </div>
-            @endif
+            @endif --}}
             <div class="col-lg-4 col-md-4 col-sm-12">
                 <div class="card o-hidden border-0">
                     <div class="bg-primary b-r-4 card-body">
