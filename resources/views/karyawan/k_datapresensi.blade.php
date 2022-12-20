@@ -52,8 +52,7 @@
                                     <th>Jam Masuk</th>
                                     <th>Jam Siang</th>
                                     <th>Jam Keluar</th>
-                                    <th>Telat Masuk</th>
-                                    <th>Telat Siang</th>
+                                    <th>Durasi</th>
                                     <th>Note</th>
                                     <th>Aksi</th>
                                     <th>Status</th>
@@ -70,7 +69,7 @@
 @endsection
 
 @section('scripts')
-<div class="modal fade bd-example-modal-lg" id="show-izin" aria-labelledby="myLargeModalLabel" aria-modal="true"
+    <div class="modal fade bd-example-modal-lg" id="show-izin" aria-labelledby="myLargeModalLabel" aria-modal="true"
         tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -239,12 +238,8 @@
                         name: 'jam_pulang'
                     },
                     {
-                        data: 'telat_masuk',
-                        name: 'telat_masuk'
-                    },
-                    {
-                        data: 'telat_siang',
-                        name: 'telat_siang'
+                        data: 'durasi',
+                        name: 'durasi'
                     },
                     {
                         data: 'note',

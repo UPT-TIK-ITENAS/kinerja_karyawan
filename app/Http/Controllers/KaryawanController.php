@@ -40,6 +40,7 @@ class KaryawanController extends Controller
     }
     public function index_datapresensi()
     {
+
         return view('karyawan.k_datapresensi');
     }
 
@@ -70,6 +71,9 @@ class KaryawanController extends Controller
                         $actionBtn = "";
                         return $actionBtn;
                     }
+                })
+                ->editColumn('kurang_jam', function ($row) {
+                    return strtotime($row->telat_masuk) + strtotime($row->telat_siang);
                 })
                 ->addColumn('note', function ($row) {
                     if ($row->status == 0) {
@@ -108,7 +112,7 @@ class KaryawanController extends Controller
                         return $apprv = '';
                     }
                 })
-                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'action', 'file', 'status'])
+                ->rawColumns(['hari', 'durasi', 'action', 'file', 'status'])
                 ->make(true);
         }
     }
@@ -324,6 +328,4 @@ class KaryawanController extends Controller
             return redirect()->back()->with('danger', 'Gagal membatalkan izin');
         }
     }
-
-
 }
