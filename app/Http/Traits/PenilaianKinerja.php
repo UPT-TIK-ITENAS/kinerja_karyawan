@@ -80,7 +80,7 @@ trait PenilaianKinerja
     public function penilaian_atasan($nopeg, $periode)
     {
         $data = RespondenKinerja::where('nopeg', $nopeg)->where('kuisioner_kinerja_id', $periode->id)->first();
-        $indeks = $data->indeks;
+        $indeks = $data->indeks ?? 0;
         // convert indeks from 1-4 to 1-100
         $indeks = ($indeks / 4) * 100;
         return $indeks;

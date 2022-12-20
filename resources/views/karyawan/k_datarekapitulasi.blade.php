@@ -314,5 +314,11 @@
                 $(api.column(4).footer()).html(`${total} Poin`);
             },
         });
+
+        $("#filter1").on('change', function() {
+            table.draw();
+            tablePenilaian.draw();
+            tableTotalPenilaian.draw();
+        });
     </script>
 @endsection

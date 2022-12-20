@@ -26,6 +26,7 @@ use Yajra\DataTables\Contracts\DataTable;
 class KaryawanController extends Controller
 {
     use PenilaianKinerja;
+
     /**
      * Display a listing of the resource.
      *

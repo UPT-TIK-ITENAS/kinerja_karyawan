@@ -270,6 +270,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/listrekapkaryawan', [RekapitulasiController::class, 'listrekapkaryawan'])->name('listrekapkaryawan');
             Route::get('/detailrekap/{nopeg}', [RekapitulasiController::class, 'detailrekap'])->name('detailrekap');
             Route::get('/detailrekap/list/{nopeg}', [RekapitulasiController::class, 'list_detail_rekap'])->name('listdetailrekap');
+            Route::get('/list-penilaian-detail/{tipe}', [RekapitulasiController::class, 'penilaian_detail'])->name('penilaian_detail');
         });
     });
 
