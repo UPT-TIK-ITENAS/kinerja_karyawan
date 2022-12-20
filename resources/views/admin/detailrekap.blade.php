@@ -23,24 +23,21 @@
                 <div class="card">
                     <div class="card-header">
                         <h5>Silakan pilih periode untuk melihat jumlah kehadiran</h5>
-                        <form action="{{ route('admin.SyncAndInsertBiometric') }}" method="POST" class="mt-3">
-                            @csrf
-                            <div class="form-group row">
-                                <label class="col-lg-1 col-md-12 col-form-label">Periode</label>
-                                <div class="col-lg-6 col-md-12">
-                                    <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
-                                        name="filter1" id="filter1" required="">
-                                        @foreach ($periode as $p)
-                                            @if ($p->id == 2)
-                                                <option value="{{ $p->id }}" selected>{{ $p->judul }}</option>
-                                            @else
-                                                <option value="{{ $p->id }}">{{ $p->judul }}</option>
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                </div>
+                        <div class="form-group row">
+                            <label class="col-lg-1 col-md-12 col-form-label">Periode</label>
+                            <div class="col-lg-6 col-md-12">
+                                <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                    name="filter1" id="filter1" required="">
+                                    @foreach ($periode as $p)
+                                        @if ($p->id == 2)
+                                            <option value="{{ $p->id }}" selected>{{ $p->judul }}</option>
+                                        @else
+                                            <option value="{{ $p->id }}">{{ $p->judul }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
                             </div>
-                        </form>
+                        </div>
                         <hr>
                     </div>
                     <div class="card-body">
