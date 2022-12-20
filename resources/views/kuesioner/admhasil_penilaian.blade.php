@@ -31,15 +31,15 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($data as $no => $b)
-                                    <tr>
-                                        <th scope="row">{{ $no + 1 }}</th>
-                                        <td>{{ $b->nopeg }} - {{ $b->nama_pegawai }}</td>
-                                        <td>{{ $b->indeks }}</td>
-                                        <td>{{ $b->judul }}</td>
-                                    </tr>
+                                        <tr>
+                                            <th scope="row">{{ $no + 1 }}</th>
+                                            <td>{{ $b->nopeg }} - {{ $b->nama_pegawai }}</td>
+                                            <td>{{ number_format(($b->indeks / 3) * 100) }}</td>
+                                            <td>{{ $b->judul }}</td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
-                                
+
                             </table>
                         </div>
                     </div>

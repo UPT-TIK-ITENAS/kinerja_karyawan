@@ -214,7 +214,7 @@
         </table>
         <br>
 
-        <table class="table1" border="1" cellpadding="0" cellspacing="0">
+        <table class="table1" border="1" cellpadding="3" cellspacing="0">
             <thead class="text-center">
                 <tr>
                     <td style="font-size: 14.5px;"colspan="4">
@@ -224,8 +224,8 @@
                 <tr>
                     <th style="width:4%;font-size: 14.5px;">No</th>
                     <th style="font-size: 14.5px;">Alasan Izin</th>
-                    <th style="font-size: 14.5px;">Lamanya Hari yang diizinkan </th>
-                    <th style="font-size: 14.5px;">Periode Tanggal Izin yang diambil </th>
+                    <th style="width:20%;font-size: 14.5px;">Lamanya Hari <br> yang diizinkan </th>
+                    <th style="font-size: 14.5px;">Periode Tanggal <br> Izin yang diambil </th>
                 </tr>
             </thead>
             <tbody>

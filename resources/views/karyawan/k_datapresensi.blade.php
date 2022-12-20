@@ -35,7 +35,8 @@
                         <div class="row justify-content-start">
                             <label class="form-label" for="validationDefault01">Pilih Bulan</label>
                             <div class="col-sm-12 col-md-12 col-lg-6">
-                                <input class="date-picker form-control" type="text" id="bulan_hadir">
+                                <input class="date-picker form-control" type="text" id="bulan_hadir"
+                                    autocomplete="off" />
                             </div>
                             <div class="col-sm-12 col-md-12 col-lg-6">
                                 <button type="button" class="btn btn-info" id="btn-filter">Filter</button>
@@ -43,21 +44,18 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="dt-ext table-responsive">
                             <table class="dataTable" id="table-kehadiran">
                                 <thead>
                                     <th>No.</th>
                                     <th>Hari</th>
-                                    <th>Awal Tugas</th>
-                                    <th>Akhir Tugas</th>
                                     <th>Jam Masuk</th>
                                     <th>Jam Siang</th>
                                     <th>Jam Keluar</th>
-                                    <th>Durasi</th>
                                     <th>Telat Masuk</th>
                                     <th>Telat Siang</th>
+                                    <th>Note</th>
                                     <th>Aksi</th>
-                                    <th>File</th>
                                     <th>Status</th>
                                 </thead>
                                 <tbody>
@@ -129,16 +127,8 @@
                         searchable: false,
                     },
                     {
-                        data: 'hari',
-                        name: 'hari'
-                    },
-                    {
-                        data: 'awal_tugas',
-                        name: 'awal_tugas'
-                    },
-                    {
-                        data: 'akhir_tugas',
-                        name: 'akhir_tugas'
+                        data: 'days',
+                        name: 'days'
                     },
                     {
                         data: 'jam_masuk',
@@ -153,25 +143,20 @@
                         name: 'jam_pulang'
                     },
                     {
-                        data: 'duration',
-                        name: 'duration'
+                        data: 'telat_masuk',
+                        name: 'telat_masuk'
                     },
                     {
-                        data: 'latemasuk',
-                        name: 'latemasuk'
+                        data: 'telat_siang',
+                        name: 'telat_siang'
                     },
                     {
-                        data: 'latesiang',
-                        name: 'latesiang'
+                        data: 'note',
+                        name: 'note'
                     },
                     {
                         data: 'action',
                         name: 'action'
-                    },
-
-                    {
-                        data: 'file',
-                        name: 'file'
                     },
                     {
                         data: 'status',

@@ -9,6 +9,8 @@ use Yajra\DataTables\Facades\DataTables;
 use App\Models\User;
 use App\Models\Cuti;
 use App\Models\Attendance;
+use App\Models\KuesionerKinerja;
+use Barryvdh\Debugbar\Facades\Debugbar;
 
 class RekapitulasiController extends Controller
 {
@@ -40,12 +42,19 @@ class RekapitulasiController extends Controller
 
     public function detailrekap($nopeg)
     {
-        $data = DB::select('CALL getTotalTelatPerBulan(' . $nopeg . ')');
-        $data2 = DB::select('CALL getIzinSakit(' . $nopeg . ')');
-        $cuti = DB::Select('SELECT cuti.nopeg, cuti.jenis_cuti , MONTH(cuti.tgl_awal_cuti) AS bulan,  YEAR(cuti.tgl_awal_cuti) AS tahun, SUM(cuti.total_cuti) AS totalcuti
-        FROM cuti WHERE cuti.nopeg = ' . $nopeg . ' AND cuti.approval = 2 GROUP BY nopeg,bulan,tahun');
-        // dd($cuti);
+        $periode = KuesionerKinerja::where('status', '1')->get();
+        return view('admin.detailrekap', compact('periode', 'nopeg'));
+    }
 
-        return view('admin.detailrekap', compact('data', 'data2', 'cuti'));
+    public function list_detail_rekap(Request $request, $nopeg)
+    {
+        $periode = KuesionerKinerja::where('id', $request->periode ?? 2)->where('status', '1')->first();
+        $data = DB::select("CALL HitungTotalHariKerja('$nopeg', '$periode->batas_awal', '$periode->batas_akhir')");
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->editColumn('total_hari_mangkir', function ($row) {
+                return $row->total_hari_mangkir - ($row->cuti ?? 0) - ($row->izin_kerja ?? 0);
+            })
+            ->toJson();
     }
 }

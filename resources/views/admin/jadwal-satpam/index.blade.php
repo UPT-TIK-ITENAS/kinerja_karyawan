@@ -21,7 +21,7 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="table-responsive my-5">
+                        <div class="dt-ext table-responsive my-5">
                             <table class="dataTable" id="table-jadwal-satpam">
                                 <thead>
                                     <th>No.</th>
