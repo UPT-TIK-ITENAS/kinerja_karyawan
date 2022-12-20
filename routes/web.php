@@ -16,6 +16,7 @@ use App\Http\Controllers\ListKaryawanController;
 use App\Http\Controllers\KuesionerController;
 use App\Http\Controllers\PejabatController;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -269,6 +270,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/listrekapkaryawan', [RekapitulasiController::class, 'listrekapkaryawan'])->name('listrekapkaryawan');
             Route::get('/detailrekap/{nopeg}', [RekapitulasiController::class, 'detailrekap'])->name('detailrekap');
             Route::get('/detailrekap/list/{nopeg}', [RekapitulasiController::class, 'list_detail_rekap'])->name('listdetailrekap');
+            Route::get('/list-penilaian-detail/{tipe}', [RekapitulasiController::class, 'penilaian_detail'])->name('penilaian_detail');
         });
     });
 
@@ -330,6 +332,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/rekapitulasi', [KaryawanController::class, 'rekapitulasi'])->name('rekapitulasi');
         // Route::get('/listdatarekapitulasi', [KaryawanController::class, 'listdatarekapitulasi'])->name('listdatarekapitulasi');
         Route::get('/listdatarekapitulasi', [KaryawanController::class, 'listdatarekapitulasi'])->name('listdatarekapitulasi');
+        Route::get('/list-penilaian-detail/{tipe}', [KaryawanController::class, 'penilaian_detail'])->name('penilaian_detail');
         Route::get('/izin/index', [KaryawanController::class, 'index_izin'])->name('izin');
         Route::post('/izin/store', [KaryawanController::class, 'store_izin'])->name('store_izin');
         Route::get('/izin/batal{id}', [KaryawanController::class, 'batal_izin'])->name('batal_izin');

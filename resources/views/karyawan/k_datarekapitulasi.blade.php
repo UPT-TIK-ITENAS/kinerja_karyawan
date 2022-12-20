@@ -22,24 +22,21 @@
                 <div class="card">
                     <div class="card-header">
                         <h5>Silakan pilih periode untuk melihat jumlah kehadiran</h5>
-                        <form action="{{ route('admin.SyncAndInsertBiometric') }}" method="POST" class="mt-3">
-                            @csrf
-                            <div class="form-group row">
-                                <label class="col-lg-1 col-md-12 col-form-label">Periode</label>
-                                <div class="col-lg-6 col-md-12">
-                                    <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
-                                        name="filter1" id="filter1" required="">
-                                        @foreach ($periode as $p)
-                                            @if ($p->id == 2)
-                                                <option value="{{ $p->id }}" selected>{{ $p->judul }}</option>
-                                            @else
-                                                <option value="{{ $p->id }}">{{ $p->judul }}</option>
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                </div>
+                        <div class="form-group row">
+                            <label class="col-lg-1 col-md-12 col-form-label">Periode</label>
+                            <div class="col-lg-6 col-md-12">
+                                <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                    name="filter1" id="filter1" required="">
+                                    @foreach ($periode as $p)
+                                        @if ($p->id == 2)
+                                            <option value="{{ $p->id }}" selected>{{ $p->judul }}</option>
+                                        @else
+                                            <option value="{{ $p->id }}">{{ $p->judul }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
                             </div>
-                        </form>
+                        </div>
                         <hr>
                     </div>
                     <div class="card-body">
@@ -63,6 +60,61 @@
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Penilaian</h5>
+                        <hr>
+                    </div>
+                    <div class="card-body pt-0">
+                        <div class="my-3">
+                            <h6 class="font-primary">Detail Penilaian</h6>
+                            <div class="dt-ext table-responsive">
+                                <table class="table table-bordered" id="table-penilaian">
+                                    <thead>
+                                        <th>No.</th>
+                                        <th>Bulan</th>
+                                        <th>Poin Izin</th>
+                                        <th>Poin Sakit</th>
+                                        <th>Poin Mangkir</th>
+                                        <th>Poin Kurang Jam</th>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="my-3">
+                            <h6 class="font-primary">Total Penilaian</h6>
+                            <div class="dt-ext table-responsive">
+                                <table class="table table-bordered" id="table-total-penilaian">
+                                    <thead>
+                                        <th>No.</th>
+                                        <th>Komponen Penilaian</th>
+                                        <th>Sub Komponen</th>
+                                        <th>Bobot</th>
+                                        <th>Poin</th>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="4" style="text-align:right !important">Total Poin</th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -133,6 +185,140 @@
             buttons: [
                 'copy', 'csv', 'print'
             ]
+        });
+
+        let tablePenilaian = $('#table-penilaian').DataTable({
+            fixedHeader: true,
+            pageLength: 10,
+            responsive: true,
+            processing: true,
+            autoWidth: false,
+            serverSide: true,
+            columnDefs: [{
+                targets: 1,
+                width: "200px !important",
+            }, ],
+            ajax: {
+                url: "{{ route('karyawan.penilaian_detail', 'detail') }}",
+                data: function(d) {
+                    d.periode = $('#filter1').val() ? $('#filter1').val() : '2';
+                }
+            },
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    className: 'text-center',
+                    orderable: false,
+                    searchable: false,
+                },
+                {
+                    data: 'bulan',
+                    name: 'bulan'
+                },
+                {
+                    data: 'izin',
+                    name: 'izin'
+                },
+                {
+                    data: 'sakit',
+                    name: 'sakit'
+                },
+                {
+                    data: 'mangkir',
+                    name: 'mangkir'
+                },
+                {
+                    data: 'kurang_jam',
+                    name: 'kurang_jam'
+                },
+            ],
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'print'
+            ]
+        });
+
+        let tableTotalPenilaian = $('#table-total-penilaian').DataTable({
+            fixedHeader: true,
+            pageLength: 10,
+            responsive: true,
+            processing: true,
+            autoWidth: false,
+            serverSide: true,
+            columnDefs: [{
+                targets: 1,
+                width: "200px !important",
+            }, ],
+            ajax: {
+                url: "{{ route('karyawan.penilaian_detail', 'total') }}",
+                data: function(d) {
+                    d.periode = $('#filter1').val() ? $('#filter1').val() : '2';
+                }
+            },
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    className: 'text-center',
+                    orderable: false,
+                    searchable: false,
+                },
+                {
+                    data: 'komponen_penilaian',
+                    name: 'komponen_penilaian'
+                },
+                {
+                    data: 'sub_komponen',
+                    name: 'sub_komponen'
+                },
+                {
+                    data: 'bobot',
+                    name: 'bobot'
+                },
+                {
+                    data: 'point',
+                    name: 'point'
+                },
+            ],
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'print'
+            ],
+            footerCallback: function(row, data, start, end, display) {
+                let api = this.api();
+
+                // Remove the formatting to get integer data for summation
+                let intVal = function(i) {
+                    return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i :
+                        0;
+                };
+
+                // Total over all pages
+                let total = api
+                    .column(4)
+                    .data()
+                    .reduce(function(a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Total over this page
+                let pageTotal = api
+                    .column(4, {
+                        page: 'current'
+                    })
+                    .data()
+                    .reduce(function(a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Update footer
+                $(api.column(4).footer()).html(`${total} Poin`);
+            },
+        });
+
+        $("#filter1").on('change', function() {
+            table.draw();
+            tablePenilaian.draw();
+            tableTotalPenilaian.draw();
         });
     </script>
 @endsection
