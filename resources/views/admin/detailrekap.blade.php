@@ -40,7 +40,70 @@
                         </div>
                         <hr>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body pt-0">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                <div class="card o-hidden border-0">
+                                    <div class="bg-primary b-r-4 card-body px-2 py-3">
+                                        <div class="media gap-3 static-top-widget">
+                                            <div class="align-self-center text-center">
+                                                <i data-feather="clock"></i>
+                                            </div>
+                                            <div class="pl-3">
+                                                <span class="m-0">Maksimal Izin</span>
+                                                <p>(Di luar jam kerja)</p>
+                                                <h4 class="mb-0 counter">16 Jam</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                <div class="card o-hidden border-0">
+                                    <div class="bg-primary b-r-4 card-body px-2 py-3">
+                                        <div class="media gap-3 static-top-widget">
+                                            <div class="align-self-center text-center">
+                                                <i data-feather="clock"></i>
+                                            </div>
+                                            <div>
+                                                <span class="m-0">Maksimal Sakit</span>
+                                                <h4 class="mb-0 counter">16 Jam</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                <div class="card o-hidden border-0">
+                                    <div class="bg-primary b-r-4 card-body px-2 py-3">
+                                        <div class="media gap-3 static-top-widget">
+                                            <div class="align-self-center text-center">
+                                                <i data-feather="clock"></i>
+                                            </div>
+                                            <div>
+                                                <span class="m-0">Maksimal Mangkir</span>
+                                                <h4 class="mb-0 counter">0 Hari</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                <div class="card o-hidden border-0">
+                                    <div class="bg-primary b-r-4 card-body px-2 py-3">
+                                        <div class="media gap-3 static-top-widget">
+                                            <div class="align-self-center text-center">
+                                                <i data-feather="clock"></i>
+                                            </div>
+                                            <div>
+                                                <span class="m-0">Maksimal Keterlambatan</span>
+                                                <h4 class="mb-0 counter">300 Menit</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <h6 class="font-primary">Rekapitulasi Kehadiran</h6>
                         <div class="dt-ext table-responsive">
                             <table class="table table-bordered" id="table-rekapitulasi">
