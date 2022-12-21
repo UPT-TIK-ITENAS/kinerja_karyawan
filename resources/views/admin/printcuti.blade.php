@@ -108,7 +108,7 @@
     .ttd3 {
         position: absolute;
         /* margin-right: 1em; */
-        right: 30%;
+        right: 35%;
 
         /* (300/2) */
     }
@@ -286,7 +286,7 @@
             </tr>
             <tr>
                 <td>
-                    <b>Diajukan oleh,
+                    <b>Disetujui/Tidak Disetujui oleh,
                 </td>
             </tr>
             <tr>
@@ -297,7 +297,7 @@
             </tr>
             <tr>
                 <td>
-                    <u><b>{{ $atasan_lang->name }}</u></b><br>
+                    <u><b>{{ $atasan_lang->nama }}</u></b><br>
                     Atasan dari Atasan Langsung
                 </td>
             </tr>

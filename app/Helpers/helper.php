@@ -21,7 +21,7 @@ if (!function_exists('getCheck')) {
                 $td = \Carbon\Carbon::parse($cek->tgl_awal_izin)->isoFormat('D MMMM')  . ' s/d ' . \Carbon\Carbon::parse($cek->tgl_akhir_izin)->isoFormat('D MMMM Y');
             }
         } elseif ($tipe == 'sakit') {
-            if ($cek->jenis_izin == 'sakit') {
+            if ($cek->jenis_izin == '9') {
                 $td = $cek->tgl_awal_izin . ' s/d ' . $cek->tgl_akhir_izin;
             } else {
                 $td = "................s/d................";

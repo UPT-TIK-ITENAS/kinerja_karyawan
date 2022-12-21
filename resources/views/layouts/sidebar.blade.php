@@ -60,7 +60,7 @@
                                 data-feather="file"></i><span>Kuesioner</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
-                        <ul class="nav-submenu menu-content" style="display:  @if (request()->routeIs('admin.indexKuesioner') || request()->routeIs('admin.kuesioner.pertanyaan') || request()->routeIs('admin.kuesioner.pertanyaanPeriode')) block
+                        <ul class="nav-submenu menu-content" style="display:  @if (request()->routeIs('admin.kuesioner.admHasilKuesioner') || request()->routeIs('admin.kuesioner.pertanyaan') || request()->routeIs('admin.kuesioner.pertanyaanPeriode')) block
                     @else
                         none @endif;">
                             {{-- <li><a href="{{ route('admin.indexKuesioner') }}" class="">Penilaian</a></li> --}}
