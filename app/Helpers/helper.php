@@ -122,6 +122,13 @@ if (!function_exists('getAksi')) {
             $for_html = '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a>';
         } elseif ($tipe == 'cuti') {
             $for_html = '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a> ';
+
+            if (auth()->user()->role == "kepalaunit") {
+                $data = Cuti::where('id_cuti', $id)->first();
+                $for_html = '
+                    <a href="#" class="btn btn-primary btn-xs editAK" data-bs-toggle="modal" data-id="' . $data->id_cuti . '"><i class="icofont icofont-pencil-alt-2"></i></a>
+                    <a class="btn btn-success btn-xs" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a> ';
+            }
         } else if ($tipe == 'liburnasional') {
             $for_html = "
                     <div class='d-block text-center'>

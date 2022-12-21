@@ -461,20 +461,13 @@ class KepalaUnitController extends Controller
                 //     return getAksi($row->id_cuti, 'cuti');
                 // })
                 ->addColumn('action', function ($data) {
-                    // $delete_url = route('kepalaunit.destroyCuti', $data->id_cuti);
-                    $edit_dd = "<div class='d-block text-center'>
-                        <a data-bs-toggle='modal' class='btn btn-success btn-xs align-items-center editAK fa fa-pencil' data-id='$data->id_cuti' data-original-title='Edit' data-bs-target='#ProsesCuti'></a>
-                        </div>";
-
-                    // Debugbar::info($data);
-
-                    return $edit_dd;
+                    return getAksi($data->id_cuti, 'cuti');
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->approval == 1) {
-                        $apprv = '<span class="badge badge-success">Disetujui Kepala Unit</span>';
+                        $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
                     } else if ($row->approval == 2) {
-                        $apprv = '<span class="badge badge-success">Disetujui Atasan</span>';
+                        $apprv = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
                     } else if ($row->approval == 3) {
                         $apprv = '<span class="badge badge-danger">Ditolak</span>';
                     } else {

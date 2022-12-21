@@ -93,9 +93,7 @@ class KuesionerController extends Controller
             foreach ($request->responden as $key => $value) {
                 $total += DB::table('jawaban_kinerja')->where('id', $value['jawaban_kinerja_id'])->value('nilai');
             }
-            $indeks = round($total / count($request->responden), 2);
-            // $penilai = explode('-', $request->nama_penilai);
-            // dd(explode('-', $request->nama_penilai)[1]);
+            $indeks = round((($total / 21) * 100), 2);
             $kuesionerResponden = RespondenKinerja::create([
                 'kuisioner_kinerja_id' => $kuesioner->id,
 
