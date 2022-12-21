@@ -291,7 +291,7 @@ class AdminController extends Controller
         }
 
 
-        return redirect()->route('admin.datapresensi')->with('success', 'Pengajuan Izin Berhasil!');
+        return redirect()->route('admin.presensi.datapresensi')->with('success', 'Pengajuan Izin Berhasil!');
     }
 
     public function printizin($id)

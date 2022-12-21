@@ -176,7 +176,7 @@ class KuesionerController extends Controller
     public function destroyPeriode($id)
     {
         KuesionerKinerja::where('id', $id)->delete();
-        return redirect()->route('admin.pertanyaanPeriode')->with('success', 'Data berhasil dihapus!');
+        return redirect()->back()->with('success', 'Data berhasil dihapus!');
     }
 
     public function index_penilaian(Request $request)
@@ -250,8 +250,7 @@ class KuesionerController extends Controller
             'pertanyaan' => $request->pertanyaan,
             'kuesioner_kinerja_id' => $request->kuesioner_kinerja_id,
         ]);
-
-        return redirect()->route('admin.pertanyaanPeriode')->with('success', 'Edit Data Berhasil!');
+        return redirect()->back()->with('success', 'Edit Data berhasil!');
     }
 
     public function jawaban($id)
@@ -273,6 +272,6 @@ class KuesionerController extends Controller
             'nilai' => $request->nilai,
         ]);
 
-        return redirect()->route('admin.jawaban')->with('success', 'Edit Data Berhasil!');
+        return redirect()->back()->with('success', 'Edit Data Berhasil!');
     }
 }

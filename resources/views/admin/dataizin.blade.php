@@ -221,6 +221,32 @@
             };
         });
 
+
+        
+        daterangepicker('#tgl_awal_izin', 'auto', false, '#tambahIzin');
+        daterangepicker('#tgl_akhir_izin', 'auto', false, '#tambahIzin');
+        
+        $("#tgl_awal_izin").on('change', function(e) {
+            e.preventDefault();
+            let tgl_awal = $(this).val();
+            $("#tgl_akhir_izin").daterangepicker({
+                singleDatePicker: true,
+                timePicker: false,
+                showDropdowns: true,
+                autoUpdateInput: true,
+                autoApply: true,
+                locale: {
+                    cancelLabel: "Hapus",
+                    applyLabel: "Terapkan",
+                    format: "YYYY-MM-DD",
+                },
+                drops: "auto",
+                parentEl: "#tambahIzin",
+                minDate: moment(tgl_awal).format('YYYY-MM-DD'),
+                maxDate: moment(tgl_awal).endOf('month').format('YYYY-MM-DD')
+            });
+        });
+
         $('#table-izin').on('click', '.batalizin', function(e) {
             let id = $(this).data('id');
             const href = $(this).attr('href');

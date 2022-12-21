@@ -237,29 +237,32 @@
             };
         });
 
-        $(document).ready(function() {
-            daterangepicker('#tgl_awal_cuti', 'auto', false, '#tambahCuti');
-            $("#tgl_awal_cuti").on('change', function(e) {
-                e.preventDefault();
-                let tgl_awal = $(this).val();
-                $("#tgl_akhir_cuti").daterangepicker({
-                    singleDatePicker: true,
-                    timePicker: false,
-                    showDropdowns: true,
-                    autoUpdateInput: true,
-                    autoApply: true,
-                    locale: {
-                        cancelLabel: "Hapus",
-                        applyLabel: "Terapkan",
-                        format: "YYYY-MM-DD",
-                    },
-                    drops: "auto",
-                    parentEl: "#tambahCuti",
-                    minDate: moment(tgl_awal).format('YYYY-MM-DD'),
-                    maxDate: moment(tgl_awal).endOf('month').format('YYYY-MM-DD')
-                });
+        daterangepicker('#tgl_awal_cuti', 'auto', false, '#tambahCuti');
+        daterangepicker('#tgl_akhir_cuti', 'auto', false, '#tambahCuti');
+        $("#tgl_awal_cuti").on('change', function(e) {
+            e.preventDefault();
+            let tgl_awal = $(this).val();
+            
+            $("#tgl_akhir_cuti").daterangepicker({
+                singleDatePicker: true,
+                timePicker: false,
+                showDropdowns: true,
+                autoUpdateInput: true,
+                autoApply: true,
+                locale: {
+                    cancelLabel: "Hapus",
+                    applyLabel: "Terapkan",
+                    format: "YYYY-MM-DD",
+                },
+                drops: "auto",
+                parentEl: "#tambahCuti",
+                minDate: moment(tgl_awal).format('YYYY-MM-DD'),
+                maxDate: moment(tgl_awal).endOf('month').format('YYYY-MM-DD')
             });
+        });
 
+        $(document).ready(function() {
+        
             $('#jenis_cuti').on('change', function() {
                 const selected = $(this).find('option:selected');
                 const max_hari = selected.data('max');
