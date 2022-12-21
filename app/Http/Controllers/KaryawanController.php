@@ -78,8 +78,28 @@ class KaryawanController extends Controller
                         return $actionBtn;
                     }
                 })
-                ->editColumn('kurang_jam', function ($row) {
-                    return strtotime($row->telat_masuk) + strtotime($row->telat_siang);
+                ->addColumn('kurang_jam', function ($row) {
+
+                    date_default_timezone_set('UTC');
+                    $masuk = strtotime($row->telat_masuk);
+                    $siang = strtotime($row->telat_siang);
+                    $durasi = strtotime($row->durasi);
+    
+                    if($row->hari != "6" && $row->hari != "0"){
+                        if($row->durasi == "04:00:00"){
+                            $result = date("H:i:s", $siang + $masuk + $durasi);
+                        }elseif($row->durasi == "00:00:00"){
+                            $result = "08:00:00";
+                        }else{
+                            $result = date("H:i:s", $siang + $masuk);
+                        }
+                    }else{
+                        $result = "00:00:00";
+                    }
+                    
+                    
+                    return $result;
+                    
                 })
                 ->addColumn('note', function ($row) {
                     if ($row->status == 0) {
@@ -118,7 +138,7 @@ class KaryawanController extends Controller
                         return $apprv = '';
                     }
                 })
-                ->rawColumns(['duration', 'latemasuk', 'days', 'latesiang', 'action', 'file', 'status'])
+                ->rawColumns(['duration', 'kurang_jam','latemasuk', 'days', 'latesiang', 'action', 'file', 'status'])
                 ->make(true);
         }
     }

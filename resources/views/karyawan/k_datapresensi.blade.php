@@ -52,7 +52,7 @@
                                     <th>Jam Masuk</th>
                                     <th>Jam Siang</th>
                                     <th>Jam Keluar</th>
-                                    <th>Durasi</th>
+                                    <th>Kurang Jam</th>
                                     <th>Note</th>
                                     <th>Aksi</th>
                                     <th>Status</th>
@@ -238,8 +238,8 @@
                         name: 'jam_pulang'
                     },
                     {
-                        data: 'durasi',
-                        name: 'durasi'
+                        data: 'kurang_jam',
+                        name: 'kurang_jam'
                     },
                     {
                         data: 'note',

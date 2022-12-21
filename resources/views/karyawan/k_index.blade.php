@@ -27,7 +27,7 @@
                             </div>
                             <div class="media-body">
                                 <span class="m-0">Total Keterlambatan</span>
-                                <h4 class="mb-0 counter">{{ $data->kurang_jam }} Jam</h4>
+                                <h4 class="mb-0 counter">{{ $data->kurang_jam }} Menit</h4>
                             </div>
                         </div>
                     </div>

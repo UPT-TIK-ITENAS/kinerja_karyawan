@@ -88,9 +88,7 @@
                                     <th>Jam Masuk</th>
                                     <th>Jam Siang</th>
                                     <th>Jam Keluar</th>
-                                    {{-- <th>Durasi</th> --}}
-                                    <th>Telat Masuk</th>
-                                    <th>Telat Siang</th>
+                                    <th>Kurang Jam</th>
                                     <th>Note</th>
                                     <th>Aksi</th>
                                     @if (auth()->user()->role == 'admin_bsdm' || auth()->user()->role == 'admin')
@@ -399,12 +397,8 @@
                         name: 'jam_pulang'
                     },
                     {
-                        data: 'telat_masuk',
-                        name: 'telat_masuk'
-                    },
-                    {
-                        data: 'telat_siang',
-                        name: 'telat_siang'
+                        data: 'kurang_jam',
+                        name: 'kurang_jam',
                     },
                     {
                         data: 'note',

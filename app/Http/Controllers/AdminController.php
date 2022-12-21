@@ -98,6 +98,29 @@ class AdminController extends Controller
             ->addColumn('action_edit', function ($row) {
                 return getAksi($row->id, 'att_edit');
             })
+            ->addColumn('kurang_jam', function ($row) {
+
+                date_default_timezone_set('UTC');
+                $masuk = strtotime($row->telat_masuk);
+                $siang = strtotime($row->telat_siang);
+                $durasi = strtotime($row->durasi);
+
+                if($row->hari != "6" && $row->hari != "0"){
+                    if($row->durasi == "04:00:00"){
+                        $result = date("H:i:s", $siang + $masuk + $durasi);
+                    }elseif($row->durasi == "00:00:00"){
+                        $result = "08:00:00";
+                    }else{
+                        $result = date("H:i:s", $siang + $masuk);
+                    }
+                }else{
+                    $result = "00:00:00";
+                }
+                
+                
+                return $result;
+                
+            })
             ->addColumn('status', function ($row) {
                 if ($row->izin != NULL) {
                     if ($row->izin->approval == '1') {
@@ -110,7 +133,7 @@ class AdminController extends Controller
                     return $apprv = '';
                 }
             })
-            ->rawColumns(['latemasuk', 'days', 'latesiang', 'latesore', 'action_edit', 'action', 'status', 'note'])
+            ->rawColumns(['latemasuk', 'days', 'kurang_jam', 'latesiang', 'latesore', 'action_edit', 'action', 'status', 'note'])
             ->toJson();
     }
 
