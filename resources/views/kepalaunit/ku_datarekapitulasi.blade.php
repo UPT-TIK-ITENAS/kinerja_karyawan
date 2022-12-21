@@ -25,15 +25,14 @@
                         <span>Daftar hasil rekapitulasi presensi karyawan terhitung dari tanggal 01 Juli 2022</span>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="dt-ext table-responsive">
                             <table class="dataTable" id="table-rekapitulasi">
                                 <thead>
                                     <th width="5%">No.</th>
-                                    <th>Bulan</th>
-                                    <th>Tahun</th>
-                                    <th>Total Telat Pagi</th>
-                                    <th>Total Telat Siang</th>
-                                    <th>Total Telat Keseluruhan</th>
+                                    <th>Nopeg</th>
+                                    <th>Nama</th>
+                                    <th>Unit</th>
+                                    <th>Detail</th>
                                 </thead>
                                 <tbody>
 
@@ -61,7 +60,7 @@
                 targets: 1,
                 width: "200px !important",
             }, ],
-            ajax: "{{ route('karyawan.listdatarekapitulasi') }}",
+            ajax: "{{ route('kepalaunit.listrekapkaryawan') }}",
             columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',
@@ -70,29 +69,20 @@
                     searchable: false,
                 },
                 {
-                    data: 'bulan',
-                    name: 'bulan',
+                    data: 'nopeg',
+                    name: 'nopeg'
                 },
                 {
-                    data: 'tahun',
-                    name: 'tahun',
-                    class: 'text-center',
-                },
-
-                {
-                    data: 'total_telat_pagi',
-                    name: 'total_telat_pagi',
-                    class: 'text-center',
+                    data: 'name',
+                    name: 'name'
                 },
                 {
-                    data: 'total_telat_siang',
-                    name: 'total_telat_siang',
-                    class: 'text-center',
+                    data: 'nama_unit',
+                    name: 'nama_unit'
                 },
                 {
-                    data: 'total_telat',
-                    name: 'total_telat',
-                    class: 'text-center',
+                    data: 'detail',
+                    name: 'detail'
                 },
 
             ],

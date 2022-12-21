@@ -57,9 +57,6 @@
                                     <th>Jam Masuk</th>
                                     <th>Jam Siang</th>
                                     <th>Jam Keluar</th>
-                                    {{-- <th>Durasi</th> --}}
-                                    <th>Telat Masuk</th>
-                                    <th>Telat Siang</th>
                                     <th>Note</th>
                                 </thead>
                                 <tbody>
@@ -126,14 +123,6 @@
                     {
                         data: 'jam_pulang',
                         name: 'jam_pulang'
-                    },
-                    {
-                        data: 'latemasuk',
-                        name: 'latemasuk'
-                    },
-                    {
-                        data: 'latesiang',
-                        name: 'latesiang'
                     },
                     {
                         data: 'note',

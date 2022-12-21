@@ -373,19 +373,22 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('printizin/{id}', [PejabatController::class, 'printizin'])->name('printizin');
     });
 
-
-
-
-
     Route::prefix('kepalaunit')->name('kepalaunit.')->group(function () {
-        //Route::get('/', [KepalaUnitController::class, 'index'])->name('index');
-        Route::get('/kepalaunit', [KepalaUnitController::class, 'index'])->name('kepalaunit');
+        //Dashboard
+        Route::get('/', [KepalaUnitController::class, 'index'])->name('kepalaunit');
 
+        //Data Presensi
         Route::get('/datapresensi', [KepalaUnitController::class, 'index_datapresensi'])->name('datapresensi');
-        Route::get('/datarekapitulasi', [KepalaUnitController::class, 'index_datarekapitulasi'])->name('datarekapitulasi');
         Route::get('/listdatapresensi', [KepalaUnitController::class, 'listdatapresensi'])->name('listdatapresensi');
+
+        //Rekapitulasi
+        Route::get('/datarekapitulasi', [KepalaUnitController::class, 'index_datarekapitulasi'])->name('datarekapitulasi');
+        Route::get('/listrekapkaryawan', [KepalaUnitController::class, 'listrekapkaryawan'])->name('listrekapkaryawan');
+        Route::get('/detailrekap/{nopeg}', [KepalaUnitController::class, 'detailrekap'])->name('detailrekap');
+        Route::get('/detailrekap/list/{nopeg}', [KepalaUnitController::class, 'listdatarekapitulasi'])->name('listdatarekapitulasi');
+        Route::get('/list-penilaian-detail/{tipe}', [KepalaUnitController::class, 'penilaian_detail'])->name('penilaian_detail');
+
         Route::get('/rekapitulasi', [KepalaUnitController::class, 'rekapitulasi'])->name('rekapitulasi');
-        Route::get('/listdatarekapitulasi', [KepalaUnitController::class, 'listdatarekapitulasi'])->name('listdatarekapitulasi');
 
         Route::get('/izin/index', [KepalaUnitController::class, 'index_izin'])->name('izin');
         Route::post('/izin/store', [KepalaUnitController::class, 'store_izin'])->name('store_izin');

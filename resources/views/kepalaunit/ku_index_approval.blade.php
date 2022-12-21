@@ -19,20 +19,16 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        {{-- <a href="{{ route('kepalaunit.createcuti') }}" class="btn btn-primary"><i
-                                class="icofont icofont-plus-square"></i> Tambah</a> --}}
                         <div class="table-responsive">
                             <table class="dataTable" id="table-cuti">
                                 <thead>
                                     <th>No.</th>
                                     <th>Nama</th>
                                     <th>NIP</th>
-                                    {{-- <th>Unit</th> --}}
                                     <th>Jenis Cuti</th>
                                     <th>Tanggal Awal Cuti</th>
                                     <th>Tanggal Akhir Cuti</th>
                                     <th>Total Hari Cuti</th>
-                                    {{-- <th>Keterangan</th> --}}
                                     <th>Aksi</th>
                                     <th>Status</th>
                                 </thead>
