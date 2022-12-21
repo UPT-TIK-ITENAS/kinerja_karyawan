@@ -8,19 +8,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\JadwalSatpamCalendarResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\Attendance;
-use App\Models\izin;
-use App\Models\cuti;
+use App\Models\AttendanceBaru;
+use App\Models\Izin;
+use App\Models\Cuti;
 use App\Models\IzinKerja;
+use App\Models\JadwalSatpam;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
+use App\Models\LiburNasional;
+use App\Models\Jabatan;
 use Carbon\Carbon;
 use App\Models\QR;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminController extends Controller
 {
@@ -28,7 +33,6 @@ class AdminController extends Controller
     {
         $this->middleware('auth');
     }
-    
 
     //DASHBOARD
     public function index()
@@ -41,291 +45,301 @@ class AdminController extends Controller
     //DATA PRESENSI
     public function datapresensi()
     {
-        // $workingdays = getWorkingDays('2022-09-21', date('Y-m-d'));
-        // if($workingdays > 3){
-        //     return 'lebih';
-        //  }else{
-        //     return 'tidak';
-        //  }
-        return view('admin.datapresensi');
+        $user = User::SelectRaw('users.*,unit.*,jabatan.nopeg as peg_jab, jabatan.nama as name_jab')->join('unit', 'users.unit', '=', 'unit.id')->join('jabatan', 'users.atasan', '=', 'jabatan.id')->where('status', '1')->get();
+
+        $attendance = Attendance::select('tanggal')->groupby('tanggal')->get();
+        // get attendance limit 10
+        // dd(Attendance::with('user')->limit(10)->get());
+        return view('admin.datapresensi', compact('user', 'attendance'));
+    }
+
+    public function datapresensi_duration()
+    {
+        $user = User::SelectRaw('users.*,unit.*,jabatan.nopeg as peg_jab, jabatan.nama as name_jab')->join('unit', 'users.unit', '=', 'unit.id')->join('jabatan', 'users.atasan', '=', 'jabatan.id')->where('status', '1')->get();
+
+        $attendance = AttendanceBaru::select('tanggal')->groupby('tanggal')->get();
+        // get attendance limit 10
+        // dd(Attendance::with('user')->limit(10)->get());
+        return view('admin.datapresensi-duration', compact('user', 'attendance'));
     }
 
 
     public function listkaryawan(Request $request)
     {
-        $data = Attendance::selectRaw('attendance.*, users.name, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg');
-        if ($request->ajax()) {
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('duration', function ($row) {
-                    if ($row->jam_pulang == NULL || $row->jam_masuk == NULL) {
-                        return $durationwork = '';
+        $data = Attendance::query()->with(['user', 'izin'])->whereRelation('user', 'status', '=', 1)->where('nip', $request->get('filter1'), '', 'and')->where('tanggal', $request->get('filter2'), '', 'and')->orderby('tanggal', 'asc');
+        $days = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('days', function ($row) use ($days) {
+                return $days[$row->hari];
+            })
+            ->addColumn('note', function ($row) {
+                if ($row->status == 0) {
+                    $note = 'Kurang';
+                } else {
+                    $note = 'Lengkap';
+                }
+                return $note;
+            })
+            ->addColumn('action', function ($row) {
+                $hasIzin = $row->izin?->count();
+                $print =  route('admin.printizin', $row->id);
+                if ($hasIzin == null) {
+                    $for_html = '
+                    <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
+                } else {
+                    $for_html = '
+                    <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
+                    <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
+                }
+
+                return $for_html;
+            })
+            ->addColumn('action_edit', function ($row) {
+                return getAksi($row->id, 'att_edit');
+            })
+            ->addColumn('status', function ($row) {
+                if ($row->izin != NULL) {
+                    if ($row->izin->approval == '1') {
+                        $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
                     } else {
-                        $time_awalreal =  strtotime($row->jam_masuk);
-                        $time_akhirreal = strtotime($row->jam_pulang);
-                        $duration = ceil(abs($time_akhirreal - $time_awalreal) - strtotime('01:00:00'));
-                        $durationwork = date("H:i:s", $duration);
-                        return $durationwork;
+                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
                     }
-                })
-                ->editColumn('hari', function ($row) {
-                    return config('app.days')[$row->hari];
-                })
-
-                ->addColumn('latemasuk', function ($row) {
-                    if ($row->jam_masuk == NULL){
-                        $durasitelat = strtotime('13:15:00') - strtotime('08:00:00');
-                        $durasi = date("H:i:s", $durasitelat);
-                        return $durasi;
-                    
-                    } else if ($row->hari != 6 && $row->hari != 0 && date("H:i:s", strtotime($row->jam_masuk)) <= '08:00:00') {
-                        return '';
-
-                    } else if ($row->hari != 6 && $row->hari != 0 && date("H:i:s", strtotime($row->jam_masuk)) > '08:00:00') {
-                        $durasitelat = strtotime($row->jam_masuk) - strtotime('08:00:00');
-                        $durasi = date("H:i:s", $durasitelat);
-                        return $durasi;
-                    } 
-                })
-                ->addColumn('latesiang', function ($row) {
-                    if ($row->hari == 5) {
-                        if ($row->jam_siang == NULL){
-                            $durasitelat = strtotime('17:00:00') - strtotime('13:30:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                            return $durasi;
-                        } else if (date("H:i:s", strtotime($row->jam_siang)) <= '13:15:00') {
-                            return '';
-                        } else if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
-                            $durasitelat = strtotime($row->jam_siang) - strtotime('13:30:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                            return $durasi;
-                        } 
-                    } else {
-                        if ($row->hari != 6 && $row->hari != 0 && $row->jam_siang == NULL){
-                            $durasitelat = strtotime('17:00:00') - strtotime('13:00:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                            return $durasi;
-                        } else if ($row->hari != 6 && $row->hari != 0 && date("H:i:s", strtotime($row->jam_siang)) <= '12:45:00') {
-                            return '';
-                        } else if ($row->hari != 6 && $row->hari != 0 && date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
-                            $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
-                            $durasi = date("H:i:s", $durasitelat);
-                            return $durasi;
-                        }
-                    }
-                })
-
-                ->addColumn('action', function ($row) {
-                    $workingdays = getWorkingDays($row->tanggal,date('Y-m-d'));
-                    if($workingdays < 3 ){
-                        $addsurat = route('admin.createizinkehadiran', $row->id);
-                        return $actionBtn = "
-                        <div class='d-block text-center'>
-                        <a href='$addsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-ui-add'></i></a>
-                        </div>
-                        ";
-                    }else{
-                        return '';
-                    }
-                })
-                ->addColumn('file', function ($row) {
-                    $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id',$row->id)->get();
-
-                    foreach($dataizin as $izin){
-                        $printsurat =  route('admin.printizin', $izin->id);
-                    
-                        if ($row->id == $izin->id_attendance) {
-                            $actionBtn = "
-                            <div class='d-block text-center'>
-                                <a href='$printsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-download-alt'></i></a>
-                            </div>
-                            ";
-                            return $actionBtn;
-                           
-                        } else {
-                            $actionBtn = "";
-                            return $actionBtn;
-                        }
-                    }    
-                })
-
-                ->addColumn('status', function ($row) {
-                    $dataizin = Attendance::join('izin', 'izin.id_attendance', '=', 'attendance.id')->where('attendance.id',$row->id)->get();
-
-                    foreach($dataizin as $izin){
-                        if ($row->id == $izin->id_attendance) {
-                            if ($row->approval == 1) {
-                                $apprv = '<span class="badge badge-success">Disetujui</span>';
-                            } else {
-                                $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
-                            }
-                            return $apprv;
-                        }else{
-                            return $apprv ='';
-                        }
-                    }
-
-                    
-                })
-                ->rawColumns(['duration', 'latemasuk', 'hari', 'latesiang', 'action','file','status'])
-                ->make(true);
-        }
-        return DataTables::queryBuilder($data)->toJson();
+                    return $apprv;
+                } else {
+                    return $apprv = '';
+                }
+            })
+            ->rawColumns(['latemasuk', 'days', 'latesiang', 'latesore', 'action_edit', 'action', 'status', 'note'])
+            ->toJson();
     }
 
-    public function createizinkehadiran($id)
+    public function storeAttendance(Request $request)
     {
+        $request->validate([
+            'nip' => 'required',
+            'tanggal' => 'required',
+        ]);
 
+        $currentData = Attendance::where('nip', $request->nip)->where('tanggal', Carbon::parse($request->tanggal)->format('Y-m-d'))->first();
+
+        // if currentData is null, then create new data
+        if (!$currentData) {
+            Attendance::insert([
+                'nip' => $request->nip,
+                'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
+                'hari' => date('w', strtotime($request->tanggal)),
+                'jam_masuk' => $request->jam_masuk == NULL ? NULL :  Carbon::parse($request->jam_masuk)->format('Y-m-d H:i:s'),
+                'jam_siang' => $request->jam_siang == NULL ? NULL :  Carbon::parse($request->jam_siang)->format('Y-m-d H:i:s'),
+                'jam_pulang' => $request->jam_pulang == NULL ? NULL :  Carbon::parse($request->jam_pulang)->format('Y-m-d H:i:s'),
+                'status' => $request->status
+            ]);
+            return redirect()->back()->with('success', 'Data Attendance berhasil disimpan');
+        } else {
+            return redirect()->back()->with('error', "Data Attendance pada NIP $request->nip Tanggal $request->tanggal sudah ada! Mohon edit attendance.");
+        }
+    }
+
+    public function updateAttendance(Request $request)
+    {
+        Attendance::where('id', $request->id2)->update([
+            'jam_masuk' => Carbon::parse($request->jam_masuk1)->format('Y-m-d H:i:s'),
+            'jam_siang' => Carbon::parse($request->jam_siang1)->format('Y-m-d H:i:s'),
+            'jam_pulang' => Carbon::parse($request->jam_pulang1)->format('Y-m-d H:i:s'),
+            'modify_by' => '1',
+            'status' => $request->status1,
+        ]);
+        return redirect()->back()->with('success', 'Data Attendance berhasil diupdate');
+    }
+
+    public function listkaryawan_duration(Request $request)
+    {
+        $data = AttendanceBaru::query()->with(['user', 'izin'])->whereRelation('user', 'status', '=', 1)->orderby('tanggal', 'asc');
+        $days = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('days', function ($row) use ($days) {
+                return $days[$row->hari];
+            })
+            ->addColumn('duration', function ($row) {
+                $telat_masuk = Carbon::createFromFormat("H:i:s", $row->telat_masuk);
+                $telat_siang = Carbon::createFromFormat("H:i:s", $row->telat_siang);
+                list($addHour, $addMinutes, $addSeconds) = explode(':', $telat_siang->format('H:i:s'));
+                $telat = $telat_masuk->addHours($addHour)->addMinutes($addMinutes)->addSeconds($addSeconds)->format('H:i:s');
+
+                $durasi = Carbon::createFromFormat("H:i:s", $row->durasi);
+                $durasi_kerja = $durasi->diff($telat)->format("%H:%I:%S");
+                if ($durasi->greaterThanOrEqualTo($telat) && $durasi->notEqualTo("00:00:00")) {
+                    $durasi_kerja = $durasi->diff($telat)->format("%H:%I:%S");
+                } else {
+                    $durasi_kerja = "00:00:00";
+                }
+                return $durasi_kerja;
+            })
+
+            ->addColumn('latemasuk', function ($row) {
+                return $row->telat_masuk;
+            })
+
+            ->addColumn('latesiang', function ($row) {
+                return $row->telat_siang;
+            })
+            ->addColumn('note', function ($row) {
+                if ($row->status == 0) {
+                    $note = 'Kurang';
+                } else {
+                    $note = 'Lengkap';
+                }
+                return $note;
+            })
+            ->addColumn('action', function ($row) {
+                $hasIzin = $row->izin?->count();
+                $print =  route('admin.printizin', $row->id);
+                if ($hasIzin == null) {
+                    $for_html = '
+                    <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
+                } else {
+                    $for_html = '
+                    <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
+                    <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
+                }
+
+                return $for_html;
+            })
+            ->addColumn('status', function ($row) {
+                if ($row->izin != NULL) {
+                    if ($row->izin->approval == '1') {
+                        $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
+                    } else {
+                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                    }
+                    return $apprv;
+                } else {
+                    return $apprv = '';
+                }
+            })
+            ->rawColumns(['latemasuk', 'days', 'latesiang', 'latesore', 'action', 'status', 'note'])
+            ->toJson();
+    }
+
+    public function editAtt($id)
+    {
         $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas, unit.nama_unit')
-        ->join('users', 'attendance.nip', '=', 'users.nopeg')
-        ->join('unit', 'unit.id', '=', 'users.unit')
-        ->where('attendance.id', $id)->first();
-        return view('admin.createizinkehadiran', compact('data'));
+            ->join('users', 'attendance.nip', '=', 'users.nopeg')
+            ->join('unit', 'unit.id', '=', 'users.unit')
+            ->where('attendance.id', $id)->first();
+        return response()->json($data);
     }
 
     public function storeizinkehadiran(Request $request)
     {
 
-        if ($request->validasi == NULL) {
-            return redirect()->route('admin.createizinkehadiran', $request->id_izin)->with('error', 'Validasi Tidak diisi!');
+        $qrcode_filenamepeg = 'qr-' . $request->nip . '-' . $request->id . '.svg';
+        QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nip . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
+
+        if ($request->jenis == 2) {
+            Izin::insert([
+                'id_attendance' => $request->id,
+                'nopeg' => $request->nip,
+                'name' => $request->name,
+                'unit' => $request->unit,
+                'tanggal_izin' => date('Y-m-d H:i:s', strtotime($request->tanggal_izin)),
+                'alasan' => $request->alasan,
+                'validasi' => 1,
+                'approval' => 0,
+                'jenis' => $request->jenis,
+                'qrcode_peg' => $qrcode_filenamepeg,
+            ]);
         } else {
             Izin::insert([
-                'id_attendance' => $request->id_attendance,
-                'nopeg' => $request->nopeg,
+                'id_attendance' => $request->id,
+                'nopeg' => $request->nip,
                 'name' => $request->name,
-                'unit' => $request->idunit,
-                'tanggal' => $request->tgl,
-                'jam_awal' => date('H:i:s', strtotime($request->jam_awal)),
-                'jam_akhir' => date('H:i:s', strtotime($request->jam_akhir)),
+                'unit' => $request->unit,
+                'tanggal' => $request->tanggall,
+                'jam_awal' => $request->jam_awal,
+                'jam_akhir' => $request->jam_akhir,
                 'alasan' => $request->alasan,
-                'validasi' => $request->validasi,
+                'validasi' => 1,
+                'approval' => 0,
+                'jenis' => $request->jenis,
+                'qrcode_peg' => $qrcode_filenamepeg,
             ]);
-
-            $dataqr = Izin::where('nopeg', $request->nopeg)->first();
-            $qrcode_filename = 'qr-' . base64_encode($request->nopeg . date('Y-m-d H:i:s')) . '.svg';
-            // dd($qrcode_filename);
-            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nopeg . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
-
-            QR::where('nopeg', $request->nopeg)->insert([
-                'id_attendance' => $request->id_attendance,
-                'nopeg' => $request->nopeg,
-                'qr_peg' => $qrcode_filename,
-            ]);
-
-            return redirect()->route('admin.datapresensi')->with('success', 'Pengajuan Izin Berhasil!');
         }
+
+
+        return redirect()->route('admin.datapresensi')->with('success', 'Pengajuan Izin Berhasil!');
     }
 
     public function printizin($id)
     {
-        $data = Izin::where('id_attendance', $id)->first();
-        $dataqr = QR::where('id_attendance', $id)->first();
+        $data = Izin::join('users', 'izin.nopeg', '=', 'users.nopeg')->where('id_attendance', $id)->first();
+        $atasan = Jabatan::selectRaw('users.atasan,jabatan.*')->join('users', 'users.atasan', '=', 'jabatan.id')->where('users.atasan', $data->atasan)->first();
+        // dd($data);
 
-        $pdf = PDF::loadview('admin.printizin', compact('data', 'dataqr'))->setPaper('A5','landscape');
-        return $pdf->stream();
+        if ($data->jenis == 1) {
+            $pdf = PDF::loadview('admin.printizin', compact('data', 'atasan'))->setPaper('A5', 'landscape');
+            return $pdf->stream();
+        } else {
+            $pdf = PDF::loadview('admin.printizinsj', compact('data', 'atasan'))->setPaper('A5', 'landscape');
+            return $pdf->stream();
+        }
     }
     //END DATA PRESENSI
 
-
-    //DATA REKAPITULASI
-    public function rekapitulasi()
+    function getWorkingDays($startDate, $endDate)
     {
-        return view('admin.rekapitulasi');
-    }
-
-    public function listrekapkaryawan(Request $request)
-    {
-        $data = DB::table('users');
-
-        if ($request->ajax()) {
-            return DataTables::of($data)
-                ->addIndexColumn()
-
-                ->addColumn('duration', function ($data) {
-
-                    $durasi_telat = strtotime('00:00:00');
-                    $data_att     = Attendance::where('nip', $data->nopeg)->get();
-                    foreach ($data_att as $row) {
-                        if (date("H:i:s", strtotime($row->jam_masuk)) > $data->awal_tugas && $row->hari != '6' && $row->hari != '0'  ) {
-                            $durasitelat = strtotime($row->jam_masuk) - strtotime($data->awal_tugas);
-                            $durasi_telat += $durasitelat;
-                        }
-                        if ($row->hari == '5') {
-                            if (date("H:i:s", strtotime($row->jam_siang)) > '13:30:00') {
-                                $durasitelat = strtotime($row->jam_siang) - strtotime('13:30:00');
-                                $durasi_telat += $durasitelat;
-                            }
-                        } else {
-                            if (date("H:i:s", strtotime($row->jam_siang)) > '13:00:00') {
-                                $durasitelat = strtotime($row->jam_siang) - strtotime('13:00:00');
-                                $durasi_telat += $durasitelat;
-                            }
-                        }
+        $begin = strtotime($startDate);
+        $end   = strtotime($endDate);
+        $curentYear = date('Y', $begin);
+        $endYear = date('Y', $end);
+        $libur_nasional = DB::table('libur_nasional')->whereYear('tanggal', '=', $curentYear)->whereYear('tanggal', '=', $endYear)->get();
+        if ($begin > $end) {
+            return 0;
+        } else {
+            $no_days  = 0;
+            $weekends = 0;
+            while ($begin <= $end) {
+                $no_days++; // no of days in the given interval
+                $what_day = date("N", $begin);
+                if ($what_day > 5) { // 6 and 7 are weekend days
+                    $weekends++;
+                }
+                // cek libur nasional
+                foreach ($libur_nasional as $key => $value) {
+                    if (date('Y-m-d', $begin) == $value->tanggal) {
+                        $weekends++;
                     }
-                    return date("H:i:s", $durasi_telat);
-                })
-                
-                ->addColumn('izin',function($data){
-                    $izin = IzinKerja::selectRaw('SUM(total_izin)*8 AS total, nopeg')->where('nopeg',$data->nopeg)->get();
+                }
+                $begin += 86400; // +1 day
+            };
 
-                    foreach($izin as $row){
-                        if($row->nopeg != NULL){
-                            return $row->total.' Jam';
-                        }else{
-                            return '';
-                        }
-                    }
-                })
+            $working_days = $no_days - $weekends;
 
-                ->addColumn('detail',function($data){
-                    $rekap =  route('admin.detailrekap', $data->nopeg);
-                    $actionBtn = "
-                        <div class='d-block text-center'>
-                            <a href='$rekap' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-eye-alt'></i></a>
-                        </div>";
-                    return $actionBtn;
-                })
-                ->rawColumns(['duration','izin','detail'])
-                ->make(true);
+            return response()->json($working_days);
         }
-        return DataTables::queryBuilder($data)->toJson();
     }
-
-    public function detailrekap($nip)
-    {
-
-        $data = DB::select('CALL getTotalTelatPerBulan(' . $nip . ')');
-        
-        $dataizinkerja = Attendance::selectRaw('izin_kerja.*,attendance.id, attendance.nip, MONTH(izin_kerja.tgl_awal_izin) AS bulan,  YEAR(izin_kerja.tgl_awal_izin) AS tahun, izin_kerja.total_izin AS total')
-        ->join('izin_kerja','attendance.nip','=','izin_kerja.nopeg')
-        ->whereIn('attendance.nip',[$nip])
-        ->whereNotIn('izin_kerja.jenis_izin',['9'])
-        ->groupBy('bulan', 'tahun')
-        ->get();
-
-        $datasakit = Attendance::selectRaw('izin_kerja.*, attendance.id, attendance.nip, MONTH(izin_kerja.tgl_awal_izin) AS bulan,  YEAR(izin_kerja.tgl_awal_izin) AS tahun, izin_kerja.total_izin AS total')
-        ->join('izin_kerja','attendance.nip','=','izin_kerja.nopeg')
-        ->where('attendance.nip',$nip)
-        ->where('izin_kerja.jenis_izin','9')
-        ->groupBy('bulan', 'tahun')
-        ->get();
-
-        return view('admin.detailrekap',compact('data','dataizinkerja','datasakit'));
-    }
-
-    //END DATA REKAPITULASI
 
 
     //DATA IZIN KARYAWAN
 
     public function dataizin()
     {
-        return view('admin.dataizin');
+        $user = User::SelectRaw('users.*,unit.*,jabatan.nopeg as peg_jab, jabatan.nama as name_jab')->join('unit', 'users.unit', '=', 'unit.id')->join('jabatan', 'users.atasan', '=', 'jabatan.id')->where('fungsi', 'admin')->get();
+        // dd($user[20]);
+        $jenisizin = JenisIzin::all();
+
+        $data = [
+            'user' => $user,
+            'jenisizin' => $jenisizin
+        ];
+
+        return view('admin.dataizin', compact('data'));
     }
 
     public function listizin(Request $request)
     {
-        $data = DB::table('izin_kerja')->join('jenis_izin','jenis_izin.id_izin','=','izin_kerja.jenis_izin');
+        $data = DB::table('izin_kerja')->join('unit', 'izin_kerja.unit', '=', 'unit.id')->join('jenis_izin', 'jenis_izin.id_izin', '=', 'izin_kerja.jenis_izin')->orderBy('izin_kerja.created_at')->get();
 
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -335,69 +349,73 @@ class AdminController extends Controller
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->approval == 1) {
-                        $apprv = '<span class="badge badge-success">Disetujui</span>';
+                        $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
                     } else {
-                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                        $batal_izin = route('admin.izin-resmi.batal_izin', $row->id_izinkerja);
+                        $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalizin" title="Batal Izin" href="' . $batal_izin . '">X</a>';
                     }
-                    return $apprv;
+
+                    return $for_html;
                 })
-                ->rawColumns(['print','status'])
+                ->rawColumns(['print', 'status'])
                 ->make(true);
         }
-        return DataTables::queryBuilder($data)->toJson();
-    }
-
-    public function createizin()
-    {
-        $datauser = User::groupby('nopeg')->get();
-        $jenisizin = JenisIzin::get();
-        $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas, users.atasan')->join('users', 'attendance.nip', '=', 'users.nopeg')->get();
-        return view('admin.createizin', compact('data', 'datauser','jenisizin'));
     }
 
     public function storeizin(Request $request)
     {
-        // dd(date('d-m-Y', strtotime($request->startDate)) );
-        if ($request->total > $request->lama_izin && $request->jenis_izin != 'Sakit') {
-            return redirect()->route('admin.dataizin')->with('error', 'Pengajuan Izin Tidak Berhasil, Total lama izin melebihi ketentuan hari yang diizinkan!');
-        } elseif ($request->validasi == NULL) {
-            return redirect()->route('admin.createizin')->with('error', 'Validasi Tidak diisi!');
+        $qrcode_filenamepeg = 'qr-' . explode('-', $request->nopeg)[0] . '-' . explode('|', $request->jenis_izin)[0] . '.svg';
+        $qrcode_filenameat = 'qr-' . $request->atasan . '-' . explode('-', $request->nopeg)[0] .  explode('|', $request->jenis_izin)[0] . '.svg';
+        if (auth()->user()->role == 'admin_bsdm') {
+            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
+            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->atasan . '-' .  $request->name_jab . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenameat));
         } else {
-            IzinKerja::insert([
-                'nopeg' => explode('-', $request->nopeg)[0] ,
-                'name' =>  explode('-', $request->nopeg)[1],
-                'unit' =>  explode('-', $request->nopeg)[2],
-                'jenis_izin' => $request->jenis_izin,
-                'total_izin' => $request->total,
-                'tgl_awal_izin' => date('Y-m-d', strtotime($request->startDate)),
-                'tgl_akhir_izin' => date('Y-m-d', strtotime($request->endDate)),
-                'validasi' => $request->validasi,
-                'approval' => '0',
-            ]);
-            
-            $dataqr = IzinKerja::where('id_izinkerja', $request->id_izinkerja)->first();
-            $qrcode_filename = 'qr-' . base64_encode(explode('-', $request->nopeg)[0] . date('Y-m-d H:i:s')) . '.svg';
-            // dd($qrcode_filename);
-            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filename));
-    
-            QR::where('id_izinkerja', $request->id_izinkerja)->update([
-                'qr_peg' => $qrcode_filename,
-            ]);
-    
+            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
         }
 
-        return redirect()->route('admin.dataizin')->with('success', 'Pengajuan Izin Berhasil!');
+        if (auth()->user()->role == 'admin_bsdm') {
+            IzinKerja::insert([
+                'nopeg' => explode('-', $request->nopeg)[0],
+                'name' =>  explode('-', $request->nopeg)[1],
+                'unit' =>  explode('-', $request->nopeg)[2],
+                'jenis_izin' => explode('|', $request->jenis_izin)[0],
+                'total_izin' => $request->total_izin,
+                'tgl_awal_izin' => date('Y-m-d', strtotime($request->tgl_awal_izin)),
+                'tgl_akhir_izin' => date('Y-m-d', strtotime($request->tgl_akhir_izin)),
+                'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+                'validasi' => '1',
+                'approval' => '1',
+                'qrcode_peg' => $qrcode_filenamepeg,
+                'qrcode_kepala' => $qrcode_filenameat,
+            ]);
+        } else {
+            IzinKerja::insert([
+                'nopeg' => explode('-', $request->nopeg)[0],
+                'name' =>  explode('-', $request->nopeg)[1],
+                'unit' =>  explode('-', $request->nopeg)[2],
+                'jenis_izin' => explode('|', $request->jenis_izin)[0],
+                'total_izin' => $request->total_izin,
+                'tgl_awal_izin' => date('Y-m-d', strtotime($request->tgl_awal_izin)),
+                'tgl_akhir_izin' => date('Y-m-d', strtotime($request->tgl_akhir_izin)),
+                'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+                'validasi' => '1',
+                'approval' => '0',
+                'qrcode_peg' => $qrcode_filenamepeg,
+            ]);
+        }
+
+
+        return redirect()->route('admin.izin-resmi.dataizin')->with('success', 'Pengajuan Izin Berhasil!');
     }
 
     public function printizinkerja($id)
     {
-        $data = IzinKerja::join('users','izin_kerja.nopeg','=','users.nopeg')->where('id_izinkerja', $id)->first();
-        $kepala = User::select('name')->where('nopeg', $data->atasan)->first();
+        $data = IzinKerja::join('users', 'izin_kerja.nopeg', '=', 'users.nopeg')->join('unit', 'izin_kerja.unit', '=', 'unit.id')->where('id_izinkerja', $id)->first();
+        // $atasan = User::selectRaw('jabatan.*')->join('jabatan', 'jabatan.id', 'users.atasan')->where('jabatan.nopeg', $data->atasan)->first();
+        $atasan = Jabatan::selectRaw('users.atasan,jabatan.*')->join('users', 'users.atasan', '=', 'jabatan.id')->where('users.atasan', $data->atasan)->first();
         $jenisizin = JenisIzin::where('jenis_izin', '!=', 'sakit')->get();
-        $dataqr = QR::where('id_izinkerja', $id)->first();
 
-
-        $pdf = PDF::loadview('admin.printizinkerja', compact('data', 'jenisizin','dataqr','kepala'))->setPaper('potrait');
+        $pdf = PDF::loadview('admin.printizinkerja', compact('data', 'jenisizin', 'atasan'))->setPaper('potrait');
         return $pdf->stream();
     }
 
@@ -419,12 +437,37 @@ class AdminController extends Controller
 
     public function datacuti()
     {
-        return view('admin.datacuti');
+        // $user = User::join('unit', 'users.unit', '=', 'unit.id')->where('fungsi', 'admin')->get();
+        $user = User::SelectRaw('users.*,unit.*, jb1.nopeg as peg_jab, jb1.nama as name_jab, jb2.nopeg as peg_jab2, jb2.nama as name_jab2')
+            ->join('unit', 'users.unit', '=', 'unit.id')
+            ->join('jabatan as jb1', 'users.atasan', '=', 'jb1.id')
+            ->join('jabatan as jb2', 'users.atasan_lang', '=', 'jb2.id')
+            ->where('fungsi', 'admin')->get();
+
+        $jeniscuti = JenisCuti::all();
+
+        $data = [
+            'user' => $user,
+            'jeniscuti' => $jeniscuti
+        ];
+        return view('admin.datacuti', compact('data'));
+    }
+
+    public function historycuti($nopeg, $jenis)
+    {
+        // dd(Carbon::now()->year);
+        $history_cuti =
+            cuti::join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
+            ->where('cuti.nopeg', $nopeg)
+            ->where('cuti.jenis_cuti', $jenis)
+            ->where(DB::raw("(DATE_FORMAT(created_at,'%Y'))"), Carbon::now()->year)
+            ->GROUPBY('cuti.jenis_cuti')->sum('total_cuti');
+        return response()->json($history_cuti);
     }
 
     public function listcuti(Request $request)
     {
-        $data = DB::table('cuti');
+        $data = Cuti::join('unit', 'cuti.unit', 'unit.id')->join('jenis_cuti', 'cuti.jenis_cuti', 'jenis_cuti.id_jeniscuti')->orderBy('cuti.created_at')->get();
 
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -433,55 +476,128 @@ class AdminController extends Controller
                     return getAksi($row->id_cuti, 'cuti');
                 })
                 ->addColumn('status', function ($row) {
+                    $batal_cuti = route('admin.cuti.batal_cuti', $row->id);
                     if ($row->approval == 1) {
-                        $apprv = '<span class="badge badge-success">Disetujui</span>';
+                        $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
+                    } elseif ($row->approval == 2) {
+                        $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
+                    } elseif ($row->approval == 3) {
+                        $for_html = '<span class="badge badge-danger">Ditolak</span><br><p><b>note</b> : ' . $row->alasan_tolak . '</p>';
                     } else {
-                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                        $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalcuti" title="Batal Cuti" href="' . $batal_cuti . '">X</a>';
                     }
-                    return $apprv;
+                    return $for_html;
                 })
-                ->rawColumns(['action','status'])
+                ->rawColumns(['action', 'status'])
                 ->make(true);
         }
-        return DataTables::queryBuilder($data)->toJson();
     }
 
-
-    public function createcuti()
+    public function datacuti_show($id)
     {
-        $datauser = User::groupby('nopeg')->get();
-        $jeniscuti = JenisCuti::get();
-        // $data = Attendance::selectRaw('attendance.*, users.name, users.unit, users.awal_tugas, users.akhir_tugas')->join('users','attendance.nip','=','users.nopeg')->get();
-        return view('admin.createcuti', compact('datauser', 'jeniscuti'));
+        $cuti = Cuti::with(['jeniscuti', 'unit', 'user'])->where('id_cuti', $id)->first();
+        $jeniscuti = JenisCuti::where('id_jeniscuti', $cuti->jenis_cuti)->first();
+        $datauser = User::where('fungsi', 'satpam')->get();
+        // dd($cuti);
+        return view('admin.datacuti_show', compact('cuti', 'jeniscuti', 'datauser'));
+    }
+
+    public function datacuti_calendar($id, $nopeg)
+    {
+        $cuti = Cuti::with(['user'])->where('id_cuti', $id)->first();
+        $data = JadwalSatpam::with('user')->where('nip', $nopeg)->whereHasMorph(
+            'tagable',
+            [Cuti::class],
+            function ($query) use ($cuti) {
+                $query->where('tagable_id', $cuti->id_cuti);
+            }
+        )->get();
+        return response()->json(JadwalSatpamCalendarResource::collection($data));
+    }
+
+    public function datacuti_pengganti(Request $request)
+    {
+        $request->validate([
+            'id_jadwal' => 'required',
+            'nip' => 'required',
+        ]);
+        $data = JadwalSatpam::with('user')->where('id', $request->id_jadwal)->whereHasMorph(
+            'tagable',
+            [Cuti::class],
+        )->first();
+        // assign pengganti
+        $data->update([
+            'nip_pengganti' => $request->nip,
+        ]);
+        return redirect()->back()->with('success', 'Berhasil Menambahkan Pengganti ' . $request->nip);
     }
 
     public function storecuti(Request $request)
     {
-        Cuti::insert([
-            'nopeg' => explode('-', $request->nopeg)[0] ,
-            'name' =>  explode('-', $request->nopeg)[1],
-            'unit' =>  explode('-', $request->nopeg)[2],
-            'jenis_cuti' => $request->jenis_cuti,
-            'tgl_awal_cuti' => date('Y-m-d', strtotime($request->startDate)),
-            'tgl_akhir_cuti' => date('Y-m-d', strtotime($request->endDate)),
-            'total_cuti' => $request->total,
-            'alamat' => $request->alamat,
-            'no_hp' => $request->no_hp,
-            'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
-            'validasi' => $request->validasi,
-        ]);
+        $qrcode_filenamepeg = 'qr-' . explode('-', $request->nopeg)[0] . '-' . explode('|', $request->jenis_cuti)[0] . '.svg';
+        $qrcode_filenameat = 'qr-' . $request->atasan . '-' . explode('-', $request->nopeg)[0] .  explode('|', $request->jenis_cuti)[0] . '.svg';
+        $qrcode_filenameatlang = 'qr-' . $request->atasan_lang . '-' . explode('-', $request->nopeg)[0] .  explode('|', $request->jenis_cuti)[0] . '.svg';
 
-        return redirect()->route('admin.datacuti')->with('success', 'Pengajuan cuti Berhasil!');
+        if (auth()->user()->role == 'admin_bsdm') {
+            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
+            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->atasan . '-' .  $request->name_jab . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenameat));
+            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->atasan_lang . '-' .  $request->name_jab_lang . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenameatlang));
+        } else {
+            QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
+        }
+
+        if (auth()->user()->role == 'admin_bsdm') {
+            Cuti::insert([
+                'nopeg' => explode('-', $request->nopeg)[0],
+                'name' =>  explode('-', $request->nopeg)[1],
+                'unit' =>  explode('-', $request->nopeg)[2],
+                'jenis_cuti' => explode('-', $request->jenis_cuti)[0],
+                'tgl_awal_cuti' => date('Y-m-d', strtotime($request->tgl_awal_cuti)),
+                'tgl_akhir_cuti' => date('Y-m-d', strtotime($request->tgl_akhir_cuti)),
+                'total_cuti' => $request->total_cuti,
+                'alamat' => $request->alamat,
+                'no_hp' => $request->no_hp,
+                'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+                'validasi' => 1,
+                'approval' => 2,
+                'qrcode_peg' => $qrcode_filenamepeg,
+                'qrcode_kepala' => $qrcode_filenameat,
+                'qrcode_pejabat' => $qrcode_filenameatlang,
+            ]);
+        } else {
+            Cuti::insert([
+                'nopeg' => explode('-', $request->nopeg)[0],
+                'name' =>  explode('-', $request->nopeg)[1],
+                'unit' =>  explode('-', $request->nopeg)[2],
+                'jenis_cuti' => explode('-', $request->jenis_cuti)[0],
+                'tgl_awal_cuti' => date('Y-m-d', strtotime($request->tgl_awal_cuti)),
+                'tgl_akhir_cuti' => date('Y-m-d', strtotime($request->tgl_akhir_cuti)),
+                'total_cuti' => $request->total_cuti,
+                'alamat' => $request->alamat,
+                'no_hp' => $request->no_hp,
+                'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+                'validasi' => 1,
+                'approval' => 0,
+                'qrcode_peg' => $qrcode_filenamepeg,
+            ]);
+        }
+
+
+        return redirect()->route('admin.cuti.datacuti')->with('success', 'Add Data Berhasil!');
     }
 
     public function printcuti($id)
     {
-        $data = Cuti::where('id_cuti', $id)->first();
 
-        $pdf = PDF::loadview('admin.printcuti', compact('data'))->setPaper('potrait');
+        $data = Cuti::join('unit', 'cuti.unit', '=', 'unit.id')->join('users', 'cuti.nopeg', '=', 'users.nopeg')->join('jenis_cuti', 'cuti.jenis_cuti', '=', 'jenis_cuti.id_jeniscuti')->where('id_cuti', $id)->first();
+        $atasan = Jabatan::selectRaw('users.atasan,jabatan.*')->join('users', 'users.atasan', '=', 'jabatan.id')->where('users.atasan', $data->atasan)->first();
+        $atasan_lang = Jabatan::selectRaw('users.atasan_lang,jabatan.*')->join('users', 'users.atasan_lang', '=', 'jabatan.id')->where('users.atasan_lang', $data->atasan_lang)->first();
+        // dd($data);
+
+        $pdf = PDF::loadview('admin.printcuti', compact('data', 'atasan', 'atasan_lang'))->setPaper('potrait');
         return $pdf->stream();
     }
-    
+
     public function batal_cuti($id)
     {
         $delete = Cuti::where('id_cuti', $id)->delete();
@@ -494,6 +610,59 @@ class AdminController extends Controller
 
     //ENDDATA CUTI KARYAWAN
 
+    //Libur Nasional 
+
+    public function liburnasional()
+    {
+        $libur = LiburNasional::get();
+        return view('admin.liburnasional', compact('libur'));
+    }
 
 
+    public function listlibur(Request $request)
+    {
+        $data = LiburNasional::get();
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    return getAksi($data->id, 'liburnasional');
+                })
+
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+
+    public function editlibur($id)
+    {
+        $libur = LiburNasional::where('id', $id)->first();
+        return response()->json($libur);
+    }
+
+    public function updatelibur(Request $request)
+    {
+        LiburNasional::where('id', $request->id)->update([
+            'tanggal' => $request->tanggal,
+            'keterangan' => $request->keterangan,
+        ]);
+
+        return redirect()->route('admin.libur-nasional.libur')->with('success', 'Edit Data Berhasil!');
+    }
+
+    public function createlibur(Request $request)
+    {
+        LiburNasional::create([
+            'tanggal' => $request->tanggal,
+            'keterangan' => $request->keterangan,
+        ]);
+
+        return redirect()->route('admin.libur-nasional.libur')->with('success', 'Add Data Berhasil!');
+    }
+
+    public function destroylibur($id)
+    {
+        LiburNasional::where('id', $id)->delete();
+        return redirect()->route('admin.libur-nasional.libur')->with('success', 'Data berhasil dihapus!');
+    }
 }

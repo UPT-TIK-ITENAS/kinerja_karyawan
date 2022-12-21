@@ -11,4 +11,10 @@ class JenisCuti extends Model
     // use HasFactory;
     protected $table = 'jenis_cuti';
     protected $guarded = [];
+    protected $primaryKey = ' id_jeniscuti';
+
+    public function cuti()
+    {
+        return $this->hasMany(Cuti::class);
+    }
 }

@@ -10,4 +10,14 @@ class Attendance extends Model
     // use HasFactory;
     protected $table = 'attendance';
     protected $guarded = [];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'nip', 'nopeg');
+    }
+
+    public function izin()
+    {
+        return $this->hasOne(Izin::class, 'id_attendance', 'id');
+    }
 }

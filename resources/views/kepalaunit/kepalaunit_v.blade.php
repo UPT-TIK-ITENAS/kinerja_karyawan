@@ -6,17 +6,12 @@
                 <div class="col-lg-6">
                     <h3>Dashboard</h3>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item">Sistem Laporan Presensi Karyawan</li>
                         <li class="breadcrumb-item active">Dashboard</li>
                     </ol>
                 </div>
             </div>
         </div>
     </div>
+    <div class="container-fluid">
+    </div>
 @endsection
-
-@section('scripts')
-@parent
-
-@endsection
-

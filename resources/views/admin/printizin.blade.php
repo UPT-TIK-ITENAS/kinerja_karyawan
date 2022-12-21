@@ -95,7 +95,7 @@
 
     .ttd {
         bottom: 250;
-        margin-left: 23em;
+        margin-left: 20em;
         margin-right: 0;
         /* position:fixed; */
     }
@@ -103,13 +103,13 @@
     .ttd2 {
 
         bottom: 250;
-        margin-left: 14em;
+        margin-left: 15em;
         margin-right: 5em;
 
         /* position:fixed; */
     }
 
-    
+
 
     .center {
         border: 1px solid #000000;
@@ -119,13 +119,12 @@
     .page:after {
         content: counter(page);
     }
-
-
 </style>
 
 <body>
     <header class="header">
-        <p style="font-size: 20px;align:left;"> INSTITUT TEKNOLOGI NASIONAL <br> JL. PHH MUSTAPA 23 BANDUNG <br> ------------------------------------------------</p>
+        <p style="font-size: 20px;align:left;"> INSTITUT TEKNOLOGI NASIONAL <br> JL. PHH MUSTAPA 23 BANDUNG <br>
+            ------------------------------------------------</p>
     </header>
     <br>
     <div class="isi">
@@ -152,9 +151,12 @@
             </tr>
         </table>
     </div>
-    
+
     <div class="isi">
-        <p style="font-size: 16px;align:left;"> Dengan ini menyatakan bahwa saya tidak hadir pada tanggal dan jam <b> {{ $data->tgl_awal_izin }} </b> sampai dengan tanggal dan jam <b> {{ $data->tgl_akhir_izin }} </b> dikarenakan <b> {{ $data->alasan }} </b> </p>
+        <p style="font-size: 16px;align:left;"> Dengan ini menyatakan bahwa saya tidak hadir di tanggal
+            <b>{{ $data->tanggal }}</b> pada jam <b> {{ $data->jam_awal }} </b> sampai dengan jam <b>
+                {{ $data->jam_akhir }} </b> dikarenakan <b> {{ $data->alasan }} </b>
+        </p>
 
     </div>
     <div class="isi">
@@ -171,23 +173,23 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>Pimpinan Unit Kerja 
+                        <b>Pimpinan Unit Kerja
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        {{-- <img src="data:image/png;base64, {!! $qrcode !!}"> --}}
-                        <img src="">
+                        <img src="{{ url('qrcode/' . $data->qrcode_kepala) }}" width="80" height="80"
+                            alt="">
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <u><b>Epih Haryanti, A.Md.</u></b>
+                        <u><b>{{ $atasan->nama }}</u></b>
                     </td>
                 </tr>
             </table>
         </div>
-    
+
         <div class="ttd2">
             <table style="float:right">
                 <tr>
@@ -202,8 +204,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <img src="{{ url('qrcode/' . $dataqr->qr_peg) }}" width="80" height="80" alt="">
-                        <img src="">
+                        <img src="{{ url('qrcode/' . $data->qrcode_peg) }}" width="80" height="80"
+                            alt="">
                     </td>
                 </tr>
                 <tr>
@@ -215,7 +217,7 @@
         </div>
     </div>
     <footer>
-        
+
 
     </footer>
 

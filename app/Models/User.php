@@ -22,7 +22,23 @@ class User extends Authenticatable
         'email',
         'password',
         'nopeg',
-        'role'
+        'role',
+        'npp',
+        'unit',
+        'atasan',
+        'atasan_lang',
+        'masuk_kerja',
+        'tempat',
+        'tanggal_lahir',
+        'status',
+        'fungsi',
+        'awal_tugas',
+        'akhir_tugas',
+        'gedung',
+        'email',
+        'nohp',
+        'sisacuti',
+        'last_login'
     ];
 
     /**
@@ -43,4 +59,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function jadwal_satpam()
+    {
+        return $this->hasMany(JadwalSatpam::class, 'nip', 'nopeg');
+    }
+
+    public function attendance()
+    {
+        return $this->hasMany(Attendance::class, 'nip', 'nopeg');
+    }
+
+    public function izin()
+    {
+        return $this->hasMany(Izin::class, 'nopeg', 'nopeg');
+    }
 }

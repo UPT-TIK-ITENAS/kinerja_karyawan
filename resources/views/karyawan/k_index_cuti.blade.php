@@ -112,6 +112,9 @@
                 <form class="needs-validation" novalidate="" action="{{ route('karyawan.store_cuti') }}" method="POST">
                     @csrf
                     <div class="modal-body">
+                        <div class="alert alert-danger" id="lebihHari" style="display: none;">
+                            ⚠️ Tidak boleh melebihi jumlah hari yang telah ditentukan.
+                        </div>
                         <div class="row g-1 mb-3">
                             <div class="col-md-12">
                                 <span class="form-label" for="jenis_cuti">Jenis Cuti</span>
@@ -119,7 +122,8 @@
                                     id="jenis_cuti" name="jenis_cuti" required="">
                                     <option selected="" disabled="" value="">-- Pilih ---</option>
                                     @foreach ($data['jeniscuti'] as $r)
-                                        <option value="{{ $r->id_jeniscuti }}">{{ $r->jenis_cuti }}</option>
+                                        <option value="{{ $r->id_jeniscuti }}|{{ $r->max_hari }}">{{ $r->jenis_cuti }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 <input type="hidden" id="lama_cuti">
@@ -129,13 +133,13 @@
                         <div class="row g-2 mb-3">
                             <div class="col-md-4">
                                 <span class="form-label" for="tgl_awal_cuti">Tanggal Awal</span>
-                                <input class="form-control" id="tgl_awal_cuti" name="tgl_awal_cuti" type="date"
+                                <input class="form-control" id="tgl_awal_cuti" name="tgl_awal_cuti" type="text"
                                     required="">
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="tgl_akhir_cuti">Tanggal Akhir</span>
-                                <input class="form-control" id="tgl_akhir_cuti" name="tgl_akhir_cuti" type="date"
+                                <input class="form-control" id="tgl_akhir_cuti" name="tgl_akhir_cuti" type="text"
                                     required="">
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
@@ -173,12 +177,15 @@
                                     <div class="invalid-feedback">Wajib di centang !</div>
                                 </div>
                             </div>
+                            <p class="fw-bold">Bila pengajuan izin/cuti dimulai dari akhir bulan hingga awal bulan
+                                depan-nya, dilakukan
+                                pengajuan dua kali agar dapat terdata tiap bulannya.</p>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
                             dihitung</span>
-                        <button class="btn btn-primary" type="submit">Submit</button>
+                        <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
                     </div>
                 </form>
             </div>
@@ -193,10 +200,35 @@
             processing: true,
         });
 
+
         document.getElementById('no_hp').addEventListener('input', function(e) {
             var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,4})(\d{0,5})/);
             e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
         });
+
+        daterangepicker('#tgl_awal_cuti', 'auto', false, '#tambahCuti');
+        daterangepicker('#tgl_akhir_cuti', 'auto', false, '#tambahCuti');
+        $("#tgl_awal_cuti").on('change', function(e) {
+            e.preventDefault();
+            let tgl_awal = $(this).val();
+            $("#tgl_akhir_cuti").daterangepicker({
+                singleDatePicker: true,
+                timePicker: false,
+                showDropdowns: true,
+                autoUpdateInput: true,
+                autoApply: true,
+                locale: {
+                    cancelLabel: "Hapus",
+                    applyLabel: "Terapkan",
+                    format: "YYYY-MM-DD",
+                },
+                drops: "auto",
+                parentEl: "#tambahCuti",
+                minDate: moment(tgl_awal).format('YYYY-MM-DD'),
+                maxDate: moment(tgl_awal).endOf('month').format('YYYY-MM-DD')
+            });
+        });
+
         $('#tgl_akhir_cuti').on('change', function() {
             let tgl_awal = $('#tgl_awal_cuti').val();
             let tgl_akhir = $('#tgl_akhir_cuti').val();
@@ -207,6 +239,14 @@
                 let date2 = new Date(tgl_akhir);
                 total = getBusinessDatesCount(date1, date2);
                 total_cuti.val(total);
+
+                if (total > $('#lama_cuti').val()) {
+                    $('#lebihHari').css('display', 'block');
+                    $('#btnSubmit').attr('disabled', 'true');
+                } else {
+                    $('#lebihHari').css('display', 'none');
+                    $('#btnSubmit').removeAttr('disabled');
+                }
             }
         });
 
@@ -219,6 +259,23 @@
                 curDate.setDate(curDate.getDate() + 1);
             }
             return count;
+        }
+
+        $('#jenis_cuti').on('change', function() {
+            let jenis_cuti = $('#jenis_cuti');
+            let lama_cuti = $('#lama_cuti');
+            let durasi_cuti = jenis_cuti.val().split('|')[1] ? jenis_cuti.val().split('|')[1] : 100;
+            lama_cuti.val(durasi_cuti);
+            console.log(durasi_cuti);
+            emptyField();
+        });
+
+        function emptyField() {
+            let tgl_awal = $('#tgl_awal_cuti').val('');
+            let tgl_akhir = $('#tgl_akhir_cuti').val('');
+            let total_cuti = $('#total_cuti').val('');
+            $('#lebihHari').css('display', 'none');
+            $('#btnSubmit').removeAttr('disabled');
         }
     </script>
 @endsection

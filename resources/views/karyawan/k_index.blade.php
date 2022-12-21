@@ -27,7 +27,7 @@
                             </div>
                             <div class="media-body">
                                 <span class="m-0">Total Keterlambatan</span>
-                                <h4 class="mb-0 counter">{{ $data['terlambat'] }}</h4>
+                                <h4 class="mb-0 counter">{{ $data->kurang_jam }} Jam</h4>
                             </div>
                         </div>
                     </div>
@@ -41,28 +41,49 @@
                                 <i data-feather="check-circle"></i>
                             </div>
                             <div class="media-body">
-                                <span class="m-0">Total Jam Kerja</span>
-                                <h4 class="mb-0 counter">{{ $data['durasi_kerja'] }}</h4>
+                                <span class="m-0">Total Hari Kerja</span>
+                                <h4 class="mb-0 counter">{{ $data->total_hari_kerja_per_bulan }} Hari</h4>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
-                <div class="card o-hidden border-0">
-                    <div class="bg-secondary b-r-4 card-body">
-                        <div class="media static-top-widget">
-                            <div class="align-self-center text-center">
-                                <i data-feather="trending-up"></i>
-                            </div>
-                            <div class="media-body">
-                                <span class="m-0">Total Nilai Kinerja</span>
-                                <h4 class="mb-0 counter">0 poin</h4>
+
+            @if ($data->izin_kerja != null)
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <div class="card o-hidden border-0">
+                        <div class="bg-secondary b-r-4 card-body">
+                            <div class="media static-top-widget">
+                                <div class="align-self-center text-center">
+                                    <i data-feather="trending-up"></i>
+                                </div>
+                                <div class="media-body">
+                                    <span class="m-0">Total Izin</span>
+                                    <h4 class="mb-0 counter">{{ $data->izin_kerja }} Hari</h4>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
+
+            @if ($data->cuti != null)
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <div class="card o-hidden border-0">
+                        <div class="bg-primary b-r-4 card-body">
+                            <div class="media static-top-widget">
+                                <div class="align-self-center text-center">
+                                    <i data-feather="check-circle"></i>
+                                </div>
+                                <div class="media-body">
+                                    <span class="m-0">Total Cuti</span>
+                                    <h4 class="mb-0 counter">{{ $data->cuti }} Hari</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 @endsection

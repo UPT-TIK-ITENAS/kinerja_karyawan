@@ -77,7 +77,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Jakarta',
 
     /*
     |--------------------------------------------------------------------------
@@ -206,6 +206,8 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
+        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
+
     ],
 
     /*
@@ -224,6 +226,7 @@ return [
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+        'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
     ])->toArray(),
 
 ];
