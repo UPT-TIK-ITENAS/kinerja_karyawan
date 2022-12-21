@@ -26,7 +26,9 @@
                                 data-feather="monitor"></i><span>Master Data Presensi</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
-                        <ul class="nav-submenu menu-content" style="display: none;">
+                        <ul class="nav-submenu menu-content" style="display: @if (request()->routeIs('admin.presensi.master') || request()->routeIs('admin.rekapitulasi.rekap') || request()->routeIs('admin.jadwal-satpam.index')) block
+                    @else
+                        none @endif;">
                             <li><a href="{{ route('admin.presensi.master') }}" class="">Monitor Kehadiran</a>
                             </li>
                             <li><a href="{{ route('admin.rekapitulasi.rekap') }}" class="">Rekapitulasi</a>
@@ -58,7 +60,9 @@
                                 data-feather="file"></i><span>Kuesioner</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
-                        <ul class="nav-submenu menu-content" style="display: none;">
+                        <ul class="nav-submenu menu-content" style="display:  @if (request()->routeIs('admin.indexKuesioner') || request()->routeIs('admin.kuesioner.pertanyaan') || request()->routeIs('admin.kuesioner.pertanyaanPeriode')) block
+                    @else
+                        none @endif;">
                             {{-- <li><a href="{{ route('admin.indexKuesioner') }}" class="">Penilaian</a></li> --}}
                             <li><a href="{{ route('admin.kuesioner.pertanyaan') }}" class="">Pertanyaan</a></li>
                             <li><a href="{{ route('admin.kuesioner.pertanyaanPeriode') }}" class="">Daftar
@@ -73,7 +77,9 @@
                                 data-feather="edit-3"></i><span>Pengajuan</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
-                        <ul class="nav-submenu menu-content" style="display: none;">
+                        <ul class="nav-submenu menu-content" style="display: @if (request()->routeIs('admin.izin-resmi.dataizin') || request()->routeIs('admin.cuti.datacuti')) block
+                    @else
+                        none @endif;">
                             <li><a href="{{ route('admin.izin-resmi.dataizin') }}" class="">Izin</a>
                             </li>
                             <li><a href="{{ route('admin.cuti.datacuti') }}" class="">Cuti</a>
@@ -103,7 +109,9 @@
                                 data-feather="monitor"></i><span>Master Data Presensi</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
-                        <ul class="nav-submenu menu-content" style="display: none;">
+                        <ul class="nav-submenu menu-content" style="display: @if (request()->routeIs('admin_bsdm.presensi.master') || request()->routeIs('admin_bsdm.rekapitulasi.rekap')) block
+                    @else
+                        none @endif;">
                             <li><a href="{{ route('admin_bsdm.presensi.master') }}" class="">Monitor
                                     Kehadiran</a>
                             </li>
@@ -116,7 +124,9 @@
                                 data-feather="edit-3"></i><span>Pengajuan</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
-                        <ul class="nav-submenu menu-content" style="display: none;">
+                        <ul class="nav-submenu menu-content" style="display: @if (request()->routeIs('admin_bsdm.izin-resmi.dataizin') || request()->routeIs('admin_bsdm.cuti.datacuti')) block
+                    @else
+                        none @endif;">
                             <li><a href="{{ route('admin_bsdm.izin-resmi.dataizin') }}" class="">Izin</a>
                             </li>
                             <li><a href="{{ route('admin_bsdm.cuti.datacuti') }}" class="">Cuti</a>
