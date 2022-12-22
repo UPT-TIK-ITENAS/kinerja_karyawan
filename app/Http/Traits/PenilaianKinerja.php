@@ -86,8 +86,8 @@ trait PenilaianKinerja
     {
         $data = RespondenKinerja::where('nopeg', $nopeg)->where('kuisioner_kinerja_id', $periode->id)->first();
         $indeks = $data->indeks ?? 0;
-        // handle indeks if range 0-4 or 0-100
-        $indeks = ($indeks >= 0 && $indeks <= 4) ? ($indeks / 4) * 100 : $indeks;
+        // handle indeks if range 0-3 or 0-100
+        $indeks = ($indeks >= 0 && $indeks <= 3) ? ($indeks / 3) * 100 : $indeks;
         return $indeks;
     }
 }
