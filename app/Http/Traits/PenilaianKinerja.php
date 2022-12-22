@@ -26,6 +26,11 @@ trait PenilaianKinerja
     {
         $data = DB::select("CALL HitungTotalHariKerja('$nopeg', '$periode->batas_awal', '$periode->batas_akhir')");
 
+        // transform $data->total_hari_mangkir to $data->mangkir
+        foreach ($data as $key => $value) {
+            $data[$key]->mangkir = $value->total_hari_mangkir - ($value->cuti ?? 0) - ($value->izin_kerja ?? 0);
+        }
+
         // $this->bobot_izin = 13;
         // $this->bobot_sakit = 11;
         // $this->bobot_mangkir = 21;
@@ -52,7 +57,7 @@ trait PenilaianKinerja
                 $skor['sakit'][$key] = round($this->bobot_sakit * ($this->maks_sakit - $value->izin_sakit) / $this->maks_sakit, 2);
             }
 
-            if ($value->total_hari_mangkir >= $this->maks_mangkir) {
+            if ($value->mangkir >= $this->maks_mangkir) {
                 $skor['mangkir'][$key] = 0;
                 $skor['avg']['mangkir'] = 0;
             } else {
@@ -81,8 +86,8 @@ trait PenilaianKinerja
     {
         $data = RespondenKinerja::where('nopeg', $nopeg)->where('kuisioner_kinerja_id', $periode->id)->first();
         $indeks = $data->indeks ?? 0;
-        // convert indeks from 1-4 to 1-100
-        $indeks = ($indeks / 4) * 100;
+        // handle indeks if range 0-4 or 0-100
+        $indeks = ($indeks >= 0 && $indeks <= 4) ? ($indeks / 4) * 100 : $indeks;
         return $indeks;
     }
 }
