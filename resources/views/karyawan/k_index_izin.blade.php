@@ -28,7 +28,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="table-responsive">
+                            <div class="dt-ext table-responsive">
                                 <table class="dataTable" id="table-izin">
                                     <thead>
                                         <tr align="center">
@@ -154,7 +154,7 @@
 
         daterangepicker('#tgl_awal_izin', 'auto', false, '#tambahIzin');
         daterangepicker('#tgl_akhir_izin', 'auto', false, '#tambahIzin');
-        
+
         $("#tgl_awal_izin").on('change', function(e) {
             e.preventDefault();
             let tgl_awal = $(this).val();

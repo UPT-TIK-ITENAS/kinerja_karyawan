@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="table-responsive">
+                            <div class="dt-ext table-responsive">
                                 <table class="dataTable" id="table-izin">
                                     <thead>
                                         <tr align="center">
@@ -43,19 +43,19 @@
                                                 <td align="center">{{ $r->jam_awal }}</td>
                                                 <td align="center">{{ $r->jam_akhir }}</td>
                                                 <td align="center">{{ $r->tanggal }}</td>
-                                                @if($r->approval == 1)
+                                                @if ($r->approval == 1)
                                                     <td>
                                                         <div class='d-block text-center'>
-                                                            <a class='badge badge-success align-items-center' 
-                                                                > Disetujui Kepala Unit
+                                                            <a class='badge badge-success align-items-center'> Disetujui
+                                                                Kepala Unit
                                                             </a>
                                                         </div>
                                                     </td>
                                                 @else
                                                     <td>
                                                         <div class='d-block text-center'>
-                                                            <a class='badge badge-warning align-items-center' 
-                                                                > Menunggu Persetujuan
+                                                            <a class='badge badge-warning align-items-center'> Menunggu
+                                                                Persetujuan
                                                             </a>
                                                         </div>
                                                     </td>
@@ -68,7 +68,7 @@
                                                             <i class='icofont icofont-edit-alt'></i>
                                                         </a>
                                                     </div>
-    
+
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -115,36 +115,39 @@
                         <div class="row g-2 mb-3">
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_awal">Tanggal Awal</span>
-                                <input class="form-control" id="jam_awal" name="jam_awal" type="text" required="" readonly>
+                                <input class="form-control" id="jam_awal" name="jam_awal" type="text" required=""
+                                    readonly>
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="jam_akhir">Tanggal Akhir</span>
-                                <input class="form-control" id="jam_akhir" name="jam_akhir" type="text" required="" readonly>
+                                <input class="form-control" id="jam_akhir" name="jam_akhir" type="text" required=""
+                                    readonly>
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="tanggal">Tanggal</span>
-                                <input class="form-control" id="tanggal" name="tanggal" type="date" required="" readonly>
+                                <input class="form-control" id="tanggal" name="tanggal" type="date" required=""
+                                    readonly>
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                         </div>
                         <!-- <div class="mb-3">
-                            <div class="form-check">
-                                <div class="checkbox p-0">
-                                    <div class="checkbox checkbox-dark">
-                                        <input id="cb_valid" class="form-check-input" type="checkbox" required>
-                                        <label class="form-check-label" for="cb_valid">Pengajuan izin dilakukan oleh diri
-                                            sendiri dan secara sadar sesuai dengan ketentuan yang berlaku</label>
+                                <div class="form-check">
+                                    <div class="checkbox p-0">
+                                        <div class="checkbox checkbox-dark">
+                                            <input id="cb_valid" class="form-check-input" type="checkbox" required>
+                                            <label class="form-check-label" for="cb_valid">Pengajuan izin dilakukan oleh diri
+                                                sendiri dan secara sadar sesuai dengan ketentuan yang berlaku</label>
+                                        </div>
+                                        <div class="invalid-feedback">Wajib di centang !</div>
                                     </div>
-                                    <div class="invalid-feedback">Wajib di centang !</div>
                                 </div>
-                            </div>
-                        </div> -->
+                            </div> -->
                     </div>
                     <div class="modal-footer justify-content-between">
                         <!-- <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
-                            dihitung</span> -->
+                                dihitung</span> -->
                         <button class="btn btn-primary" type="submit" id="btnSubmit">Setuju</button>
                     </div>
                 </form>
@@ -195,7 +198,5 @@
                 console.log('data :', data);
             })
         });
-
-        
     </script>
 @endsection

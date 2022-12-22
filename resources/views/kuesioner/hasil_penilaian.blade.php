@@ -20,7 +20,7 @@
                     <div class="card-body">
                         {{-- <a href="{{ route('kepalaunit.createcuti') }}" class="btn btn-primary"><i
                                 class="icofont icofont-plus-square"></i> Tambah</a> --}}
-                        <div class="table-responsive">
+                        <div class="dt-ext table-responsive">
                             <table class="dataTable" id="table-cuti">
                                 <thead>
                                     <th>No.</th>

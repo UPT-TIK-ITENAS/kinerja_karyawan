@@ -24,7 +24,7 @@
                                     data-bs-toggle="modal" style="float: right">+ Tambah</a>
                             </div>
                         </div>
-                        <div class="table-responsive">
+                        <div class="dt-ext table-responsive">
                             <table class="dataTable" id="table-pertanyaan">
                                 <thead>
                                     <th>No.</th>

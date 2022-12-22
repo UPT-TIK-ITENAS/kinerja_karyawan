@@ -19,7 +19,7 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="dt-ext table-responsive">
                             <table class="dataTable" id="table-cuti">
                                 <thead>
                                     <th>No.</th>
