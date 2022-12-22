@@ -69,14 +69,25 @@ class KepalaUnitController extends Controller
             ->where('unit', auth()->user()->unit)->get();
         // dd($user);
 
-        $attendance = Attendance::select('tanggal')->groupby('tanggal')->get();
-        return view('kepalaunit.ku_datapresensi', compact('user', 'attendance'));
+        // $attendance = Attendance::select('tanggal')->groupby('tanggal')->get();
+        $attendance = Attendance::select('tanggal')
+        ->where(DB::raw('date_format(tanggal,"%a")'),'!=','Sat')
+        ->where(DB::raw('date_format(tanggal,"%a")'),'!=','Sun')
+        ->groupby('tanggal')->get();
+        // dd($attendance);
+        $bulan = Attendance::select(DB::raw('MONTH(tanggal) as bulan'))->groupby('bulan')->get();
+
+        // $a =  Attendance::whereMonth('tanggal','=','7')->get();
+        // dd($a);
+        return view('kepalaunit.ku_datapresensi', compact('user', 'attendance','bulan'));
     }
 
     public function listdatapresensi(Request $request)
     {
         // $attendances = Attendance::query()->with(['user', 'izin'])
         //     ->whereRelation('user', 'status', '=', 1)
+        
+        // ->whereRaw('MONTH(tanggal) ='. $request->get('filter3'))
         //     ->where('nip', $request->get('filter1'), '', 'and')
         //     ->where('tanggal', $request->get('filter2'), '', 'and')
         //     ->orderby('tanggal', 'asc');
@@ -86,6 +97,7 @@ class KepalaUnitController extends Controller
             ->whereRelation('user', 'status', '=', 1)
             ->where('nip', $request->get('filter1'), '', 'and')
             ->where('tanggal', $request->get('filter2'), '', 'and')
+            ->where(DB::raw('MONTH(tanggal)'), $request->get('filter3'), '', 'and')
             ->where('unit', auth()->user()->unit)
             ->orderby('tanggal', 'asc')->get();
 
