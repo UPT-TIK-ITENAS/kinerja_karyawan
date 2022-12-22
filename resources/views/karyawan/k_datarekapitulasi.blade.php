@@ -22,6 +22,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h5>Silakan pilih periode untuk melihat jumlah kehadiran</h5>
+                        <br>
                         <div class="form-group row">
                             <label class="col-lg-1 col-md-12 col-form-label">Periode</label>
                             <div class="col-lg-6 col-md-12">
@@ -49,8 +50,7 @@
                                                 <i data-feather="clock"></i>
                                             </div>
                                             <div class="pl-3">
-                                                <span class="m-0">Maksimal Izin</span>
-                                                <p>(Di luar jam kerja)</p>
+                                                <p class="m-0">Maksimal Izin (Di luar jam kerja)</p>
                                                 <h4 class="mb-0 counter">16 Jam</h4>
                                             </div>
                                         </div>
@@ -65,7 +65,7 @@
                                                 <i data-feather="clock"></i>
                                             </div>
                                             <div>
-                                                <span class="m-0">Maksimal Sakit</span>
+                                                <p class="m-0">Maksimal Sakit</p>
                                                 <h4 class="mb-0 counter">16 Jam</h4>
                                             </div>
                                         </div>
@@ -80,7 +80,7 @@
                                                 <i data-feather="clock"></i>
                                             </div>
                                             <div>
-                                                <span class="m-0">Maksimal Mangkir</span>
+                                                <p class="m-0">Maksimal Mangkir</p>
                                                 <h4 class="mb-0 counter">0 Hari</h4>
                                             </div>
                                         </div>
@@ -95,7 +95,7 @@
                                                 <i data-feather="clock"></i>
                                             </div>
                                             <div>
-                                                <span class="m-0">Maksimal Keterlambatan</span>
+                                                <p class="m-0">Maksimal Keterlambatan</p>
                                                 <h4 class="mb-0 counter">300 Menit</h4>
                                             </div>
                                         </div>
