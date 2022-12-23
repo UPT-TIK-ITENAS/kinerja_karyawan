@@ -28,7 +28,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="table-responsive">
+                            <div class="dt-ext table-responsive">
                                 <table class="dataTable" id="table-izin">
                                     <thead>
                                         <tr align="center">

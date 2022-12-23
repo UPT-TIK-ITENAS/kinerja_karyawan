@@ -25,7 +25,7 @@
                         <span>Daftar hasil rekapitulasi presensi karyawan terhitung dari tanggal 01 Juli 2022</span>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="dt-ext table-responsive">
                             <table class="dataTable" id="table-rekapitulasi">
                                 <thead>
                                     <th width="5%">No.</th>

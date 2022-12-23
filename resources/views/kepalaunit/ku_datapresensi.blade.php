@@ -56,7 +56,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="dt-ext table-responsive">
                             <table class="dataTable" id="table-admin">
                                 <thead>
                                     <th>No.</th>
