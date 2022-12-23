@@ -355,8 +355,8 @@
                         name: 'jam_pulang'
                     },
                     {
-                        data: 'duration',
-                        name: 'duration'
+                        data: 'durasi',
+                        name: 'durasi'
                     },
                     {
                         data: 'latemasuk',

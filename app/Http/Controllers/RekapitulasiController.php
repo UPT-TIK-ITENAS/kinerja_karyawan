@@ -45,8 +45,9 @@ class RekapitulasiController extends Controller
 
     public function detailrekap($nopeg)
     {
+        $user = User::with(['units'])->where('nopeg', $nopeg)->first();
         $periode = KuesionerKinerja::where('status', '1')->get();
-        return view('admin.detailrekap', compact('periode', 'nopeg'));
+        return view('admin.detailrekap', compact('periode', 'nopeg', 'user'));
     }
 
     public function list_detail_rekap(Request $request, $nopeg)

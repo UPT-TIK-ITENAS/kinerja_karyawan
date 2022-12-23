@@ -13,6 +13,11 @@ class Unit extends Model
     protected $guarded = [];
 
 
+    public function user()
+    {
+        return $this->hasMany(User::class, 'unit', 'id');
+    }
+
     public function cuti()
     {
         return $this->hasMany(Cuti::class);

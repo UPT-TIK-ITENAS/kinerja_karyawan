@@ -65,6 +65,11 @@ class User extends Authenticatable
         return $this->hasMany(JadwalSatpam::class, 'nip', 'nopeg');
     }
 
+    public function units()
+    {
+        return $this->belongsTo(Unit::class, 'unit', 'id');
+    }
+
     public function attendance()
     {
         return $this->hasMany(Attendance::class, 'nip', 'nopeg');

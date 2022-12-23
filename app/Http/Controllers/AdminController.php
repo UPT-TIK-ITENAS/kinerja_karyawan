@@ -48,14 +48,14 @@ class AdminController extends Controller
         $user = User::SelectRaw('users.*,unit.*,jabatan.nopeg as peg_jab, jabatan.nama as name_jab')->join('unit', 'users.unit', '=', 'unit.id')->join('jabatan', 'users.atasan', '=', 'jabatan.id')->where('status', '1')->get();
 
         $attendance = Attendance::select('tanggal')
-        ->where(DB::raw('date_format(tanggal,"%a")'),'!=','Sat')
-        ->where(DB::raw('date_format(tanggal,"%a")'),'!=','Sun')
-        ->groupby('tanggal')->get();
-    
+            ->where(DB::raw('date_format(tanggal,"%a")'), '!=', 'Sat')
+            ->where(DB::raw('date_format(tanggal,"%a")'), '!=', 'Sun')
+            ->groupby('tanggal')->get();
+
         $bulan = Attendance::select(DB::raw('MONTH(tanggal) as bulan'))->groupby('bulan')->get();
         // get attendance limit 10
         // dd(Attendance::with('user')->limit(10)->get());
-        return view('admin.datapresensi', compact('user', 'attendance','bulan'));
+        return view('admin.datapresensi', compact('user', 'attendance', 'bulan'));
     }
 
     public function datapresensi_duration()
@@ -72,12 +72,12 @@ class AdminController extends Controller
     public function listkaryawan(Request $request)
     {
         $data = Attendance::query()->with(['user', 'izin'])
-        ->whereRelation('user', 'status', '=', 1)
-        ->where('nip', $request->get('filter1'), '', 'and')
-        ->where('tanggal', $request->get('filter2'), '', 'and')
-        ->where(DB::raw('MONTH(tanggal)'), $request->get('filter3'), '', 'and')
-        ->orderby('tanggal', 'asc');
-        
+            ->whereRelation('user', 'status', '=', 1)
+            ->where('nip', $request->get('filter1'), '', 'and')
+            ->where('tanggal', $request->get('filter2'), '', 'and')
+            ->where(DB::raw('MONTH(tanggal)'), $request->get('filter3'), '', 'and')
+            ->orderby('tanggal', 'asc');
+
         $days = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
         return DataTables::of($data)
             ->addIndexColumn()
@@ -116,21 +116,20 @@ class AdminController extends Controller
                 $siang = strtotime($row->telat_siang);
                 $durasi = strtotime($row->durasi);
 
-                if($row->hari != "6" && $row->hari != "0"){
-                    if($row->durasi == "04:00:00"){
+                if ($row->hari != "6" && $row->hari != "0") {
+                    if ($row->durasi == "04:00:00") {
                         $result = date("H:i:s", $siang + $masuk + $durasi);
-                    }elseif($row->durasi == "00:00:00"){
+                    } elseif ($row->durasi == "00:00:00") {
                         $result = "08:00:00";
-                    }else{
+                    } else {
                         $result = date("H:i:s", $siang + $masuk);
                     }
-                }else{
+                } else {
                     $result = "00:00:00";
                 }
-                
-                
+
+
                 return $result;
-                
             })
             ->addColumn('status', function ($row) {
                 if ($row->izin != NULL) {
@@ -194,21 +193,6 @@ class AdminController extends Controller
             ->addIndexColumn()
             ->addColumn('days', function ($row) use ($days) {
                 return $days[$row->hari];
-            })
-            ->addColumn('duration', function ($row) {
-                $telat_masuk = Carbon::createFromFormat("H:i:s", $row->telat_masuk);
-                $telat_siang = Carbon::createFromFormat("H:i:s", $row->telat_siang);
-                list($addHour, $addMinutes, $addSeconds) = explode(':', $telat_siang->format('H:i:s'));
-                $telat = $telat_masuk->addHours($addHour)->addMinutes($addMinutes)->addSeconds($addSeconds)->format('H:i:s');
-
-                $durasi = Carbon::createFromFormat("H:i:s", $row->durasi);
-                $durasi_kerja = $durasi->diff($telat)->format("%H:%I:%S");
-                if ($durasi->greaterThanOrEqualTo($telat) && $durasi->notEqualTo("00:00:00")) {
-                    $durasi_kerja = $durasi->diff($telat)->format("%H:%I:%S");
-                } else {
-                    $durasi_kerja = "00:00:00";
-                }
-                return $durasi_kerja;
             })
 
             ->addColumn('latemasuk', function ($row) {

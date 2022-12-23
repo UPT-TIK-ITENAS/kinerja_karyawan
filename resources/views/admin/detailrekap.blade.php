@@ -42,7 +42,10 @@
                         <hr>
                     </div>
                     <div class="card-body pt-0">
-                        
+                        <div class="mb-3">
+                            <h5>{{ $user->name . " ($user->nopeg) " }}</h5>
+                            <p class="fw-bold">{{ $user->units->nama_unit }}</p>
+                        </div>
                         <div class="row">
                             <div class="col-lg-3 col-md-6 col-sm-12">
                                 <div class="card o-hidden border-0">
