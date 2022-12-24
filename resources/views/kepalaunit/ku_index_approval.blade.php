@@ -59,31 +59,26 @@
                     @csrf
                     <div class="modal-body">
                         <div class="row g-1 mb-3">
-                            <div class="col-md-12">
+                            <div class="col-md-2">
+                                <span class="form-label" for="nopeg">No Pegawai</span>
+                                <input class="form-control" id="nopeg" name="nopeg" type="text"
+                                    required="" disabled>
+                            </div>
+                            <div class="col-md-7">
+                                <span class="form-label" for="name">Nama</span>
+                                <input class="form-control" id="name" name="name" type="text"
+                                    required="" disabled>
+                            </div>
+                            <div class="col-md-3">
                                 <span class="form-label" for="jenis_cuti">Jenis Cuti</span>
                                 <input class="form-control" id="jenis_cuti" name="jenis_cuti" type="text" required=""
                                     disabled>
                                 <input type="hidden" id="lama_cuti">
                             </div>
+                            <input type="hidden" id="id_cuti" name="id_cuti">
+                            
                         </div>
 
-                        <input type="hidden" id="id_cuti" name="id_cuti">
-                        <div class="col-md-12">
-                            <span class="form-label" for="approval">Persetujuan</span>
-                            <select class="form-control col-sm-12" onchange="yesnoCheck(this);" id="approval"
-                                name="approval" required="">
-                                <option selected="" disabled="" value="">-- Pilih ---</option>
-                                <option value="1">Disetujui</option>
-                                <option value="2" hidden>Disetujui Atasan</option>
-                                <option value="3">Ditolak</option>
-                            </select>
-                            <input type="hidden" id="lama_cuti">
-                            <div class="invalid-feedback">Pilih salah satu !</div>
-                        </div>
-                        <div class="col-md-12" id="ifYes" style="display: none;">
-                            <span class="form-label" for="alasan_tolak">Alasan Tolak</span>
-                            <textarea name="alasan_tolak" id="alasan_tolak" name="alasan_tolak" class="form-control col-12" required=""></textarea>
-                        </div>
                         <div class="row g-2 mb-3">
                             <div class="col-md-4">
                                 <span class="form-label" for="tgl_awal_cuti">Tanggal Awal</span>
@@ -115,9 +110,29 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-5">
+                            <span class="form-label" for="approval">Persetujuan</span>
+                            <select class="form-control col-sm-12" onchange="yesnoCheck(this);" id="approval"
+                                name="approval" required="">
+                                <option selected="" disabled="" value="">-- Pilih ---</option>
+                                <option value="1">Disetujui Atasan Langsung</option>
+                                <option value="2" hidden>Disetujui Atasan dari Atasan Langsung</option>
+                                <option value="3">Ditolak</option>
+                            </select>
+                            <input type="hidden" id="lama_cuti">
+                            <div class="invalid-feedback">Pilih salah satu !</div>
+                        </div>
+                        
+                        <div class="col-md-12" id="ifYes" style="display: none;">
+                            <span class="form-label" for="alasan_tolak">Alasan Tolak</span>
+                            <textarea name="alasan_tolak" id="alasan_tolak" name="alasan_tolak" class="form-control col-12" required=""></textarea>
+                        </div>
+                       
+                        
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
+                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu dan hari libur
+                            nasional tidak
                             dihitung</span>
                         <button class="btn btn-primary" type="submit" id="btnSubmit">Setuju</button>
                     </div>
@@ -174,6 +189,8 @@
             $.get("{{ url('/pejabat/approval/editCuti') }}/" + id, function(data, jeniscuti) {
                 if (data.approval == 0) {
                     $('#approval').val(null);
+                    $('#nopeg').val(data.nopeg);
+                    $('#name').val(data.name);
                     $('#id_cuti').val(data.id_cuti);
                     $('#jenis_cuti').val(data.jenis_cuti);
                     $('#tgl_awal_cuti').val(data.tgl_awal_cuti);
@@ -189,6 +206,8 @@
                 if (data.approval == 2) {
                     $('#btnSubmit').prop('disabled', true);
                     $('#approval').prop('disabled', true);
+                    $('#nopeg').val(data.nopeg);
+                    $('#name').val(data.name);
                     $('#approval').val(data.approval);
                     $('#id_cuti').val(data.id_cuti);
                     $('#jenis_cuti').val(data.jenis_cuti);
@@ -202,6 +221,8 @@
                 if (data.approval == 1) {
                     $('#btnSubmit').prop('disabled', true);
                     $('#approval').prop('disabled', true);
+                    $('#nopeg').val(data.nopeg);
+                    $('#name').val(data.name);
                     $('#approval').val(data.approval);
                     $('#id_cuti').val(data.id_cuti);
                     $('#jenis_cuti').val(data.jenis_cuti);
@@ -214,6 +235,8 @@
                 }
                 if (data.approval == 3) {
                     $('#btnSubmit').prop('disabled', true);
+                    $('#nopeg').val(data.nopeg);
+                    $('#name').val(data.name);
                     $('#alasan_tolak').prop('disabled', true).val(data.alasan_tolak);
                     $('#ifYes').show();
                     $('#approval').prop('disabled', true).val(data.approval);

@@ -65,6 +65,7 @@
                                     <th>Jam Masuk</th>
                                     <th>Jam Siang</th>
                                     <th>Jam Keluar</th>
+                                    <th>Kurang Jam</th>
                                     <th>Note</th>
                                 </thead>
                                 <tbody>
@@ -132,6 +133,10 @@
                     {
                         data: 'jam_pulang',
                         name: 'jam_pulang'
+                    },
+                    {
+                        data: 'kurang_jam',
+                        name: 'kurang_jam'
                     },
                     {
                         data: 'note',

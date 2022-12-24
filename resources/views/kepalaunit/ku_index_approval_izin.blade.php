@@ -60,6 +60,16 @@
                     @csrf
                     <div class="modal-body">
                         <div class="row g-1 mb-3">
+                            <div class="col-md-2">
+                                <span class="form-label" for="nopeg">No Pegawai</span>
+                                <input class="form-control" id="nopeg" name="nopeg" type="text"
+                                    required="" disabled>
+                            </div>
+                            <div class="col-md-7">
+                                <span class="form-label" for="name">Nama</span>
+                                <input class="form-control" id="name" name="name" type="text"
+                                    required="" disabled>
+                            </div>
                             <div class="col-md-12">
                                 <span class="form-label" for="jenis_izin">Jenis izin</span>
                                 <input class="form-control" id="jenis_izin" name="jenis_izin" type="text" required=""
@@ -88,7 +98,8 @@
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
+                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu dan hari libur
+                            nasional tidak
                             dihitung</span>
                         <button class="btn btn-primary" type="submit" id="btnSubmit">Setuju</button>
                     </div>
@@ -109,6 +120,8 @@
                     $('#btnSubmit').prop('disabled', true);
                 }
                 $('#ProsesIzin').modal('show');
+                $('#name').val(data.name);
+                $('#nopeg').val(data.nopeg);
                 $('#approval').val(data.approval);
                 $('#id_izinkerja').val(data.id_izinkerja);
                 $('#jenis_izin').val(data.jenis_izin);

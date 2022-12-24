@@ -38,7 +38,7 @@ class KuesionerController extends Controller
         //$kuesioner = KuesionerKinerja::get();
 
         //$kuesioner = DB::table('kuisioner_periode')->get();
-        $kuesioner = KuesionerKinerja::all();
+        $kuesioner = KuesionerKinerja::where('status','1')->get();
         //dd($kuesioner);
         return view('kuesioner.index_kuesioner', compact('kuesioner'));
     }
@@ -47,33 +47,34 @@ class KuesionerController extends Controller
     {
         $auth = auth()->user()->unit;
 
-        // $user = User::where('unit', '=', $auth)->get();
-
-        $user = User::select('*')
-            ->join('unit', 'unit.id', '=', 'users.unit')
-            ->where('role', '=', 'karyawan')
-            ->where('users.unit', auth()->user()->unit)
-            ->get();
-
-        //$unit = Unit::where('id', '=', $auth)->get();
         $jabatan = Jabatan::select('jabatan.*', 'jabatan.jabatan as j')
             ->join('users', 'jabatan.nopeg', '=', 'users.nopeg')
             ->where('users.unit', auth()->user()->unit)
             ->get();
 
-        // $jabatan = Jabatan::select('id', '=', $auth)
-        //     ->join('user as u', 'u.nopeg', '=', 'j.nopeg')
-        //     ->get();
+        $responden = RespondenKinerja::select('nopeg')->get();
+
+        $user = User::select('*')
+        ->join('unit', 'unit.id', '=', 'users.unit')
+        ->where('role', '=', 'karyawan')
+        ->where('users.unit', auth()->user()->unit)
+        ->whereNotExists(function($query){
+            $query->select(DB::raw('nopeg'))
+                  ->from('responden_kuisioner')
+                  ->whereRaw('users.nopeg = responden_kuisioner.nopeg');
+        })->get();
+
+        // dd($user);
+       
         $data = [
             'User' => $user,
             // 'Unit' => $unit,
             'Jabatan' => $jabatan
         ];
-        // dd($user);
         $kuesioner = KuesionerKinerja::with(['pertanyaan' => function ($query) {
             return $query->orderBy('nomor', 'asc');
         }, 'pertanyaan.jawaban'])->find($id);
-        return view('kuesioner.showKuesioner', compact('kuesioner', 'data'));
+        return view('kuesioner.showKuesioner', compact('kuesioner', 'data','responden'));
     }
 
     public function storeKuesioner(Request $request, $id)
@@ -177,44 +178,21 @@ class KuesionerController extends Controller
         return redirect()->back()->with('success', 'Data berhasil dihapus!');
     }
 
-    public function index_penilaian(Request $request)
+
+    public function index_penilaian()
     {
-        $auth = auth()->user()->unit;
-        $data = RespondenKinerja::select('*')
-            ->join('kuisioner_periode', 'kuisioner_periode.id', '=', 'responden_kuisioner.kuisioner_kinerja_id')
-            ->join('unit', 'unit.nama_unit', '=', 'responden_kuisioner.unit')
-            ->where('unit.id', auth()->user()->unit)
-            ->get();
+        $periode = KuesionerKinerja::get();
+        $data = RespondenKinerja::where('unit', auth()->user()->unit)->get();
+        // dd($data);
+        return view('kuesioner.hasil_penilaian', compact('periode'));
+    }
 
-        //Debugbar::info($data);
-
-        //$data = RespondenKinerja::all();
-
-        if ($request->ajax()) {
-            return DataTables::of($data)
-                ->addIndexColumn()
-
-                // ->addColumn('action', function ($data) {
-                //     $edit_dd = "<div class='d-block text-center'>
-                //         <a data-bs-toggle='modal' class='btn btn-success align-items-center editAK fa fa-pencil' data-id='$data->id_cuti' data-original-title='Edit' data-bs-target='#ProsesCuti'></a>
-                //         </div>";
-
-                //     return $edit_dd;
-                // })
-                ->addColumn('status', function ($row) {
-                    if ($row->indeks <= 1.5) {
-                        $apprv = '<span class="badge badge-warning">Kurang puas</span>';
-                    } else if ($row->indeks < 2 || $row->indeks <= 2.5) {
-                        $apprv = '<span class="badge badge-success">Puas</span>';
-                    } else if ($row->indeks >= 2.6) {
-                        $apprv = '<span class="badge badge-success">Sangat Puas</span>';
-                    }
-                    return $apprv;
-                })
-                ->rawColumns(['status'])
-                ->make(true);
-        }
-        return view('kuesioner.hasil_penilaian', compact('data'));
+    public function listPenilaian(Request $request)
+    {
+        $data =  RespondenKinerja::where('unit', auth()->user()->unit)->where('kuisioner_kinerja_id', $request->get('filter1'), '', 'and')->get();
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->toJson();
     }
 
     public function admHasilKuesioner()
