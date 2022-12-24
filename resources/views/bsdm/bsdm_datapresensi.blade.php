@@ -40,9 +40,18 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-sm-12 col-md-12 col-lg-6">
+                            <div class="col-xl-2">
+                                <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
+                                    name="filter3" id="filter3" required="">
+                                    <option selected="" disabled="" value="">Pilih Bulan </option>
+                                    @foreach ($bulan as $a)
+                                        <option value="{{ $a->bulan }}">{{ getNamaBulan($a->bulan) }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3">
                                 <button class="btn btn-outline-danger txt-red" type="button" id="clear"><i
-                                        class="icofont icofont-ui-delete"></i> Hapus</button>
+                                        class="icofont icofont-ui-delete"></i> Clear</button>
                                 {{-- <button class="btn btn-danger" type="submit" id="clear">Hapus</button> --}}
                             </div>
                         </div>
@@ -281,6 +290,7 @@
                     data: function(d) {
                         d.filter1 = $('#filter1').val() ? $('#filter1').val() : '<>';
                         d.filter2 = $('#filter2').val() ? $('#filter2').val() : '<>';
+                        d.filter3 = $('#filter3').val() ? $('#filter3').val() : '<>';
                         // d.search = $('input[type="search"]').val();
                     }
                 },
@@ -343,11 +353,15 @@
                 // location.reload();
                 $("#filter1").val('').trigger('change');
                 $("#filter2").val('').trigger('change');
+                $("#filter3").val('').trigger('change');
             });
             $("#filter1").on('change', function() {
                 table.draw();
             });
             $("#filter2").on('change', function() {
+                table.draw();
+            });
+            $("#filter3").on('change', function() {
                 table.draw();
             });
 

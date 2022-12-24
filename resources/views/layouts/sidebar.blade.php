@@ -142,6 +142,25 @@
                         </a>
 
                     </li>
+                    <li class="dropdown">
+                        <a class="nav-link menu-title @if (request()->routeIs('admin_bsdm.kuesioner.pertanyaanPeriode') ||
+                            request()->routeIs('admin_bsdm.kuesioner.admHasilKuesioner') ||
+                            request()->routeIs('admin_bsdm.kuesioner.pertanyaan')) active @endif "><i
+                                data-feather="file"></i><span>Kuesioner</span>
+                            <div class="according-menu"><i class="fa fa-angle-right"></i></div>
+                        </a>
+                        <ul class="nav-submenu menu-content" style="display:  @if (request()->routeIs('admin_bsdm.kuesioner.admHasilKuesioner') || request()->routeIs('admin_bsdm.kuesioner.pertanyaan') || request()->routeIs('admin_bsdm.kuesioner.pertanyaanPeriode')) block
+                    @else
+                        none @endif;">
+                            {{-- <li><a href="{{ route('admin_bsdm.indexKuesioner') }}" class="">Penilaian</a></li> --}}
+                            <li><a href="{{ route('admin_bsdm.kuesioner.pertanyaan') }}" class="">Pertanyaan</a></li>
+                            <li><a href="{{ route('admin_bsdm.kuesioner.pertanyaanPeriode') }}" class="">Daftar
+                                    Periode</a>
+                            </li>
+                            <li><a href="{{ route('admin_bsdm.kuesioner.admHasilKuesioner') }}" class="">Hasil
+                                    Kuesioner</a></li>
+                        </ul>
+                    </li>
                 @endif
 
                 @if (auth()->user()->role == 'karyawan')
