@@ -197,14 +197,16 @@ class KuesionerController extends Controller
 
     public function admHasilKuesioner()
     {
-        $data = RespondenKinerja::select('*')
-            ->join('kuisioner_periode', 'kuisioner_periode.id', '=', 'responden_kuisioner.kuisioner_kinerja_id')
-            ->join('unit', 'unit.nama_unit', '=', 'responden_kuisioner.unit')
-            ->get();
+        $periode = KuesionerKinerja::get();
+        return view('kuesioner.admhasil_penilaian',compact('periode'));
+    }
 
-        // dd($data)
-
-        return view('kuesioner.admhasil_penilaian', compact('data'));
+    public function admlistPenilaian(Request $request)
+    {
+        $data =  RespondenKinerja::where('kuisioner_kinerja_id', $request->get('filter1'), '', 'and')->get();
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->toJson();
     }
 
     public function pertanyaan()

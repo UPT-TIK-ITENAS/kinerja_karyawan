@@ -247,6 +247,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::prefix('kuesioner')->name('admin.kuesioner.')->group(function () {
             Route::get('/admHasilKuesioner', [KuesionerController::class, 'admHasilKuesioner'])->name('admHasilKuesioner');
+            Route::get('/admlistPenilaian', [KuesionerController::class, 'admlistPenilaian'])->name('admlistPenilaian');
             Route::get('/pertanyaanPeriode', [KuesionerController::class, 'pertanyaanPeriode'])->name('pertanyaanPeriode');
             Route::get('/editPeriode/{id}', [KuesionerController::class, 'editPeriode'])->name('editPeriode');
             Route::post('/updatePeriode', [KuesionerController::class, 'updatePeriode'])->name('updatePeriode');
