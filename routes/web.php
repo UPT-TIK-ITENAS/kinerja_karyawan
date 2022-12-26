@@ -367,8 +367,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/', [PejabatController::class, 'index'])->name('index');
 
         Route::get('/datapresensi', [PejabatController::class, 'index_datapresensi'])->name('datapresensi');
-        Route::get('/datarekapitulasi', [PejabatController::class, 'index_datarekapitulasi'])->name('datarekapitulasi');
         Route::get('/listdatapresensi', [PejabatController::class, 'listdatapresensi'])->name('listdatapresensi');
+        Route::get('/datarekapitulasi', [PejabatController::class, 'index_datarekapitulasi'])->name('datarekapitulasi');
+        Route::get('/listrekapkaryawan', [PejabatController::class, 'listrekapkaryawan'])->name('listrekapkaryawan');
+        Route::get('/detailrekap/{nopeg}', [RekapitulasiController::class, 'detailrekap'])->name('detailrekap');
+
+
+
+
         Route::get('/rekapitulasi', [PejabatController::class, 'rekapitulasi'])->name('rekapitulasi');
         Route::get('/listdatarekapitulasi', [PejabatController::class, 'listdatarekapitulasi'])->name('listdatarekapitulasi');
 
