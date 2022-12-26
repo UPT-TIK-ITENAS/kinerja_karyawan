@@ -26,7 +26,10 @@
                                 data-feather="monitor"></i><span>Master Data Presensi</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
-                        <ul class="nav-submenu menu-content" style="display: @if (request()->routeIs('admin.presensi.master') || request()->routeIs('admin.rekapitulasi.rekap') || request()->routeIs('admin.jadwal-satpam.index')) block
+                        <ul class="nav-submenu menu-content"
+                            style="display: @if (request()->routeIs('admin.presensi.master') ||
+                                request()->routeIs('admin.rekapitulasi.rekap') ||
+                                request()->routeIs('admin.jadwal-satpam.index')) block
                     @else
                         none @endif;">
                             <li><a href="{{ route('admin.presensi.master') }}" class="">Monitor Kehadiran</a>
@@ -60,7 +63,10 @@
                                 data-feather="file"></i><span>Kuesioner</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
-                        <ul class="nav-submenu menu-content" style="display:  @if (request()->routeIs('admin.kuesioner.admHasilKuesioner') || request()->routeIs('admin.kuesioner.pertanyaan') || request()->routeIs('admin.kuesioner.pertanyaanPeriode')) block
+                        <ul class="nav-submenu menu-content"
+                            style="display:  @if (request()->routeIs('admin.kuesioner.admHasilKuesioner') ||
+                                request()->routeIs('admin.kuesioner.pertanyaan') ||
+                                request()->routeIs('admin.kuesioner.pertanyaanPeriode')) block
                     @else
                         none @endif;">
                             {{-- <li><a href="{{ route('admin.indexKuesioner') }}" class="">Penilaian</a></li> --}}
@@ -77,7 +83,8 @@
                                 data-feather="edit-3"></i><span>Pengajuan</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
-                        <ul class="nav-submenu menu-content" style="display: @if (request()->routeIs('admin.izin-resmi.dataizin') || request()->routeIs('admin.cuti.datacuti')) block
+                        <ul class="nav-submenu menu-content"
+                            style="display: @if (request()->routeIs('admin.izin-resmi.dataizin') || request()->routeIs('admin.cuti.datacuti')) block
                     @else
                         none @endif;">
                             <li><a href="{{ route('admin.izin-resmi.dataizin') }}" class="">Izin</a>
@@ -109,7 +116,8 @@
                                 data-feather="monitor"></i><span>Master Data Presensi</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
-                        <ul class="nav-submenu menu-content" style="display: @if (request()->routeIs('admin_bsdm.presensi.master') || request()->routeIs('admin_bsdm.rekapitulasi.rekap')) block
+                        <ul class="nav-submenu menu-content"
+                            style="display: @if (request()->routeIs('admin_bsdm.presensi.master') || request()->routeIs('admin_bsdm.rekapitulasi.rekap')) block
                     @else
                         none @endif;">
                             <li><a href="{{ route('admin_bsdm.presensi.master') }}" class="">Monitor
@@ -124,7 +132,8 @@
                                 data-feather="edit-3"></i><span>Pengajuan</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
-                        <ul class="nav-submenu menu-content" style="display: @if (request()->routeIs('admin_bsdm.izin-resmi.dataizin') || request()->routeIs('admin_bsdm.cuti.datacuti')) block
+                        <ul class="nav-submenu menu-content"
+                            style="display: @if (request()->routeIs('admin_bsdm.izin-resmi.dataizin') || request()->routeIs('admin_bsdm.cuti.datacuti')) block
                     @else
                         none @endif;">
                             <li><a href="{{ route('admin_bsdm.izin-resmi.dataizin') }}" class="">Izin</a>
@@ -149,11 +158,15 @@
                                 data-feather="file"></i><span>Kuesioner</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
-                        <ul class="nav-submenu menu-content" style="display:  @if (request()->routeIs('admin_bsdm.kuesioner.admHasilKuesioner') || request()->routeIs('admin_bsdm.kuesioner.pertanyaan') || request()->routeIs('admin_bsdm.kuesioner.pertanyaanPeriode')) block
+                        <ul class="nav-submenu menu-content"
+                            style="display:  @if (request()->routeIs('admin_bsdm.kuesioner.admHasilKuesioner') ||
+                                request()->routeIs('admin_bsdm.kuesioner.pertanyaan') ||
+                                request()->routeIs('admin_bsdm.kuesioner.pertanyaanPeriode')) block
                     @else
                         none @endif;">
                             {{-- <li><a href="{{ route('admin_bsdm.indexKuesioner') }}" class="">Penilaian</a></li> --}}
-                            <li><a href="{{ route('admin_bsdm.kuesioner.pertanyaan') }}" class="">Pertanyaan</a></li>
+                            <li><a href="{{ route('admin_bsdm.kuesioner.pertanyaan') }}"
+                                    class="">Pertanyaan</a></li>
                             <li><a href="{{ route('admin_bsdm.kuesioner.pertanyaanPeriode') }}" class="">Daftar
                                     Periode</a>
                             </li>
@@ -242,8 +255,7 @@
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
                         <ul class="nav-submenu menu-content"
-                            style="display: @if (request()->routeIs('kepalaunit.datapresensi') ||
-                            request()->routeIs('kepalaunit.datarekapitulasi')) block @else none @endif;">
+                            style="display: @if (request()->routeIs('kepalaunit.datapresensi') || request()->routeIs('kepalaunit.datarekapitulasi')) block @else none @endif;">
                             <li><a id="a_active" href="{{ route('kepalaunit.datapresensi') }}"
                                     class="{{ routeActive('kepalaunit.datapresensi') }}">Data Presensi</a>
                             </li>
@@ -263,7 +275,8 @@
                         </a>
                         <ul class="nav-submenu menu-content"
                             style="display:  @if (request()->routeIs('kepalaunit.approval') ||
-                            request()->routeIs('kepalaunit.approvalIzin') || request()->routeIs('kepalaunit.approvalIzinTelat')) block @else none @endif;">
+                                request()->routeIs('kepalaunit.approvalIzin') ||
+                                request()->routeIs('kepalaunit.approvalIzinTelat')) block @else none @endif;">
                             <li><a href="{{ route('kepalaunit.approval') }}"
                                     class="{{ routeActive('kepalaunit.approval') }}">Approval Cuti</a>
                             </li>
@@ -281,10 +294,10 @@
                                 data-feather="file"></i><span>Kuesioner</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
-                        <ul class="nav-submenu menu-content" style="display: @if (request()->routeIs('kepalaunit.indexKuesioner') ||
-                            request()->routeIs('kepalaunit.hasilKuesioner')) block @else none @endif;">
+                        <ul class="nav-submenu menu-content"
+                            style="display: @if (request()->routeIs('kepalaunit.indexKuesioner') || request()->routeIs('kepalaunit.hasilKuesioner')) block @else none @endif;">
                             <li><a href="{{ route('kepalaunit.indexKuesioner') }}" class="">Penilaian</a>
-                            </li>   
+                            </li>
                             <li><a href="{{ route('kepalaunit.hasilKuesioner') }}" class="">Hasil Kuesioner</a>
                             </li>
                         </ul>
@@ -320,26 +333,14 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title @if (request()->routeIs('pejabat.izin') ||
-                            request()->routeIs('pejabat.store_izin') ||
-                            request()->routeIs('pejabat.cuti') ||
-                            request()->routeIs('pejabat.store_cuti')) active @endif"><i
+                        <a class="nav-link menu-title @if (request()->routeIs('pejabat.approval')) active @endif"><i
                                 data-feather="edit-3"></i><span>Pengajuan</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
                         <ul class="nav-submenu menu-content"
-                            style="display: @if (request()->routeIs('pejabat.izin') ||
-                                request()->routeIs('pejabat.store_izin') ||
-                                request()->routeIs('pejabat.cuti') ||
-                                request()->routeIs('pejabat.store_cuti')) block @else none @endif;">
-                            <li><a href="{{ route('pejabat.izin') }}"
-                                    class="{{ routeActive('pejabat.izin') }}">Izin</a>
-                            </li>
-                            <li><a href="{{ route('pejabat.cuti') }}"
-                                    class="{{ routeActive('pejabat.cuti') }}">Cuti</a>
-                            </li>
+                            style="display: @if (request()->routeIs('pejabat.approval')) block @else none @endif;">
                             <li><a href="{{ route('pejabat.approval') }}"
-                                    class="{{ routeActive('pejabat.approval') }}">Approval</a>
+                                    class="{{ routeActive('pejabat.approval') }}">Approval Cuti</a>
                             </li>
                         </ul>
                     </li>

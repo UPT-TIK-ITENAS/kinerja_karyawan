@@ -7,7 +7,7 @@
                     <h3>Master Data Presensi</h3>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">Sistem Laporan Presensi Karyawan</li>
-                        <li class="breadcrumb-item active">Data Rekapitulasi</li>
+                        <li class="breadcrumb-item active">Master Data Presensi</li>
                     </ol>
                 </div>
             </div>
@@ -26,14 +26,13 @@
                     </div>
                     <div class="card-body">
                         <div class="dt-ext table-responsive">
-                            <table class="dataTable" id="table-rekapitulasi">
+                            <table class="dataTable" id="table-rekap">
                                 <thead>
                                     <th width="5%">No.</th>
-                                    <th>Bulan</th>
-                                    <th>Tahun</th>
-                                    <th>Total Telat Pagi</th>
-                                    <th>Total Telat Siang</th>
-                                    <th>Total Telat Keseluruhan</th>
+                                    <th>Nopeg</th>
+                                    <th>Nama</th>
+                                    <th>Unit</th>
+                                    <th>Detail</th>
                                 </thead>
                                 <tbody>
 
@@ -50,56 +49,48 @@
 @section('scripts')
     @parent
     <script>
-        let table = $('#table-rekapitulasi').DataTable({
-            fixedHeader: true,
-            pageLength: 10,
-            responsive: true,
-            processing: true,
-            autoWidth: false,
-            serverSide: true,
-            columnDefs: [{
-                targets: 1,
-                width: "200px !important",
-            }, ],
-            ajax: "{{ route('karyawan.listdatarekapitulasi') }}",
-            columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    className: 'text-center',
-                    orderable: false,
-                    searchable: false,
-                },
-                {
-                    data: 'bulan',
-                    name: 'bulan',
-                },
-                {
-                    data: 'tahun',
-                    name: 'tahun',
-                    class: 'text-center',
-                },
+        $().ready(function() {
+            let table = $('#table-rekap').DataTable({
+                fixedHeader: true,
+                pageLength: 10,
+                responsive: true,
+                processing: true,
+                autoWidth: false,
+                serverSide: true,
+                columnDefs: [{
+                    targets: 1,
+                    width: "200px !important",
+                }, ],
+                ajax: "{{ route('pejabat.listrekapkaryawan') }}",
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        className: 'text-center',
+                        orderable: false,
+                        searchable: false,
+                    },
+                    {
+                        data: 'nopeg',
+                        name: 'nopeg'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'nama_unit',
+                        name: 'nama_unit'
+                    },
+                    {
+                        data: 'detail',
+                        name: 'detail'
+                    },
 
-                {
-                    data: 'total_telat_pagi',
-                    name: 'total_telat_pagi',
-                    class: 'text-center',
-                },
-                {
-                    data: 'total_telat_siang',
-                    name: 'total_telat_siang',
-                    class: 'text-center',
-                },
-                {
-                    data: 'total_telat',
-                    name: 'total_telat',
-                    class: 'text-center',
-                },
-
-            ],
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'print'
-            ]
+                ],
+            });
+            $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
+                console.log(message);
+            };
         });
     </script>
 @endsection
