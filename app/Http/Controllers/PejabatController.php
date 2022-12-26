@@ -413,14 +413,24 @@ class PejabatController extends Controller
 
     public function approveCuti(Request $request)
     {
-        Cuti::where('id_cuti', $request->id_cuti)->update([
-            'approval' => $request->approval,
-        ]);
-
+        $cuti = Cuti::where('id_cuti', $request->id_cuti)->first();
         if ($request->approval == 2) {
-            return redirect()->back()->with('success', 'Cuti disetujui');
+
+            $attendance = Attendance::where('nip', $cuti->nopeg)->whereBetween('tanggal', [$cuti->tgl_awal_cuti, $cuti->tgl_akhir_cuti])->get();
+            DB::beginTransaction();
+            $cuti->update([
+                'approval' => $request->approval,
+            ]);
+
+            foreach ($attendance as $key => $value) {
+                $value->update([
+                    'is_cuti' => 1,
+                ]);
+            }
+            DB::commit();
+            return redirect()->back()->with('success', 'Cuti disetujui!');
         } else {
-            Cuti::where('id_cuti', $request->id_cuti)->update([
+            $cuti->update([
                 'alasan_tolak' => $request->alasan_tolak,
             ]);
             return redirect()->back()->with('danger', 'Cuti ditolak');
