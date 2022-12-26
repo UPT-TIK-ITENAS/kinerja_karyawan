@@ -142,6 +142,25 @@
                         </a>
 
                     </li>
+                    <li class="dropdown">
+                        <a class="nav-link menu-title @if (request()->routeIs('admin_bsdm.kuesioner.pertanyaanPeriode') ||
+                            request()->routeIs('admin_bsdm.kuesioner.admHasilKuesioner') ||
+                            request()->routeIs('admin_bsdm.kuesioner.pertanyaan')) active @endif "><i
+                                data-feather="file"></i><span>Kuesioner</span>
+                            <div class="according-menu"><i class="fa fa-angle-right"></i></div>
+                        </a>
+                        <ul class="nav-submenu menu-content" style="display:  @if (request()->routeIs('admin_bsdm.kuesioner.admHasilKuesioner') || request()->routeIs('admin_bsdm.kuesioner.pertanyaan') || request()->routeIs('admin_bsdm.kuesioner.pertanyaanPeriode')) block
+                    @else
+                        none @endif;">
+                            {{-- <li><a href="{{ route('admin_bsdm.indexKuesioner') }}" class="">Penilaian</a></li> --}}
+                            <li><a href="{{ route('admin_bsdm.kuesioner.pertanyaan') }}" class="">Pertanyaan</a></li>
+                            <li><a href="{{ route('admin_bsdm.kuesioner.pertanyaanPeriode') }}" class="">Daftar
+                                    Periode</a>
+                            </li>
+                            <li><a href="{{ route('admin_bsdm.kuesioner.admHasilKuesioner') }}" class="">Hasil
+                                    Kuesioner</a></li>
+                        </ul>
+                    </li>
                 @endif
 
                 @if (auth()->user()->role == 'karyawan')
@@ -223,7 +242,8 @@
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
                         <ul class="nav-submenu menu-content"
-                            style="display: @if (request()->routeIs('kepalaunit.datapresensi') || request()->routeIs('kepalaunit.datarekapitulasi')) active @endif;">
+                            style="display: @if (request()->routeIs('kepalaunit.datapresensi') ||
+                            request()->routeIs('kepalaunit.datarekapitulasi')) block @else none @endif;">
                             <li><a id="a_active" href="{{ route('kepalaunit.datapresensi') }}"
                                     class="{{ routeActive('kepalaunit.datapresensi') }}">Data Presensi</a>
                             </li>
@@ -235,15 +255,15 @@
                     </li>
 
                     <li class="dropdown">
-                        <a class="nav-link menu-title @if (request()->routeIs('kepalaunit.izin') ||
-                            request()->routeIs('kepalaunit.store_izin') ||
-                            request()->routeIs('kepalaunit.cuti') ||
-                            request()->routeIs('kepalaunit.store_cuti')) active @endif"><i
+                        <a class="nav-link menu-title @if (request()->routeIs('kepalaunit.approvalIzin') ||
+                            request()->routeIs('kepalaunit.approval') ||
+                            request()->routeIs('kepalaunit.approvalIzinTelat')) active @endif"><i
                                 data-feather="edit-3"></i><span>Pengajuan</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
                         <ul class="nav-submenu menu-content"
-                            style="display: @if (request()->routeIs('kepalaunit.izin'))  @endif;">
+                            style="display:  @if (request()->routeIs('kepalaunit.approval') ||
+                            request()->routeIs('kepalaunit.approvalIzin') || request()->routeIs('kepalaunit.approvalIzinTelat')) block @else none @endif;">
                             <li><a href="{{ route('kepalaunit.approval') }}"
                                     class="{{ routeActive('kepalaunit.approval') }}">Approval Cuti</a>
                             </li>
@@ -257,16 +277,14 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title @if (request()->routeIs('kepalaunit.pertanyaanPeriode')) active @endif "><i
+                        <a class="nav-link menu-title @if (request()->routeIs('kepalaunit.hasilKuesioner') || request()->routeIs('kepalaunit.indexKuesioner')) active @endif "><i
                                 data-feather="file"></i><span>Kuesioner</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
-                        <ul class="nav-submenu menu-content" style="display: none;">
+                        <ul class="nav-submenu menu-content" style="display: @if (request()->routeIs('kepalaunit.indexKuesioner') ||
+                            request()->routeIs('kepalaunit.hasilKuesioner')) block @else none @endif;">
                             <li><a href="{{ route('kepalaunit.indexKuesioner') }}" class="">Penilaian</a>
-                            </li>
-                            <li><a href="{{ route('kepalaunit.pertanyaanPeriode') }}" class="">Daftar
-                                    Pertanyaan</a>
-                            </li>
+                            </li>   
                             <li><a href="{{ route('kepalaunit.hasilKuesioner') }}" class="">Hasil Kuesioner</a>
                             </li>
                         </ul>

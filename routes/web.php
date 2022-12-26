@@ -247,6 +247,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::prefix('kuesioner')->name('admin.kuesioner.')->group(function () {
             Route::get('/admHasilKuesioner', [KuesionerController::class, 'admHasilKuesioner'])->name('admHasilKuesioner');
+            Route::get('/admlistPenilaian', [KuesionerController::class, 'admlistPenilaian'])->name('admlistPenilaian');
             Route::get('/pertanyaanPeriode', [KuesionerController::class, 'pertanyaanPeriode'])->name('pertanyaanPeriode');
             Route::get('/editPeriode/{id}', [KuesionerController::class, 'editPeriode'])->name('editPeriode');
             Route::post('/updatePeriode', [KuesionerController::class, 'updatePeriode'])->name('updatePeriode');
@@ -315,6 +316,22 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/', [RekapitulasiController::class, 'index'])->name('rekap');
             Route::get('/listrekapkaryawan', [RekapitulasiController::class, 'listrekapkaryawan'])->name('listrekapkaryawan');
             Route::get('/detailrekap/{nopeg}', [RekapitulasiController::class, 'detailrekap'])->name('detailrekap');
+        });
+
+        Route::prefix('kuesioner')->name('kuesioner.')->group(function () {
+            Route::get('/admHasilKuesioner', [KuesionerController::class, 'admHasilKuesioner'])->name('admHasilKuesioner');
+            Route::get('/admlistPenilaian', [KuesionerController::class, 'admlistPenilaian'])->name('admlistPenilaian');
+            Route::get('/pertanyaanPeriode', [KuesionerController::class, 'pertanyaanPeriode'])->name('pertanyaanPeriode');
+            Route::get('/editPeriode/{id}', [KuesionerController::class, 'editPeriode'])->name('editPeriode');
+            Route::post('/updatePeriode', [KuesionerController::class, 'updatePeriode'])->name('updatePeriode');
+            Route::post('/createPeriode', [KuesionerController::class, 'createPeriode'])->name('createPeriode');
+            Route::get('/destroyPeriode/{id}', [KuesionerController::class, 'destroyPeriode'])->name('destroyPeriode');
+            Route::get('/pertanyaan', [KuesionerController::class, 'pertanyaan'])->name('pertanyaan');
+            Route::get('/editPertanyaan/{id}', [KuesionerController::class, 'editPertanyaan'])->name('editPertanyaan');
+            Route::post('/updatePertanyaan', [KuesionerController::class, 'updatePertanyaan'])->name('updatePertanyaan');
+            Route::get('/jawaban/{id}', [KuesionerController::class, 'jawaban'])->name('jawaban');
+            Route::get('/editJawaban/{id}', [KuesionerController::class, 'editJawaban'])->name('editJawaban');
+            Route::post('/updateJawaban', [KuesionerController::class, 'updateJawaban'])->name('updateJawaban');
         });
     });
 
@@ -426,6 +443,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/kuesioner/kinerja/{id}', [KuesionerController::class, 'showKuesioner'])->name('showKuesioner');
         Route::post('/kuesioner/approveKuesioner/{id}', [KuesionerController::class, 'storeKuesioner'])->name('storeKuesioner');
         Route::get('/kuesioner/hasilKuesioner', [KuesionerController::class, 'index_penilaian'])->name('hasilKuesioner');
+        Route::get('/kuesioner/listPenilaian', [KuesionerController::class, 'listPenilaian'])->name('listPenilaian');
 
         // Route::get('/dataizin', [KepalaUnitController::class, 'dataizin'])->name('kepalaunit.dataizin');
         // Route::get('/editizin/{id_izinkerja}', [KepalaUnitController::class, 'editizin'])->name('kepalaunit.editizin');

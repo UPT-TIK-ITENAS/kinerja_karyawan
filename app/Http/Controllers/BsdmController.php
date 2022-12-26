@@ -30,14 +30,19 @@ class BsdmController extends Controller
         $user = User::SelectRaw('users.*,unit.*,jabatan.nopeg as peg_jab, jabatan.nama as name_jab')->join('unit', 'users.unit', '=', 'unit.id')->join('jabatan', 'users.atasan', '=', 'jabatan.id')->where('status', '1')->get();
 
         $attendance = Attendance::select('tanggal')->groupby('tanggal')->get();
+        $bulan = Attendance::select(DB::raw('MONTH(tanggal) as bulan'))->groupby('bulan')->get();
         // get attendance limit 10
         // dd(Attendance::with('user')->limit(10)->get());
-        return view('bsdm.bsdm_datapresensi', compact('user', 'attendance'));
+        return view('bsdm.bsdm_datapresensi', compact('user', 'attendance','bulan'));
     }
 
     public function bsdm_listkaryawan(Request $request)
     {
-        $data = Attendance::query()->with(['user', 'izin'])->whereRelation('user', 'status', '=', 1)->where('nip', $request->get('filter1'), '', 'and')->where('tanggal', $request->get('filter2'), '', 'and')->orderby('tanggal', 'asc');
+        $data = Attendance::query()->with(['user', 'izin'])->whereRelation('user', 'status', '=', 1)
+        ->where('nip', $request->get('filter1'), '', 'and')
+        ->where('tanggal', $request->get('filter2'), '', 'and')
+        ->where(DB::raw('MONTH(tanggal)'), $request->get('filter3'), '', 'and')
+        ->orderby('tanggal', 'asc');
         $days = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
         return DataTables::of($data)
             ->addIndexColumn()

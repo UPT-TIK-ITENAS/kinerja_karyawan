@@ -130,6 +130,29 @@ class KepalaUnitController extends Controller
                 return $total;
             })
 
+            ->addColumn('kurang_jam', function ($row) {
+
+                date_default_timezone_set('UTC');
+                $masuk = strtotime($row->telat_masuk);
+                $siang = strtotime($row->telat_siang);
+                $durasi = strtotime($row->durasi);
+
+                if($row->hari != "6" && $row->hari != "0"){
+                    if($row->durasi == "04:00:00"){
+                        $result = date("H:i:s", $siang + $masuk + $durasi);
+                    }elseif($row->durasi == "00:00:00"){
+                        $result = "08:00:00";
+                    }else{
+                        $result = date("H:i:s", $siang + $masuk);
+                    }
+                }else{
+                    $result = "00:00:00";
+                }
+                
+                
+                return $result;
+                
+            })
             ->addColumn('latesiang', function ($row) {
                 $siang = Carbon::parse($row->jam_siang)->format('H:i:s');
                 $keluar1 = Carbon::parse('13:00:00')->format('H:i:s');
@@ -173,7 +196,7 @@ class KepalaUnitController extends Controller
                 }
                 return $note;
             })
-            ->rawColumns(['latemasuk', 'days', 'latesiang', 'latesore', 'note'])
+            ->rawColumns(['latemasuk','kurang_jam', 'days', 'latesiang', 'latesore', 'note'])
             ->toJson();
     }
 
