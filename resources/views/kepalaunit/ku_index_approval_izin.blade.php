@@ -56,19 +56,20 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('kepalaunit.approveIzin') }}" method="POST">
+                <form autocomplete="off" class="needs-validation" novalidate=""
+                    action="{{ route('kepalaunit.approveIzin') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-1 mb-3">
                             <div class="col-md-2">
                                 <span class="form-label" for="nopeg">No Pegawai</span>
-                                <input class="form-control" id="nopeg" name="nopeg" type="text"
-                                    required="" disabled>
+                                <input class="form-control" id="nopeg" name="nopeg" type="text" required=""
+                                    disabled>
                             </div>
                             <div class="col-md-7">
                                 <span class="form-label" for="name">Nama</span>
-                                <input class="form-control" id="name" name="name" type="text"
-                                    required="" disabled>
+                                <input class="form-control" id="name" name="name" type="text" required=""
+                                    disabled>
                             </div>
                             <div class="col-md-12">
                                 <span class="form-label" for="jenis_izin">Jenis izin</span>

@@ -18,7 +18,7 @@
         <div class="card-header pb-0">
             <h5>Data Izin</h5>
         </div>
-        <form action="{{ route('admin.storeizinkehadiran', $data->id) }}" method="POST" name="tmbh"
+        <form autocomplete="off" action="{{ route('admin.storeizinkehadiran', $data->id) }}" method="POST" name="tmbh"
             enctype="multipart/form-data">
             @csrf
             <div class="card-body">
@@ -88,7 +88,8 @@
                             <div class="form-check form-check-success">
                                 <input type="checkbox" class="form-check-input" id="validasi" name="validasi"
                                     value="1">
-                                <label class="form-check-label" for="colorCheck3" required>Dengan ini saya menyatakan dengan
+                                <label class="form-check-label" for="colorCheck3" required>Dengan ini saya menyatakan
+                                    dengan
                                     benar bahwa saya izin</label>
                             </div>
                         </div>
@@ -98,7 +99,7 @@
 
                 <button class="btn btn-primary" type="submit" id="btnSubmit" name="btnSubmit">Simpan</button>
             </div>
-            <form>
+            <form autocomplete="off">
     </div>
 @endsection
 

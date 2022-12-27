@@ -20,7 +20,8 @@
                 <div class="card">
                     <div class="card-header">
                         <p><b>Sinkronisasi Mesin Sidik Jari</b> </p>
-                        <form action="{{ route('admin.SyncAndInsertBiometricWithDuration') }}" method="POST">
+                        <form autocomplete="off" action="{{ route('admin.SyncAndInsertBiometricWithDuration') }}"
+                            method="POST">
                             @csrf
                             <div class="form-group row">
                                 <label class="col-sm-1 col-form-label">Tanggal</label>
@@ -38,7 +39,7 @@
                                 </div>
                             </div>
                         </form>
-                        <form action="{{ route('admin.recalculateTelat') }}" method="POST">
+                        <form autocomplete="off" action="{{ route('admin.recalculateTelat') }}" method="POST">
                             @csrf
                             <div class="form-group row">
                                 <label class="col-sm-1 col-form-label">Tanggal</label>
@@ -131,8 +132,8 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('admin.presensi.storeizinkehadiran') }}"
-                    method="POST">
+                <form autocomplete="off" class="needs-validation" novalidate=""
+                    action="{{ route('admin.presensi.storeizinkehadiran') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-2 mb-3">
@@ -213,8 +214,8 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('admin.presensi.storeAttendance') }}"
-                    method="POST">
+                <form autocomplete="off" class="needs-validation" novalidate=""
+                    action="{{ route('admin.presensi.storeAttendance') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-1 mb-3">

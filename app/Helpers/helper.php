@@ -485,8 +485,7 @@ if (!function_exists('lateSiang2')) {
                 $telat_pulang = Carbon::parse("$tanggal 00:00:00");
 
                 if ($jam_siang->greaterThan($base_time_siang_akhir)) {
-                    $telat_siang = $jam_siang->diff($base_time_siang_akhir)->format("%H:%I:%S");
-                    $telat_siang = Carbon::parse($telat_siang);
+                    $telat_siang = Carbon::parse('00:00:00');
                 } else {
                     $telat_siang = Carbon::parse("$tanggal 00:00:00");
                 }
@@ -500,6 +499,43 @@ if (!function_exists('lateSiang2')) {
         } else {
             $total = Carbon::parse('00:00:00')->format('H:i:s');
             return $total;
+        }
+    }
+}
+
+if (!function_exists('getDurasi')) {
+    function getDurasi($jam_masuk, $jam_siang, $jam_pulang)
+    {
+        if (!empty($jam_masuk) && !empty($jam_siang) && !empty($jam_pulang)) {
+            return '08:00:00';
+        }
+        // Jika tidak ada sama sekali
+        else if (empty($jam_masuk) && empty($jam_siang) && empty($jam_pulang)) {
+            return '00:00:00';
+        }
+        // Jika hanya ada sore yang terisi
+        else if (empty($jam_masuk) && empty($jam_siang) && !empty($jam_pulang)) {
+            return '00:00:00';
+        }
+        // Jika hanya ada siang yang terisi
+        else if (empty($jam_masuk) && !empty($jam_siang) && empty($jam_pulang)) {
+            return '00:00:00';
+        }
+        // Jika hanya ada pagi yang terisi
+        else if (!empty($jam_masuk) && empty($jam_siang) && empty($jam_pulang)) {
+            return '00:00:00';
+        }
+        // Jika hanya ada siang dan sore terisi
+        else if (empty($jam_masuk) && !empty($jam_siang) && !empty($jam_pulang)) {
+            return '04:00:00';
+        }
+        // Jika hanya ada pagi dan sore terisi
+        else if (!empty($jam_masuk) && empty($jam_siang) && !empty($jam_pulang)) {
+            return '04:00:00';
+        }
+        // Jika hanya ada pagi dan siang terisi
+        else if (!empty($jam_masuk) && !empty($jam_siang) && empty($jam_pulang)) {
+            return '04:00:00';
         }
     }
 }

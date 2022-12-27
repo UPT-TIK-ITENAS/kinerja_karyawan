@@ -59,25 +59,24 @@ class BsdmController extends Controller
             })
             ->addColumn('kurang_jam', function ($row) {
 
-                date_default_timezone_set('UTC');
-                $masuk = strtotime($row->telat_masuk);
-                $siang = strtotime($row->telat_siang);
-                $durasi = strtotime($row->durasi);
-
-                if ($row->hari != "6" && $row->hari != "0") {
-                    if ($row->durasi == "04:00:00") {
-                        $result = date("H:i:s", $siang + $masuk + $durasi);
-                    } elseif ($row->durasi == "00:00:00") {
-                        $result = "08:00:00";
-                    } else {
-                        $result = date("H:i:s", $siang + $masuk);
-                    }
+                $tanggal = Carbon::now()->format('Y-m-d');
+                $durasi = Carbon::parse("$tanggal $row->durasi");
+                $telat_masuk = Carbon::parse("$tanggal $row->telat_masuk");
+                $telat_pulang = Carbon::parse("$tanggal $row->telat_pulang");
+                if ($durasi->equalTo("$tanggal 08:00:00")) {
+                    $base_time = Carbon::parse("$tanggal 00:00:00");
+                    $total = $base_time->addMinutes($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+                    $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
+                } else if ($durasi->equalTo("$tanggal 04:00:00")) {
+                    $base_time = Carbon::parse("$tanggal 04:00:00");
+                    $total = $base_time->addMinutes($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+                    $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
                 } else {
-                    $result = "00:00:00";
+                    $base_time = Carbon::parse("$tanggal 08:00:00");
+                    $total = $durasi->addMinutes($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+                    $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
                 }
-
-
-                return $result;
+                return $total->format('H:i:s');
             })
             ->addColumn('jenis', function ($row) {
                 $hasIzin = $row->izin?->count();

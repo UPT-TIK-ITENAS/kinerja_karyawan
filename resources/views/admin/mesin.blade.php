@@ -84,7 +84,8 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" action="{{ route('admin.mesin-sidikjari.updatemesin') }}" method="POST">
+                <form autocomplete="off" class="needs-validation" action="{{ route('admin.mesin-sidikjari.updatemesin') }}"
+                    method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-2 mb-3">
@@ -137,7 +138,8 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" action="{{ route('admin.mesin-sidikjari.createmesin') }}" method="POST">
+                <form autocomplete="off" class="needs-validation"
+                    action="{{ route('admin.mesin-sidikjari.createmesin') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-2 mb-3">

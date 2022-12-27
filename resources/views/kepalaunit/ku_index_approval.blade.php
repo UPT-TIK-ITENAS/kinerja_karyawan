@@ -55,19 +55,20 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('kepalaunit.approveCuti') }}" method="POST">
+                <form autocomplete="off" class="needs-validation" novalidate=""
+                    action="{{ route('kepalaunit.approveCuti') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-1 mb-3">
                             <div class="col-md-2">
                                 <span class="form-label" for="nopeg">No Pegawai</span>
-                                <input class="form-control" id="nopeg" name="nopeg" type="text"
-                                    required="" disabled>
+                                <input class="form-control" id="nopeg" name="nopeg" type="text" required=""
+                                    disabled>
                             </div>
                             <div class="col-md-7">
                                 <span class="form-label" for="name">Nama</span>
-                                <input class="form-control" id="name" name="name" type="text"
-                                    required="" disabled>
+                                <input class="form-control" id="name" name="name" type="text" required=""
+                                    disabled>
                             </div>
                             <div class="col-md-3">
                                 <span class="form-label" for="jenis_cuti">Jenis Cuti</span>
@@ -76,7 +77,7 @@
                                 <input type="hidden" id="lama_cuti">
                             </div>
                             <input type="hidden" id="id_cuti" name="id_cuti">
-                            
+
                         </div>
 
                         <div class="row g-2 mb-3">
@@ -92,8 +93,8 @@
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="total_cuti">Total Hari</span>
-                                <input class="form-control" id="total_cuti" name="total_cuti" type="number"
-                                    required="" disabled>
+                                <input class="form-control" id="total_cuti" name="total_cuti" type="number" required=""
+                                    disabled>
                             </div>
                         </div>
                         <div class="row g-2 mb-3">
@@ -122,13 +123,13 @@
                             <input type="hidden" id="lama_cuti">
                             <div class="invalid-feedback">Pilih salah satu !</div>
                         </div>
-                        
+
                         <div class="col-md-12" id="ifYes" style="display: none;">
                             <span class="form-label" for="alasan_tolak">Alasan Tolak</span>
                             <textarea name="alasan_tolak" id="alasan_tolak" name="alasan_tolak" class="form-control col-12" required=""></textarea>
                         </div>
-                       
-                        
+
+
                     </div>
                     <div class="modal-footer justify-content-between">
                         <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu dan hari libur

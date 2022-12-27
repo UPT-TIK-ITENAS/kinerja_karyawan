@@ -38,12 +38,17 @@ Route::group(['name' => 'auth'], function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
 Route::get('/test', function () {
-    dd("Selesai!");
-    $cek_status = DB::table('attendance2')->get();
+    // $jam_masuk = '08:00:00';
+    // $jam_siang = '13:39:00';
+    // $jam_pulang = '16:50:00';
+    // $telat_masuk = lateMasuk($jam_masuk, $jam_siang, 3);
+    // $telat_siang = lateSiang2($jam_siang, $jam_pulang, 3);
+    // dd($jam_masuk, $jam_siang, $jam_pulang, $telat_masuk, $telat_siang);
+    $cek_status = DB::table('attendance_backup')->get();
     foreach ($cek_status as $cs) {
         // Jika full terisi
         if (!empty($cs->jam_masuk) && !empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
-            DB::table('attendance_baru')->insert([
+            DB::table('attendance')->insert([
                 'nip' => $cs->nip,
                 'hari' => $cs->hari,
                 'tanggal' => $cs->tanggal,
@@ -58,7 +63,7 @@ Route::get('/test', function () {
         }
         // Jika tidak ada sama sekali
         else if (empty($cs->jam_masuk) && empty($cs->jam_siang) && empty($cs->jam_pulang)) {
-            DB::table('attendance_baru')->insert([
+            DB::table('attendance')->insert([
                 'nip' => $cs->nip,
                 'hari' => $cs->hari,
                 'tanggal' => $cs->tanggal,
@@ -73,7 +78,7 @@ Route::get('/test', function () {
         }
         // Jika hanya ada sore yang terisi
         else if (empty($cs->jam_masuk) && empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
-            DB::table('attendance_baru')->insert([
+            DB::table('attendance')->insert([
                 'nip' => $cs->nip,
                 'hari' => $cs->hari,
                 'tanggal' => $cs->tanggal,
@@ -88,7 +93,7 @@ Route::get('/test', function () {
         }
         // Jika hanya ada siang yang terisi
         else if (empty($cs->jam_masuk) && !empty($cs->jam_siang) && empty($cs->jam_pulang)) {
-            DB::table('attendance_baru')->insert([
+            DB::table('attendance')->insert([
                 'nip' => $cs->nip,
                 'hari' => $cs->hari,
                 'tanggal' => $cs->tanggal,
@@ -103,7 +108,7 @@ Route::get('/test', function () {
         }
         // Jika hanya ada pagi yang terisi
         else if (!empty($cs->jam_masuk) && empty($cs->jam_siang) && empty($cs->jam_pulang)) {
-            DB::table('attendance_baru')->insert([
+            DB::table('attendance')->insert([
                 'nip' => $cs->nip,
                 'hari' => $cs->hari,
                 'tanggal' => $cs->tanggal,
@@ -118,7 +123,7 @@ Route::get('/test', function () {
         }
         // Jika hanya ada siang dan sore terisi
         else if (empty($cs->jam_masuk) && !empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
-            DB::table('attendance_baru')->insert([
+            DB::table('attendance')->insert([
                 'nip' => $cs->nip,
                 'hari' => $cs->hari,
                 'tanggal' => $cs->tanggal,
@@ -133,7 +138,7 @@ Route::get('/test', function () {
         }
         // Jika hanya ada pagi dan sore terisi
         else if (!empty($cs->jam_masuk) && empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
-            DB::table('attendance_baru')->insert([
+            DB::table('attendance')->insert([
                 'nip' => $cs->nip,
                 'hari' => $cs->hari,
                 'tanggal' => $cs->tanggal,
@@ -148,7 +153,7 @@ Route::get('/test', function () {
         }
         // Jika hanya ada pagi dan siang terisi
         else if (!empty($cs->jam_masuk) && !empty($cs->jam_siang) && empty($cs->jam_pulang)) {
-            DB::table('attendance_baru')->insert([
+            DB::table('attendance')->insert([
                 'nip' => $cs->nip,
                 'hari' => $cs->hari,
                 'tanggal' => $cs->tanggal,

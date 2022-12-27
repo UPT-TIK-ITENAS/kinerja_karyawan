@@ -25,7 +25,8 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{ route('admin.jadwal-satpam.storeByUser', $data->nopeg) }}" method="POST">
+                        <form autocomplete="off" action="{{ route('admin.jadwal-satpam.storeByUser', $data->nopeg) }}"
+                            method="POST">
                             <div class="row mb-4">
                                 @csrf
                                 <div class="col-xl-3 col-md-6 col-12">
@@ -136,7 +137,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="theme-form">
+                    <form autocomplete="off" class="theme-form">
                         <div class="mb-3">
                             <label class="col-form-label pt-0" for="read_name">Nama</label>
                             <input class="form-control" id="read_name" name="read_name" type="text" readonly>

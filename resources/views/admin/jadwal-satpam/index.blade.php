@@ -87,7 +87,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="theme-form">
+                    <form autocomplete="off" class="theme-form">
                         <div class="mb-3">
                             <label class="col-form-label pt-0" for="read_name">Nama</label>
                             <input class="form-control" id="read_name" name="read_name" type="text" readonly>
@@ -129,7 +129,8 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="theme-form" action="{{ route('admin.jadwal-satpam.store') }}" method="POST">
+                    <form autocomplete="off" class="theme-form" action="{{ route('admin.jadwal-satpam.store') }}"
+                        method="POST">
                         @csrf
                         <div class="mb-3">
                             <label class="col-form-label pt-0" for="nip">NIP</label>

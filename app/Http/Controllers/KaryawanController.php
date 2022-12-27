@@ -10,6 +10,7 @@ use App\Models\IzinKerja;
 use App\Models\JadwalSatpam;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
+use App\Models\Kuesioner;
 use App\Models\KuesionerKinerja;
 use App\Models\QR;
 use App\Models\Unit;
@@ -41,8 +42,7 @@ class KaryawanController extends Controller
     {
         $periode = KuesionerKinerja::where('status', '1')->first();
         $data = collect(DB::select("CALL HitungTotalHariKerja('" . auth()->user()->nopeg . "', '$periode->batas_awal', '$periode->batas_akhir')"))->where('bulan', date('m'))->first();
-
-
+        $data_all = collect(DB::select("CALL HitungTotalHariKerja('" . auth()->user()->nopeg . "', '$periode->batas_awal', '$periode->batas_akhir')"));
         return view('karyawan.k_index', compact('data'));
     }
     public function index_datapresensi()
@@ -80,26 +80,24 @@ class KaryawanController extends Controller
                     }
                 })
                 ->addColumn('kurang_jam', function ($row) {
-
-                    date_default_timezone_set('UTC');
-                    $masuk = strtotime($row->telat_masuk);
-                    $siang = strtotime($row->telat_siang);
-                    $durasi = strtotime($row->durasi);
-
-                    if ($row->hari != "6" && $row->hari != "0") {
-                        if ($row->durasi == "04:00:00") {
-                            $result = date("H:i:s", $siang + $masuk + $durasi);
-                        } elseif ($row->durasi == "00:00:00") {
-                            $result = "08:00:00";
-                        } else {
-                            $result = date("H:i:s", $siang + $masuk);
-                        }
+                    $tanggal = Carbon::now()->format('Y-m-d');
+                    $durasi = Carbon::parse("$tanggal $row->durasi");
+                    $telat_masuk = Carbon::parse("$tanggal $row->telat_masuk");
+                    $telat_pulang = Carbon::parse("$tanggal $row->telat_pulang");
+                    if ($durasi->equalTo("$tanggal 08:00:00")) {
+                        $base_time = Carbon::parse("$tanggal 00:00:00");
+                        $total = $base_time->addMinutes($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+                        $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
+                    } else if ($durasi->equalTo("$tanggal 04:00:00")) {
+                        $base_time = Carbon::parse("$tanggal 04:00:00");
+                        $total = $base_time->addMinutes($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+                        $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
                     } else {
-                        $result = "00:00:00";
+                        $base_time = Carbon::parse("$tanggal 08:00:00");
+                        $total = $durasi->addMinutes($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+                        $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
                     }
-
-
-                    return $result;
+                    return $total->format('H:i:s');
                 })
                 ->addColumn('note', function ($row) {
                     if ($row->status == 0) {
@@ -298,7 +296,12 @@ class KaryawanController extends Controller
         if ($tipe == 'detail') {
             return DataTables::of($new_data)->addIndexColumn()->toJson();
         } elseif ($tipe == 'total') {
-            return DataTables::of($komponen_penilaian)->addIndexColumn()->toJson();
+            return DataTables::of($komponen_penilaian)
+                ->addIndexColumn()
+                ->editColumn('point', function ($row) {
+                    return 0;
+                })
+                ->toJson();
         } else {
             return response()->json([
                 'message' => 'Data tidak ditemukan!'
