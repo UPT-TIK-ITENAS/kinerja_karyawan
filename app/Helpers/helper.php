@@ -112,9 +112,9 @@ if (!function_exists('routeActive')) {
 if (!function_exists('getAksi')) {
     function getAksi($id, $tipe, $user = null)
     {
-        $printizin =  route('admin.printizinkerja', $id);
-        $printcuti =  route('admin.printcuti', $id);
-        $print =  route('admin.printizin', $id);
+        $printizin =  route('admin.print.izinkerja', $id);
+        $printcuti =  route('admin.print.cuti', $id);
+        $print =  route('admin.print.izin', $id);
         $delete_url = route('admin.libur-nasional.destroylibur', $id);
 
         $for_html = "";
@@ -153,9 +153,9 @@ if (!function_exists('getAksi')) {
 if (!function_exists('getAksiKu')) {
     function getAksiKu($id, $tipe, $user = null)
     {
-        $printizin =  route('admin.printizinkerja', $id);
-        $printcuti =  route('admin.printcuti', $id);
-        $print =  route('admin.printizin', $id);
+        $printizin =  route('admin.print.izinkerja', $id);
+        $printcuti =  route('admin.print.cuti', $id);
+        $print =  route('admin.print.izin', $id);
         $batal_cuti = route('admin.batal_cuti', $id);
         $batal_izin = route('admin.batal_izin', $id);
         $delete_url = route('admin.destroylibur', $id);

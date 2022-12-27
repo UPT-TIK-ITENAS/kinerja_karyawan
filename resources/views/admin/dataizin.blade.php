@@ -137,14 +137,13 @@
                                     <div class="invalid-feedback">Wajib di centang !</div>
                                 </div>
                             </div>
-                            <p class="fw-bold">Bila pengajuan izin/cuti dimulai dari akhir bulan hingga awal bulan
-                                depan-nya, dilakukan
-                                pengajuan dua kali agar dapat terdata tiap bulannya.</p>
+                            <p class="fw-bold">Apabila pengajuan izin/cuti pada 2 bulan yang berbeda, maka harus mengajukan
+                                2(dua) kali pada form yang berbeda, agar dapat terdata setiap bulannya.</p>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu dan libur
-                            nasional tidak
+                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu, libur nasional
+                            dan cuti bersama tidak
                             dihitung</span>
                         <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
                     </div>
@@ -222,10 +221,10 @@
         });
 
 
-        
+
         daterangepicker('#tgl_awal_izin', 'auto', false, '#tambahIzin');
         daterangepicker('#tgl_akhir_izin', 'auto', false, '#tambahIzin');
-        
+
         $("#tgl_awal_izin").on('change', function(e) {
             e.preventDefault();
             let tgl_awal = $(this).val();

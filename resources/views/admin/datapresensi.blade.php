@@ -162,6 +162,7 @@
                                     <option value='' disabled selected>Pilih Status</option>
                                     <option value="1">Izin</option>
                                     <option value="2">Sidik Jari</option>
+                                    <option value="3">Dispensasi</option>
                                 </select>
 
                             </div>
@@ -223,8 +224,8 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation my-5" novalidate="" action="{{ route('admin.presensi.storeAttendance') }}"
-                    method="POST">
+                <form class="needs-validation my-5" novalidate=""
+                    action="{{ route('admin.presensi.storeAttendance') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-1 mb-3">

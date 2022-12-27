@@ -111,7 +111,7 @@ class KaryawanController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $hasIzin = $row->izin?->count();
-                    $print =  route('admin.printizin', $row->id);
+                    $print =  route('admin.print.izin', $row->id);
                     $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
 
                     if ($hasIzin == null && $workingdays <= 2) {

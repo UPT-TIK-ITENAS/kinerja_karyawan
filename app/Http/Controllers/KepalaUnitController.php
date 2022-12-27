@@ -71,22 +71,22 @@ class KepalaUnitController extends Controller
 
         // $attendance = Attendance::select('tanggal')->groupby('tanggal')->get();
         $attendance = Attendance::select('tanggal')
-        ->where(DB::raw('date_format(tanggal,"%a")'),'!=','Sat')
-        ->where(DB::raw('date_format(tanggal,"%a")'),'!=','Sun')
-        ->groupby('tanggal')->get();
+            ->where(DB::raw('date_format(tanggal,"%a")'), '!=', 'Sat')
+            ->where(DB::raw('date_format(tanggal,"%a")'), '!=', 'Sun')
+            ->groupby('tanggal')->get();
         // dd($attendance);
         $bulan = Attendance::select(DB::raw('MONTH(tanggal) as bulan'))->groupby('bulan')->get();
 
         // $a =  Attendance::whereMonth('tanggal','=','7')->get();
         // dd($a);
-        return view('kepalaunit.ku_datapresensi', compact('user', 'attendance','bulan'));
+        return view('kepalaunit.ku_datapresensi', compact('user', 'attendance', 'bulan'));
     }
 
     public function listdatapresensi(Request $request)
     {
         // $attendances = Attendance::query()->with(['user', 'izin'])
         //     ->whereRelation('user', 'status', '=', 1)
-        
+
         // ->whereRaw('MONTH(tanggal) ='. $request->get('filter3'))
         //     ->where('nip', $request->get('filter1'), '', 'and')
         //     ->where('tanggal', $request->get('filter2'), '', 'and')
@@ -137,21 +137,20 @@ class KepalaUnitController extends Controller
                 $siang = strtotime($row->telat_siang);
                 $durasi = strtotime($row->durasi);
 
-                if($row->hari != "6" && $row->hari != "0"){
-                    if($row->durasi == "04:00:00"){
+                if ($row->hari != "6" && $row->hari != "0") {
+                    if ($row->durasi == "04:00:00") {
                         $result = date("H:i:s", $siang + $masuk + $durasi);
-                    }elseif($row->durasi == "00:00:00"){
+                    } elseif ($row->durasi == "00:00:00") {
                         $result = "08:00:00";
-                    }else{
+                    } else {
                         $result = date("H:i:s", $siang + $masuk);
                     }
-                }else{
+                } else {
                     $result = "00:00:00";
                 }
-                
-                
+
+
                 return $result;
-                
             })
             ->addColumn('latesiang', function ($row) {
                 $siang = Carbon::parse($row->jam_siang)->format('H:i:s');
@@ -196,7 +195,7 @@ class KepalaUnitController extends Controller
                 }
                 return $note;
             })
-            ->rawColumns(['latemasuk','kurang_jam', 'days', 'latesiang', 'latesore', 'note'])
+            ->rawColumns(['latemasuk', 'kurang_jam', 'days', 'latesiang', 'latesore', 'note'])
             ->toJson();
     }
 
@@ -231,7 +230,7 @@ class KepalaUnitController extends Controller
         return view('kepalaunit.ku_detailrekapitulasi', compact('periode', 'nopeg'));
     }
 
-    public function listdatarekapitulasi(Request $request,$nopeg)
+    public function listdatarekapitulasi(Request $request, $nopeg)
     {
         $periode = KuesionerKinerja::where('id', $request->periode ?? 2)->where('status', '1')->first();
         $data = DB::select("CALL HitungTotalHariKerja('$nopeg', '$periode->batas_awal', '$periode->batas_akhir')");
@@ -470,7 +469,7 @@ class KepalaUnitController extends Controller
         $data = Izin::where('id_attendance', $id)->first();
         $dataqr = QR::where('id_attendance', $id)->first();
 
-        $pdf = PDF::loadview('admin.printizin', compact('data', 'dataqr'))->setPaper('A5', 'landscape');
+        $pdf = PDF::loadview('admin.print.izin', compact('data', 'dataqr'))->setPaper('A5', 'landscape');
         return $pdf->stream();
     }
 

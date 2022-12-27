@@ -25,7 +25,7 @@ class BsdmController extends Controller
         $this->middleware('auth');
     }
 
-    public function bsdm_datapresensi() 
+    public function bsdm_datapresensi()
     {
         $user = User::SelectRaw('users.*,unit.*,jabatan.nopeg as peg_jab, jabatan.nama as name_jab')->join('unit', 'users.unit', '=', 'unit.id')->join('jabatan', 'users.atasan', '=', 'jabatan.id')->where('status', '1')->get();
 
@@ -33,16 +33,16 @@ class BsdmController extends Controller
         $bulan = Attendance::select(DB::raw('MONTH(tanggal) as bulan'))->groupby('bulan')->get();
         // get attendance limit 10
         // dd(Attendance::with('user')->limit(10)->get());
-        return view('bsdm.bsdm_datapresensi', compact('user', 'attendance','bulan'));
+        return view('bsdm.bsdm_datapresensi', compact('user', 'attendance', 'bulan'));
     }
 
     public function bsdm_listkaryawan(Request $request)
     {
         $data = Attendance::query()->with(['user', 'izin'])->whereRelation('user', 'status', '=', 1)
-        ->where('nip', $request->get('filter1'), '', 'and')
-        ->where('tanggal', $request->get('filter2'), '', 'and')
-        ->where(DB::raw('MONTH(tanggal)'), $request->get('filter3'), '', 'and')
-        ->orderby('tanggal', 'asc');
+            ->where('nip', $request->get('filter1'), '', 'and')
+            ->where('tanggal', $request->get('filter2'), '', 'and')
+            ->where(DB::raw('MONTH(tanggal)'), $request->get('filter3'), '', 'and')
+            ->orderby('tanggal', 'asc');
         $days = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
         return DataTables::of($data)
             ->addIndexColumn()
@@ -64,21 +64,20 @@ class BsdmController extends Controller
                 $siang = strtotime($row->telat_siang);
                 $durasi = strtotime($row->durasi);
 
-                if($row->hari != "6" && $row->hari != "0"){
-                    if($row->durasi == "04:00:00"){
+                if ($row->hari != "6" && $row->hari != "0") {
+                    if ($row->durasi == "04:00:00") {
                         $result = date("H:i:s", $siang + $masuk + $durasi);
-                    }elseif($row->durasi == "00:00:00"){
+                    } elseif ($row->durasi == "00:00:00") {
                         $result = "08:00:00";
-                    }else{
+                    } else {
                         $result = date("H:i:s", $siang + $masuk);
                     }
-                }else{
+                } else {
                     $result = "00:00:00";
                 }
-                
-                
+
+
                 return $result;
-                
             })
             ->addColumn('jenis', function ($row) {
                 $hasIzin = $row->izin?->count();
@@ -97,7 +96,7 @@ class BsdmController extends Controller
             })
             ->addColumn('action', function ($row) {
                 $hasIzin = $row->izin?->count();
-                $print =  route('admin.printizin', $row->id);
+                $print =  route('admin.print.izin', $row->id);
                 if ($hasIzin == null) {
                     $for_html = '';
                 } else {
@@ -122,8 +121,7 @@ class BsdmController extends Controller
                     return $apprv = '';
                 }
             })
-            ->rawColumns(['latemasuk', 'days','kurang_jam','jenis', 'action_edit', 'action', 'status', 'note'])
+            ->rawColumns(['latemasuk', 'days', 'kurang_jam', 'jenis', 'action_edit', 'action', 'status', 'note'])
             ->toJson();
     }
-
 }

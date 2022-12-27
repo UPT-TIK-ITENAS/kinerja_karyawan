@@ -94,7 +94,7 @@ class AdminController extends Controller
             })
             ->addColumn('action', function ($row) {
                 $hasIzin = $row->izin?->count();
-                $print =  route('admin.printizin', $row->id);
+                $print =  route('admin.print.izin', $row->id);
                 if ($hasIzin == null) {
                     $for_html = '
                     <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
@@ -212,7 +212,7 @@ class AdminController extends Controller
             })
             ->addColumn('action', function ($row) {
                 $hasIzin = $row->izin?->count();
-                $print =  route('admin.printizin', $row->id);
+                $print =  route('admin.print.izin', $row->id);
                 if ($hasIzin == null) {
                     $for_html = '
                     <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
@@ -251,8 +251,8 @@ class AdminController extends Controller
 
     public function storeizinkehadiran(Request $request)
     {
+        $qrcode_filenamepeg = 'qr-karyawan' . base64_encode($request->nip . '-' . $request->id . '-' . date('Y-m-d H:i:s') . ')') . '.svg';
 
-        $qrcode_filenamepeg = 'qr-' . $request->nip . '-' . $request->id . '.svg';
         QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nip . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
 
         if ($request->jenis == 2) {
@@ -268,7 +268,7 @@ class AdminController extends Controller
                 'jenis' => $request->jenis,
                 'qrcode_peg' => $qrcode_filenamepeg,
             ]);
-        } else {
+        } elseif ($request->jenis == 1) {
             Izin::insert([
                 'id_attendance' => $request->id,
                 'nopeg' => $request->nip,
@@ -283,26 +283,24 @@ class AdminController extends Controller
                 'jenis' => $request->jenis,
                 'qrcode_peg' => $qrcode_filenamepeg,
             ]);
-        }
-
-
-        return redirect()->route('admin.presensi.datapresensi')->with('success', 'Pengajuan Izin Berhasil!');
-    }
-
-    public function printizin($id)
-    {
-        $data = Izin::join('users', 'izin.nopeg', '=', 'users.nopeg')->where('id_attendance', $id)->first();
-        $atasan = Jabatan::selectRaw('users.atasan,jabatan.*')->join('users', 'users.atasan', '=', 'jabatan.id')->where('users.atasan', $data->atasan)->first();
-        // dd($data);
-
-        if ($data->jenis == 1) {
-            $pdf = PDF::loadview('admin.printizin', compact('data', 'atasan'))->setPaper('A5', 'landscape');
-            return $pdf->stream();
         } else {
-            $pdf = PDF::loadview('admin.printizinsj', compact('data', 'atasan'))->setPaper('A5', 'landscape');
-            return $pdf->stream();
+            Izin::insert([
+                'id_attendance' => $request->id,
+                'nopeg' => $request->nip,
+                'name' => $request->name,
+                'unit' => $request->unit,
+                'tanggal_izin' => date('Y-m-d H:i:s', strtotime($request->tanggal_izin)),
+                'alasan' => $request->alasan,
+                'validasi' => 1,
+                'approval' => 0,
+                'jenis' => $request->jenis,
+                'qrcode_peg' => $qrcode_filenamepeg,
+            ]);
         }
+
+        return redirect()->back()->with('success', 'Pengajuan Izin Berhasil!');
     }
+
     //END DATA PRESENSI
 
     function getWorkingDays($startDate, $endDate)
@@ -366,15 +364,9 @@ class AdminController extends Controller
                     return getAksi($row->id_izinkerja, 'izin');
                 })
                 ->addColumn('status', function ($row) {
-                    if ($row->approval == 1) {
-                        $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
-                    } else {
-                        $batal_izin = route('admin.izin-resmi.batal_izin', $row->id_izinkerja);
-                        $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalizin" title="Batal Izin" href="' . $batal_izin . '">X</a>';
-                    }
-
-                    return $for_html;
+                    return getAprv($row->id_izinkerja, 'izin');
                 })
+
                 ->rawColumns(['print', 'status'])
                 ->make(true);
         }
@@ -382,8 +374,9 @@ class AdminController extends Controller
 
     public function storeizin(Request $request)
     {
-        $qrcode_filenamepeg = 'qr-' . explode('-', $request->nopeg)[0] . '-' . explode('|', $request->jenis_izin)[0] . '.svg';
-        $qrcode_filenameat = 'qr-' . $request->atasan . '-' . explode('-', $request->nopeg)[0] .  explode('|', $request->jenis_izin)[0] . '.svg';
+        $qrcode_filenamepeg = 'qr-karyawan' . base64_encode(explode('-', $request->nopeg)[0] . '-' . explode('|', $request->jenis_izin)[0] . '-' . date('Y-m-d H:i:s') . ')') . '.svg';
+        $qrcode_filenameat = 'qr-atasan' . base64_encode($request->atasan . '-' . explode('-', $request->nopeg)[0] .  explode('|', $request->jenis_izin)[0] . '-' . date('Y-m-d H:i:s') . ')') . '.svg';
+
         if (auth()->user()->role == 'admin_bsdm') {
             QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
             QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->atasan . '-' .  $request->name_jab . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenameat));
@@ -430,20 +423,9 @@ class AdminController extends Controller
             ]);
         }
 
-
-        return redirect()->route('admin.izin-resmi.dataizin')->with('success', 'Pengajuan Izin Berhasil!');
+        return redirect()->back()->with('success', 'Pengajuan Izin Berhasil!');
     }
 
-    public function printizinkerja($id)
-    {
-        $data = IzinKerja::join('users', 'izin_kerja.nopeg', '=', 'users.nopeg')->join('unit', 'izin_kerja.unit', '=', 'unit.id')->where('id_izinkerja', $id)->first();
-        // $atasan = User::selectRaw('jabatan.*')->join('jabatan', 'jabatan.id', 'users.atasan')->where('jabatan.nopeg', $data->atasan)->first();
-        $atasan = Jabatan::selectRaw('users.atasan,jabatan.*')->join('users', 'users.atasan', '=', 'jabatan.id')->where('users.atasan', $data->atasan)->first();
-        $jenisizin = JenisIzin::where('jenis_izin', '!=', 'sakit')->get();
-
-        $pdf = PDF::loadview('admin.printizinkerja', compact('data', 'jenisizin', 'atasan'))->setPaper('potrait');
-        return $pdf->stream();
-    }
 
     public function batal_izin($id)
     {
@@ -502,18 +484,9 @@ class AdminController extends Controller
                     return getAksi($row->id_cuti, 'cuti');
                 })
                 ->addColumn('status', function ($row) {
-                    $batal_cuti = route('admin.cuti.batal_cuti', $row->id);
-                    if ($row->approval == 1) {
-                        $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
-                    } elseif ($row->approval == 2) {
-                        $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
-                    } elseif ($row->approval == 3) {
-                        $for_html = '<span class="badge badge-danger">Ditolak</span><br><p><b>note</b> : ' . $row->alasan_tolak . '</p>';
-                    } else {
-                        $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalcuti" title="Batal Cuti" href="' . $batal_cuti . '">X</a>';
-                    }
-                    return $for_html;
+                    return getAprv($row->id_cuti, 'cuti');
                 })
+
                 ->rawColumns(['action', 'status'])
                 ->make(true);
         }
@@ -560,9 +533,9 @@ class AdminController extends Controller
 
     public function storecuti(Request $request)
     {
-        $qrcode_filenamepeg = 'qr-' . explode('-', $request->nopeg)[0] . '-' . explode('|', $request->jenis_cuti)[0] . '.svg';
-        $qrcode_filenameat = 'qr-' . $request->atasan . '-' . explode('-', $request->nopeg)[0] .  explode('|', $request->jenis_cuti)[0] . '.svg';
-        $qrcode_filenameatlang = 'qr-' . $request->atasan_lang . '-' . explode('-', $request->nopeg)[0] .  explode('|', $request->jenis_cuti)[0] . '.svg';
+        $qrcode_filenamepeg = 'qr-karyawan' . base64_encode(explode('-', $request->nopeg)[0] . '-' . explode('|', $request->jenis_cuti)[0] . '-' . date('Y-m-d H:i:s') . ')') . '.svg';
+        $qrcode_filenameat = 'qr-atasan' . base64_encode($request->atasan . '-' . explode('-', $request->nopeg)[0] .  explode('|', $request->jenis_cuti)[0] . '-' . date('Y-m-d H:i:s') . ')') . '.svg';
+        $qrcode_filenameatlang = 'qr-pejabat' . base64_encode($request->atasan_lang . '-' . explode('-', $request->nopeg)[0] .  explode('|', $request->jenis_cuti)[0] . '-' . date('Y-m-d H:i:s') . ')') . '.svg';
 
         if (auth()->user()->role == 'admin_bsdm') {
             QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . explode('-', $request->nopeg)[0] . '-' . explode('-', $request->nopeg)[1] . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
@@ -616,28 +589,17 @@ class AdminController extends Controller
                 'qrcode_peg' => $qrcode_filenamepeg,
             ]);
         }
-        return redirect()->route('admin.cuti.datacuti')->with('success', 'Add Data Berhasil!');
+        return redirect()->back()->with('success', 'Berhasil menambah data cuti');
     }
 
-    public function printcuti($id)
-    {
-
-        $data = Cuti::join('unit', 'cuti.unit', '=', 'unit.id')->join('users', 'cuti.nopeg', '=', 'users.nopeg')->join('jenis_cuti', 'cuti.jenis_cuti', '=', 'jenis_cuti.id_jeniscuti')->where('id_cuti', $id)->first();
-        $atasan = Jabatan::selectRaw('users.atasan,jabatan.*')->join('users', 'users.atasan', '=', 'jabatan.id')->where('users.atasan', $data->atasan)->first();
-        $atasan_lang = Jabatan::selectRaw('users.atasan_lang,jabatan.*')->join('users', 'users.atasan_lang', '=', 'jabatan.id')->where('users.atasan_lang', $data->atasan_lang)->first();
-        // dd($atasan_lang);
-
-        $pdf = PDF::loadview('admin.printcuti', compact('data', 'atasan', 'atasan_lang'))->setPaper('potrait');
-        return $pdf->stream();
-    }
 
     public function batal_cuti($id)
     {
         $delete = Cuti::where('id_cuti', $id)->delete();
         if ($delete) {
-            return redirect()->back()->with('success', 'Berhasil membatalkan izin');
+            return redirect()->back()->with('success', 'Berhasil membatalkan cuti');
         } else {
-            return redirect()->back()->with('error', 'Gagal membatalkan izin');
+            return redirect()->back()->with('error', 'Gagal membatalkan cuti');
         }
     }
 

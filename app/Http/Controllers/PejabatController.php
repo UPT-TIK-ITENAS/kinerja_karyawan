@@ -76,7 +76,7 @@ class PejabatController extends Controller
             })
             ->addColumn('action', function ($row) {
                 $hasIzin = $row->izin?->count();
-                $print =  route('admin.printizin', $row->id);
+                $print =  route('admin.print.izin', $row->id);
                 if ($hasIzin == null) {
                     $for_html = '
                 <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
@@ -287,7 +287,7 @@ class PejabatController extends Controller
         $data = Izin::where('id_attendance', $id)->first();
         $dataqr = QR::where('id_attendance', $id)->first();
 
-        $pdf = PDF::loadview('admin.printizin', compact('data', 'dataqr'))->setPaper('A5', 'landscape');
+        $pdf = PDF::loadview('admin.print.izin', compact('data', 'dataqr'))->setPaper('A5', 'landscape');
         return $pdf->stream();
     }
 

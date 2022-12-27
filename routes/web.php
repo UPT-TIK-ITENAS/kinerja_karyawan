@@ -6,8 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\BiometricController;
 use App\Http\Controllers\BsdmController;
-use App\Http\Controllers\PengajuanIzinController;
-use App\Http\Controllers\PengajuanCutiController;
+use App\Http\Controllers\PrintController;
 use App\Http\Controllers\KepalaUnitController;
 use App\Http\Controllers\BiometricAllController;
 use App\Http\Controllers\MesinController;
@@ -166,12 +165,6 @@ Route::get('/test', function () {
     dd("Selesai!");
 });
 Route::group(['middleware' => 'auth'], function () {
-
-
-    Route::get('printizin/{id}', [AdminController::class, 'printizin'])->name('admin.printizin');
-    Route::get('printizinkerja/{id}', [AdminController::class, 'printizinkerja'])->name('admin.printizinkerja');
-    Route::get('printcuti/{id}', [AdminController::class, 'printcuti'])->name('admin.printcuti');
-
     Route::group(['prefix' => 'admin'], function () {
 
         Route::get('/', [AdminController::class, 'index'])->name('admin.admin_v');
@@ -188,6 +181,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/datacuti/{id}', [AdminController::class, 'datacuti_show'])->name('admin.datacuti.show');
         Route::post('/datacuti/pengganti', [AdminController::class, 'datacuti_pengganti'])->name('admin.datacuti.pengganti');
         Route::get('/datacuti/calendar/{id}/{nopeg}', [AdminController::class, 'datacuti_calendar'])->name('admin.datacuti.calendar');
+
+        Route::prefix('print')->name('admin.print.')->group(function () {
+            Route::get('izin/{id}', [PrintController::class, 'printizin'])->name('izin');
+            Route::get('izinkerja/{id}', [PrintController::class, 'printizinkerja'])->name('izinkerja');
+            Route::get('cuti/{id}', [PrintController::class, 'printcuti'])->name('cuti');
+        });
 
         Route::prefix('jadwal-satpam')->name('admin.jadwal-satpam.')->group(function () {
             Route::get('/list', [\App\Http\Controllers\JadwalSatpamController::class, 'list'])->name('list');
