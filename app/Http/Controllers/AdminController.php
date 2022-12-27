@@ -392,7 +392,7 @@ class AdminController extends Controller
         }
 
         if (auth()->user()->role == 'admin_bsdm') {
-            IzinKerja::insert([
+            $izin = IzinKerja::create([
                 'nopeg' => explode('-', $request->nopeg)[0],
                 'name' =>  explode('-', $request->nopeg)[1],
                 'unit' =>  explode('-', $request->nopeg)[2],
@@ -406,6 +406,14 @@ class AdminController extends Controller
                 'qrcode_peg' => $qrcode_filenamepeg,
                 'qrcode_kepala' => $qrcode_filenameat,
             ]);
+            $attendance = Attendance::where('nip', $izin->nopeg)->whereBetween('tanggal', [$izin->tgl_awal_izin, $izin->tgl_akhir_izin])->get();
+            DB::beginTransaction();
+            foreach ($attendance as $key => $value) {
+                $value->update([
+                    'is_izin' => 1,
+                ]);
+            }
+            DB::commit();
         } else {
             IzinKerja::insert([
                 'nopeg' => explode('-', $request->nopeg)[0],
@@ -565,7 +573,7 @@ class AdminController extends Controller
         }
 
         if (auth()->user()->role == 'admin_bsdm') {
-            Cuti::insert([
+            $cuti = Cuti::create([
                 'nopeg' => explode('-', $request->nopeg)[0],
                 'name' =>  explode('-', $request->nopeg)[1],
                 'unit' =>  explode('-', $request->nopeg)[2],
@@ -582,6 +590,15 @@ class AdminController extends Controller
                 'qrcode_kepala' => $qrcode_filenameat,
                 'qrcode_pejabat' => $qrcode_filenameatlang,
             ]);
+
+            $attendance = Attendance::where('nip', $cuti->nopeg)->whereBetween('tanggal', [$cuti->tgl_awal_cuti, $cuti->tgl_akhir_cuti])->get();
+            DB::beginTransaction();
+            foreach ($attendance as $key => $value) {
+                $value->update([
+                    'is_cuti' => 1,
+                ]);
+            }
+            DB::commit();
         } else {
             Cuti::insert([
                 'nopeg' => explode('-', $request->nopeg)[0],
@@ -599,8 +616,6 @@ class AdminController extends Controller
                 'qrcode_peg' => $qrcode_filenamepeg,
             ]);
         }
-
-
         return redirect()->route('admin.cuti.datacuti')->with('success', 'Add Data Berhasil!');
     }
 
