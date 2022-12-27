@@ -15,7 +15,7 @@
         <div class="card-header pb-0">
             <h5>Form Cuti</h5>
         </div>
-        <form action="{{ route('admin.storecuti') }}" method="POST" enctype="multipart/form-data">
+        <form autocomplete="off" action="{{ route('admin.storecuti') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="card-body">
                 <div class="row">
@@ -80,7 +80,8 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="theme-form" action="{{ route('admin.datacuti.pengganti') }}" method="POST">
+                    <form autocomplete="off" class="theme-form" action="{{ route('admin.datacuti.pengganti') }}"
+                        method="POST">
                         @csrf
                         <input type="hidden" name="id_jadwal" id="id_jadwal" value="">
                         <div class="mb-3">

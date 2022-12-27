@@ -80,7 +80,7 @@
                 <div class="left-menu-header col">
                     {{-- <ul>
               <li>
-                <form class="form-inline search-form">
+                <form autocomplete="off" class="form-inline search-form">
                   <div class="search-bg"><i class="fa fa-search"></i>
                     <input class="form-control-plaintext" placeholder="Search here.....">
                   </div>

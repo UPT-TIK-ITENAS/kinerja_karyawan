@@ -95,8 +95,8 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('kepalaunit.approveIzinTelat') }}"
-                    method="POST">
+                <form autocomplete="off" class="needs-validation" novalidate=""
+                    action="{{ route('kepalaunit.approveIzinTelat') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="alert alert-danger" id="lebihHari" style="display: none;">
@@ -133,21 +133,21 @@
                             </div>
                         </div>
                         <!-- <div class="mb-3">
-                                <div class="form-check">
-                                    <div class="checkbox p-0">
-                                        <div class="checkbox checkbox-dark">
-                                            <input id="cb_valid" class="form-check-input" type="checkbox" required>
-                                            <label class="form-check-label" for="cb_valid">Pengajuan izin dilakukan oleh diri
-                                                sendiri dan secara sadar sesuai dengan ketentuan yang berlaku</label>
+                                    <div class="form-check">
+                                        <div class="checkbox p-0">
+                                            <div class="checkbox checkbox-dark">
+                                                <input id="cb_valid" class="form-check-input" type="checkbox" required>
+                                                <label class="form-check-label" for="cb_valid">Pengajuan izin dilakukan oleh diri
+                                                    sendiri dan secara sadar sesuai dengan ketentuan yang berlaku</label>
+                                            </div>
+                                            <div class="invalid-feedback">Wajib di centang !</div>
                                         </div>
-                                        <div class="invalid-feedback">Wajib di centang !</div>
                                     </div>
-                                </div>
-                            </div> -->
+                                </div> -->
                     </div>
                     <div class="modal-footer justify-content-between">
                         <!-- <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
-                                dihitung</span> -->
+                                    dihitung</span> -->
                         <button class="btn btn-primary" type="submit" id="btnSubmit">Setuju</button>
                     </div>
                 </form>

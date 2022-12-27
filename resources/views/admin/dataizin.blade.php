@@ -66,8 +66,8 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('admin.izin-resmi.storeizin') }}"
-                    method="POST">
+                <form autocomplete="off" class="needs-validation" novalidate=""
+                    action="{{ route('admin.izin-resmi.storeizin') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="alert alert-danger" id="lebihHari" style="display: none;">
@@ -222,10 +222,10 @@
         });
 
 
-        
+
         daterangepicker('#tgl_awal_izin', 'auto', false, '#tambahIzin');
         daterangepicker('#tgl_akhir_izin', 'auto', false, '#tambahIzin');
-        
+
         $("#tgl_awal_izin").on('change', function(e) {
             e.preventDefault();
             let tgl_awal = $(this).val();

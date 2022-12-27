@@ -102,8 +102,8 @@
                             </div>
                         </div>
 
-                        <form class="settings-form" action="{{ route('kepalaunit.storeKuesioner', $kuesioner->id) }}"
-                            method="POST">
+                        <form autocomplete="off" class="settings-form"
+                            action="{{ route('kepalaunit.storeKuesioner', $kuesioner->id) }}" method="POST">
                             @csrf
                             <div class="app-card-body py-2 px-4">
                                 <div class="row g-2 mb-3">

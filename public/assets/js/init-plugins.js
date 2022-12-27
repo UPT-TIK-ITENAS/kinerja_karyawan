@@ -9,7 +9,7 @@ const daterangepicker = (
         singleDatePicker: true,
         timePicker: false,
         showDropdowns: true,
-        autoUpdateInput: true,
+        autoUpdateInput: false,
         autoApply: true,
         locale: {
             cancelLabel: "Hapus",

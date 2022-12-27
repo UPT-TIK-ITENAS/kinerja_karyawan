@@ -73,7 +73,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" action="" method="POST">
+                <form autocomplete="off" class="needs-validation" action="" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-2 mb-3">

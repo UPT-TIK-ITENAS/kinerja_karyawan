@@ -113,8 +113,8 @@
                                 <thead>
                                     <th>No.</th>
                                     <th>Bulan</th>
-                                    <th>Total Hari Hadir Kerja</th>
                                     <th>Total Hari Kerja</th>
+                                    <th>Total Hari Hadir Kerja</th>
                                     <th>Total Hari Mangkir</th>
                                     <th>Cuti</th>
                                     <th>Izin</th>
@@ -137,25 +137,6 @@
                         <hr>
                     </div>
                     <div class="card-body pt-0">
-                        <div class="my-3">
-                            <h6 class="font-primary">Detail Penilaian</h6>
-                            <div class="dt-ext table-responsive">
-                                <table class="table table-bordered" id="table-penilaian">
-                                    <thead>
-                                        <th>No.</th>
-                                        <th>Bulan</th>
-                                        <th>Poin Izin</th>
-                                        <th>Poin Sakit</th>
-                                        <th>Poin Mangkir</th>
-                                        <th>Poin Kurang Jam</th>
-                                    </thead>
-                                    <tbody>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
                         <div class="my-3">
                             <h6 class="font-primary">Total Penilaian</h6>
                             <div class="dt-ext table-responsive">
@@ -220,12 +201,12 @@
                     name: 'nama_bulan'
                 },
                 {
-                    data: 'total_masuk_karyawan',
-                    name: 'total_masuk_karyawan'
-                },
-                {
                     data: 'total_hari_kerja_per_bulan',
                     name: 'total_hari_kerja_per_bulan'
+                },
+                {
+                    data: 'total_masuk_karyawan',
+                    name: 'total_masuk_karyawan'
                 },
                 {
                     data: 'total_hari_mangkir',
@@ -242,57 +223,6 @@
                 {
                     data: 'total_izin',
                     name: 'total_izin'
-                },
-                {
-                    data: 'kurang_jam',
-                    name: 'kurang_jam'
-                },
-            ],
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'print'
-            ]
-        });
-
-        let tablePenilaian = $('#table-penilaian').DataTable({
-            fixedHeader: true,
-            pageLength: 10,
-            responsive: true,
-            processing: true,
-            autoWidth: false,
-            serverSide: true,
-            columnDefs: [{
-                targets: 1,
-                width: "200px !important",
-            }, ],
-            ajax: {
-                url: "{{ route('karyawan.penilaian_detail', 'detail') }}",
-                data: function(d) {
-                    d.periode = $('#filter1').val() ? $('#filter1').val() : '2';
-                }
-            },
-            columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    className: 'text-center',
-                    orderable: false,
-                    searchable: false,
-                },
-                {
-                    data: 'bulan',
-                    name: 'bulan'
-                },
-                {
-                    data: 'izin',
-                    name: 'izin'
-                },
-                {
-                    data: 'sakit',
-                    name: 'sakit'
-                },
-                {
-                    data: 'mangkir',
-                    name: 'mangkir'
                 },
                 {
                     data: 'kurang_jam',
@@ -384,7 +314,6 @@
 
         $("#filter1").on('change', function() {
             table.draw();
-            tablePenilaian.draw();
             tableTotalPenilaian.draw();
         });
     </script>

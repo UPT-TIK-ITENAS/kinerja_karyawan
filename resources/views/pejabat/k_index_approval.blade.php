@@ -59,7 +59,8 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>
-                <form class="needs-validation" novalidate="" action="{{ route('pejabat.approveCuti') }}" method="POST">
+                <form autocomplete="off" class="needs-validation" novalidate="" action="{{ route('pejabat.approveCuti') }}"
+                    method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="row g-1 mb-3">
@@ -100,8 +101,8 @@
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="total_cuti">Total Hari</span>
-                                <input class="form-control" id="total_cuti" name="total_cuti" type="number" required=""
-                                    disabled>
+                                <input class="form-control" id="total_cuti" name="total_cuti" type="number"
+                                    required="" disabled>
                             </div>
                         </div>
                         <div class="row g-2 mb-3">
