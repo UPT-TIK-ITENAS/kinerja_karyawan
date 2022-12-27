@@ -53,33 +53,32 @@ class KuesionerController extends Controller
             ->get();
 
         $responden = RespondenKinerja::select('nopeg')->get();
+        $kuesioner = KuesionerKinerja::with(['pertanyaan' => function ($query) { return $query->orderBy('nomor', 'asc'); }, 'pertanyaan.jawaban'])->find($id);
 
         $user = User::select('*')
         ->join('unit', 'unit.id', '=', 'users.unit')
         ->where('role', '=', 'karyawan')
         ->where('users.unit', auth()->user()->unit)
-        ->whereNotExists(function($query){
+        ->where('users.unit', auth()->user()->unit)
+        ->whereNotExists(function($query)  use ($kuesioner){
             $query->select(DB::raw('nopeg'))
                   ->from('responden_kuisioner')
-                  ->whereRaw('users.nopeg = responden_kuisioner.nopeg');
+                  ->whereRaw('users.nopeg = responden_kuisioner.nopeg')
+                  ->where('responden_kuisioner.kuisioner_kinerja_id', $kuesioner->id);
         })->get();
 
-        // dd($user);
-       
         $data = [
             'User' => $user,
             // 'Unit' => $unit,
             'Jabatan' => $jabatan
         ];
-        $kuesioner = KuesionerKinerja::with(['pertanyaan' => function ($query) {
-            return $query->orderBy('nomor', 'asc');
-        }, 'pertanyaan.jawaban'])->find($id);
+
         return view('kuesioner.showKuesioner', compact('kuesioner', 'data','responden'));
     }
 
     public function storeKuesioner(Request $request, $id)
     {
-
+        
         // $request->validate([
         //     'responden.*.jawaban_kinerja_id' => 'required',
         //     'responden.*.pertanyaan_kinerja_id' => 'required',

@@ -352,6 +352,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/datarekapitulasi', [KaryawanController::class, 'index_datarekapitulasi'])->name('datarekapitulasi');
         Route::get('/listdatapresensi', [KaryawanController::class, 'listdatapresensi'])->name('listdatapresensi');
         Route::get('/rekapitulasi', [KaryawanController::class, 'rekapitulasi'])->name('rekapitulasi');
+        Route::get('/getWorkingDays/{startDate}/{endDate}', [KaryawanController::class, 'getWorkingDays'])->name('getWorkingDays');
+        Route::get('/historycuti/{nopeg}/{jenis}', [AdminController::class, 'historycuti'])->name('historycuti');
+
         // Route::get('/listdatarekapitulasi', [KaryawanController::class, 'listdatarekapitulasi'])->name('listdatarekapitulasi');
         Route::get('/listdatarekapitulasi', [KaryawanController::class, 'listdatarekapitulasi'])->name('listdatarekapitulasi');
         Route::get('/list-penilaian-detail/{tipe}', [KaryawanController::class, 'penilaian_detail'])->name('penilaian_detail');

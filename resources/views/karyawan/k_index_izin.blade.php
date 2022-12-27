@@ -82,7 +82,7 @@
                     @csrf
                     <div class="modal-body">
                         <div class="alert alert-danger" id="lebihHari" style="display: none;">
-                            ⚠️ Tidak boleh melebihi jumlah hari yang telah ditentukan.
+                            ⚠️ Pengajuan anda <b>DITOLAK</b> karena telah melebihi hari yang telah ditentukan.
                         </div>
                         <div class="row g-1 mb-3">
                             <div class="col-md-12">
@@ -130,13 +130,11 @@
                                     <div class="invalid-feedback">Wajib di centang !</div>
                                 </div>
                             </div>
-                            <p class="fw-bold">Bila pengajuan izin/cuti dimulai dari akhir bulan hingga awal bulan
-                                depan-nya, dilakukan
-                                pengajuan dua kali agar dapat terdata tiap bulannya.</p>
+                            <p class="fw-bold">Apabila pengajuan izin/cuti pada 2 bulan yang berbeda, maka harus mengajukan 2(dua) kali pada form yang berbeda, agar dapat terdata setiap bulannya.</p>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
+                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu, libur nasional dan cuti bersama tidak
                             dihitung</span>
                         <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
                     </div>
@@ -225,5 +223,25 @@
             $('#lebihHari').css('display', 'none');
             $('#btnSubmit').removeAttr('disabled');
         }
+
+        $('#table-izin').on('click', '.batalizin', function(e) {
+            let id = $(this).data('id');
+            const href = $(this).attr('href');
+
+            e.preventDefault()
+            Swal.fire({
+                title: 'Apakah Yakin?',
+                text: `Apakah Anda yakin ingin menghapus?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Hapus'
+            }).then((result) => {
+                if (result.value == true) {
+                    document.location.href = href;
+                }
+            })
+        })
     </script>
 @endsection

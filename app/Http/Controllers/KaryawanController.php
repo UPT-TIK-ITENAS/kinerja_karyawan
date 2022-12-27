@@ -329,58 +329,71 @@ class KaryawanController extends Controller
         return view('karyawan.k_index_cuti', compact('data'));
     }
 
+    public function historycuti($nopeg, $jenis)
+    {
+        // dd(Carbon::now()->year);
+        $history_cuti =
+            cuti::join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
+            ->where('cuti.nopeg', $nopeg)
+            ->where('cuti.jenis_cuti', $jenis)
+            ->where(DB::raw("(DATE_FORMAT(created_at,'%Y'))"), Carbon::now()->year)
+            ->GROUPBY('cuti.jenis_cuti')->sum('total_cuti');
+        return response()->json($history_cuti);
+    }
+
+    function getWorkingDays($startDate, $endDate)
+    {
+        $begin = strtotime($startDate);
+        $end   = strtotime($endDate);
+        $curentYear = date('Y', $begin);
+        $endYear = date('Y', $end);
+        $libur_nasional = DB::table('libur_nasional')->whereYear('tanggal', '=', $curentYear)->whereYear('tanggal', '=', $endYear)->get();
+        if ($begin > $end) {
+            return 0;
+        } else {
+            $no_days  = 0;
+            $weekends = 0;
+            while ($begin <= $end) {
+                $no_days++; // no of days in the given interval
+                $what_day = date("N", $begin);
+                if ($what_day > 5) { // 6 and 7 are weekend days
+                    $weekends++;
+                }
+                // cek libur nasional
+                foreach ($libur_nasional as $key => $value) {
+                    if (date('Y-m-d', $begin) == $value->tanggal) {
+                        $weekends++;
+                    }
+                }
+                $begin += 86400; // +1 day
+            };
+
+            $working_days = $no_days - $weekends;
+
+            return response()->json($working_days);
+        }
+    }
+
     public function store_cuti(Request $request)
     {
-        $is_valid = 0;
-        // $this->validate($request, [
-        //     'jenis_cuti' => 'required',
-        //     'tgl_akhir_cuti' => 'required',
-        //     'total_cuti' => 'required',
-        //     'alamat' => 'required',
-        //     'no_hp' => 'required',
-        // ]);
-        $a = explode('|', $request->jenis_cuti);
-        // dd($a);
+        $qrcode_filenamepeg = 'qr-' . auth()->user()->nopeg . '-' . $request->jenis_cuti . '.svg';
+        QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . auth()->user()->nopeg . '-' . auth()->user()->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
 
-        $history_cuti = DB::table('jenis_cuti')
-            ->select(DB::raw("jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari"))
-            ->join('cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
-            ->where('cuti.nopeg', auth()->user()->nopeg)
-            ->groupBy('cuti.jenis_cuti')
-            ->get();
-
-
-        //dd($history_cuti);
-        foreach ($history_cuti as $r) {
-            if ($r->id_cuti == $a[0]) {
-                if ($r->total_harinya == $r->max_hari) {
-                    $is_valid = 1;
-                } else if (($r->total_harinya + $request->total_cuti) > $r->max_hari) {
-                    $is_valid = 1;
-                } else {
-                    $is_valid = 0;
-                }
-            } else if ($r->id_cuti != $a[0]) {
-                $is_valid = 0;
-            }
-        }
-
-        if ($is_valid == 0) {
-            $data = new Cuti();
-            $data->nopeg = auth()->user()->nopeg;
-            $data->unit = auth()->user()->unit;
-            $data->name = auth()->user()->name;
-            $data->jenis_cuti = $request->jenis_cuti;
-            $data->tgl_awal_cuti = $request->tgl_awal_cuti;
-            $data->tgl_akhir_cuti = $request->tgl_akhir_cuti;
-            $data->total_cuti = $request->total_cuti;
-            $data->alamat = $request->alamat;
-            $data->no_hp = '0' . str_replace('-', '', $request->no_hp);
-            $data->validasi = 1;
-            $data->tgl_pengajuan = date('Y-m-d H:i:s');
-            $data->save();
-            return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
-        }
+        Cuti::insert([
+            'nopeg' => auth()->user()->nopeg,
+            'name' =>  auth()->user()->name,
+            'unit' => auth()->user()->unit,
+            'jenis_cuti' => explode('-', $request->jenis_cuti)[0],
+            'tgl_awal_cuti' => date('Y-m-d', strtotime($request->tgl_awal_cuti)),
+            'tgl_akhir_cuti' => date('Y-m-d', strtotime($request->tgl_akhir_cuti)),
+            'total_cuti' => $request->total_cuti,
+            'alamat' => $request->alamat,
+            'no_hp' => $request->no_hp,
+            'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
+            'validasi' => 1,
+            'approval' => 0,
+            'qrcode_peg' => $qrcode_filenamepeg,
+        ]);
         return redirect()->back()->with('danger', 'Saldo Cuti Tidak Mencukupi');
     }
 
