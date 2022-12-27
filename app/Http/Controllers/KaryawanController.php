@@ -94,24 +94,21 @@ class KaryawanController extends Controller
                     return $note;
                 })
                 ->addColumn('action', function ($row) {
-                    // $hasIzin = $row->izin?->count();
+                    $hasIzin = $row->izin?->count();
                     $print =  route('karyawan.print.izin', $row->id);
-                    // $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
+                    $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
 
-                    // if ($hasIzin == null && $workingdays <= 2) {
-                    //     $for_html = '
-                    // <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
-                    // } elseif ($hasIzin != null) {
-                    //     $for_html = '
-                    //     <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
-                    //     <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
-                    // } else {
-                    //     $for_html = '';
-                    // }
-
-                    $for_html = '
+                    if ($hasIzin == null && $workingdays <= 2) {
+                        $for_html = '
+                    <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
+                    } elseif ($hasIzin != null) {
+                        $for_html = '
                         <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
                         <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
+                    } else {
+                        $for_html = '';
+                    }
+
                     return $for_html;
                 })
                 ->addColumn('status', function ($row) {
