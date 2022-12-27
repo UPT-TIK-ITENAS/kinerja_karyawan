@@ -65,20 +65,6 @@ class KaryawanController extends Controller
                 ->editColumn('days', function ($row) {
                     return config('app.days')[$row->hari];
                 })
-                ->addColumn('file', function ($row) {
-                    $printsurat =  route('karyawan.printizin', $row->id);
-                    if ($row->izin != null) {
-                        $actionBtn = "
-                            <div class='d-block text-center'>
-                                <a href='$printsurat' class='btn btn btn-success btn-xs align-items-center'><i class='icofont icofont-download-alt'></i></a>
-                            </div>
-                            ";
-                        return $actionBtn;
-                    } else {
-                        $actionBtn = "";
-                        return $actionBtn;
-                    }
-                })
                 ->addColumn('kurang_jam', function ($row) {
                     $tanggal = Carbon::now()->format('Y-m-d');
                     $durasi = Carbon::parse("$tanggal $row->durasi");
@@ -108,20 +94,24 @@ class KaryawanController extends Controller
                     return $note;
                 })
                 ->addColumn('action', function ($row) {
-                    $hasIzin = $row->izin?->count();
-                    $print =  route('admin.print.izin', $row->id);
-                    $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
+                    // $hasIzin = $row->izin?->count();
+                    $print =  route('karyawan.print.izin', $row->id);
+                    // $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
 
-                    if ($hasIzin == null && $workingdays <= 2) {
-                        $for_html = '
-                    <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
-                    } elseif ($hasIzin != null) {
-                        $for_html = '
+                    // if ($hasIzin == null && $workingdays <= 2) {
+                    //     $for_html = '
+                    // <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
+                    // } elseif ($hasIzin != null) {
+                    //     $for_html = '
+                    //     <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
+                    //     <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
+                    // } else {
+                    //     $for_html = '';
+                    // }
+
+                    $for_html = '
                         <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
                         <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
-                    } else {
-                        $for_html = '';
-                    }
                     return $for_html;
                 })
                 ->addColumn('status', function ($row) {
@@ -136,7 +126,7 @@ class KaryawanController extends Controller
                         return $apprv = '';
                     }
                 })
-                ->rawColumns(['duration', 'kurang_jam', 'latemasuk', 'days', 'latesiang', 'action', 'file', 'status'])
+                ->rawColumns(['duration', 'kurang_jam', 'latemasuk', 'days', 'latesiang', 'action', 'status'])
                 ->make(true);
         }
     }
@@ -152,8 +142,7 @@ class KaryawanController extends Controller
 
     public function storeizinkehadiran(Request $request)
     {
-
-        $qrcode_filenamepeg = 'qr-' . $request->nip . '-' . $request->id . '.svg';
+        $qrcode_filenamepeg = 'qr-karyawan' . base64_encode($request->nip . '-' . $request->id . '-' . date('Y-m-d H:i:s') . ')') . '.svg';
         QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nip . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
 
         if ($request->jenis == 2) {
@@ -324,7 +313,7 @@ class KaryawanController extends Controller
             'cuti'      => $cuti,
             'history'   => $history_cuti
         ];
-        // dd($data);
+        // dd($cuti);
 
         return view('karyawan.k_index_cuti', compact('data'));
     }
@@ -376,7 +365,7 @@ class KaryawanController extends Controller
 
     public function store_cuti(Request $request)
     {
-        $qrcode_filenamepeg = 'qr-' . auth()->user()->nopeg . '-' . $request->jenis_cuti . '.svg';
+        $qrcode_filenamepeg = 'qr-karyawan' . base64_encode(auth()->user()->nopeg . '-' . $request->jenis_cuti . '-' . date('Y-m-d H:i:s') . ')') . '.svg';
         QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . auth()->user()->nopeg . '-' . auth()->user()->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
 
         Cuti::insert([
@@ -407,6 +396,8 @@ class KaryawanController extends Controller
             'izinkerja' => $izinkerja
         ];
 
+        // dd($izinkerja);
+
         return view('karyawan.k_index_izin', compact('data'));
     }
 
@@ -419,7 +410,10 @@ class KaryawanController extends Controller
             'total_izin' => 'required',
         ]);
 
-        DB::transaction(function () use ($request) {
+        $qrcode_filenamepeg = 'qr-karyawan' . base64_encode(auth()->user()->nopeg . '-' . explode('|', $request->jenis_izin)[0] . '-' . date('Y-m-d H:i:s') . ')') . '.svg';
+        QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . auth()->user()->nopeg . '-' . auth()->user()->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
+
+        DB::transaction(function () use ($request, $qrcode_filenamepeg) {
             $izin = IzinKerja::create([
                 'nopeg' => auth()->user()->nopeg,
                 'name' =>  auth()->user()->name,
@@ -430,6 +424,7 @@ class KaryawanController extends Controller
                 'total_izin' => $request->total_izin,
                 'tgl_pengajuan' => Carbon::now()->toDateTimeString(),
                 'validasi' => 1,
+                'qrcode_peg' => $qrcode_filenamepeg
             ]);
 
             if (auth()->user()->fungsi === 'Satpam') {

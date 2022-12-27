@@ -261,20 +261,7 @@ class AdminController extends Controller
 
         QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nip . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
 
-        if ($request->jenis == 2) {
-            Izin::insert([
-                'id_attendance' => $request->id,
-                'nopeg' => $request->nip,
-                'name' => $request->name,
-                'unit' => $request->unit,
-                'tanggal_izin' => date('Y-m-d H:i:s', strtotime($request->tanggal_izin)),
-                'alasan' => $request->alasan,
-                'validasi' => 1,
-                'approval' => 0,
-                'jenis' => $request->jenis,
-                'qrcode_peg' => $qrcode_filenamepeg,
-            ]);
-        } elseif ($request->jenis == 1) {
+        if ($request->jenis == 1) {
             Izin::insert([
                 'id_attendance' => $request->id,
                 'nopeg' => $request->nip,

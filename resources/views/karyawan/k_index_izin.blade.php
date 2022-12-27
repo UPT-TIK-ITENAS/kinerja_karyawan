@@ -38,6 +38,7 @@
                                             <th>Tanggal Akhir</th>
                                             <th>Total Hari</th>
                                             <th>Tanggal Pengajuan</th>
+                                            <th>Aksi</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
@@ -52,6 +53,9 @@
                                                 </td>
                                                 <td align="center">{{ $r->total_izin }}</td>
                                                 <td align="center">{{ $r->tgl_pengajuan }}</td>
+                                                <td align="center"><a class="btn btn-success btn-xs" title="Print Surat"
+                                                        href={{ route('karyawan.print.izinkerja', $r->id_izinkerja) }}><i
+                                                            class="icofont icofont-download-alt"></i></a></td>
                                                 <td align="center">{!! getApproval($r->id_izinkerja, 'izin') !!}
                                                 </td>
                                             </tr>
@@ -130,11 +134,13 @@
                                     <div class="invalid-feedback">Wajib di centang !</div>
                                 </div>
                             </div>
-                            <p class="fw-bold">Apabila pengajuan izin/cuti pada 2 bulan yang berbeda, maka harus mengajukan 2(dua) kali pada form yang berbeda, agar dapat terdata setiap bulannya.</p>
+                            <p class="fw-bold">Apabila pengajuan izin/cuti pada 2 bulan yang berbeda, maka harus mengajukan
+                                2(dua) kali pada form yang berbeda, agar dapat terdata setiap bulannya.</p>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu, libur nasional dan cuti bersama tidak
+                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu, libur nasional
+                            dan cuti bersama tidak
                             dihitung</span>
                         <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
                     </div>

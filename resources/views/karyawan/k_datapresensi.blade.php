@@ -114,6 +114,7 @@
                                     <option value='' disabled selected>Pilih Status</option>
                                     <option value="1">Izin</option>
                                     <option value="2">Sidik Jari</option>
+                                    <option value="3">Dispensasi</option>
                                 </select>
 
                             </div>

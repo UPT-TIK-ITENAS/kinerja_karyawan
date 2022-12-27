@@ -69,6 +69,7 @@
                                             <th>Alamat</th>
                                             <th>No. Telp</th>
                                             <th>Tanggal Pengajuan</th>
+                                            <th>Aksi</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
@@ -85,6 +86,9 @@
                                                 <td>{{ $r->alamat }}</td>
                                                 <td>{{ $r->no_hp }}</td>
                                                 <td>{{ $r->tgl_pengajuan }}</td>
+                                                <td align="center"><a class="btn btn-success btn-xs" title="Print Surat"
+                                                        href={{ route('karyawan.print.cuti', $r->id_cuti) }}><i
+                                                            class="icofont icofont-download-alt"></i></a></td>
                                                 <td align="center">{!! getApproval($r->id_cuti, 'cuti', $r->alasan_tolak) !!}</td>
                                             </tr>
                                         @endforeach
@@ -127,7 +131,7 @@
                                             {{ $r->jenis_cuti }}</option>
                                     @endforeach
                                 </select>
-                                <input type="hidden" id="nopeg" value = "{{ auth()->user()->nopeg }}">
+                                <input type="hidden" id="nopeg" value="{{ auth()->user()->nopeg }}">
                                 <input type="hidden" id="lama_cuti">
                                 <div class="invalid-feedback">Pilih salah satu !</div>
                             </div>
@@ -184,11 +188,13 @@
                                     <div class="invalid-feedback">Wajib di centang !</div>
                                 </div>
                             </div>
-                            <p class="fw-bold">Apabila pengajuan izin/cuti pada 2 bulan yang berbeda, maka harus mengajukan 2(dua) kali pada form yang berbeda, agar dapat terdata setiap bulannya.</p>
+                            <p class="fw-bold">Apabila pengajuan izin/cuti pada 2 bulan yang berbeda, maka harus mengajukan
+                                2(dua) kali pada form yang berbeda, agar dapat terdata setiap bulannya.</p>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu, libur nasional dan cuti bersama tidak
+                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu, libur nasional
+                            dan cuti bersama tidak
                             dihitung</span>
                         <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
                     </div>
@@ -255,7 +261,7 @@
         })
 
         $(document).ready(function() {
-        
+
             $('#jenis_cuti').on('change', function() {
                 const selected = $(this).find('option:selected');
                 const max_hari = selected.data('max');
