@@ -113,21 +113,27 @@
                     @csrf
                     <div class="modal-body">
                         <div class="alert alert-danger" id="lebihHari" style="display: none;">
-                            ⚠️ Tidak boleh melebihi jumlah hari yang telah ditentukan.
+                            ⚠️ Pengajuan anda <b>DITOLAK</b> karena telah melebihi hari yang telah ditentukan.
                         </div>
                         <div class="row g-1 mb-3">
-                            <div class="col-md-12">
+                            <div class="col-md-8">
                                 <span class="form-label" for="jenis_cuti">Jenis Cuti</span>
                                 <select class="form-control js-example-basic-single col-sm-12 select2-hidden-accessible"
                                     id="jenis_cuti" name="jenis_cuti" required="">
                                     <option selected="" disabled="" value="">-- Pilih ---</option>
                                     @foreach ($data['jeniscuti'] as $r)
-                                        <option value="{{ $r->id_jeniscuti }}|{{ $r->max_hari }}">{{ $r->jenis_cuti }}
-                                        </option>
+                                        <option value="{{ $r->id_jeniscuti }}" data-max="{{ $r->max_hari }}">
+                                            {{ $r->jenis_cuti }}</option>
                                     @endforeach
                                 </select>
+                                <input type="hidden" id="nopeg" value = "{{ auth()->user()->nopeg }}">
                                 <input type="hidden" id="lama_cuti">
                                 <div class="invalid-feedback">Pilih salah satu !</div>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="sumcuti">Total cuti yang sudah terpakai</span>
+                                <input class="form-control" readonly id="sumcuti" name="sumcuti" type="text"
+                                    required="">
                             </div>
                         </div>
                         <div class="row g-2 mb-3">
@@ -177,13 +183,11 @@
                                     <div class="invalid-feedback">Wajib di centang !</div>
                                 </div>
                             </div>
-                            <p class="fw-bold">Bila pengajuan izin/cuti dimulai dari akhir bulan hingga awal bulan
-                                depan-nya, dilakukan
-                                pengajuan dua kali agar dapat terdata tiap bulannya.</p>
+                            <p class="fw-bold">Apabila pengajuan izin/cuti pada 2 bulan yang berbeda, maka harus mengajukan 2(dua) kali pada form yang berbeda, agar dapat terdata setiap bulannya.</p>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
+                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu, libur nasional dan cuti bersama tidak
                             dihitung</span>
                         <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
                     </div>
@@ -229,53 +233,76 @@
             });
         });
 
-        $('#tgl_akhir_cuti').on('change', function() {
-            let tgl_awal = $('#tgl_awal_cuti').val();
-            let tgl_akhir = $('#tgl_akhir_cuti').val();
-            let total_cuti = $('#total_cuti');
-            let total = 0;
-            if (tgl_awal != '' && tgl_akhir != '') {
-                let date1 = new Date(tgl_awal);
-                let date2 = new Date(tgl_akhir);
-                total = getBusinessDatesCount(date1, date2);
-                total_cuti.val(total);
+        $('#table-cuti').on('click', '.batalcuti', function(e) {
+            let id = $(this).data('id');
+            const href = $(this).attr('href');
 
-                if (total > $('#lama_cuti').val()) {
-                    $('#lebihHari').css('display', 'block');
-                    $('#btnSubmit').attr('disabled', 'true');
-                } else {
-                    $('#lebihHari').css('display', 'none');
-                    $('#btnSubmit').removeAttr('disabled');
+            e.preventDefault()
+            Swal.fire({
+                title: 'Apakah Yakin?',
+                text: `Apakah Anda yakin ingin menghapus?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Hapus'
+            }).then((result) => {
+                if (result.value == true) {
+                    document.location.href = href;
+                }
+            })
+        })
+
+        $(document).ready(function() {
+        
+            $('#jenis_cuti').on('change', function() {
+                const selected = $(this).find('option:selected');
+                const max_hari = selected.data('max');
+
+                $("#lama_cuti").val(max_hari);
+                let nopeg = $('#nopeg').val();
+                let jenis = $('#jenis_cuti').val();
+
+                let sumcuti = $('#sumcuti');
+                $.get(window.baseurl + '/karyawan/historycuti/' + nopeg + '/' + jenis, function(res) {
+                    sumcuti.val(res);
+                })
+                getTotalCuti();
+            });
+            $('#tgl_akhir_cuti').on('change', function() {
+                getTotalCuti();
+            });
+            $('#tgl_awal_cuti').on('change', function() {
+                getTotalCuti();
+            });
+
+            function getTotalCuti() {
+                let tgl_awal = $('#tgl_awal_cuti').val();
+                let tgl_akhir = $('#tgl_akhir_cuti').val();
+                let total_cuti = $('#total_cuti');
+                let sumcuti = $('#sumcuti').val();
+                let lama = $('#lama_cuti').val();
+                let total = 0;
+                let totalll = 0;
+
+                if (tgl_awal != '' && tgl_akhir != '') {
+                    $.get(window.baseurl + '/karyawan/getWorkingDays/' + tgl_awal + '/' + tgl_akhir, function(
+                        response) {
+                        total = total_cuti.val(response);
+                        totalll = parseInt(response) + parseInt(sumcuti);
+
+                        if (totalll > lama) {
+                            $('#lebihHari').css('display', 'block');
+                            $('#btnSubmit').attr('disabled', 'true');
+                        } else {
+                            $('#lebihHari').css('display', 'none');
+                            $('#btnSubmit').removeAttr('disabled');
+                        }
+
+                    })
+
                 }
             }
         });
-
-        function getBusinessDatesCount(startDate, endDate) {
-            let count = 0;
-            const curDate = new Date(startDate.getTime());
-            while (curDate <= endDate) {
-                const dayOfWeek = curDate.getDay();
-                if (dayOfWeek !== 0 && dayOfWeek !== 6) count++;
-                curDate.setDate(curDate.getDate() + 1);
-            }
-            return count;
-        }
-
-        $('#jenis_cuti').on('change', function() {
-            let jenis_cuti = $('#jenis_cuti');
-            let lama_cuti = $('#lama_cuti');
-            let durasi_cuti = jenis_cuti.val().split('|')[1] ? jenis_cuti.val().split('|')[1] : 100;
-            lama_cuti.val(durasi_cuti);
-            console.log(durasi_cuti);
-            emptyField();
-        });
-
-        function emptyField() {
-            let tgl_awal = $('#tgl_awal_cuti').val('');
-            let tgl_akhir = $('#tgl_akhir_cuti').val('');
-            let total_cuti = $('#total_cuti').val('');
-            $('#lebihHari').css('display', 'none');
-            $('#btnSubmit').removeAttr('disabled');
-        }
     </script>
 @endsection

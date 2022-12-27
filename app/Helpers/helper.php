@@ -47,7 +47,7 @@ if (!function_exists('getApproval')) {
                 } elseif ($getDataIzin->approval == 2) {
                     $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
                 } else {
-                    $for_html = '<span class="badge badge-warning">Menunggu</span> <a class="btn btn-danger btn-xs" href="' . $url_batal_izin . '" id="btnBatal"><i class="fa fa-times"></i></a>';
+                    $for_html = '<span class="badge badge-warning">Menunggu</span> <a class="btn btn-danger btn-xs batalizin" href="' . $url_batal_izin . '" id="btnBatal"><i class="fa fa-times"></i></a>';
                 }
             }
         } elseif ($tipe == 'cuti') {
@@ -60,7 +60,7 @@ if (!function_exists('getApproval')) {
                 } elseif ($getDataCuti->approval == 2) {
                     $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
                 } else {
-                    $for_html = '<span class="badge badge-warning">Menunggu</span> <a class="btn btn-danger btn-xs" href="' . $url_batal_cuti . '" id="btnBatal"><i class="fa fa-times"></i></a>';
+                    $for_html = '<span class="badge badge-warning">Menunggu</span> <a class="btn btn-danger btn-xs batalcuti" href="' . $url_batal_cuti . '" id="btnBatal"><i class="fa fa-times"></i></a>';
                 }
             }
         }
