@@ -427,14 +427,6 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/rekapitulasi', [KepalaUnitController::class, 'rekapitulasi'])->name('rekapitulasi');
 
-        // Route::get('/izin/index', [KepalaUnitController::class, 'index_izin'])->name('izin');
-        // Route::post('/izin/store', [KepalaUnitController::class, 'store_izin'])->name('store_izin');
-        // Route::get('/izin/batal{id}', [KepalaUnitController::class, 'batal_izin'])->name('batal_izin');
-
-        // Route::get('/cuti/index', [KepalaUnitController::class, 'index_cuti'])->name('cuti');
-        // Route::post('/cuti/store', [KepalaUnitController::class, 'store_cuti'])->name('store_cuti');
-        // Route::get('/cuti/batal/{id}', [KepalaUnitController::class, 'batal_cuti'])->name('batal_cuti');
-
         Route::prefix('print')->name('print.')->group(function () {
             Route::get('izin/{id}', [PrintController::class, 'printizin'])->name('izin');
             Route::get('izinkerja/{id}', [PrintController::class, 'printizinkerja'])->name('izinkerja');

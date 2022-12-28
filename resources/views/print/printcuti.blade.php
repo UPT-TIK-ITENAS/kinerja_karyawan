@@ -223,7 +223,12 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>Disetujui/Tidak Disetujui oleh,
+                        @if ($data->approval == 3)
+                            <b><del>Disetujui</del> / Tidak Disetujui oleh,</b>
+                        @elseif($data->approval == 1)
+                            <b>Disetujui/<del>Tidak Disetujui</del> oleh,</b>
+                        @endif
+
                     </td>
                 </tr>
                 <tr>
@@ -290,7 +295,11 @@
             </tr>
             <tr>
                 <td>
-                    <b>Disetujui/Tidak Disetujui oleh,
+                    @if ($data->approval == 3)
+                        <b><del>Disetujui</del> / Tidak Disetujui oleh,</b>
+                    @elseif($data->approval == 2)
+                        <b>Disetujui/<del>Tidak Disetujui</del> oleh,</b>
+                    @endif
                 </td>
             </tr>
             <tr>

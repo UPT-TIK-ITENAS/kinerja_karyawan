@@ -26,52 +26,14 @@
                                         <tr align="center">
                                             <th width="5%">No.</th>
                                             <th>Nama</th>
+                                            <th>Nopeg</th>
                                             <th>Alasan</th>
-                                            <th>Jam Awal</th>
-                                            <th>Jam Akhir</th>
-                                            <th>Tanggal</th>
-                                            <th>Status</th>
+                                            <th>Waktu</th>
                                             <th>Action</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($data as $no => $r)
-                                            <tr>
-                                                <td align="center">{{ $no + 1 }}</td>
-                                                <td>{{ $r->name }}</td>
-                                                <td>{{ $r->alasan }}</td>
-                                                <td align="center">{{ $r->jam_awal }}</td>
-                                                <td align="center">{{ $r->jam_akhir }}</td>
-                                                <td align="center">{{ $r->tanggal }}</td>
-                                                @if ($r->approval == 1)
-                                                    <td>
-                                                        <div class='d-block text-center'>
-                                                            <a class='badge badge-success align-items-center'> Disetujui
-                                                                Kepala Unit
-                                                            </a>
-                                                        </div>
-                                                    </td>
-                                                @else
-                                                    <td>
-                                                        <div class='d-block text-center'>
-                                                            <a class='badge badge-warning align-items-center'> Menunggu
-                                                                Persetujuan
-                                                            </a>
-                                                        </div>
-                                                    </td>
-                                                @endif
-                                                <td>
-                                                    <div class='d-block text-center'>
-                                                        <a href='#' data-toggle='tooltip'
-                                                            class='btn btn btn-warning btn-xs align-items-center tambahIzin'
-                                                            data-id='{{ $r->id_izin }}' title='Edit Izin'>
-                                                            <i class='icofont icofont-edit-alt'></i>
-                                                        </a>
-                                                    </div>
-
-                                                </td>
-                                            </tr>
-                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -114,40 +76,15 @@
                         </div>
                         <div class="row g-2 mb-3">
                             <div class="col-md-4">
-                                <span class="form-label" for="jam_awal">Tanggal Awal</span>
-                                <input class="form-control" id="jam_awal" name="jam_awal" type="text" required=""
-                                    readonly>
-                                <div class="invalid-feedback">Wajib Diisi !</div>
-                            </div>
-                            <div class="col-md-4">
-                                <span class="form-label" for="jam_akhir">Tanggal Akhir</span>
-                                <input class="form-control" id="jam_akhir" name="jam_akhir" type="text" required=""
-                                    readonly>
-                                <div class="invalid-feedback">Wajib Diisi !</div>
-                            </div>
-                            <div class="col-md-4">
-                                <span class="form-label" for="tanggal">Tanggal</span>
-                                <input class="form-control" id="tanggal" name="tanggal" type="date" required=""
+                                <span class="form-label" for="jam">Waktu</span>
+                                <input class="form-control" id="jam" name="jam" type="text" required=""
                                     readonly>
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                         </div>
-                        <!-- <div class="mb-3">
-                                    <div class="form-check">
-                                        <div class="checkbox p-0">
-                                            <div class="checkbox checkbox-dark">
-                                                <input id="cb_valid" class="form-check-input" type="checkbox" required>
-                                                <label class="form-check-label" for="cb_valid">Pengajuan izin dilakukan oleh diri
-                                                    sendiri dan secara sadar sesuai dengan ketentuan yang berlaku</label>
-                                            </div>
-                                            <div class="invalid-feedback">Wajib di centang !</div>
-                                        </div>
-                                    </div>
-                                </div> -->
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <!-- <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu tidak
-                                    dihitung</span> -->
+                        <p style="font-size: 14px; color: white"></p>
                         <button class="btn btn-primary" type="submit" id="btnSubmit">Setuju</button>
                     </div>
                 </form>
@@ -161,25 +98,53 @@
             pageLength: 10,
             responsive: true,
             processing: true,
+            autoWidth: false,
+            serverSide: true,
+            columnDefs: [{
+                targets: 1,
+                width: "200px !important",
+            }, ],
+            ajax: "{{ route('kepalaunit.approvalIzinTelat') }}",
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    className: 'text-center',
+                    orderable: false,
+                    searchable: false,
+                },
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'nopeg',
+                    name: 'nopeg'
+                },
+                {
+                    data: 'alasan',
+                    name: 'alasan'
+                },
+                {
+                    data: 'waktu',
+                    name: 'waktu'
+                },
+
+                {
+                    data: 'action',
+                    name: 'action'
+                },
+
+                {
+                    data: 'status',
+                    name: 'status'
+                },
+
+            ],
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'print'
+            ]
         });
-
-        // $('body').on('click', '.tambahIzin', function() {
-        //     var id = $(this).data('id');
-
-        //     $.get("{{ url('/kepalaunit/approval/editIzinTelat') }}/" + id, function(data) {
-        //         $('#ModalTitle').html("Pertanyaan");
-        //         $('#show-mesin').modal('show');
-        //         $('#id_izin').val(data.id_izin);
-        //         $('#id_attendance').val(data.id_attendance);
-        //         $('#name').val(data.name);
-        //         $('#nopeg').val(data.nopeg);
-        //         $('#alasan').val(data.alasan);
-        //         $('#jam_awal').val(data.jam_awal);
-        //         $('#jam_akhir').val(data.jam_akhir);
-        //         $('#tanggal').val(data.tanggal);
-        //         console.log(data);
-        //     })
-        // });
 
         $('body').on('click', '.tambahIzin', function() {
             id = $(this).data('id');
@@ -192,9 +157,12 @@
                 $('#name').val(data.name);
                 $('#nopeg').val(data.nopeg);
                 $('#alasan').val(data.alasan);
-                $('#jam_awal').val(data.jam_awal);
-                $('#jam_akhir').val(data.jam_akhir);
-                $('#tanggal').val(data.tanggal);
+                if (data.jam_awal != undefined && data.jam_akhir != undefined && data.tanggal !=
+                    undefined) {
+                    $('#jam').val(data.tanggal + ' ' + data.jam_awal + ' s/d ' + data.jam_akhir);
+                } else {
+                    $('#jam').val(data.tanggal_izin);
+                }
                 console.log('data :', data);
             })
         });

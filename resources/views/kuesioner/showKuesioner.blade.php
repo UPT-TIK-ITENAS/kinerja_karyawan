@@ -19,47 +19,6 @@
                     <div class="card-body">
                         <div class="row mt-1">
                             <div class="col col-md-2">
-                                <label class=" form-control-label" style="color:green; font-weight:bold">
-                                    Petunjuk Pengisian
-                                </label>
-                            </div>
-                            <p class="form-control-static" style="color:green">Kuesioner ini terdiri
-                                dari {{ count($kuesioner->pertanyaan) }} butir
-                                pertanyaan dengan bentuk jawaban pilihan ganda yang terdiri dari 3
-                                (tiga) pilihan jawaban.
-                                Anda dapat memilih satu pilihan sesuai pendapat pribadi.</p>
-                            <div class="row">
-                                <div class="col">
-                                    <label class="d-block" for="edo-ani" style="color:green">
-                                        <input class="radio_animated" id="edo-ani" type="radio" name="rdo-ani"
-                                            disabled>Sangat Baik (Sangat Puas)
-                                    </label>
-
-                                    <label class="d-block" for="edo-ani1" style="color:green">
-                                        <input class="radio_animated" id="edo-ani1" type="radio" name="rdo-ani"
-                                            checked="" disabled>Baik (Puas)
-                                    </label>
-
-                                    <label class="d-block" for="edo-ani2" style="color:green">
-                                        <input class="radio_animated" id="edo-ani2" type="radio" name="rdo-ani"
-                                            disabled>Kurang (Tidak Puas)
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Zero Configuration  Starts-->
-            <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mt-1">
-                            <div class="col col-md-2">
                                 <h5 class=" form-control-label" style="color:green; font-weight:bold">
                                     Pertanyaan
                                 </h5>

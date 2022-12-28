@@ -347,26 +347,19 @@ class KepalaUnitController extends Controller
         return response()->json($data);
     }
 
-    // public function destroyCuti($id)
-    // {
-    //     Cuti::where('id_cuti', $id)->delete();
-    //     return redirect()->route('kepalaunit.ku_index_approval')->with('success', 'Data berhasil dihapus!');
-    // }
-
     public function approveCuti(Request $request)
     {
+
+        $qrcode_filenameat = 'qr-atasan' . base64_encode(auth()->user()->nopeg . '-' . auth()->user()->name  .  $request->jenis_cuti . '-' . date('Y-m-d H:i:s') . ')') . '.svg';
+        QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . auth()->user()->nopeg . '-' . auth()->user()->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenameat));
+
         Cuti::where('id_cuti', $request->id_cuti)->update([
             'approval' => $request->approval,
+            'alasan_tolak' => $request->alasan_tolak,
+            'qrcode_kepala' => $qrcode_filenameat,
         ]);
 
-        if ($request->approval == 1) {
-            return redirect()->back()->with('success', 'Cuti disetujui');
-        } else {
-            Cuti::where('id_cuti', $request->id_cuti)->update([
-                'alasan_tolak' => $request->alasan_tolak,
-            ]);
-            return redirect()->back()->with('error', 'Cuti ditolak');
-        }
+        return redirect()->back()->with('success', 'Pengajuan Cuti disetujui');
     }
 
     public function index_approvalIzin(Request $request)
@@ -426,25 +419,38 @@ class KepalaUnitController extends Controller
 
     public function index_approvalIzinTelat(Request $request)
     {
-        //$data = DB::select("SELECT * from cuti inner join unit u on u.id =cuti.unit inner join jenis_cuti jc on jc.id_jeniscuti = cuti.jenis_cuti");
-        $data = Izin::where('unit', auth()->user()->unit)
-            ->get();
-
+        $data = Izin::where('unit', auth()->user()->unit)->get();
         // dd($data);
-
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    $print =  route('kepalaunit.print.izin', $data->id_attendance);
+                    $for_html = '
+                    <a href="#" class="btn btn-warning btn-xs tambahIzin" data-bs-toggle="modal" data-id="' . $data->id_izin . '"><i class="icofont icofont-pencil-alt-2"></i></a>
+                    <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
+
+                    return $for_html;
+                })
+                ->addColumn('waktu', function ($data) {
+                    if ($data->tanggal != NULL && $data->jam_awal != NULL && $data->jam_akhir != NULL) {
+                        $waktu = $data->tanggal . ' ' . $data->jam_awal . ' s/d ' . $data->jam_akhir;
+                    } else {
+                        $waktu = $data->tanggal_izin;
+                    }
+
+                    return $waktu;
+                })
                 ->addColumn('status', function ($row) {
                     if ($row->approval == 1) {
-                        $apprv = '<span class="badge badge-success">Disetujui Kepala Unit</span>';
+                        $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
                     } else {
                         $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
                     }
                     return $apprv;
                 })
-                ->rawColumns(['status'])
-                ->make(true);
+                ->rawColumns(['status', 'action', 'waktu'])
+                ->toJson();
         }
 
         return view('kepalaunit.ku_index_approval_izin_telat', compact('data'));
@@ -459,7 +465,7 @@ class KepalaUnitController extends Controller
 
     public function approveIzinTelat(Request $request)
     {
-        $qrcode_filenameat = 'qr-' . $request->nopeg . '-' . auth()->user()->nopeg . '-' . $request->id_attendance . '.svg';
+        $qrcode_filenameat = 'qr-atasan' . $request->nopeg . '-' . auth()->user()->nopeg . '-' . $request->id_attendance . '.svg';
         QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . auth()->user()->name . '-' . auth()->user()->nopeg . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenameat));
 
         Izin::where('id_izin', $request->id_izin)->update([
