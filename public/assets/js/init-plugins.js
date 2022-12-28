@@ -10,12 +10,12 @@ const daterangepicker = (
         timePicker: false,
         showDropdowns: true,
         autoUpdateInput: false,
-        autoApply: true,
         locale: {
-            cancelLabel: "Hapus",
-            applyLabel: "Terapkan",
             format: "YYYY-MM-DD",
         },
+        cancelLabel: "Hapus",
+        applyLabel: "Terapkan",
+
         drops: drops,
     };
 
@@ -31,4 +31,16 @@ const daterangepicker = (
     }
 
     $(`${elementSelector}`).daterangepicker(config);
+
+    $(`${elementSelector}`).on("apply.daterangepicker", function (ev, picker) {
+        if (timePicker) {
+            $(this).val(picker.startDate.format("YYYY-MM-DD HH:mm:ss"));
+        } else {
+            $(this).val(picker.startDate.format("YYYY-MM-DD"));
+        }
+    });
+
+    $(`${elementSelector}`).on("cancel.daterangepicker", function (ev, picker) {
+        $(this).val("");
+    });
 };
