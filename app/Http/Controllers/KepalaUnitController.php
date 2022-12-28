@@ -60,12 +60,11 @@ class KepalaUnitController extends Controller
     public function listdatapresensi(Request $request)
     {
         $data = Attendance::query()->with(['user', 'izin'])
-            ->join('users', 'users.nopeg', '=', 'attendance.nip')
             ->whereRelation('user', 'status', '=', 1)
+            ->whereRelation('user', 'unit', auth()->user()->unit)
             ->where('nip', $request->get('filter1'), '', 'and')
             ->where('tanggal', $request->get('filter2'), '', 'and')
             ->where(DB::raw('MONTH(tanggal)'), $request->get('filter3'), '', 'and')
-            ->where('unit', auth()->user()->unit)
             ->orderby('tanggal', 'asc')->get();
 
 
@@ -75,84 +74,25 @@ class KepalaUnitController extends Controller
             ->addColumn('days', function ($row) use ($days) {
                 return $days[$row->hari];
             })
-
-            ->addColumn('latemasuk', function ($row) {
-                $masuk = Carbon::parse($row->jam_masuk)->format('H:i:s');
-                $keluar = Carbon::parse('08:00:00')->format('H:i:s');
-                if ($row->hari != '6' && $row->hari != '0') {
-                    if ($row->jam_masuk == NULL &&  $row->jam_siang != NULL) {
-                        $durasi = strtotime(Carbon::parse($row->jam_siang)->format('H:i:s')) - strtotime($keluar);
-                        $total = Carbon::parse($durasi)->format('H:i:s');
-                    } else {
-                        if ($masuk > $keluar) {
-                            $durasi = strtotime($masuk) - strtotime($keluar);
-                            $total = Carbon::parse($durasi)->format('H:i:s');
-                        } else {
-                            $total = '';
-                        }
-                    }
-                } else {
-                    $total = '';
-                }
-                return $total;
-            })
-
             ->addColumn('kurang_jam', function ($row) {
-
-                date_default_timezone_set('UTC');
-                $masuk = strtotime($row->telat_masuk);
-                $siang = strtotime($row->telat_siang);
-                $durasi = strtotime($row->durasi);
-
-                if ($row->hari != "6" && $row->hari != "0") {
-                    if ($row->durasi == "04:00:00") {
-                        $result = date("H:i:s", $siang + $masuk + $durasi);
-                    } elseif ($row->durasi == "00:00:00") {
-                        $result = "08:00:00";
-                    } else {
-                        $result = date("H:i:s", $siang + $masuk);
-                    }
+                $tanggal = Carbon::now()->format('Y-m-d');
+                $durasi = Carbon::parse("$tanggal $row->durasi");
+                $telat_masuk = Carbon::parse("$tanggal $row->telat_masuk");
+                $telat_pulang = Carbon::parse("$tanggal $row->telat_pulang");
+                if ($durasi->equalTo("$tanggal 08:00:00")) {
+                    $base_time = Carbon::parse("$tanggal 00:00:00");
+                    $total = $base_time->addHours($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+                    $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
+                } else if ($durasi->equalTo("$tanggal 04:00:00")) {
+                    $base_time = Carbon::parse("$tanggal 04:00:00");
+                    $total = $base_time->addHours($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+                    $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
                 } else {
-                    $result = "00:00:00";
+                    $base_time = Carbon::parse("$tanggal 08:00:00");
+                    $total = $durasi->addHours($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+                    $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
                 }
-
-
-                return $result;
-            })
-            ->addColumn('latesiang', function ($row) {
-                $siang = Carbon::parse($row->jam_siang)->format('H:i:s');
-                $keluar1 = Carbon::parse('13:00:00')->format('H:i:s');
-                $keluar2 = Carbon::parse('13:30:00')->format('H:i:s');
-
-                if ($row->hari == '5') {
-                    if ($row->jam_siang == NULL && $row->jam_pulang != NULL) {
-                        $durasi = strtotime(Carbon::parse($row->jam_pulang)->format('H:i:s')) - strtotime($keluar2);
-                        $total = Carbon::parse($durasi)->format('H:i:s');
-                    } else {
-                        if ($siang > $keluar2) {
-                            $durasi = strtotime($siang) - strtotime($keluar2);
-                            $total = Carbon::parse($durasi)->format('H:i:s');
-                        } else {
-                            $total = '';
-                        }
-                    }
-                } elseif ($row->hari != '6' && $row->hari != '0') {
-                    if ($row->jam_siang == NULL && $row->jam_pulang != NULL) {
-                        $durasi = strtotime(Carbon::parse($row->jam_pulang)->format('H:i:s')) - strtotime($keluar1);
-                        $total = Carbon::parse($durasi)->format('H:i:s');
-                    } else {
-                        if ($siang > $keluar1) {
-                            $durasi = strtotime($siang) - strtotime($keluar1);
-                            $total = Carbon::parse($durasi)->format('H:i:s');
-                        } else {
-                            $total = '';
-                        }
-                    }
-                } else {
-                    $total = '';
-                }
-
-                return $total;
+                return $total->format('H:i:s');
             })
             ->addColumn('note', function ($row) {
                 if ($row->status == 0) {
