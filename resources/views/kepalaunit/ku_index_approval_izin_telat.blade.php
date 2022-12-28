@@ -29,6 +29,7 @@
                                             <th>Nopeg</th>
                                             <th>Alasan</th>
                                             <th>Waktu</th>
+                                            <th>Jenis</th>
                                             <th>Action</th>
                                             <th>Status</th>
                                         </tr>
@@ -128,7 +129,10 @@
                     data: 'waktu',
                     name: 'waktu'
                 },
-
+                {
+                    data: 'jenis',
+                    name: 'jenis'
+                },
                 {
                     data: 'action',
                     name: 'action'

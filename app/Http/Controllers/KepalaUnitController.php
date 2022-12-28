@@ -449,7 +449,17 @@ class KepalaUnitController extends Controller
                     }
                     return $apprv;
                 })
-                ->rawColumns(['status', 'action', 'waktu'])
+                ->editColumn('jenis', function ($row) {
+                    if ($row->jenis == 1) {
+                        $stat = 'Izin terlambat/Ada keperluan,dll';
+                    } elseif ($row->jenis == 2) {
+                        $stat = 'Absen sidik jari tidak terbaca mesin';
+                    } else {
+                        $stat = 'Dispensasi';
+                    }
+                    return $stat;
+                })
+                ->rawColumns(['status', 'action', 'waktu', 'jenis'])
                 ->toJson();
         }
 
