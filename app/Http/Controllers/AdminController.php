@@ -113,7 +113,7 @@ class AdminController extends Controller
                 $tanggal = Carbon::now()->format('Y-m-d');
                 $durasi = Carbon::parse("$tanggal $row->durasi");
                 $telat_masuk = Carbon::parse("$tanggal $row->telat_masuk");
-                $telat_pulang = Carbon::parse("$tanggal $row->telat_pulang");
+                $telat_pulang = Carbon::parse("$tanggal $row->telat_siang");
                 if ($durasi->equalTo("$tanggal 08:00:00")) {
                     $base_time = Carbon::parse("$tanggal 00:00:00");
                     $total = $base_time->addHours($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
@@ -179,6 +179,7 @@ class AdminController extends Controller
     public function updateAttendance(Request $request)
     {
         $attendance = Attendance::where('id', $request->id2)->first();
+        dd(lateSiang2($request->jam_siang1, $request->jam_pulang1, $attendance->hari));
         $attendance->update([
             'jam_masuk' => Carbon::parse($request->jam_masuk1)->format('Y-m-d H:i:s'),
             'jam_siang' => Carbon::parse($request->jam_siang1)->format('Y-m-d H:i:s'),

@@ -38,12 +38,30 @@ Route::group(['name' => 'auth'], function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
 Route::get('/test', function () {
-    $jam_masuk = '09:00:00';
-    $jam_siang = '12:50:00';
-    $jam_pulang = '17:10:00';
-    $telat_masuk = lateMasuk($jam_masuk, $jam_siang, 3);
-    $telat_siang = lateSiang2($jam_siang, $jam_pulang, 3);
-    dd($jam_masuk, $jam_siang, $jam_pulang, $telat_masuk, $telat_siang);
+    $jam_masuk = '08:00:00';
+    $jam_siang = '13:37:00';
+    $jam_pulang = '17:30:00';
+    $telat_masuk = lateMasuk($jam_masuk, $jam_siang, 5);
+    $telat_siang = lateSiang2($jam_siang, $jam_pulang, 5);
+    // dd($jam_masuk, $jam_siang, $jam_pulang, $telat_masuk, $telat_siang);
+    $tanggal = Carbon::now()->format('Y-m-d');
+    $durasi = Carbon::parse("$tanggal 08:00:00");
+    $telat_masuk = Carbon::parse("$tanggal 00:00:00");
+    $telat_pulang = Carbon::parse("$tanggal 00:07:00");
+    if ($durasi->equalTo("$tanggal 08:00:00")) {
+        $base_time = Carbon::parse("$tanggal 00:00:00");
+        $total = $base_time->addHours($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+        $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
+    } else if ($durasi->equalTo("$tanggal 04:00:00")) {
+        $base_time = Carbon::parse("$tanggal 04:00:00");
+        $total = $base_time->addHours($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+        $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
+    } else {
+        $base_time = Carbon::parse("$tanggal 08:00:00");
+        $total = $durasi->addHours($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+        $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
+    }
+
     // $cek_status = DB::table('attendance_backup')->get();
     // foreach ($cek_status as $cs) {
     //     // Jika full terisi

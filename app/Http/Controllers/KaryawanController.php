@@ -69,18 +69,18 @@ class KaryawanController extends Controller
                     $tanggal = Carbon::now()->format('Y-m-d');
                     $durasi = Carbon::parse("$tanggal $row->durasi");
                     $telat_masuk = Carbon::parse("$tanggal $row->telat_masuk");
-                    $telat_pulang = Carbon::parse("$tanggal $row->telat_pulang");
+                    $telat_pulang = Carbon::parse("$tanggal $row->telat_siang");
                     if ($durasi->equalTo("$tanggal 08:00:00")) {
                         $base_time = Carbon::parse("$tanggal 00:00:00");
-                        $total = $base_time->addMinutes($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+                        $total = $base_time->addHours($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
                         $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
                     } else if ($durasi->equalTo("$tanggal 04:00:00")) {
                         $base_time = Carbon::parse("$tanggal 04:00:00");
-                        $total = $base_time->addMinutes($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+                        $total = $base_time->addHours($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
                         $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
                     } else {
                         $base_time = Carbon::parse("$tanggal 08:00:00");
-                        $total = $durasi->addMinutes($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+                        $total = $durasi->addHours($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
                         $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
                     }
                     return $total->format('H:i:s');
