@@ -2,17 +2,25 @@
 
 @section('content')
     <div class="container-fluid">
+        <div class="page-header">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h3>Pendataan Hari Libur</h3>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">Daftar hari libur nasional</li>
+                        <li class="breadcrumb-item active">Libur nasional</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid">
         <div class="row">
             <!-- Zero Configuration  Starts-->
             <div class="col-sm-12">
                 <div class="card">
-                    <div class="card-header">
-                        <div class="row mb-2">
-                            <h5>Pendataan Hari Libur </h5>
-                            <span>Daftar hari libur nasional</span>
-                        </div>
-
-                    </div>
                     <div class="card-body">
                         <div class="row mb-2">
                             <div class="col">
@@ -96,7 +104,8 @@
                             </div>
                             <div class="col-md-7">
                                 <span class="form-label" for="tanggal">Keterangan</span>
-                                <input class="form-control" id="keterangan" name="keterangan" type="text" required="">
+                                <input class="form-control" id="keterangan" name="keterangan" type="text"
+                                    required="">
                             </div>
 
                         </div>

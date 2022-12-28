@@ -79,74 +79,60 @@
                         <div class="row g-2 mb-3">
                             <div class="col-md-2">
                                 <span class="form-label" for="name">No Pegawai</span>
-                                <input class="form-control" id="nopeg" name="nopeg" type="text" required=""
-                                    readonly>
+                                <input class="form-control" id="nopeg" name="nopeg" type="text" readonly>
                             </div>
                             <div class="col-md-5">
                                 <span class="form-label" for="name">Nama</span>
-                                <input class="form-control" id="name" name="name" type="text" required="">
+                                <input class="form-control" id="name" name="name" type="text" readonly>
                             </div>
                             <div class="col-md-2">
                                 <span class="form-label" for="npp">NPP</span>
-                                <input class="form-control" id="npp" name="npp" type="text" required="">
+                                <input class="form-control" id="npp" name="npp" type="text" readonly>
                             </div>
                             <div class="col-md-3">
                                 <span class="form-label" for="tempat">Tempat Lahir</span>
-                                <input class="form-control" id="tempat" name="tempat" type="text" required="">
+                                <input class="form-control" id="tempat" name="tempat" type="text" readonly>
                             </div>
                             <div class="col-md-3">
                                 <span class="form-label" for="tanggal_lahir">Tanggal Lahir</span>
                                 <div class="input-group date" id="dt-date" data-target-input="nearest">
                                     <input class="form-control col-sm-12 datetimepicker-input digits" type="text"
-                                        data-target="#dt-date" id="tanggal_lahir" name="tanggal_lahir" required>
+                                        data-target="#dt-date" id="tanggal_lahir" name="tanggal_lahir" readonly>
                                     <div class="input-group-text" data-target="#dt-date" data-toggle="datetimepicker"><i
                                             class="fa fa-calendar"></i></div>
                                 </div>
                             </div>
                             <div class="col-md-5">
                                 <span class="form-label" for="email">Email</span>
-                                <input class="form-control" id="email" name="email" type="text" required="">
+                                <input class="form-control" id="email" name="email" type="text" readonly>
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="nohp">No HP</span>
-                                <input class="form-control" id="nohp" name="nohp" type="text"
-                                    required="">
+                                <input class="form-control" id="nohp" name="nohp" type="text" readonly>
                             </div>
                             <div class="col-md-7">
                                 <span class="form-label" for="nama_unit">Unit</span>
-                                <input class="form-control" id="nama_unit" name="nama_unit" type="text"
-                                    required="">
+                                <input class="form-control" id="nama_unit" name="nama_unit" type="text" readonly>
                             </div>
                             <div class="col-md-5">
                                 <input type="hidden" id="atasan" name="atasan">
                                 <span class="form-label" for="name_jab">Atasan</span>
-                                <input class="form-control" id="name_jab" name="name_jab" type="text"
-                                    required="">
+                                <input class="form-control" id="name_jab" name="name_jab" type="text" readonly>
                             </div>
                             <div class="col-md-5">
                                 <input type="hidden" id="atasan_lang" name="atasan_lang">
                                 <span class="form-label" for="name_jab2">Atasan Langsung</span>
-                                <input class="form-control" id="name_jab2" name="name_jab2" type="text"
-                                    required="">
+                                <input class="form-control" id="name_jab2" name="name_jab2" type="text" readonly>
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="jabatan">Jabatan Karyawan</span>
-                                <input class="form-control" id="jabatan" name="jabatan" type="text"
-                                    required="">
+                                <input class="form-control" id="jabatan" name="jabatan" type="text" readonly>
                             </div>
                             <div class="col-md-3">
-                                <span class="form-label" for="status">Status</span>
-                                <select name="status" id="status" class="form-control">
-                                    <option value='' disabled selected>Pilih Status</option>
-                                    <option value="1">Tendik</option>
-                                    <option value="0">Nondik</option>
-                                </select>
+                                <span class="form-label" for="jabatan">Status</span>
+                                <input class="form-control" id="status" name="status" type="text" readonly>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-
-                        <button class="btn btn-primary" type="submit">Submit</button>
                     </div>
 
                 </form>
@@ -181,7 +167,11 @@
                 $('#atasan_lang').val(data.atasan_lang);
                 $('#masuk_kerja').val(data.masuk_kerja);
                 $('#fungsi').val(data.fungsi);
-                $('#status').val(data.status);
+                if (data.status = '1') {
+                    $('#status').val('Tendik');
+                } else {
+                    $('#status').val('Nondik');
+                }
                 $('#unit').val(data.unit);
                 $('#nama_unit').val(data.nama_unit);
                 $('#name_jab').val(data.name_jab);
