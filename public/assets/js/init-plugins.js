@@ -2,6 +2,8 @@
 const daterangepicker = (
     elementSelector,
     drops = "auto",
+    autoUpdate = false,
+    autoApply = false,
     timePicker = false,
     parentEl = null
 ) => {
@@ -9,8 +11,8 @@ const daterangepicker = (
         singleDatePicker: true,
         timePicker: false,
         showDropdowns: true,
-        autoUpdateInput: false,
-        autoApply: true,
+        autoUpdateInput: autoUpdate,
+        autoApply: autoApply,
         locale: {
             cancelLabel: "Hapus",
             applyLabel: "Terapkan",
@@ -31,4 +33,16 @@ const daterangepicker = (
     }
 
     $(`${elementSelector}`).daterangepicker(config);
+
+    $(`${elementSelector}`).on("apply.daterangepicker", function (ev, picker) {
+        if (timePicker) {
+            $(this).val(picker.startDate.format("YYYY-MM-DD HH:mm:ss"));
+        } else {
+            $(this).val(picker.startDate.format("YYYY-MM-DD"));
+        }
+    });
+
+    $(`${elementSelector}`).on("cancel.daterangepicker", function (ev, picker) {
+        $(this).val("");
+    });
 };

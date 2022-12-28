@@ -331,14 +331,22 @@
 
             daterangepicker('.ts-datepicker');
             daterangepicker('.ts-datetimepicker', true);
-            daterangepicker('#tanggal-tambah', "auto", false, '#tambahAtt');
-            daterangepicker('#jam_masuk', "auto", true, '#tambahAtt');
-            daterangepicker('#jam_siang', "auto", true, '#tambahAtt');
-            daterangepicker('#jam_pulang', "auto", true, '#tambahAtt');
-            daterangepicker('#tanggal_izin', "auto", true, '#show-izin');
-            daterangepicker('#jam_masuk1', "auto", true, '#show-att');
-            daterangepicker('#jam_siang1', "auto", true, '#show-att');
-            daterangepicker('#jam_pulang1', "auto", true, '#show-att');
+            daterangepicker('#tanggal-tambah', drops = "auto", autoUpdate = false, autoApply = false, timePicker =
+                false, parentEl = '#tambahAtt');
+            daterangepicker('#jam_masuk', drops = "auto", autoUpdate = false, autoApply = false, timePicker =
+                true, parentEl = '#tambahAtt');
+            daterangepicker('#jam_siang', drops = "auto", autoUpdate = false, autoApply = false, timePicker =
+                true, parentEl = '#tambahAtt');
+            daterangepicker('#jam_pulang', drops = "auto", autoUpdate = false, autoApply = false, timePicker =
+                true, parentEl = '#tambahAtt');
+            daterangepicker('#tanggal_izin', drops = "auto", autoUpdate = false, autoApply = false, timePicker =
+                true, parentEl = '#show-izin');
+            daterangepicker('#jam_masuk1', drops = "auto", autoUpdate = false, autoApply = false, timePicker =
+                true, parentEl = '#show-att');
+            daterangepicker('#jam_siang1', drops = "auto", autoUpdate = false, autoApply = false, timePicker =
+                true, parentEl = '#show-att');
+            daterangepicker('#jam_pulang1', drops = "auto", autoUpdate = false, autoApply = false, timePicker =
+                true, parentEl = '#show-att');
         });
 
         $('body').on('click', '.editAttendance', function() {

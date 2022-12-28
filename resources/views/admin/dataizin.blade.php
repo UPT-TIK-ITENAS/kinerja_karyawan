@@ -222,8 +222,8 @@
 
 
 
-        daterangepicker('#tgl_awal_izin', 'auto', false, '#tambahIzin');
-        daterangepicker('#tgl_akhir_izin', 'auto', false, '#tambahIzin');
+        daterangepicker('#tgl_awal_izin', drops = "auto", autoUpdate = true, autoApply = true, timePicker = false,
+            parentEl = '#tambahIzin');
 
         $("#tgl_awal_izin").on('change', function(e) {
             e.preventDefault();
@@ -266,7 +266,8 @@
             })
         })
 
-        daterangepicker('#tgl_awal_izin', 'auto', false, '#tambahIzin');
+        daterangepicker('#tgl_awal_izin', drops = "auto", autoUpdate = true, autoApply = true, timePicker = false,
+            parentEl = '#tambahIzin');
         $("#tgl_awal_izin").on('change', function(e) {
             e.preventDefault();
             let tgl_awal = $(this).val();

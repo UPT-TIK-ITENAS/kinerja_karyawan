@@ -237,8 +237,9 @@
             };
         });
 
-        daterangepicker('#tgl_awal_cuti', 'auto', false, '#tambahCuti');
-        daterangepicker('#tgl_akhir_cuti', 'auto', false, '#tambahCuti');
+        daterangepicker('#tgl_awal_cuti', drops = "auto", autoUpdate = true, autoApply = true, timePicker = false,
+            parentEl = '#tambahCuti');
+
         $("#tgl_awal_cuti").on('change', function(e) {
             e.preventDefault();
             let tgl_awal = $(this).val();

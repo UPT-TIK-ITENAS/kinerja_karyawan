@@ -116,15 +116,15 @@ class AdminController extends Controller
                 $telat_pulang = Carbon::parse("$tanggal $row->telat_pulang");
                 if ($durasi->equalTo("$tanggal 08:00:00")) {
                     $base_time = Carbon::parse("$tanggal 00:00:00");
-                    $total = $base_time->addMinutes($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+                    $total = $base_time->addHours($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
                     $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
                 } else if ($durasi->equalTo("$tanggal 04:00:00")) {
                     $base_time = Carbon::parse("$tanggal 04:00:00");
-                    $total = $base_time->addMinutes($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+                    $total = $base_time->addHours($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
                     $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
                 } else {
                     $base_time = Carbon::parse("$tanggal 08:00:00");
-                    $total = $durasi->addMinutes($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
+                    $total = $durasi->addHours($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
                     $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
                 }
                 return $total->format('H:i:s');
@@ -154,6 +154,7 @@ class AdminController extends Controller
 
         $currentData = Attendance::where('nip', $request->nip)->where('tanggal', Carbon::parse($request->tanggal)->format('Y-m-d'))->first();
         $hari = date('w', strtotime($request->tanggal));
+        date_default_timezone_set('UTC');
 
         // if currentData is null, then create new data
         if (!$currentData) {

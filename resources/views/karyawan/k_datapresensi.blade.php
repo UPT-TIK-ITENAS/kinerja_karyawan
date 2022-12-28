@@ -265,7 +265,8 @@
                 table.draw();
                 document.getElementById('btn-filter').style.pointerEvents = 'auto';
             });
-            daterangepicker('#tanggal_izin', "auto", true, '#show-izin');
+            daterangepicker('#tanggal_izin', drops = "auto", autoUpdate = false, autoApply = false, timePicker =
+                true, parentEl = '#show-izin');
         });
 
         $('body').on('click', '.editAtt', function() {
