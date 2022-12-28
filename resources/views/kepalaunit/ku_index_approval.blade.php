@@ -19,6 +19,13 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col">
+                                <a href="#" class="btn btn-primary" data-bs-target="#tambahCuti"
+                                    data-bs-toggle="modal" style="float: right">+ Tambah</a>
+                            </div>
+                        </div>
+                        {{-- <a href="{{ route('admin.createcuti') }}" class="btn btn-primary"><i class="icofont icofont-plus-square"></i> Tambah</a> --}}
                         <div class="dt-ext table-responsive">
                             <table class="dataTable" id="table-cuti">
                                 <thead>
@@ -43,7 +50,6 @@
         </div>
     </div>
 @endsection
-
 
 @section('scripts')
     <div class="modal fade bd-example-modal-lg" id="ProsesCuti" aria-labelledby="myLargeModalLabel" aria-modal="true"
@@ -141,49 +147,9 @@
             </div>
         </div>
     </div>
-    @parent
 
-@section('scripts')
     @parent
     <script>
-        // $('body').on('click', '.editAK', function() {
-        //     id = $(this).data('id');
-        //     console.log(id)
-        //     $('#approval').prop('disabled', false);
-        //     $('#alasan_tolak').prop('disabled', false);
-        //     $('#approval').val(null);
-        //     $('#btnSubmit').prop('disabled', false);
-        //     console.log("approval", $("#approval"))
-        //     $.get("{{ url('/kepalaunit/approval/editCuti') }}/" + id, function(data, jeniscuti) {
-        //         if (data.approval == 2) {
-        //             document.getElementById("ifYes").style.display = "block";
-        //             $('#btnSubmit').prop('disabled', true);
-        //             $('#approval').prop('disabled', true);
-        //             $('#alasan_tolak').prop('disabled', true);
-        //         }
-        //         if (data.approval == 1) {
-        //             document.getElementById("ifYes").style.display = "none";
-        //             $('#btnSubmit').prop('disabled', false);
-        //             $('#approval').prop('disabled', false);
-        //             $('#alasan_tolak').prop('disabled', false);
-        //         }
-        //         $('#approval').val(data.approval);
-        //         $('#ModalTitle').html("Edit Jenis Kegiatan");
-        //         $('#ProsesCuti').modal('show');
-        //         $("#token").val($("meta[name=csrf-token]").attr("content"));
-        //         $('#id_cuti').val(data.id_cuti);
-        //         $('#alasan_tolak').val(data.alasan_tolak);
-        //         $('#jenis_cuti').val(data.jenis_cuti);
-        //         $('#tgl_awal_cuti').val(data.tgl_awal_cuti);
-        //         $('#tgl_akhir_cuti').val(data.tgl_akhir_cuti);
-        //         $('#total_cuti').val(data.total_cuti);
-        //         $('#alamat').val(data.alamat);
-        //         $('#no_hp').val(data.no_hp);
-        //         console.log(data);
-        //         //console.log(jeniscuti);
-        //     })
-        // });
-
         $('body').on('click', '.editAK', function() {
             id = $(this).data('id');
             console.log(id)
@@ -319,10 +285,6 @@
                     },
 
                 ],
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'print'
-                ]
             });
 
             $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {

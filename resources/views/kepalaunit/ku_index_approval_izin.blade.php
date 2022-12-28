@@ -13,13 +13,14 @@
             </div>
         </div>
     </div>
+
+
     <div class="container-fluid">
         <div class="row">
             <!-- Zero Configuration  Starts-->
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-
                         <div class="dt-ext table-responsive">
                             <table class="dataTable" id="table-izin">
                                 <thead>
@@ -44,7 +45,6 @@
         </div>
     </div>
 @endsection
-
 
 @section('scripts')
     <div class="modal fade bd-example-modal-lg" id="ProsesIzin" aria-labelledby="myLargeModalLabel" aria-modal="true"
@@ -75,11 +75,12 @@
                                 <span class="form-label" for="jenis_izin">Jenis izin</span>
                                 <input class="form-control" id="jenis_izin" name="jenis_izin" type="text" required=""
                                     disabled>
-                                {{-- <input type="hidden" id="total_izin"> --}}
                             </div>
                         </div>
-
+                        <input id="jbnopeg" name="jbnopeg" type="hidden">
                         <input type="hidden" id="id_izinkerja" name="id_izinkerja">
+                        <input type="hidden" id="id_izin" name="id_izin">
+
                         <div class="row g-2 mb-3">
                             <div class="col-md-4">
                                 <span class="form-label" for="tgl_awal_izin">Tanggal Awal</span>
@@ -99,8 +100,8 @@
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu dan hari libur
-                            nasional tidak
+                        <span class="badge badge-secondary" style="font-size: 14px;">*) Hari sabtu/minggu, libur nasional
+                            dan cuti bersama tidak
                             dihitung</span>
                         <button class="btn btn-primary" type="submit" id="btnSubmit">Setuju</button>
                     </div>
@@ -108,9 +109,6 @@
             </div>
         </div>
     </div>
-    @parent
-
-@section('scripts')
     @parent
     <script>
         $('body').on('click', '.editAK', function() {
@@ -126,6 +124,7 @@
                 $('#approval').val(data.approval);
                 $('#id_izinkerja').val(data.id_izinkerja);
                 $('#jenis_izin').val(data.jenis_izin);
+                $('#id_izin').val(data.id_izin);
                 $('#tgl_awal_izin').val(data.tgl_awal_izin);
                 $('#tgl_akhir_izin').val(data.tgl_akhir_izin);
                 $('#total_izin').val(data.total_izin);

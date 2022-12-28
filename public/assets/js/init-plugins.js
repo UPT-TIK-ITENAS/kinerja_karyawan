@@ -14,10 +14,11 @@ const daterangepicker = (
         autoUpdateInput: autoUpdate,
         autoApply: autoApply,
         locale: {
-            cancelLabel: "Hapus",
-            applyLabel: "Terapkan",
             format: "YYYY-MM-DD",
         },
+        cancelLabel: "Hapus",
+        applyLabel: "Terapkan",
+
         drops: drops,
     };
 

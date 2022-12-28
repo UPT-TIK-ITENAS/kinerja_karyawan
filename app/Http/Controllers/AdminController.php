@@ -349,7 +349,9 @@ class AdminController extends Controller
 
     public function listizin(Request $request)
     {
-        $data = DB::table('izin_kerja')->join('unit', 'izin_kerja.unit', '=', 'unit.id')->join('jenis_izin', 'jenis_izin.id_izin', '=', 'izin_kerja.jenis_izin')->orderBy('izin_kerja.created_at')->get();
+        $data = DB::table('izin_kerja')
+            ->join('unit', 'izin_kerja.unit', '=', 'unit.id')
+            ->join('jenis_izin', 'jenis_izin.id_izin', '=', 'izin_kerja.jenis_izin');
 
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -362,7 +364,7 @@ class AdminController extends Controller
                 })
 
                 ->rawColumns(['print', 'status'])
-                ->make(true);
+                ->toJson();
         }
     }
 
@@ -469,7 +471,8 @@ class AdminController extends Controller
 
     public function listcuti(Request $request)
     {
-        $data = Cuti::join('unit', 'cuti.unit', 'unit.id')->join('jenis_cuti', 'cuti.jenis_cuti', 'jenis_cuti.id_jeniscuti')->orderBy('cuti.created_at')->get();
+        $data = Cuti::join('unit', 'cuti.unit', 'unit.id')
+            ->join('jenis_cuti', 'cuti.jenis_cuti', 'jenis_cuti.id_jeniscuti');
 
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -482,7 +485,7 @@ class AdminController extends Controller
                 })
 
                 ->rawColumns(['action', 'status'])
-                ->make(true);
+                ->toJson();
         }
     }
 

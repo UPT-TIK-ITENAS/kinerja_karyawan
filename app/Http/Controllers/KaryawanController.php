@@ -380,7 +380,7 @@ class KaryawanController extends Controller
             'approval' => 0,
             'qrcode_peg' => $qrcode_filenamepeg,
         ]);
-        return redirect()->back()->with('danger', 'Saldo Cuti Tidak Mencukupi');
+        return redirect()->back()->with('success', 'Pengajuan Cuti Berhasil');
     }
 
     public function index_izin()
@@ -452,9 +452,9 @@ class KaryawanController extends Controller
     {
         $delete = Cuti::where('id_cuti', $id)->delete();
         if ($delete) {
-            return redirect()->back()->with('success', 'Berhasil membatalkan izin');
+            return redirect()->back()->with('success', 'Berhasil membatalkan cuti');
         } else {
-            return redirect()->back()->with('danger', 'Gagal membatalkan izin');
+            return redirect()->back()->with('danger', 'Gagal membatalkan cuti');
         }
     }
 }
