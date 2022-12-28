@@ -225,7 +225,7 @@
                     <td>
                         @if ($data->approval == 3)
                             <b><del>Disetujui</del> / Tidak Disetujui oleh,</b>
-                        @elseif($data->approval == 1)
+                        @elseif($data->approval == 1 || $data->approval == 2)
                             <b>Disetujui/<del>Tidak Disetujui</del> oleh,</b>
                         @endif
 

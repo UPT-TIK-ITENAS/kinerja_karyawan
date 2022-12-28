@@ -386,19 +386,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/listrekapkaryawan', [PejabatController::class, 'listrekapkaryawan'])->name('listrekapkaryawan');
         Route::get('/detailrekap/{nopeg}', [RekapitulasiController::class, 'detailrekap'])->name('detailrekap');
 
-
-
-
         Route::get('/rekapitulasi', [PejabatController::class, 'rekapitulasi'])->name('rekapitulasi');
         Route::get('/listdatarekapitulasi', [PejabatController::class, 'listdatarekapitulasi'])->name('listdatarekapitulasi');
 
-        Route::get('/izin/index', [PejabatController::class, 'index_izin'])->name('izin');
-        Route::post('/izin/store', [PejabatController::class, 'store_izin'])->name('store_izin');
-        Route::get('/izin/batal{id}', [PejabatController::class, 'batal_izin'])->name('batal_izin');
-
-        Route::get('/cuti/index', [PejabatController::class, 'index_cuti'])->name('cuti');
-        Route::post('/cuti/store', [PejabatController::class, 'store_cuti'])->name('store_cuti');
-        Route::get('/cuti/batal/{id}', [PejabatController::class, 'batal_cuti'])->name('batal_cuti');
+        Route::prefix('print')->name('print.')->group(function () {
+            Route::get('cuti/{id}', [PrintController::class, 'printcuti'])->name('cuti');
+        });
 
         Route::get('/approval/index', [PejabatController::class, 'index_approval'])->name('approval');
         Route::get('/approval/editCuti/{id}', [PejabatController::class, 'editCuti'])->name('editCuti');

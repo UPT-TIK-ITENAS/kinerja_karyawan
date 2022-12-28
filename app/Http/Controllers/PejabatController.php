@@ -292,7 +292,6 @@ class PejabatController extends Controller
 
     public function index_approval(Request $request)
     {
-        //$data = DB::select("SELECT * from cuti inner join unit u on u.id =cuti.unit inner join jenis_cuti jc on jc.id_jeniscuti = cuti.jenis_cuti");
         $auth = auth()->user()->nopeg;
         $usrs = Jabatan::select('id')
             ->where('nopeg', '=', $auth)
@@ -302,32 +301,22 @@ class PejabatController extends Controller
             ->join('users', 'cuti.nopeg', '=', 'users.nopeg')
             ->join('jabatan as jb1', 'jb1.id', '=', 'users.atasan_lang')
             ->join('jabatan as jb2', 'jb2.id', '=', 'users.atasan')
+            ->where('cuti.approval', '>=', '1')
             ->where('jb1.nopeg', $auth)
             ->where('users.atasan_lang', $usrs['id'])
             ->orWhere('users.atasan', $usrs['id'])
-            // ->where('users.atasan_lang', auth()->user()->atasan_lang)
-            // ->where('cuti.approval', 1)
-            ->where('users.role', 'karyawan')->get();
-
-
-
-
-        // $jeniscuti = JenisCuti::all();
-
-        //dd($usrs['id']);
-        //Debugbar::info($usrs);
+            ->where('users.role', 'karyawan');
 
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
-                // ->addColumn('action', function ($row) {
-                //     return getAksi($row->id_cuti, 'cuti');
-                // })
                 ->addColumn('action', function ($data) {
-                    // $delete_url = route('pejabat.destroyCuti', $data->id_cuti);
-                    $edit_dd = "<div class='d-block text-center'>
-                    <a data-bs-toggle='modal' class='btn btn-success btn-xs align-items-center editAK fa fa-pencil' data-id='$data->id_cuti' data-original-title='Edit' data-bs-target='#ProsesCuti'></a>                        </div>";
-                    return $edit_dd;
+                    $print =  route('pejabat.print.cuti', $data->id_cuti);
+                    $for_html = '
+                    <a href="#" class="btn btn-warning btn-xs editAK" data-bs-toggle="modal" data-id="' . $data->id_cuti . '"><i class="icofont icofont-pencil-alt-2"></i></a>
+                    <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
+
+                    return $for_html;
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->approval == 1) {
@@ -342,7 +331,7 @@ class PejabatController extends Controller
                     return $apprv;
                 })
                 ->rawColumns(['status', 'action'])
-                ->make(true);
+                ->toJson();
         }
         return view('pejabat.k_index_approval', compact('data'));
     }
@@ -354,14 +343,12 @@ class PejabatController extends Controller
         return response()->json($data);
     }
 
-    public function destroyCuti($id)
-    {
-        Cuti::where('id_cuti', $id)->delete();
-        return redirect()->route('pejabat.k_index_approval')->with('success', 'Data berhasil dihapus!');
-    }
-
     public function approveCuti(Request $request)
     {
+
+        $qrcode_filenameatlang = 'qr-pejabat' . base64_encode(auth()->user()->nopeg . '-' . auth()->user()->name .  $request->id_jeniscuti . '-' . date('Y-m-d H:i:s') . ')') . '.svg';
+        QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . auth()->user()->nopeg . '-' .  auth()->user()->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenameatlang));
+
         $cuti = Cuti::where('id_cuti', $request->id_cuti)->first();
         if ($request->approval == 2) {
 
@@ -369,6 +356,7 @@ class PejabatController extends Controller
             DB::beginTransaction();
             $cuti->update([
                 'approval' => $request->approval,
+                'qrcode_pejabat' => $qrcode_filenameatlang,
             ]);
 
             foreach ($attendance as $key => $value) {
@@ -377,12 +365,14 @@ class PejabatController extends Controller
                 ]);
             }
             DB::commit();
-            return redirect()->back()->with('success', 'Cuti disetujui!');
+            return redirect()->back()->with('success', 'Pnegajuan Cuti Disetujui!');
         } else {
             $cuti->update([
+                'approval' => $request->approval,
                 'alasan_tolak' => $request->alasan_tolak,
+                'qrcode_pejabat' => $qrcode_filenameatlang,
             ]);
-            return redirect()->back()->with('danger', 'Cuti ditolak');
+            return redirect()->back()->with('success', 'Pengajuan Cuti Ditolak!');
         }
     }
 }
