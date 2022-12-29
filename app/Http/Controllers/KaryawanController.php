@@ -142,7 +142,7 @@ class KaryawanController extends Controller
         $qrcode_filenamepeg = 'qr-karyawan' . base64_encode($request->nip . '-' . $request->id . '-' . date('Y-m-d H:i:s') . ')') . '.svg';
         QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nip . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
 
-        if ($request->jenis == 2 || $request->jenis == 3) {
+        if ($request->jenis == 2) {
             Izin::insert([
                 'id_attendance' => $request->id,
                 'nopeg' => $request->nip,
@@ -193,7 +193,7 @@ class KaryawanController extends Controller
                 return $row->total_hari_mangkir - ($row->cuti ?? 0) - ($row->izin_kerja ?? 0);
             })
             ->editColumn('kurang_jam', function ($row) {
-                return $row->kurang_jam . ' ' . 'Menit';
+                return \Carbon\CarbonInterval::seconds(($row->kurang_jam * 3600) / 60)->cascade()->forHumans();
             })
             ->editColumn('total_izin', function ($row) {
                 if ($row->total_izin != NULL) {

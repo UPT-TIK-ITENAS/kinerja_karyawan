@@ -147,7 +147,7 @@ class KepalaUnitController extends Controller
                 return $row->total_hari_mangkir - ($row->cuti ?? 0) - ($row->izin_kerja ?? 0);
             })
             ->editColumn('kurang_jam', function ($row) {
-                return $row->kurang_jam . ' ' . 'Menit';
+                return \Carbon\CarbonInterval::seconds(($row->kurang_jam * 3600) / 60)->cascade()->forHumans();
             })
             ->editColumn('total_izin', function ($row) {
                 if ($row->total_izin != NULL) {
