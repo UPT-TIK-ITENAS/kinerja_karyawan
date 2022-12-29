@@ -365,7 +365,7 @@ class PejabatController extends Controller
                 ]);
             }
             DB::commit();
-            return redirect()->back()->with('success', 'Pnegajuan Cuti Disetujui!');
+            return redirect()->back()->with('success', 'Pengajuan Cuti Disetujui!');
         } else {
             $cuti->update([
                 'approval' => $request->approval,

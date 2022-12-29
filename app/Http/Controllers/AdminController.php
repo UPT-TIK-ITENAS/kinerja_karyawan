@@ -179,7 +179,7 @@ class AdminController extends Controller
     public function updateAttendance(Request $request)
     {
         $attendance = Attendance::where('id', $request->id2)->first();
-        dd(lateSiang2($request->jam_siang1, $request->jam_pulang1, $attendance->hari));
+        // dd(lateSiang2($request->jam_siang1, $request->jam_pulang1, $attendance->hari));
         $attendance->update([
             'jam_masuk' => Carbon::parse($request->jam_masuk1)->format('Y-m-d H:i:s'),
             'jam_siang' => Carbon::parse($request->jam_siang1)->format('Y-m-d H:i:s'),

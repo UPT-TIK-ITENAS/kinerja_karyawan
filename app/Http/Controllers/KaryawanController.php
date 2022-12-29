@@ -142,7 +142,7 @@ class KaryawanController extends Controller
         $qrcode_filenamepeg = 'qr-karyawan' . base64_encode($request->nip . '-' . $request->id . '-' . date('Y-m-d H:i:s') . ')') . '.svg';
         QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nip . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
 
-        if ($request->jenis == 2) {
+        if ($request->jenis == 2 || $request->jenis == 3) {
             Izin::insert([
                 'id_attendance' => $request->id,
                 'nopeg' => $request->nip,

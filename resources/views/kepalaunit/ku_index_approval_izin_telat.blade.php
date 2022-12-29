@@ -70,6 +70,7 @@
                                 <input type="hidden" id="id_izin" name="id_izin">
                                 <input type="hidden" id="id_attendance" name="id_attendance">
                                 <input type="hidden" id="nopeg" name="nopeg">
+                                <input type="hidden" id="jenis" name="jenis">
                                 <span class="form-label" for="alasan">Alasan</span>
                                 <textarea name="alasan" id="alasan" name="alasan" class="form-control" required readonly></textarea>
                                 <div class="invalid-feedback">Wajib Diisi !</div>
@@ -161,6 +162,7 @@
                 $('#name').val(data.name);
                 $('#nopeg').val(data.nopeg);
                 $('#alasan').val(data.alasan);
+                $('#jenis').val(data.jenis);
                 if (data.jam_awal != undefined && data.jam_akhir != undefined && data.tanggal !=
                     undefined) {
                     $('#jam').val(data.tanggal + ' ' + data.jam_awal + ' s/d ' + data.jam_akhir);

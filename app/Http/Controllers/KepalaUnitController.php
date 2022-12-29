@@ -418,11 +418,64 @@ class KepalaUnitController extends Controller
         $qrcode_filenameat = 'qr-atasan' . $request->nopeg . '-' . auth()->user()->nopeg . '-' . $request->id_attendance . '.svg';
         QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . auth()->user()->name . '-' . auth()->user()->nopeg . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenameat));
 
-        Izin::where('id_izin', $request->id_izin)->update([
-            'approval' => '1',
-            'qrcode_kepala' => $qrcode_filenameat,
-        ]);
+        $izin = Izin::where('id_attendance', $request->id_attendance)->first();
+        if ($request->jenis == '3') {
 
-        return redirect()->back()->with('success', 'Izin Disetujui');
+            $att = Attendance::where('nip', $izin->nopeg)->where('tanggal', Carbon::parse($request->jam)->format('Y-m-d'))->get();
+            DB::beginTransaction();
+
+            Izin::where('id_izin', $request->id_izin)->update([
+                'approval' => '1',
+                'qrcode_kepala' => $qrcode_filenameat,
+            ]);
+
+            foreach ($att as $key => $value) {
+                if ($value->hari == '5') {
+                    $jamsiang1 = Carbon::parse($request->jam)->format('Y-m-d 13:15:00');
+                    $value->update([
+                        'is_dispen' => 1,
+                        'jam_masuk' => Carbon::parse($value->jam_masuk)->format('Y-m-d H:i:s'),
+                        'jam_siang' => $jamsiang1,
+                        'jam_pulang' => Carbon::parse($value->jam_pulang)->format('Y-m-d H:i:s'),
+                        'durasi' => getDurasi($value->jam_masuk, $jamsiang1, $value->jam_pulang),
+                        'telat_masuk' => lateMasuk($value->jam_masuk, $jamsiang1, $value->hari),
+                        'telat_siang' => lateSiang2($jamsiang1, $value->jam_pulang, $value->hari),
+                        'modify_by' => '1',
+                    ]);
+                } else {
+                    $jamsiang2 = Carbon::parse($request->jam)->format('Y-m-d 12:45:00');
+                    $value->update([
+                        'is_dispen' => 1,
+                        'jam_masuk' => Carbon::parse($value->jam_masuk)->format('Y-m-d H:i:s'),
+                        'jam_siang' => $jamsiang2,
+                        'jam_pulang' => Carbon::parse($value->jam_pulang)->format('Y-m-d H:i:s'),
+                        'durasi' => getDurasi($value->jam_masuk, $jamsiang2, $value->jam_pulang),
+                        'telat_masuk' => lateMasuk($value->jam_masuk, $jamsiang2, $value->hari),
+                        'telat_siang' => lateSiang2($jamsiang2, $value->jam_pulang, $value->hari),
+                        'modify_by' => '1',
+                    ]);
+                }
+            }
+            $att2 = Attendance::where('nip', $izin->nopeg)->where('tanggal', Carbon::parse($request->jam)->format('Y-m-d'))->get();
+            foreach ($att2 as $key => $value) {
+                if ($value->jam_masuk == NULL || $value->jam_pulang == NULL) {
+                    $value->update([
+                        'status' => '0',
+                    ]);
+                } else {
+                    $value->update([
+                        'status' => '1',
+                    ]);
+                }
+            }
+            DB::commit();
+            return redirect()->back()->with('success', 'Izin Disetujui');
+        } else {
+            Izin::where('id_izin', $request->id_izin)->update([
+                'approval' => '1',
+                'qrcode_kepala' => $qrcode_filenameat,
+            ]);
+            return redirect()->back()->with('success', 'Izin Disetujui');
+        }
     }
 }
