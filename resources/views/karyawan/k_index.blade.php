@@ -26,7 +26,7 @@
                             </div>
                             <div class="media-body">
                                 <span class="m-0">Total Hari Kerja</span>
-                                <h4 class="mb-0 counter">{{ $data->total_hari_kerja_per_bulan }} Hari</h4>
+                                <h4 class="mb-0 counter">{{ $data->sum('total_hari_kerja_per_bulan') }} Hari</h4>
                             </div>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                             </div>
                             <div class="media-body">
                                 <span class="m-0">Total Hari Hadir Kerja</span>
-                                <h4 class="mb-0 counter">{{ $data->total_masuk_karyawan }} Hari</h4>
+                                <h4 class="mb-0 counter">{{ $data->sum('total_masuk_karyawan') }} Hari</h4>
                             </div>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                             </div>
                             <div class="media-body">
                                 <span class="m-0">Total Hari Mangkir</span>
-                                <h4 class="mb-0 counter">{{ $data->total_hari_mangkir }} Hari</h4>
+                                <h4 class="mb-0 counter">{{ $data->sum('total_hari_mangkir') }} Hari</h4>
                             </div>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                             <div class="media-body">
                                 <span class="m-0">Total Kurang Jam</span>
                                 <h4 class="mb-0 counter">
-                                    {{ \Carbon\CarbonInterval::seconds(($data->kurang_jam * 3600) / 60)->cascade()->forHumans() }}
+                                    {{ \Carbon\CarbonInterval::seconds(($data->sum('kurang_jam') * 3600) / 60)->cascade()->forHumans() }}
                                 </h4>
                             </div>
                         </div>
@@ -88,7 +88,7 @@
                             </div>
                             <div class="media-body">
                                 <span class="m-0">Total Cuti</span>
-                                <h4 class="mb-0 counter">{{ $data->cuti ?? 0 }} Hari</h4>
+                                <h4 class="mb-0 counter">{{ $data->sum('cuti') ?? 0 }} Hari</h4>
                             </div>
                         </div>
                     </div>
@@ -103,7 +103,7 @@
                             </div>
                             <div class="media-body">
                                 <span class="m-0">Total Izin</span>
-                                <h4 class="mb-0 counter">{{ $data->izin_kerja ?? 0 }} Hari</h4>
+                                <h4 class="mb-0 counter">{{ $data->sum('izin_kerja') ?? 0 }} Hari</h4>
                             </div>
                         </div>
                     </div>

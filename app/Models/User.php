@@ -79,4 +79,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Izin::class, 'nopeg', 'nopeg');
     }
+	public function atasan()
+	{
+		return $this->belongsTo(Jabatan::class, 'atasan', 'id');
+	}
+	public function atasan_langsung()
+	{
+		return $this->belongsTo(Jabatan::class, 'atasan_lang', 'id');
+	}
 }

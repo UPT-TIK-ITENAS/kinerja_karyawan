@@ -44,23 +44,14 @@ Route::get('/test', function () {
     $telat_masuk = lateMasuk($jam_masuk, $jam_siang, 5);
     $telat_siang = lateSiang2($jam_siang, $jam_pulang, 5);
     // dd($jam_masuk, $jam_siang, $jam_pulang, $telat_masuk, $telat_siang);
-    $tanggal = Carbon::now()->format('Y-m-d');
-    $durasi = Carbon::parse("$tanggal 08:00:00");
-    $telat_masuk = Carbon::parse("$tanggal 00:00:00");
-    $telat_pulang = Carbon::parse("$tanggal 00:07:00");
-    if ($durasi->equalTo("$tanggal 08:00:00")) {
-        $base_time = Carbon::parse("$tanggal 00:00:00");
-        $total = $base_time->addHours($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
-        $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
-    } else if ($durasi->equalTo("$tanggal 04:00:00")) {
-        $base_time = Carbon::parse("$tanggal 04:00:00");
-        $total = $base_time->addHours($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
-        $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
-    } else {
-        $base_time = Carbon::parse("$tanggal 08:00:00");
-        $total = $durasi->addHours($telat_masuk->format('H'))->addMinutes($telat_masuk->format('i'))->addSeconds($telat_masuk->format('s'));
-        $total = $total->addHours($telat_pulang->format('H'))->addMinutes($telat_pulang->format('i'))->addSeconds($telat_pulang->format('s'));
+
+    $users = DB::table('users')->get();
+    foreach ($users as $key => $value) {
+        // transform password from tanggal lahir
+        $password = Carbon::parse($value->tanggal_lahir)->format('dmY');
+        $users[$key]->password = Hash::make($password);
     }
+    dd($users);
 
     // $cek_status = DB::table('attendance_backup')->get();
     // foreach ($cek_status as $cs) {
@@ -284,8 +275,9 @@ Route::group(['middleware' => 'auth'], function () {
         });
 
         Route::prefix('karyawan')->name('admin.karyawan.')->group(function () {
-            Route::get('/', [ListKaryawanController::class, 'index'])->name('list');
-            Route::get('/editKaryawan/{id}', [ListKaryawanController::class, 'editKaryawan'])->name('editKaryawan');
+			Route::get('/list', [ListKaryawanController::class, 'list'])->name('list');
+            Route::get('/', [ListKaryawanController::class, 'index'])->name('index');
+            Route::get('/{id}', [ListKaryawanController::class, 'show'])->name('show');
         });
 
         Route::prefix('rekapitulasi')->name('admin.rekapitulasi.')->group(function () {
