@@ -15,7 +15,7 @@
     </div>
     <div class="container-fluid">
         <hr>
-        <h6>Rekap untuk bulan {{ \Carbon\Carbon::parse(date('Y-m-d'))->isoFormat('MMMM Y') }}</h6>
+        <h6>Rekap untuk periode {{ $periode->judul }}</h6>
         <div class="row">
             <div class="col-lg-4 col-md-4 col-sm-12">
                 <div class="card o-hidden border-0">

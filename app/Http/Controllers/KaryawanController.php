@@ -44,7 +44,7 @@ class KaryawanController extends Controller
         $data = collect(
 			DB::select("CALL HitungTotalHariKerja('" . auth()->user()->nopeg . "', '$periode->batas_awal', '$periode->batas_akhir')")
         );
-        return view('karyawan.k_index', compact('data'));
+        return view('karyawan.k_index', compact('data', 'periode'));
     }
     public function index_datapresensi()
     {
