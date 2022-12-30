@@ -37,6 +37,7 @@ Route::group(['name' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login'])->name('auth.login');
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
+
 Route::get('/test', function () {
     $jam_masuk = '08:00:00';
     $jam_siang = '13:37:00';
@@ -178,6 +179,18 @@ Route::get('/test', function () {
     // }
     // dd("Selesai!");
 });
+
+Route::prefix('data')->name('data.')->group(function (){
+	Route::prefix('unit')->name('unit.')->group(function (){
+		Route::get('/', [\App\Http\Controllers\Data\UnitController::class, 'index'])->name('index');
+	});
+	
+	Route::prefix('user')->name('user.')->group(function (){
+		Route::get('/atasan', [\App\Http\Controllers\Data\UserController::class, 'atasan'])->name('atasan');
+		Route::get('/atasan-langsung', [\App\Http\Controllers\Data\UserController::class, 'atasan_langsung'])->name('atasan_langsung');
+	});
+});
+
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'admin'], function () {
 
@@ -277,6 +290,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::prefix('karyawan')->name('admin.karyawan.')->group(function () {
 			Route::get('/list', [ListKaryawanController::class, 'list'])->name('list');
             Route::get('/', [ListKaryawanController::class, 'index'])->name('index');
+			Route::post('/', [ListKaryawanController::class, 'store'])->name('store');
             Route::get('/{id}', [ListKaryawanController::class, 'show'])->name('show');
         });
 
