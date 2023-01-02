@@ -131,7 +131,6 @@
                             </div>
                         </div>
                     </div>
-
                 </form>
             </div>
         </div>
@@ -209,7 +208,7 @@
                             </div>
                             <div class="col-lg-6 col-sm-12">
                                 <span class="form-label" for="atasan_langsung">Atasan Langsung</span>
-                                <select class="form-control select2-hidden-accessible" name="atasan_langsung" id="atasan-langsung-create">
+                                <select class="form-control select2-hidden-accessible" name="atasan_lang" id="atasan-langsung-create">
                                     <option></option>
                                 </select>
                                 <div class="text-danger text-sm fw-bold" id="atasan_langsung-error"></div>
@@ -224,6 +223,99 @@
                 </form>
                 <div class="modal-footer justify-content-between">
                       <button class="btn btn-primary" type="submit" id="btnSubmit">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" id="update-karyawan" aria-labelledby="myLargeModalLabel" aria-modal="true"
+         role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Edit Karyawan</h4>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
+                            data-bs-original-title="" title=""></button>
+                </div>
+                <form id="form-edit" autocomplete="off" class="needs-validation" method="POST">
+                    @csrf
+                    <input type="hidden" name="id" value="">
+                    <div class="modal-body">
+                        <div class="row g-2 mb-3">
+                            <div class="col-lg-2 col-sm-12">
+                                <span class="form-label" for="name">No Pegawai</span>
+                                <input class="form-control" name="nopeg" type="text">
+                                <div class="text-danger text-sm fw-bold" id="nopeg-error"></div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <span class="form-label" for="name">Nama</span>
+                                <input class="form-control" name="name" type="text">
+                                <div class="text-danger text-sm fw-bold" id="name-error"></div>
+                            </div>
+                            <div class="col-lg-4 col-sm-12">
+                                <span class="form-label" for="npp">NPP</span>
+                                <input class="form-control" name="npp" type="text">
+                                <div class="text-danger text-sm fw-bold" id="npp-error"></div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <span class="form-label" for="tempat">Tempat Lahir</span>
+                                <input class="form-control" name="tempat" type="text">
+                                <div class="text-danger text-sm fw-bold" id="tempat-error"></div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <span class="form-label" for="tanggal_lahir">Tanggal Lahir</span>
+                                <input class="form-control" name="tanggal_lahir" type="text">
+                                <div class="text-danger text-sm fw-bold" id="tanggal_lahir-error"></div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <span class="form-label" for="email">Email</span>
+                                <input class="form-control" name="email" type="email">
+                                <div class="text-danger text-sm fw-bold" id="email-error"></div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <span class="form-label" for="nohp">No HP</span>
+                                <input class="form-control" name="nohp" type="text">
+                                <div class="text-danger text-sm fw-bold" id="nohp-error"></div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <span class="form-label" for="unit">Unit</span>
+                                <select class="form-control select2-hidden-accessible" name="unit" id="unit-edit">
+                                    <option></option>
+                                </select>
+                                <div class="text-danger text-sm fw-bold" id="unit-error"></div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <span class="form-label" for="jabatan">Jabatan Karyawan</span>
+                                <select class="form-control js-example-basic-single" name="jabatan">
+                                    <option value="Staff" selected>Staff</option>
+                                    <option value="Kepala Bagian">Kepala Bagian</option>
+                                </select>
+                                <div class="text-danger text-sm fw-bold" id="jabatan-error"></div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <span class="form-label" for="atasan">Atasan</span>
+                                <select class="form-control select2-hidden-accessible" name="atasan" id="atasan-edit">
+                                    <option></option>
+                                </select>
+                                <div class="text-danger text-sm fw-bold" id="atasan-error"></div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <span class="form-label" for="atasan_langsung">Atasan Langsung</span>
+                                <select class="form-control select2-hidden-accessible" name="atasan_lang" id="atasan-langsung-edit">
+                                    <option></option>
+                                </select>
+                                <div class="text-danger text-sm fw-bold" id="atasan_langsung-error"></div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <span class="form-label" for="masuk_kerja">Masuk Kerja</span>
+                                <input class="form-control" name="masuk_kerja" type="text">
+                                <div class="text-danger text-sm fw-bold" id="masuk_kerja-error"></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer justify-content-between">
+                    <button class="btn btn-primary" type="submit" id="btnEdit" data-id="">Edit</button>
                 </div>
             </div>
         </div>
@@ -300,7 +392,6 @@
             });
         });
 
-
         let table = $('#table-kar').DataTable({
             fixedHeader: true,
             pageLength: 25,
@@ -358,8 +449,8 @@
                 type: "POST",
                 data: formData,
                 success: function (response) {
-                    console.log(response);
-                    $('#modal-create').modal('hide');
+                    $('#form-create').trigger('reset');
+                    $('#create-karyawan').modal('hide');
                     table.ajax.reload();
                     $.notify({
                         title: 'Success',
@@ -392,7 +483,7 @@
                     let errors = response.responseJSON.errors;
                     if (errors) {
                         $.each(errors, function (key, value) {
-                            $('#' + key + '-error').text(value[0]);
+                            $('#form-create #' + key + '-error').text(value[0]);
                         });
                     }
                 }
@@ -426,6 +517,148 @@
                 $('#unit').val(data.unit);
                 $('#nama_unit').val(data.units?.nama_unit);
             })
+        });
+
+        $('body').on('click', '.edit-karyawan', function(e) {
+            const id = $(this).data('id');
+            $.get(`${window.baseurl}/admin/karyawan/${id}`, function(data) {
+                console.log(data);
+                $('#unit-edit').select2({
+                    placeholder: 'Pilih Unit',
+                    allowClear: true,
+                    ajax: {
+                        url: '{{ route('data.unit.index') }}',
+                        delay: 250,
+                        dataType: 'json',
+                        data: function(params) {
+                            return {
+                                search: params.term,
+                            };
+                        },
+                        processResults: function(response) {
+                            return {
+                                results: response
+                            };
+                        },
+                        cache: true
+                    }
+                });
+
+                $('#atasan-edit').select2({
+                    placeholder: 'Pilih Atasan',
+                    allowClear: true,
+                    ajax: {
+                        url: '{{ route('data.user.atasan') }}',
+                        delay: 250,
+                        dataType: 'json',
+                        data: function(params) {
+                            return {
+                                search: params.term,
+                            };
+                        },
+                        processResults: function(response) {
+                            return {
+                                results: response
+                            };
+                        },
+                        cache: true
+                    }
+                });
+
+                $('#atasan-langsung-edit').select2({
+                    placeholder: 'Pilih Atasan Langsung',
+                    allowClear: true,
+                    ajax: {
+                        url: '{{ route('data.user.atasan_langsung') }}',
+                        delay: 250,
+                        dataType: 'json',
+                        data: function(params) {
+                            return {
+                                search: params.term,
+                            };
+                        },
+                        processResults: function(response) {
+                            return {
+                                results: response
+                            };
+                        },
+                        cache: true
+                    }
+                });
+
+                $('#update-karyawan').modal('show');
+                $('#form-edit [name="id"]').val(data.id)
+                $('#form-edit [name="nopeg"]').val(data.nopeg)
+                $('#form-edit [name="name"]').val(data.name)
+                $('#form-edit [name="npp"]').val(data.npp)
+                $('#form-edit [name="tempat"]').val(data.tempat)
+                $('#form-edit [name="tanggal_lahir"]').val(data.tanggal_lahir)
+                $('#form-edit [name="email"]').val(data.email)
+                $('#form-edit [name="nohp"]').val(data.nohp)
+                $('#form-edit [name="masuk_kerja"]').val(data.masuk_kerja)
+
+                let jabatan = data.jabatan != null ? new Option(data.jabatan, data.jabatan, true, true) : null;
+                let unit = new Option(`${data.units.kode_unit} | ${data.units?.nama_unit}`, data.unit, true, true);
+                let atasan = new Option(`${data.atasan?.nopeg} | ${data.atasan?.nama}`, data.atasan?.id, true, true);
+                let atasan_langsung = data.atasan_langsung != null ? new Option(`${data.atasan_langsung?.nopeg} | ${data.atasan_langsung?.nama}`, data
+                                .atasan_langsung?.id, true, true) : null;
+
+                $('#form-edit [name="jabatan"]').append(jabatan).trigger('change');
+                $('#unit-edit').append(unit).trigger('change');
+                $('#atasan-edit').append(atasan).trigger('change');
+                $('#atasan-langsung-edit').append(atasan_langsung).trigger('change');
+            });
+        });
+
+        $('#btnEdit').on('click', function (e){
+            e.preventDefault();
+            let id = $('#form-edit [name="id"]').val();
+            // serialize form-create
+            let formData = $('#form-edit').serialize();
+            $.ajax({
+                url: `${window.baseurl + '/admin/karyawan/' + id}`,
+                type: "POST",
+                data: formData,
+                success: function (response) {
+                    $('#form-edit').trigger('reset');
+                    $('#update-karyawan').modal('hide');
+                    table.ajax.reload();
+                    $.notify({
+                        title: 'Success',
+                        message: response.message
+                    }, {
+                        type: 'primary',
+                        allow_dismiss: true,
+                        newest_on_top: false,
+                        mouse_over: true,
+                        showProgressbar: false,
+                        spacing: 10,
+                        timer: 1700,
+                        placement: {
+                            from: 'top',
+                            align: 'center'
+                        },
+                        offset: {
+                            x: 30,
+                            y: 30
+                        },
+                        delay: 1000,
+                        z_index: 10000,
+                        animate: {
+                            enter: 'animated bounce',
+                            exit: 'animated bounce'
+                        }
+                    });
+                },
+                error: function (response) {
+                    let errors = response.responseJSON.errors;
+                    if (errors) {
+                        $.each(errors, function (key, value) {
+                            $('#form-edit #' + key + '-error').text(value[0]);
+                        });
+                    }
+                }
+            });
         });
     </script>
 @endsection

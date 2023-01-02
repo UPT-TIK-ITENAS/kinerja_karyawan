@@ -43,4 +43,8 @@ class UserController extends Controller
 		}
 		return response()->json($response);
 	}
+	public function show($id){
+		$data = Jabatan::find($id);
+		return response()->json($data);
+	}
 }

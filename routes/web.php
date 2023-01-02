@@ -44,140 +44,140 @@ Route::get('/test', function () {
     $jam_pulang = '17:30:00';
     $telat_masuk = lateMasuk($jam_masuk, $jam_siang, 5);
     $telat_siang = lateSiang2($jam_siang, $jam_pulang, 5);
-    // dd($jam_masuk, $jam_siang, $jam_pulang, $telat_masuk, $telat_siang);
+     dd($jam_masuk, $jam_siang, $jam_pulang, $telat_masuk, $telat_siang);
 
-    $users = DB::table('users')->get();
-    foreach ($users as $key => $value) {
-        // transform password from tanggal lahir
-        $password = Carbon::parse($value->tanggal_lahir)->format('dmY');
-        $users[$key]->password = Hash::make($password);
-    }
-    dd($users);
+//    $users = DB::table('users')->get();
+//    foreach ($users as $key => $value) {
+//        // transform password from tanggal lahir
+//        $password = Carbon::parse($value->tanggal_lahir)->format('dmY');
+//        $users[$key]->password = Hash::make($password);
+//    }
+//    dd($users);
 
-    // $cek_status = DB::table('attendance_backup')->get();
-    // foreach ($cek_status as $cs) {
-    //     // Jika full terisi
-    //     if (!empty($cs->jam_masuk) && !empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
-    //         DB::table('attendance')->insert([
-    //             'nip' => $cs->nip,
-    //             'hari' => $cs->hari,
-    //             'tanggal' => $cs->tanggal,
-    //             'jam_masuk' => $cs->jam_masuk,
-    //             'jam_siang' => $cs->jam_siang,
-    //             'jam_pulang' => $cs->jam_pulang,
-    //             'status' => 1,
-    //             'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-    //             'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
-    //             'durasi' => '08:00:00',
-    //         ]);
-    //     }
-    //     // Jika tidak ada sama sekali
-    //     else if (empty($cs->jam_masuk) && empty($cs->jam_siang) && empty($cs->jam_pulang)) {
-    //         DB::table('attendance')->insert([
-    //             'nip' => $cs->nip,
-    //             'hari' => $cs->hari,
-    //             'tanggal' => $cs->tanggal,
-    //             'jam_masuk' => $cs->jam_masuk,
-    //             'jam_siang' => $cs->jam_siang,
-    //             'jam_pulang' => $cs->jam_pulang,
-    //             'status' => 0,
-    //             'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-    //             'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
-    //             'durasi' => '00:00:00',
-    //         ]);
-    //     }
-    //     // Jika hanya ada sore yang terisi
-    //     else if (empty($cs->jam_masuk) && empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
-    //         DB::table('attendance')->insert([
-    //             'nip' => $cs->nip,
-    //             'hari' => $cs->hari,
-    //             'tanggal' => $cs->tanggal,
-    //             'jam_masuk' => $cs->jam_masuk,
-    //             'jam_siang' => $cs->jam_siang,
-    //             'jam_pulang' => $cs->jam_pulang,
-    //             'status' => 0,
-    //             'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-    //             'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
-    //             'durasi' => '00:00:00',
-    //         ]);
-    //     }
-    //     // Jika hanya ada siang yang terisi
-    //     else if (empty($cs->jam_masuk) && !empty($cs->jam_siang) && empty($cs->jam_pulang)) {
-    //         DB::table('attendance')->insert([
-    //             'nip' => $cs->nip,
-    //             'hari' => $cs->hari,
-    //             'tanggal' => $cs->tanggal,
-    //             'jam_masuk' => $cs->jam_masuk,
-    //             'jam_siang' => $cs->jam_siang,
-    //             'jam_pulang' => $cs->jam_pulang,
-    //             'status' => 0,
-    //             'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-    //             'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
-    //             'durasi' => '00:00:00',
-    //         ]);
-    //     }
-    //     // Jika hanya ada pagi yang terisi
-    //     else if (!empty($cs->jam_masuk) && empty($cs->jam_siang) && empty($cs->jam_pulang)) {
-    //         DB::table('attendance')->insert([
-    //             'nip' => $cs->nip,
-    //             'hari' => $cs->hari,
-    //             'tanggal' => $cs->tanggal,
-    //             'jam_masuk' => $cs->jam_masuk,
-    //             'jam_siang' => $cs->jam_siang,
-    //             'jam_pulang' => $cs->jam_pulang,
-    //             'status' => 0,
-    //             'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-    //             'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
-    //             'durasi' => '00:00:00',
-    //         ]);
-    //     }
-    //     // Jika hanya ada siang dan sore terisi
-    //     else if (empty($cs->jam_masuk) && !empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
-    //         DB::table('attendance')->insert([
-    //             'nip' => $cs->nip,
-    //             'hari' => $cs->hari,
-    //             'tanggal' => $cs->tanggal,
-    //             'jam_masuk' => $cs->jam_masuk,
-    //             'jam_siang' => $cs->jam_siang,
-    //             'jam_pulang' => $cs->jam_pulang,
-    //             'status' => 0,
-    //             'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-    //             'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
-    //             'durasi' => '04:00:00',
-    //         ]);
-    //     }
-    //     // Jika hanya ada pagi dan sore terisi
-    //     else if (!empty($cs->jam_masuk) && empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
-    //         DB::table('attendance')->insert([
-    //             'nip' => $cs->nip,
-    //             'hari' => $cs->hari,
-    //             'tanggal' => $cs->tanggal,
-    //             'jam_masuk' => $cs->jam_masuk,
-    //             'jam_siang' => $cs->jam_siang,
-    //             'jam_pulang' => $cs->jam_pulang,
-    //             'status' => 0,
-    //             'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-    //             'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
-    //             'durasi' => '04:00:00',
-    //         ]);
-    //     }
-    //     // Jika hanya ada pagi dan siang terisi
-    //     else if (!empty($cs->jam_masuk) && !empty($cs->jam_siang) && empty($cs->jam_pulang)) {
-    //         DB::table('attendance')->insert([
-    //             'nip' => $cs->nip,
-    //             'hari' => $cs->hari,
-    //             'tanggal' => $cs->tanggal,
-    //             'jam_masuk' => $cs->jam_masuk,
-    //             'jam_siang' => $cs->jam_siang,
-    //             'jam_pulang' => $cs->jam_pulang,
-    //             'status' => 0,
-    //             'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
-    //             'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
-    //             'durasi' => '04:00:00',
-    //         ]);
-    //     }
-    // }
-    // dd("Selesai!");
+//     $cek_status = DB::table('attendance_baru')->get();
+//     foreach ($cek_status as $cs) {
+//         // Jika full terisi
+//         if (!empty($cs->jam_masuk) && !empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
+//             DB::table('attendance')->insert([
+//                 'nip' => $cs->nip,
+//                 'hari' => $cs->hari,
+//                 'tanggal' => $cs->tanggal,
+//                 'jam_masuk' => $cs->jam_masuk,
+//                 'jam_siang' => $cs->jam_siang,
+//                 'jam_pulang' => $cs->jam_pulang,
+//                 'status' => 1,
+//                 'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
+//                 'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+//                 'durasi' => '08:00:00',
+//             ]);
+//         }
+//         // Jika tidak ada sama sekali
+//         else if (empty($cs->jam_masuk) && empty($cs->jam_siang) && empty($cs->jam_pulang)) {
+//             DB::table('attendance')->insert([
+//                 'nip' => $cs->nip,
+//                 'hari' => $cs->hari,
+//                 'tanggal' => $cs->tanggal,
+//                 'jam_masuk' => $cs->jam_masuk,
+//                 'jam_siang' => $cs->jam_siang,
+//                 'jam_pulang' => $cs->jam_pulang,
+//                 'status' => 0,
+//                 'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
+//                 'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+//                 'durasi' => '00:00:00',
+//             ]);
+//         }
+//         // Jika hanya ada sore yang terisi
+//         else if (empty($cs->jam_masuk) && empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
+//             DB::table('attendance')->insert([
+//                 'nip' => $cs->nip,
+//                 'hari' => $cs->hari,
+//                 'tanggal' => $cs->tanggal,
+//                 'jam_masuk' => $cs->jam_masuk,
+//                 'jam_siang' => $cs->jam_siang,
+//                 'jam_pulang' => $cs->jam_pulang,
+//                 'status' => 0,
+//                 'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
+//                 'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+//                 'durasi' => '00:00:00',
+//             ]);
+//         }
+//         // Jika hanya ada siang yang terisi
+//         else if (empty($cs->jam_masuk) && !empty($cs->jam_siang) && empty($cs->jam_pulang)) {
+//             DB::table('attendance')->insert([
+//                 'nip' => $cs->nip,
+//                 'hari' => $cs->hari,
+//                 'tanggal' => $cs->tanggal,
+//                 'jam_masuk' => $cs->jam_masuk,
+//                 'jam_siang' => $cs->jam_siang,
+//                 'jam_pulang' => $cs->jam_pulang,
+//                 'status' => 0,
+//                 'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
+//                 'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+//                 'durasi' => '00:00:00',
+//             ]);
+//         }
+//         // Jika hanya ada pagi yang terisi
+//         else if (!empty($cs->jam_masuk) && empty($cs->jam_siang) && empty($cs->jam_pulang)) {
+//             DB::table('attendance')->insert([
+//                 'nip' => $cs->nip,
+//                 'hari' => $cs->hari,
+//                 'tanggal' => $cs->tanggal,
+//                 'jam_masuk' => $cs->jam_masuk,
+//                 'jam_siang' => $cs->jam_siang,
+//                 'jam_pulang' => $cs->jam_pulang,
+//                 'status' => 0,
+//                 'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
+//                 'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+//                 'durasi' => '00:00:00',
+//             ]);
+//         }
+//         // Jika hanya ada siang dan sore terisi
+//         else if (empty($cs->jam_masuk) && !empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
+//             DB::table('attendance')->insert([
+//                 'nip' => $cs->nip,
+//                 'hari' => $cs->hari,
+//                 'tanggal' => $cs->tanggal,
+//                 'jam_masuk' => $cs->jam_masuk,
+//                 'jam_siang' => $cs->jam_siang,
+//                 'jam_pulang' => $cs->jam_pulang,
+//                 'status' => 0,
+//                 'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
+//                 'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+//                 'durasi' => '04:00:00',
+//             ]);
+//         }
+//         // Jika hanya ada pagi dan sore terisi
+//         else if (!empty($cs->jam_masuk) && empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
+//             DB::table('attendance')->insert([
+//                 'nip' => $cs->nip,
+//                 'hari' => $cs->hari,
+//                 'tanggal' => $cs->tanggal,
+//                 'jam_masuk' => $cs->jam_masuk,
+//                 'jam_siang' => $cs->jam_siang,
+//                 'jam_pulang' => $cs->jam_pulang,
+//                 'status' => 0,
+//                 'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
+//                 'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+//                 'durasi' => '04:00:00',
+//             ]);
+//         }
+//         // Jika hanya ada pagi dan siang terisi
+//         else if (!empty($cs->jam_masuk) && !empty($cs->jam_siang) && empty($cs->jam_pulang)) {
+//             DB::table('attendance')->insert([
+//                 'nip' => $cs->nip,
+//                 'hari' => $cs->hari,
+//                 'tanggal' => $cs->tanggal,
+//                 'jam_masuk' => $cs->jam_masuk,
+//                 'jam_siang' => $cs->jam_siang,
+//                 'jam_pulang' => $cs->jam_pulang,
+//                 'status' => 0,
+//                 'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
+//                 'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+//                 'durasi' => '04:00:00',
+//             ]);
+//         }
+//     }
+//     dd("Selesai!");
 });
 
 Route::prefix('data')->name('data.')->group(function (){
@@ -292,6 +292,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/', [ListKaryawanController::class, 'index'])->name('index');
 			Route::post('/', [ListKaryawanController::class, 'store'])->name('store');
             Route::get('/{id}', [ListKaryawanController::class, 'show'])->name('show');
+			Route::post('/{id}', [ListKaryawanController::class, 'update'])->name('update');
         });
 
         Route::prefix('rekapitulasi')->name('admin.rekapitulasi.')->group(function () {

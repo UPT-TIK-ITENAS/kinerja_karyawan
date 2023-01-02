@@ -22,7 +22,7 @@ class ListKaryawanController extends Controller
 	
 	public function list(Request $request){
 		$users = User::query()->with(['units', 'atasan', 'atasan_langsung'])
-		             ->where('unit', '!=', '29');
+		             ->where('unit', '!=', '29')->latest();
 		return DataTables::of($users)
 			->addIndexColumn()
 			->addColumn('action', function ($user) {
@@ -64,7 +64,7 @@ class ListKaryawanController extends Controller
 			'unit' => 'required',
 			'jabatan' => 'required',
 			'atasan' => 'required',
-			'atasan_langsung' => 'required',
+			'atasan_lang' => 'required',
 			'masuk_kerja' => 'required|date',
 		]);
 		$data = $request->all();
@@ -83,9 +83,25 @@ class ListKaryawanController extends Controller
 	
 	public function update(Request $request, $id)
 	{
-		dd($request->all());
+		$request->validate([
+			'nopeg' => 'required|min:4|max:5',
+			'name' => 'required|min:5',
+			'npp' => 'required|min:5',
+			'tempat' => 'required',
+			'tanggal_lahir' => 'required|date',
+			'email' => 'sometimes|nullable|email',
+			'nohp' => 'sometimes|nullable|numeric|min:10',
+			'unit' => 'required',
+			'jabatan' => 'required',
+			'atasan' => 'required',
+			'atasan_lang' => 'required',
+			'masuk_kerja' => 'required|date',
+		]);
 		$user = User::find($id);
 		$user->update($request->all());
-		return response()->json($user);
+		return response()->json([
+			'success' => true,
+			'message' => 'Data karyawan berhasil diubah!'
+		], 200);
 	}
 }
