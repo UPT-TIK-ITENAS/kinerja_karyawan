@@ -49,7 +49,7 @@
 
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title link-nav @if (request()->routeIs('admin.karyawan.list')) active @endif"
+                        <a class="nav-link menu-title link-nav @if (request()->routeIs('admin.karyawan.index')) active @endif"
                             href="{{ route('admin.karyawan.index') }}"><i data-feather="users"></i><span>Data
                                 Karyawan</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
