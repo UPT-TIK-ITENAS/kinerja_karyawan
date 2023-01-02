@@ -225,7 +225,9 @@
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
         <script src="{{ asset('assets/js/init-plugins.js') }}"></script>
-
+        <!-- Plugins JS start-->
+        <script src="{{ asset('assets/js/chart/chartjs/chart.min.js') }}"></script>
+        <script src="{{ asset('assets/js/chart/chartjs/chart.custom.js') }}"></script>
 
         <script type="text/javascript">
             $(window).on('load', function() {

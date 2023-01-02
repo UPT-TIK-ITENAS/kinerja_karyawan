@@ -33,8 +33,28 @@ class PejabatController extends Controller
 
     public function index()
     {
+        $total_pegawai = User::select(DB::raw('count(*) as total'))->whereNotNull('fungsi')->where('unit', auth()->user()->unit)->count();
+        $auth = auth()->user()->nopeg;  
+        $usrs = Jabatan::select('id')
+            ->where('nopeg', '=', $auth)
+            ->first();
 
-        return view('pejabat.k_index');
+        $pengajuan_cuti = Cuti::join('users', 'cuti.nopeg', '=', 'users.nopeg')
+            ->where('cuti.approval', '1')
+            ->where('users.atasan_lang', $usrs['id'])
+            ->Where('users.atasan', $usrs['id'])->count();
+
+        $cuti = Cuti::join('users', 'cuti.nopeg', '=', 'users.nopeg')
+            ->where('cuti.approval', '2')
+            ->where('users.atasan_lang', $usrs['id'])
+            ->OrWhere('users.atasan', $usrs['id'])->count();
+
+        $data = [
+            'total_pegawai' => $total_pegawai,
+            'pengajuan_cuti' => $pengajuan_cuti,
+            'cuti' => $cuti,
+        ];
+        return view('pejabat.k_index',compact('data'));
     }
 
     public function index_datapresensi()
