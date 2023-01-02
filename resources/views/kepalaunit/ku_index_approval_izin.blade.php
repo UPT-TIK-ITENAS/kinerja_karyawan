@@ -142,6 +142,7 @@
                 processing: true,
                 autoWidth: false,
                 serverSide: true,
+                searching: false,
                 columnDefs: [{
                     targets: 1,
                     width: "200px !important",
@@ -190,10 +191,6 @@
                     },
 
                 ],
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'print'
-                ]
             });
 
             $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {

@@ -33,10 +33,10 @@ class KepalaUnitController extends Controller
     public function index()
     {
         $total_pegawai = User::select(DB::raw('count(*) as total'))->whereNotNull('fungsi')->where('unit', auth()->user()->unit)->count();
-        $pengajuan_cuti = Cuti::where('approval','0')->where('unit', auth()->user()->unit)->count();
-        $cuti = Cuti::where('approval','>','1')->where('unit', auth()->user()->unit)->count();
-        $pengajuan_izin = IzinKerja::where('approval','0')->where('unit', auth()->user()->unit)->count();
-        $izin = IzinKerja::where('approval','1')->where('unit', auth()->user()->unit)->count();
+        $pengajuan_cuti = Cuti::where('approval', '0')->where('unit', auth()->user()->unit)->count();
+        $cuti = Cuti::where('approval', '>', '1')->where('unit', auth()->user()->unit)->count();
+        $pengajuan_izin = IzinKerja::where('approval', '0')->where('unit', auth()->user()->unit)->count();
+        $izin = IzinKerja::where('approval', '1')->where('unit', auth()->user()->unit)->count();
         // dd($total_pegawai);
         $data = [
             'total_pegawai' => $total_pegawai,
@@ -45,7 +45,7 @@ class KepalaUnitController extends Controller
             'pengajuan_izin' => $pengajuan_izin,
             'izin' => $izin
         ];
-        return view('kepalaunit.kepalaunit_v',compact('data'));
+        return view('kepalaunit.kepalaunit_v', compact('data'));
     }
 
     public function index_datapresensi()
@@ -263,6 +263,7 @@ class KepalaUnitController extends Controller
             ->join('users', 'cuti.nopeg', '=', 'users.nopeg')
             ->where('users.unit', $unit)
             ->where('users.role', 'karyawan');
+
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -317,10 +318,10 @@ class KepalaUnitController extends Controller
     public function index_approvalIzin(Request $request)
     {
         $unit =  auth()->user()->unit;
-        $data = IzinKerja::join('jenis_izin', 'jenis_izin.id_izin', '=', 'izin_kerja.jenis_izin')
+        $data = IzinKerja::select('izin_kerja.*')->join('jenis_izin', 'jenis_izin.id_izin', '=', 'izin_kerja.jenis_izin')
             ->join('users', 'izin_kerja.nopeg', 'users.nopeg')
             ->join('jabatan', 'users.atasan', '=', 'jabatan.id')
-            ->where('users.unit', $unit);
+            ->where('users.unit', $unit)->get();
 
         if ($request->ajax()) {
             return DataTables::of($data)

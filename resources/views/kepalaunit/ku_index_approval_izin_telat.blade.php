@@ -102,6 +102,7 @@
             processing: true,
             autoWidth: false,
             serverSide: true,
+            searching: false,
             columnDefs: [{
                 targets: 1,
                 width: "200px !important",
@@ -145,10 +146,6 @@
                 },
 
             ],
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'print'
-            ]
         });
 
         $('body').on('click', '.tambahIzin', function() {

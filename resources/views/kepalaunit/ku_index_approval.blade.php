@@ -19,13 +19,6 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col">
-                                <a href="#" class="btn btn-primary" data-bs-target="#tambahCuti"
-                                    data-bs-toggle="modal" style="float: right">+ Tambah</a>
-                            </div>
-                        </div>
-                        {{-- <a href="{{ route('admin.createcuti') }}" class="btn btn-primary"><i class="icofont icofont-plus-square"></i> Tambah</a> --}}
                         <div class="dt-ext table-responsive">
                             <table class="dataTable" id="table-cuti">
                                 <thead>
@@ -233,6 +226,7 @@
                 processing: true,
                 autoWidth: false,
                 serverSide: true,
+                searching: false,
                 columnDefs: [{
                     targets: 1,
                     width: "200px !important",
