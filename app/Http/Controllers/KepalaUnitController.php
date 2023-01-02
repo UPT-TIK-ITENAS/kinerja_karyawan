@@ -32,8 +32,20 @@ class KepalaUnitController extends Controller
 
     public function index()
     {
-
-        return view('kepalaunit.kepalaunit_v');
+        $total_pegawai = User::select(DB::raw('count(*) as total'))->whereNotNull('fungsi')->where('unit', auth()->user()->unit)->count();
+        $pengajuan_cuti = Cuti::where('approval','0')->where('unit', auth()->user()->unit)->count();
+        $cuti = Cuti::where('approval','1')->where('unit', auth()->user()->unit)->count();
+        $pengajuan_izin = IzinKerja::where('approval','0')->where('unit', auth()->user()->unit)->count();
+        $izin = IzinKerja::where('approval','1')->where('unit', auth()->user()->unit)->count();
+        // dd($total_pegawai);
+        $data = [
+            'total_pegawai' => $total_pegawai,
+            'pengajuan_cuti' => $pengajuan_cuti,
+            'cuti' => $cuti,
+            'pengajuan_izin' => $pengajuan_izin,
+            'izin' => $izin
+        ];
+        return view('kepalaunit.kepalaunit_v',compact('data'));
     }
 
     public function index_datapresensi()

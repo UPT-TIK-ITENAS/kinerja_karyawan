@@ -37,7 +37,20 @@ class AdminController extends Controller
     //DASHBOARD
     public function index()
     {
-        return view('admin.admin_v');
+        $user_info = User::groupBy('unit')->select('unit','singkatan_unit',DB::raw('count(*) as total'))->join('unit','users.unit','=','unit.id')->whereNotNull('fungsi')->get();
+        $pengajuan_cuti = Cuti::where('approval','0')->count();
+        $cuti = Cuti::where('approval','2')->count();
+        $pengajuan_izin = IzinKerja::where('approval','0')->count();
+        $izin = IzinKerja::where('approval','1')->count();
+        
+        $data = [
+            'user_info' => $user_info,
+            'pengajuan_cuti' => $pengajuan_cuti,
+            'cuti' => $cuti,
+            'pengajuan_izin' => $pengajuan_izin,
+            'izin' => $izin
+        ];
+        return view('admin.admin_v',compact('data'));
     }
 
     //END DASHBOARD
