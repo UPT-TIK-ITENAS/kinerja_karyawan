@@ -62,6 +62,12 @@
                             </table>
                         </div>
                     </div>
+                    <div class="card-header">
+                        <div class="row mb-2">
+                            <h5>Kehadiran Karyawan </h5>
+                            <div id='calendar'></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -199,7 +205,7 @@
             })
             let table = $('#table-kehadiran').DataTable({
                 fixedHeader: true,
-                pageLength: 20,
+                pageLength: 10,
                 responsive: true,
                 processing: true,
                 autoWidth: false,
@@ -307,5 +313,116 @@
                 $(".jamakhir").hide();
             }
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCalendarEvents()
+        });
+
+        const loadCalendarEvents = () => {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                dayMaxEventRows: true, // for all non-TimeGrid views
+                views: {
+                    timeGrid: {
+                        dayMaxEventRows: 7 // adjust to 6 only for timeGridWeek/timeGridDay
+                    },
+                    dayGrid: {
+                        dayMaxEventRows: 5
+                    }
+                },
+                headerToolbar: {
+                    center: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                },
+                weekNumbers: true,
+                eventSources: [{
+                    url: `{{ route('karyawan.calendar.by-user', auth()->user()->nopeg) }}`,
+                    method: 'GET',
+                    failure: function() {
+                        alert('there was an error while fetching events!');
+                    },
+                }],
+                eventClick: function(info) {
+                    let id = info.event.id
+                    $.ajax({
+                        url: "{{ url('karyawan/by-id') }}/" + id,
+                        type: 'GET',
+                        dataType: 'JSON',
+                        success: function(response) {
+                            console.log(response)
+                            const hasCuti = response.tagable?.hasOwnProperty('id_cuti');
+                            const hasIzin = response.tagable?.hasOwnProperty('id_izin');
+                            const capitalize = (s) => {
+                                if (typeof s !== 'string') return ''
+                                return s.charAt(0).toUpperCase() + s.slice(1)
+                            }
+                            $("#read_name").val(response.user.name)
+                            $("#read_nip").val(response.nip)
+                            $("#read_shift_awal").val(capitalize(response.shift_awal))
+                            $("#read_tanggal_awal").val(response.tanggal_awal)
+                            $("#read_tanggal_akhir").val(response.tanggal_akhir)
+                            if (hasCuti || hasIzin) {
+                                $("#tagable").html(`
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="">Alasan</label>
+                                        <p>${(hasCuti) ? 'CUTI ' + response.tagable.jeniscuti.jenis_cuti : response.tagable.jenisizin.jenis_izin}</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="">Total Cuti</label>
+                                        <p>${(hasCuti) ? response.tagable.total_cuti + ' Hari' : response.tagable.total_izin + ' Hari'}</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="">Diganti Oleh</label>
+                                        <p>${response.pengganti != undefined ? response.pengganti.nopeg + ' - ' + response.pengganti.name : 'Belum Ada!'}</p>
+                                    </div>
+                                `)
+                                $("#detail-jadwal").html('Detail Jadwal (Pengganti)')
+                            } else {
+                                $("#tagable").html('')
+                                $("#detail-jadwal").html('Detail Jadwal')
+                            }
+                            var myModal = new bootstrap.Modal(document.getElementById(
+                                'modal-detail'))
+                            myModal.show()
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            Swal.fire({
+                                icon: 'error',
+                                type: 'error',
+                                title: 'Error saat melihat data',
+                                showConfirmButton: true
+                            })
+                        }
+                    })
+                },
+                dateClick: function(info) {
+                    $('.ts-datepicker').daterangepicker({
+                        singleDatePicker: true,
+                        timePicker: true,
+                        timePicker24Hour: true,
+                        showDropdowns: true,
+                        autoUpdateInput: true,
+                        autoApply: true,
+                        startDate: info.dateStr,
+                        minDate: info.dateStr,
+                        drops: 'auto',
+                        locale: {
+                            cancelLabel: 'Hapus',
+                            applyLabel: 'Terapkan',
+                            format: 'YYYY-MM-DD HH:mm'
+                        },
+                        parentEl: '#modal-form'
+                    });
+                    $(".select2").select2({
+                        dropdownParent: $('#modal-form')
+                    });
+                    var myModal = new bootstrap.Modal(document.getElementById(
+                        'modal-form'))
+                    myModal.show()
+                }
+            });
+            calendar.setOption('locale', 'id');
+            calendar.render();
+        }
     </script>
 @endsection

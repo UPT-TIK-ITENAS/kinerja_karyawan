@@ -12,6 +12,7 @@ use App\Models\JenisCuti;
 use App\Models\JenisIzin;
 use App\Models\Kuesioner;
 use App\Models\KuesionerKinerja;
+use App\Http\Resources\KaryawanCalendarResource;
 use App\Models\QR;
 use App\Models\Unit;
 use Barryvdh\Debugbar\Facades\Debugbar;
@@ -42,7 +43,7 @@ class KaryawanController extends Controller
     {
         $periode = KuesionerKinerja::where('status', '1')->first();
         $data = collect(
-			DB::select("CALL HitungTotalHariKerja('" . auth()->user()->nopeg . "', '$periode->batas_awal', '$periode->batas_akhir')")
+            DB::select("CALL HitungTotalHariKerja('" . auth()->user()->nopeg . "', '$periode->batas_awal', '$periode->batas_akhir')")
         );
         return view('karyawan.k_index', compact('data', 'periode'));
     }
@@ -457,5 +458,19 @@ class KaryawanController extends Controller
         } else {
             return redirect()->back()->with('danger', 'Gagal membatalkan cuti');
         }
+    }
+
+    public function showDataCalendarByUser($id)
+    {
+        $id = auth()->user()->nopeg;
+        $data = Attendance::with(['user'])->where('nip', $id)->get();
+        dd($data);
+        return response()->json(KaryawanCalendarResource::collection($data));
+    }
+
+    public function showDataById($id)
+    {
+        $data = Attendance::with(['user'])->findOrFail($id);
+        return response()->json($data);
     }
 }
