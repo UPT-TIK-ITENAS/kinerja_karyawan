@@ -179,7 +179,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="detail-jadwal">
-                        Detail Attendance
+                        Detail
                     </h4>
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -193,21 +193,7 @@
                             <label class="col-form-label pt-0" for="read_nip">NIP</label>
                             <input class="form-control" id="read_nip" name="read_nip" type="text" readonly>
                         </div>
-                        <div class="mb-3">
-                            <label class="col-form-label pt-0" for="read_jam_masuk">Jam Masuk</label>
-                            <input class="form-control" id="read_jam_masuk" name="read_jam_masuk" type="text" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label class="col-form-label pt-0" for="read_jam_siang">Jam Siang</label>
-                            <input class="form-control" id="read_jam_siang" name="read_jam_siang" type="text"
-                                readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label class="col-form-label pt-0" for="read_jam_pulang">Jam Pulang</label>
-                            <input class="form-control" id="read_jam_pulang" name="read_jam_pulang" type="text"
-                                readonly>
-                        </div>
-                        <div id="tagable">
+                        <div id="data-type">
 
                         </div>
                     </form>
@@ -387,23 +373,65 @@
                 }],
                 eventClick: function(info) {
                     let id = info.event.id
+                    let type = info.event.extendedProps?.type
                     $.ajax({
-                        url: "{{ url('karyawan/by-id') }}/" + id,
+                        url: "{{ url('karyawan/show-data-calendar') }}" + '?id=' + id + '&type=' + type,
                         type: 'GET',
                         dataType: 'JSON',
                         success: function(response) {
                             console.log(response)
-                            const capitalize = (s) => {
-                                if (typeof s !== 'string') return ''
-                                return s.charAt(0).toUpperCase() + s.slice(1)
+                            if(type === "attendance"){
+                                let html = `<div class="mb-3">
+                                                <label class="col-form-label pt-0" for="read_jam_masuk">Jam Masuk</label>
+                                                <input class="form-control" id="read_jam_masuk" name="read_jam_masuk" type="text" value="${response
+                                        .jam_masuk}" readonly>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="col-form-label pt-0" for="read_jam_siang">Jam Siang</label>
+                                                <input class="form-control" id="read_jam_siang" name="read_jam_siang" value="${response
+                                        .jam_siang}" type="text"
+                                                    readonly>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="col-form-label pt-0" for="read_jam_pulang">Jam Pulang</label>
+                                                <input class="form-control" id="read_jam_pulang" name="read_jam_pulang" value="${response
+                                        .jam_pulang}" type="text"
+                                                    readonly>
+                                            </div`;
+                                $("#read_name").val(response.user.name)
+                                $("#read_nip").val(response.nip)
+                                $('#data-type').html(html);
+                            } else if(type === "cuti"){
+                                let html = `<div class="mb-3">
+                                                <label class="col-form-label pt-0" for="read_tanggal_awal">Tanggal Awal</label>
+                                                <input class="form-control" id="read_tanggal_awal" name="read_tanggal_awal" type="text"
+                                                value="${response.tgl_awal_cuti}"
+                                                readonly>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="col-form-label pt-0" for="read_tanggal_akhir">Tanggal Akhir</label>
+                                                <input class="form-control" id="read_tanggal_akhir" name="read_tanggal_akhir" type="text"
+                                                value="${response.tgl_akhir_cuti}"
+                                                    readonly>
+                                            </div>`;
+                                $("#read_name").val(response.user.name)
+                                $("#read_nip").val(response.nopeg)
+                                $('#data-type').html(html);
+                            } else{
+                                let html = `<div class="mb-3">
+                                                <label class="col-form-label pt-0" for="read_tanggal_awal">Tanggal Awal</label>
+                                                <input class="form-control" id="read_tanggal_awal" name="read_tanggal_awal" type="text"
+                                                value="${response.tgl_awal_izin}" readonly>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="col-form-label pt-0" for="read_tanggal_akhir">Tanggal Akhir</label>
+                                                <input class="form-control" id="read_tanggal_akhir" name="read_tanggal_akhir" type="text" value="${response.tgl_akhir_izin}"
+                                                    readonly>
+                                            </div>`;
+                                $("#read_name").val(response.user.name)
+                                $("#read_nip").val(response.nopeg)
+                                $('#data-type').html(html);
                             }
-                            $("#read_name").val(response.user.name)
-                            $("#read_nip").val(response.nip)
-                            $("#read_jam_masuk").val(capitalize(response.jam_masuk))
-                            $("#read_jam_siang").val(response.jam_siang)
-                            $("#read_jam_pulang").val(response.jam_pulang)
-                            $("#detail-jadwal").html('Detail Jadwal')
-
                             var myModal = new bootstrap.Modal(document.getElementById(
                                 'modal-detail'))
                             myModal.show()
