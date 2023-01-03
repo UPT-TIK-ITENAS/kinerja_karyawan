@@ -185,31 +185,35 @@
                 </div>
                 <div class="modal-body">
                     <form autocomplete="off" class="theme-form">
-                        <div class="mb-3">
-                            <label class="col-form-label pt-0" for="read_name">Nama</label>
-                            <input class="form-control" id="read_name" name="read_name" type="text" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label class="col-form-label pt-0" for="read_nip">NIP</label>
-                            <input class="form-control" id="read_nip" name="read_nip" type="text" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label class="col-form-label pt-0" for="read_jam_masuk">Jam Masuk</label>
-                            <input class="form-control" id="read_jam_masuk" name="read_jam_masuk" type="text" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label class="col-form-label pt-0" for="read_jam_siang">Jam Siang</label>
-                            <input class="form-control" id="read_jam_siang" name="read_jam_siang" type="text"
-                                readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label class="col-form-label pt-0" for="read_jam_pulang">Jam Pulang</label>
-                            <input class="form-control" id="read_jam_pulang" name="read_jam_pulang" type="text"
-                                readonly>
-                        </div>
-                        <div id="tagable">
 
+                    <div class="modal-body">
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-4">
+                                <span class="form-label" for="nip">Nama</span>
+                                <input class="form-control" id="read_name" name="read_name" type="text" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="name">No Pegawai</span>
+                                <input class="form-control" id="read_nip" name="read_nip" type="text" readonly>
+                            </div>
                         </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-4">
+                                <span class="form-label" for="nip">Jam Masuk</span>
+                                <input class="form-control" id="read_jam_masuk" name="read_jam_masuk" type="text" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="name">Jam Siang</span>
+                                <input class="form-control" id="read_jam_siang" name="read_jam_siang" type="text"
+                                readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="form-label" for="name">Jam Pulang</span>
+                                <input class="form-control" id="read_jam_pulang" name="read_jam_pulang" type="text"
+                                readonly>
+                            </div>
+                        </div>
+                    </div>
                     </form>
                 </div>
             </div>
@@ -402,8 +406,8 @@
                             $("#read_jam_masuk").val(capitalize(response.jam_masuk))
                             $("#read_jam_siang").val(response.jam_siang)
                             $("#read_jam_pulang").val(response.jam_pulang)
-                            $("#detail-jadwal").html('Detail Jadwal')
-
+                            $("#detail-jadwal").html('Detail Attendance')
+                            
                             var myModal = new bootstrap.Modal(document.getElementById(
                                 'modal-detail'))
                             myModal.show()
