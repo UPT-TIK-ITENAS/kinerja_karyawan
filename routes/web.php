@@ -39,12 +39,47 @@ Route::group(['name' => 'auth'], function () {
 });
 
 Route::get('/test', function () {
-    $jam_masuk = '08:00:00';
-    $jam_siang = '13:37:00';
-    $jam_pulang = '17:30:00';
-    $telat_masuk = lateMasuk($jam_masuk, $jam_siang, 5);
-    $telat_siang = lateSiang2($jam_siang, $jam_pulang, 5);
-    dd($jam_masuk, $jam_siang, $jam_pulang, $telat_masuk, $telat_siang);
+//    $jam_masuk = '08:00:00';
+//    $jam_siang = '13:37:00';
+//    $jam_pulang = '17:30:00';
+//    $telat_masuk = lateMasuk($jam_masuk, $jam_siang, 5);
+//    $telat_siang = lateSiang2($jam_siang, $jam_pulang, 5);
+//    dd($jam_masuk, $jam_siang, $jam_pulang, $telat_masuk, $telat_siang);
+	
+	$collection1 = collect([
+		[
+			'nip' => '123',
+			'tanggal' => '2021-01-01',
+			'jam_masuk' => '08:00:00',
+			'jam_pulang' => '17:30:00',
+			'jam_siang' => '13:37:00',
+			'type' => 'attendance'
+		],
+		[
+			'nip' => '123',
+			'tanggal' => '2021-01-02',
+			'jam_masuk' => '08:00:00',
+			'jam_pulang' => '17:30:00',
+			'jam_siang' => '13:37:00',
+			'type' => 'attendance'
+		]
+	]);
+	$collection2 = collect([
+		[
+			'nip' => '123',
+			'tanggal_awal' => '2021-01-02',
+			'tanggal_akhir' => '2021-01-03',
+			'type' => 'cuti'
+		],
+		[
+			'nip' => '123',
+			'tanggal_awal' => '2021-01-06',
+			'tanggal_akhir' => '2021-01-08',
+			'type' => 'cuti'
+		],
+	]);
+	$collection = $collection1->concat($collection2);
+	dd($collection1, $collection2, $collection);
 
     //    $users = DB::table('users')->get();
     //    foreach ($users as $key => $value) {

@@ -272,8 +272,8 @@
                         searchable: false,
                     },
                     {
-                        data: 'days',
-                        name: 'days'
+                        data: 'hari',
+                        name: 'hari'
                     },
                     {
                         data: 'jam_masuk',
@@ -403,7 +403,7 @@
                             $("#read_jam_siang").val(response.jam_siang)
                             $("#read_jam_pulang").val(response.jam_pulang)
                             $("#detail-jadwal").html('Detail Jadwal')
-                            
+
                             var myModal = new bootstrap.Modal(document.getElementById(
                                 'modal-detail'))
                             myModal.show()

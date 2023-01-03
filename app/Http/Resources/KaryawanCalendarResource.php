@@ -17,20 +17,16 @@ class KaryawanCalendarResource extends JsonResource
 
     public function toArray($request)
     {
+		
         $resources =  [
             'id' => $this->id,
-            'start' => $this->tanggal,
-            'end' => $this->tanggal,
-            'title' => $this->whenLoaded('user', function () {
-                return  'Hadir';
-            }),
+            'start' => ($this->type == "attendance") ? $this->tanggal : $this->tgl_awal_cuti,
+            'end' => ($this->type == "attendance") ? $this->tanggal : $this->tgl_akhir_cuti,
+            'title' => ($this->type == "attendance" && $this->is_cuti == 0) ? 'Hadir' : ($this->type == "attendance" && $this->is_cuti == 1 ? 'Cuti' : 'Cuti'),
             'allDay' => true,
-            'color' => '#24695c',
+            'color' => ($this->type == "attendance" && $this->is_cuti == 0) ? '#24695c' : ($this->type == "attendance" && $this->is_cuti == 1 ? '#03bd9e' : '#f44336'),
         ];
 
-        // if ($this->whenLoaded('tagable')) {
-        //     $resources['title'] = "Pengganti|" . $this->tagable->nopeg . " - " . $this->tagable->name . " - " . Str::ucfirst($this->shift_awal);
-        // }
         return $resources;
     }
 }

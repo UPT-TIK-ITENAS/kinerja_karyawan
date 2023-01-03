@@ -57,14 +57,22 @@ class KaryawanController extends Controller
     {
         if ($request->bulan) {
             $month =  explode('-', $request->bulan);
-            $data = Attendance::with(['izin'])->selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg)->whereNotIn('hari', array('6', '0'))->whereMonth('attendance.tanggal', $month[0])->whereYear('attendance.tanggal', $month[1])->orderBy('attendance.tanggal', 'desc');
+            $data = Attendance::with(['izin'])
+                                              ->where('nip', auth()->user()->nopeg)
+                                              ->whereNotIn('hari', array('6', '0'))
+                                              ->whereMonth('tanggal', $month[0])
+                                              ->whereYear('tanggal', $month[1])
+                                              ->orderBy('tanggal', 'desc');
         } else {
-            $data = Attendance::with(['izin'])->selectRaw('attendance.*, users.awal_tugas, users.akhir_tugas')->join('users', 'attendance.nip', '=', 'users.nopeg')->where('users.nopeg', auth()->user()->nopeg)->whereNotIn('hari', array('6', '0'))->orderBy('attendance.tanggal', 'desc');
+            $data = Attendance::with(['izin'])
+                              ->where('nip', auth()->user()->nopeg)
+                              ->whereNotIn('hari', array('6', '0'))
+                              ->orderBy('tanggal', 'desc');
         }
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->editColumn('days', function ($row) {
+                ->editColumn('hari', function ($row) {
                     return config('app.days')[$row->hari];
                 })
                 ->addColumn('kurang_jam', function ($row) {
@@ -125,7 +133,7 @@ class KaryawanController extends Controller
                         return $apprv = '';
                     }
                 })
-                ->rawColumns(['duration', 'kurang_jam', 'latemasuk', 'days', 'latesiang', 'action', 'status'])
+                ->rawColumns(['duration', 'kurang_jam', 'latemasuk', 'latesiang', 'action', 'status'])
                 ->make(true);
         }
     }
@@ -464,8 +472,15 @@ class KaryawanController extends Controller
     {
         $id = auth()->user()->nopeg;
         $cuti = Cuti::where('nopeg',$id)->get();
+		foreach ($cuti as $key => $value) {
+			$cuti[$key]['type'] = 'cuti';
+		}
         $data = Attendance::with(['user'])->where('nip', $id)->get();
-        return response()->json(KaryawanCalendarResource::collection($data));
+		foreach ($data as $key => $value) {
+			$data[$key]['type'] = 'attendance';
+		}
+		$combine = $data->merge($cuti);
+        return response()->json(KaryawanCalendarResource::collection($combine));
     }
 
     public function showDataById($id)
