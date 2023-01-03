@@ -465,7 +465,6 @@ class KaryawanController extends Controller
         $id = auth()->user()->nopeg;
         $cuti = Cuti::where('nopeg',$id)->get();
         $data = Attendance::with(['user'])->where('nip', $id)->get();
-
         return response()->json(KaryawanCalendarResource::collection($data));
     }
 
