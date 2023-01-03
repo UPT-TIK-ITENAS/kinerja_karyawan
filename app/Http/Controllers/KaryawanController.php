@@ -13,6 +13,7 @@ use App\Models\JenisIzin;
 use App\Models\Kuesioner;
 use App\Models\KuesionerKinerja;
 use App\Http\Resources\KaryawanCalendarResource;
+use App\Models\LiburNasional;
 use App\Models\QR;
 use App\Models\Unit;
 use Barryvdh\Debugbar\Facades\Debugbar;
@@ -475,17 +476,32 @@ class KaryawanController extends Controller
 		foreach ($cuti as $key => $value) {
 			$cuti[$key]['type'] = 'cuti';
 		}
+		$izin = IzinKerja::where('nopeg',$id)->get();
+		foreach ($izin as $key => $value) {
+			$izin[$key]['type'] = 'izin';
+		}
         $data = Attendance::with(['user'])->where('nip', $id)->get();
 		foreach ($data as $key => $value) {
 			$data[$key]['type'] = 'attendance';
 		}
 		$combine = $data->merge($cuti);
+		$combine = $combine->merge($izin);
         return response()->json(KaryawanCalendarResource::collection($combine));
     }
 
-    public function showDataById($id)
+    public function showDataCalendar(Request $request)
     {
-        $data = Attendance::with(['user'])->findOrFail($id);
+		$id = $request->id;
+		$type = $request->type;
+		if($type == 'attendance'){
+            $data = Attendance::with(['user'])->findOrFail($id);
+		} elseif($type == 'cuti'){
+			$data = Cuti::with(['user'])->findOrFail($id);
+		} elseif($type == 'izin'){
+			$data = IzinKerja::with(['user'])->findOrFail($id);
+		} else{
+			$data = Attendance::with(['user'])->findOrFail($id);
+		}
         return response()->json($data);
     }
 }

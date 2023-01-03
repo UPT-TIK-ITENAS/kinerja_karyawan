@@ -17,16 +17,38 @@ class KaryawanCalendarResource extends JsonResource
 
     public function toArray($request)
     {
-		
-        $resources =  [
-            'id' => $this->id,
-            'start' => ($this->type == "attendance") ? $this->tanggal : $this->tgl_awal_cuti,
-            'end' => ($this->type == "attendance") ? $this->tanggal : $this->tgl_akhir_cuti,
-            'title' => ($this->type == "attendance" && $this->is_cuti == 0) ? 'Hadir' : ($this->type == "attendance" && $this->is_cuti == 1 ? 'Cuti' : 'Cuti'),
-            'allDay' => true,
-            'color' => ($this->type == "attendance" && $this->is_cuti == 0) ? '#24695c' : ($this->type == "attendance" && $this->is_cuti == 1 ? '#03bd9e' : '#f44336'),
-        ];
-
-        return $resources;
+		if($this->type == "attendance"){
+			return [
+				'id' => $this->id,
+				'start' => $this->tanggal,
+				'end' => $this->tanggal,
+				'title' => ($this->is_cuti == 0 && $this->is_izin == 0) ? 'Hadir' : (($this->is_cuti == 1) ? 'Cuti' : 'Izin'),
+				'allDay' => true,
+				'color' => ($this->is_cuti == 0 && $this->is_izin == 0) ? '#24695c' : (($this->is_cuti == 1) ? '#03bd9e' : '#f44336'),
+				'type' => 'attendance',
+			];
+		}
+		elseif($this->type == "cuti"){
+			return [
+				'id' => $this->id_cuti,
+				'start' => $this->tgl_awal_cuti,
+				'end' => $this->tgl_akhir_cuti,
+				'title' => 'Cuti',
+				'allDay' => true,
+				'color' => '#f44336',
+				'type' => 'cuti',
+			];
+		}
+		elseif($this->type == "izin"){
+			return [
+				'id' => $this->id_izinkerja,
+				'start' => $this->tgl_awal_izin,
+				'end' => $this->tgl_akhir_izin,
+				'title' => 'Izin',
+				'allDay' => true,
+				'color' => '#f44336',
+				'type' => 'izin',
+			];
+		}
     }
 }
