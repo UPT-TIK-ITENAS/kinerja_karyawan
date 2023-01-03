@@ -197,22 +197,6 @@
                             </div>
                             <div id="data-type">
                         </div>
-                        <div class="row g-2 mb-3">
-                            <div class="col-md-4">
-                                <span class="form-label" for="nip">Jam Masuk</span>
-                                <input class="form-control" id="read_jam_masuk" name="read_jam_masuk" type="text" readonly>
-                            </div>
-                            <div class="col-md-4">
-                                <span class="form-label" for="name">Jam Siang</span>
-                                <input class="form-control" id="read_jam_siang" name="read_jam_siang" type="text"
-                                readonly>
-                            </div>
-                            <div class="col-md-4">
-                                <span class="form-label" for="name">Jam Pulang</span>
-                                <input class="form-control" id="read_jam_pulang" name="read_jam_pulang" type="text"
-                                readonly>
-                            </div>
-                        </div>
                     </div>
                     </form>
                 </div>

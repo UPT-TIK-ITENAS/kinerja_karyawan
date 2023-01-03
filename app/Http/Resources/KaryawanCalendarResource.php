@@ -50,5 +50,17 @@ class KaryawanCalendarResource extends JsonResource
 				'type' => 'izin',
 			];
 		}
+		elseif($this->type == "libur"){
+			return [
+				'id' => $this->id,
+				'start' => $this->tanggal,
+				'end' => $this->tanggal,
+				'title' => 'Libur Nasional',
+				'allDay' => true,
+				'display' => 'background',
+				'color' => '#f44336',
+				'type' => 'libur',
+			];
+		}
     }
 }

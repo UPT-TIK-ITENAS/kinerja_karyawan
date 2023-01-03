@@ -484,8 +484,13 @@ class KaryawanController extends Controller
 		foreach ($data as $key => $value) {
 			$data[$key]['type'] = 'attendance';
 		}
+        $libur = LiburNasional::get();
+		foreach ($libur as $key => $value) {
+			$libur[$key]['type'] = 'libur';
+		}
 		$combine = $data->merge($cuti);
 		$combine = $combine->merge($izin);
+        $combine = $combine->merge($libur);
         return response()->json(KaryawanCalendarResource::collection($combine));
     }
 
