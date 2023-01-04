@@ -46,6 +46,10 @@ class KaryawanController extends Controller
         $data = collect(
             DB::select("CALL HitungTotalHariKerja('" . auth()->user()->nopeg . "', '$periode->batas_awal', '$periode->batas_akhir')")
         );
+		$data = $data->map(function ($item) {
+			$item->total_hari_mangkir = $item->total_hari_mangkir - ($item->cuti ?? 0) - ($item->izin_kerja ?? 0);
+			return $item;
+		});
         return view('karyawan.k_index', compact('data', 'periode'));
     }
     public function index_datapresensi()
