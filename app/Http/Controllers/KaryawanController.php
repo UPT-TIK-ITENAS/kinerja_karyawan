@@ -46,10 +46,10 @@ class KaryawanController extends Controller
         $data = collect(
             DB::select("CALL HitungTotalHariKerja('" . auth()->user()->nopeg . "', '$periode->batas_awal', '$periode->batas_akhir')")
         );
-		$data = $data->map(function ($item) {
-			$item->total_hari_mangkir = $item->total_hari_mangkir - ($item->cuti ?? 0) - ($item->izin_kerja ?? 0);
-			return $item;
-		});
+        $data = $data->map(function ($item) {
+            $item->total_hari_mangkir = $item->total_hari_mangkir - ($item->cuti ?? 0) - ($item->izin_kerja ?? 0);
+            return $item;
+        });
         return view('karyawan.k_index', compact('data', 'periode'));
     }
     public function index_datapresensi()
@@ -63,16 +63,16 @@ class KaryawanController extends Controller
         if ($request->bulan) {
             $month =  explode('-', $request->bulan);
             $data = Attendance::with(['izin'])
-                                              ->where('nip', auth()->user()->nopeg)
-                                              ->whereNotIn('hari', array('6', '0'))
-                                              ->whereMonth('tanggal', $month[0])
-                                              ->whereYear('tanggal', $month[1])
-                                              ->orderBy('tanggal', 'desc');
+                ->where('nip', auth()->user()->nopeg)
+                ->whereNotIn('hari', array('6', '0'))
+                ->whereMonth('tanggal', $month[0])
+                ->whereYear('tanggal', $month[1])
+                ->orderBy('tanggal', 'desc');
         } else {
             $data = Attendance::with(['izin'])
-                              ->where('nip', auth()->user()->nopeg)
-                              ->whereNotIn('hari', array('6', '0'))
-                              ->orderBy('tanggal', 'desc');
+                ->where('nip', auth()->user()->nopeg)
+                ->whereNotIn('hari', array('6', '0'))
+                ->orderBy('tanggal', 'desc');
         }
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -337,7 +337,7 @@ class KaryawanController extends Controller
             cuti::join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
             ->where('cuti.nopeg', $nopeg)
             ->where('cuti.jenis_cuti', $jenis)
-            ->where(DB::raw("(DATE_FORMAT(created_at,'%Y'))"), Carbon::now()->year)
+            ->where(DB::raw("(DATE_FORMAT(tgl_awal_cuti,'%Y'))"), Carbon::now()->year)
             ->GROUPBY('cuti.jenis_cuti')->sum('total_cuti');
         return response()->json($history_cuti);
     }
@@ -476,41 +476,41 @@ class KaryawanController extends Controller
     public function showDataCalendarByUser($id)
     {
         $id = auth()->user()->nopeg;
-        $cuti = Cuti::where('nopeg',$id)->get();
-		foreach ($cuti as $key => $value) {
-			$cuti[$key]['type'] = 'cuti';
-		}
-		$izin = IzinKerja::where('nopeg',$id)->get();
-		foreach ($izin as $key => $value) {
-			$izin[$key]['type'] = 'izin';
-		}
+        $cuti = Cuti::where('nopeg', $id)->get();
+        foreach ($cuti as $key => $value) {
+            $cuti[$key]['type'] = 'cuti';
+        }
+        $izin = IzinKerja::where('nopeg', $id)->get();
+        foreach ($izin as $key => $value) {
+            $izin[$key]['type'] = 'izin';
+        }
         $data = Attendance::with(['user'])->where('nip', $id)->get();
-		foreach ($data as $key => $value) {
-			$data[$key]['type'] = 'attendance';
-		}
+        foreach ($data as $key => $value) {
+            $data[$key]['type'] = 'attendance';
+        }
         $libur = LiburNasional::get();
-		foreach ($libur as $key => $value) {
-			$libur[$key]['type'] = 'libur';
-		}
-		$combine = $data->merge($cuti);
-		$combine = $combine->merge($izin);
+        foreach ($libur as $key => $value) {
+            $libur[$key]['type'] = 'libur';
+        }
+        $combine = $data->merge($cuti);
+        $combine = $combine->merge($izin);
         $combine = $combine->merge($libur);
         return response()->json(KaryawanCalendarResource::collection($combine));
     }
 
     public function showDataCalendar(Request $request)
     {
-		$id = $request->id;
-		$type = $request->type;
-		if($type == 'attendance'){
+        $id = $request->id;
+        $type = $request->type;
+        if ($type == 'attendance') {
             $data = Attendance::with(['user'])->findOrFail($id);
-		} elseif($type == 'cuti'){
-			$data = Cuti::with(['user'])->findOrFail($id);
-		} elseif($type == 'izin'){
-			$data = IzinKerja::with(['user'])->findOrFail($id);
-		} else{
-			$data = Attendance::with(['user'])->findOrFail($id);
-		}
+        } elseif ($type == 'cuti') {
+            $data = Cuti::with(['user'])->findOrFail($id);
+        } elseif ($type == 'izin') {
+            $data = IzinKerja::with(['user'])->findOrFail($id);
+        } else {
+            $data = Attendance::with(['user'])->findOrFail($id);
+        }
         return response()->json($data);
     }
 }
