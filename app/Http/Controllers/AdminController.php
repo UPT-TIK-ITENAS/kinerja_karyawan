@@ -363,23 +363,27 @@ class AdminController extends Controller
 
     public function listizin(Request $request)
     {
-        $data = DB::table('izin_kerja')
-            ->join('unit', 'izin_kerja.unit', '=', 'unit.id')
-            ->join('jenis_izin', 'jenis_izin.id_izin', '=', 'izin_kerja.jenis_izin');
-
-        if ($request->ajax()) {
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('print', function ($row) {
-                    return getAksi($row->id_izinkerja, 'izin');
-                })
-                ->addColumn('status', function ($row) {
-                    return getAprv($row->id_izinkerja, 'izin');
-                })
-
-                ->rawColumns(['print', 'status'])
-                ->toJson();
-        }
+	    $data = IzinKerja::with(['units'])->get();
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('print', function ($row) {
+                $printizin =  route('admin.print.izinkerja', $row->id_izinkerja);
+                $batal_izin = route('admin.izin-resmi.batal_izin', $row->id_izinkerja);
+                $for_html = '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a>
+        <a class="btn btn-danger btn-xs batalizin" href="' . $batal_izin . '">X</a>';
+				return $for_html;
+			})
+            ->addColumn('status', function ($row) {
+                if ($row->approval == 1) {
+	                $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
+                } else {
+	                $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalizin" title="Batal Izin" href="' . $batal_izin . '">X</a>';
+                }
+				return $for_html;
+            })
+            ->rawColumns(['print', 'status'])
+            ->toJson();
+        
     }
 
     public function storeizin(Request $request)
@@ -485,19 +489,28 @@ class AdminController extends Controller
 
     public function listcuti(Request $request)
     {
-        $data = Cuti::join('unit', 'cuti.unit', 'unit.id')
-            ->join('jenis_cuti', 'cuti.jenis_cuti', 'jenis_cuti.id_jeniscuti');
-
+        $data = Cuti::query()->with(['units', 'jeniscuti']);
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    return getAksi($row->id_cuti, 'cuti');
+	                $printcuti =  route('admin.print.cuti', $row->id_cuti);
+	                $batal_cuti = route('admin.cuti.batal_cuti', $row->id_cuti);
+                    return '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a>
+            <a class="btn btn-danger btn-xs batalcuti" href="' . $batal_cuti . '">X</a>';
                 })
                 ->addColumn('status', function ($row) {
-                    return getAprv($row->id_cuti, 'cuti');
+	                if ($row->approval == 1) {
+		                $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
+	                } elseif ($row->approval == 2) {
+		                $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
+	                } elseif ($row->approval == 3) {
+		                $for_html = '<span class="badge badge-danger">Ditolak</span><br><p><b>note</b> : ' . $row->alasan . '</p>';
+	                } else {
+		                $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalcuti" title="Batal Cuti" href="' . $batal_cuti . '">X</a>';
+	                }
+					return $for_html;
                 })
-
                 ->rawColumns(['action', 'status'])
                 ->toJson();
         }
@@ -616,7 +629,7 @@ class AdminController extends Controller
 
     //ENDDATA CUTI KARYAWAN
 
-    //Libur Nasional 
+    //Libur Nasional
 
     public function liburnasional()
     {

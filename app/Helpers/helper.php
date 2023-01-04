@@ -122,15 +122,15 @@ if (!function_exists('getAksi')) {
 
         $for_html = "";
         if ($tipe == 'izin') {
-            $for_html = '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a> 
+            $for_html = '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a>
             <a class="btn btn-danger btn-xs batalizin" href="' . $batal_izin . '">X</a>';
         } elseif ($tipe == 'cuti') {
-            $for_html = '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a> 
+            $for_html = '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a>
             <a class="btn btn-danger btn-xs batalcuti" href="' . $batal_cuti . '">X</a>';
         } else if ($tipe == 'liburnasional') {
             $for_html = "
                     <div class='d-block text-center'>
-                    <a href='javascript:void(0)' data-toggle='tooltip' class='btn btn btn-warning btn-xs align-items-center editLibur' 
+                    <a href='javascript:void(0)' data-toggle='tooltip' class='btn btn btn-warning btn-xs align-items-center editLibur'
                     data-id='$id' data-original-title='Edit' title='Edit Libur'><i class='icofont icofont-edit-alt'></i></a>
                     <a href='$delete_url' title='Hapus Libur' class='btn btn-sm btn-danger btn-xs align-items-center hapusLibur'><i class='icofont icofont-trash'></i></a>
                     </div>
@@ -166,7 +166,7 @@ if (!function_exists('getAksi')) {
 //                 $data = IzinKerja::where('id_izinkerja', $id)->first();
 //                 $for_html = '
 //                         <a href="#" class="btn btn-primary btn-xs apprvIzin" data-bs-target="#apprvIzin" data-bs-toggle="modal" data-id="' . $data->id_izinkerja . '"><i class="icofont icofont-pencil-alt-2"></i></a>
-//                         <a class="btn btn-secondary btn-xs" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a> 
+//                         <a class="btn btn-secondary btn-xs" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a>
 //                         <a class="btn btn-danger btn-xs batalizin" href="' . $batal_izin . '">X</a> ';
 //             }
 //         } elseif ($tipe == 'cuti') {
@@ -181,7 +181,7 @@ if (!function_exists('getAksi')) {
 //         } else if ($tipe == 'liburnasional') {
 //             $for_html = "
 //                     <div class='d-block text-center'>
-//                     <a href='javascript:void(0)' data-toggle='tooltip' class='btn btn btn-warning btn-xs align-items-center editLibur' 
+//                     <a href='javascript:void(0)' data-toggle='tooltip' class='btn btn btn-warning btn-xs align-items-center editLibur'
 //                     data-id='$id' data-original-title='Edit' title='Edit Libur'><i class='icofont icofont-edit-alt'></i></a>
 //                     <a href='$delete_url' title='Hapus Libur' class='btn btn-sm btn-danger btn-xs align-items-center hapusLibur'><i class='icofont icofont-trash'></i></a>
 //                     </div>
@@ -369,7 +369,7 @@ if (!function_exists('lateMasuk')) {
     function lateMasuk($jam_masuk, $jam_siang, $hari)
     {
         $masuk = Carbon::parse($jam_masuk)->format('H:i:s');
-        $keluar = Carbon::parse('08:00:00')->format('H:i:s');
+        $keluar = Carbon::parse('08:01:00')->format('H:i:s');
         if ($hari != '6' && $hari != '0') {
             if ($jam_masuk == NULL &&  $jam_siang != NULL || $jam_masuk == NULL && $jam_siang == NULL) {
                 $total = Carbon::parse("00:00:00")->format('H:i:s');
@@ -432,7 +432,7 @@ if (!function_exists('lateSiang2')) {
         if ($hari != 6 && $hari != 0) {
             if ($jam_pulang != null &&  $jam_siang != null) {
                 $tanggal = Carbon::parse($jam_pulang)->format('Y-m-d');
-                $base_time_siang_akhir = ($hari == 5) ? Carbon::parse("$tanggal 13:30:00") : Carbon::parse("$tanggal 13:00:00");
+                $base_time_siang_akhir = ($hari == 5) ? Carbon::parse("$tanggal 13:31:00") : Carbon::parse("$tanggal 13:01:00");
                 $base_time_siang_awal = ($hari == 5) ? Carbon::parse("$tanggal 13:15:00") : Carbon::parse("$tanggal 12:45:00");
                 $base_time_keluar = Carbon::parse("$tanggal 17:00:00");
                 $jam_siang = Carbon::parse($jam_siang);

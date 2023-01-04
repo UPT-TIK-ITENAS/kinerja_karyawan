@@ -18,7 +18,7 @@ class Cuti extends Model
         return $this->belongsTo(JenisCuti::class, 'jenis_cuti', 'id_jeniscuti');
     }
 
-    public function unit()
+    public function units()
     {
         return $this->belongsTo(Unit::class, 'unit', 'id');
     }

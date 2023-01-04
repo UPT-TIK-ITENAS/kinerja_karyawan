@@ -201,12 +201,12 @@
                         name: 'nopeg'
                     },
                     {
-                        data: 'singkatan_unit',
-                        name: 'singkatan_unit'
+                        data: 'units.singkatan_unit',
+                        name: 'units.singkatan_unit'
                     },
                     {
-                        data: 'jenis_cuti',
-                        name: 'jenis_cuti'
+                        data: 'jeniscuti.jenis_cuti',
+                        name: 'jeniscuti.jenis_cuti'
                     },
                     {
                         data: 'tgl_awal_cuti',

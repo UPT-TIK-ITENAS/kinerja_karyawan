@@ -177,19 +177,21 @@
                     },
                     {
                         data: 'nopeg',
-                        name: 'nopeg'
+                        name: 'nopeg',
+                        searchable: true,
                     },
                     {
                         data: 'name',
-                        name: 'name'
+                        name: 'name',
+                        searchable: true,
                     },
                     {
-                        data: 'singkatan_unit',
-                        name: 'singkatan_unit'
+                        data: 'units.singkatan_unit',
+                        name: 'units.singkatan_unit'
                     },
                     {
-                        data: 'jenis_izin',
-                        name: 'jenis_izin'
+                        data: 'jenisizin.jenis_izin',
+                        name: 'jenisizin.jenis_izin'
                     },
                     {
                         data: 'tgl_awal_izin',

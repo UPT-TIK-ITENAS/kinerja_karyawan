@@ -195,7 +195,7 @@
                                 <span class="form-label" for="name">No Pegawai</span>
                                 <input class="form-control" id="read_nip" name="read_nip" type="text" readonly>
                             </div>
-                            <div id="data-type">
+                            <div id="data-type"></div>
                         </div>
                     </div>
                     </form>
@@ -347,11 +347,13 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             loadCalendarEvents()
+            $("#calendar .fc-toolbar-chunk:nth-child(2)").addClass("d-none d-md-block");
         });
 
         const loadCalendarEvents = () => {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
+                themeSystem: 'bootstrap5',
                 initialView: 'dayGridMonth',
                 dayMaxEventRows: true, // for all non-TimeGrid views
                 views: {

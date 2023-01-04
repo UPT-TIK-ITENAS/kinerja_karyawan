@@ -13,7 +13,7 @@ class IzinKerja extends Model
     protected $primaryKey = 'id_izinkerja';
     protected $with = ['jenisizin'];
 
-    public function unit()
+    public function units()
     {
         return $this->belongsTo(Unit::class, 'unit', 'id');
     }
