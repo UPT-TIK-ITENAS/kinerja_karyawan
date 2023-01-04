@@ -640,7 +640,7 @@ class AdminController extends Controller
 
     public function listlibur(Request $request)
     {
-        $data = LiburNasional::get();
+        $data = LiburNasional::orderBy('tanggal', 'asc')->get();
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
