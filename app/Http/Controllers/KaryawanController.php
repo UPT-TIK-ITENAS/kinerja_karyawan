@@ -340,7 +340,7 @@ class KaryawanController extends Controller
         $jeniscuti = JenisCuti::all();
         $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(cuti.total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari
         FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti
-        WHERE cuti.nopeg='" . auth()->user()->nopeg . "' AND cuti.approval != 3 AND cuti.approval != 0 GROUP BY cuti.jenis_cuti");
+        WHERE DATE_FORMAT(tgl_awal_cuti,'%Y') = '".Carbon::now()->year ."' AND cuti.nopeg='" . auth()->user()->nopeg . "' AND cuti.approval != 3 AND cuti.approval != 0 GROUP BY cuti.jenis_cuti");
 
         $data = [
             'jeniscuti' => $jeniscuti,

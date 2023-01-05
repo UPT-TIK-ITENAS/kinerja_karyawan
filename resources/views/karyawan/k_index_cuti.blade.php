@@ -19,7 +19,8 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row mb-4">
-                            <h6>Total Cuti yang Pernah Diajukan</h6>
+                            <h6>Total Cuti yang Pernah Diajukan Pada Tahun {{ \Carbon\Carbon::now()->year }} </h6>
+                                <p style="font-size: 80%;">*Akan muncul jika sudah mengajukan cuti</p>
                         </div>
                         <div class="row">
                             @foreach ($data['history'] as $r)
@@ -31,7 +32,7 @@
                                             {{-- <i class="icon-timer"></i> --}}
                                             <div class="row">
                                                 <div class="col-lg-12 col-sm-12 col-md-12">
-                                                    <p align="center"><b>[{{ $r->total_harinya }} hari]</b></p>
+                                                    <p align="center"><b>[{{ $r->total_harinya}}hari]</b></p>
                                                 </div>
                                             </div>
 
