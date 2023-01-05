@@ -109,22 +109,37 @@ class KaryawanController extends Controller
                     return $note;
                 })
                 ->addColumn('action', function ($row) {
-                    $hasIzin = $row->izin?->count();
-                    $print =  route('karyawan.print.izin', $row->id);
-                    $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
-
-                    if ($hasIzin == null && $workingdays <= 2) {
-                        $for_html = '
+                    $btn_show = '
                     <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
-                    } elseif ($hasIzin != null) {
-                        $for_html = '
-                        <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
-                        <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
-                    } else {
-                        $for_html = '';
+
+                    return $btn_show;
+                })
+                ->addColumn('print', function ($row) {
+                    $jenis_izin = $row->izin;
+                    $count = $jenis_izin?->count();
+                    $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
+                    $html = '';
+                    foreach ($jenis_izin as $key => $value) {
+                        if ($jenis_izin[$key]->jenis == 1) {
+                            $print =  route('karyawan.print.izin', $jenis_izin[$key]->id_izin);
+                            $btn_izin = '<a class="btn btn-success btn-xs izin" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a>';
+                            $html .=  $btn_izin;
+                        }
+
+                        if ($jenis_izin[$key]->jenis == 2) {
+                            $print_dispen =  route('karyawan.print.izin', $jenis_izin[$key]->id_izin);
+                            $btn_dispen = '<a class="btn btn-success btn-xs dispen" href="' . $print_dispen . '"><i class="icofont icofont-download-alt"></i></a>';
+                            $html .=  $btn_dispen;
+                        }
+
+                        if ($jenis_izin[$key]->jenis == 3) {
+                            $print_sidik_jari =  route('karyawan.print.izin', $jenis_izin[$key]->id_izin);
+                            $btn_sidik_jari = '<a class="btn btn-success btn-xs sidik jari" href="' . $print_sidik_jari . '"><i class="icofont icofont-download-alt"></i></a>';
+                            $html .=  $btn_sidik_jari;
+                        }
                     }
 
-                    return $for_html;
+                    return $html;
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->izin != null) {
@@ -138,7 +153,7 @@ class KaryawanController extends Controller
                         return $apprv = '';
                     }
                 })
-                ->rawColumns(['duration', 'kurang_jam', 'latemasuk', 'latesiang', 'action', 'status'])
+                ->rawColumns(['duration', 'kurang_jam', 'latemasuk', 'latesiang', 'action', 'print', 'status'])
                 ->make(true);
         }
     }
@@ -234,7 +249,14 @@ class KaryawanController extends Controller
                 }
                 return $total;
             })
-
+            ->editColumn('izin_sakit', function ($row) {
+                if ($row->total_izin != NULL) {
+                    $total = $row->total_izin . ' ' . 'Hari';
+                } else {
+                    $total = ' ';
+                }
+                return $total;
+            })
             ->addIndexColumn()
             ->toJson();
     }

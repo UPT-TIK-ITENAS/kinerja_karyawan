@@ -26,7 +26,7 @@ class PrintController extends Controller
 
     public function printizin($id)
     {
-        $data = Izin::join('users', 'izin.nopeg', '=', 'users.nopeg')->join('unit', 'users.unit', '=', 'unit.id')->where('id_attendance', $id)->first();
+        $data = Izin::join('users', 'izin.nopeg', '=', 'users.nopeg')->join('unit', 'users.unit', '=', 'unit.id')->where('id_izin', $id)->first();
         $atasan = Jabatan::selectRaw('users.atasan,jabatan.*')->join('users', 'users.atasan', '=', 'jabatan.id')->where('users.atasan', $data->atasan)->first();
         // dd($data);
 
