@@ -250,8 +250,8 @@ class KaryawanController extends Controller
                 return $total;
             })
             ->editColumn('izin_sakit', function ($row) {
-                if ($row->total_izin != NULL) {
-                    $total = $row->total_izin . ' ' . 'Hari';
+                if ($row->izin_sakit != NULL) {
+                    $total = $row->izin_sakit . ' ' . 'Hari';
                 } else {
                     $total = ' ';
                 }

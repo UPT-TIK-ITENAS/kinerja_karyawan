@@ -108,6 +108,11 @@
                             </div>
                         </div>
                         <h6 class="font-primary">Rekapitulasi Kehadiran</h6>
+                        <div class="alert alert-warning dark col-md-6" role="alert">
+                            <p style="color:black;"> <b> *) Hari sabtu/minggu, libur nasional
+                                    dan cuti bersama tidak
+                                    dihitung di perhitungan </b></p>
+                        </div>
                         <div class="dt-ext table-responsive">
                             <table class="table table-bordered" id="table-rekapitulasi">
                                 <thead>

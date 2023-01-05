@@ -17,7 +17,7 @@
         <hr>
         <h6>Rekap untuk periode {{ $periode->judul }}</h6>
         <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-12">
                 <div class="card o-hidden border-0">
                     <div class="bg-primary b-r-4 card-body">
                         <div class="media static-top-widget">
@@ -32,12 +32,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-12">
                 <div class="card o-hidden border-0">
                     <div class="bg-primary b-r-4 card-body">
                         <div class="media static-top-widget">
                             <div class="align-self-center text-center">
-                                <i data-feather="check-circle"></i>
+                                <i data-feather="trending-up"></i>
                             </div>
                             <div class="media-body">
                                 <span class="m-0">Total Hari Hadir Kerja</span>
@@ -47,16 +47,31 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-12">
                 <div class="card o-hidden border-0">
                     <div class="bg-primary b-r-4 card-body">
                         <div class="media static-top-widget">
                             <div class="align-self-center text-center">
-                                <i data-feather="check-circle"></i>
+                                <i data-feather="trending-up"></i>
                             </div>
                             <div class="media-body">
                                 <span class="m-0">Total Hari Mangkir</span>
                                 <h4 class="mb-0 counter">{{ $data->sum('total_hari_mangkir') }} Hari</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="card o-hidden border-0">
+                    <div class="bg-primary b-r-4 card-body">
+                        <div class="media static-top-widget">
+                            <div class="align-self-center text-center">
+                                <i data-feather="trending-up"></i>
+                            </div>
+                            <div class="media-body">
+                                <span class="m-0">Total Izin Sakit</span>
+                                <h4 class="mb-0 counter">{{ $data->sum('izin_sakit') }} Hari</h4>
                             </div>
                         </div>
                     </div>
@@ -84,10 +99,10 @@
                     <div class="bg-primary b-r-4 card-body">
                         <div class="media static-top-widget">
                             <div class="align-self-center text-center">
-                                <i data-feather="check-circle"></i>
+                                <i data-feather="trending-up"></i>
                             </div>
                             <div class="media-body">
-                                <span class="m-0">Total Cuti</span>
+                                <span class="m-0">Total Seluruh Jenis Cuti</span>
                                 <h4 class="mb-0 counter">{{ $data->sum('cuti') ?? 0 }} Hari</h4>
                             </div>
                         </div>
@@ -102,7 +117,7 @@
                                 <i data-feather="trending-up"></i>
                             </div>
                             <div class="media-body">
-                                <span class="m-0">Total Izin</span>
+                                <span class="m-0">Total Seluruh Jenis Izin</span>
                                 <h4 class="mb-0 counter">{{ $data->sum('izin_kerja') ?? 0 }} Hari</h4>
                             </div>
                         </div>
@@ -114,6 +129,11 @@
         <div class="card">
             <div class="card-header">
                 <h6>Data Rekap Kehadiran</h6>
+                <div class="alert alert-warning dark col-md-6" role="alert">
+                      <p style="color:black;"> <b> *) Hari sabtu/minggu, libur nasional
+                            dan cuti bersama tidak
+                            dihitung di perhitungan </b></p>
+                </div>
             </div>
             <div class="card-body">
                 <div class="row">

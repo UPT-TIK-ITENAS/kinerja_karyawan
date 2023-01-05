@@ -86,6 +86,14 @@ class RekapitulasiController extends Controller
                 }
                 return $total;
             })
+            ->editColumn('izin_sakit', function ($row) {
+                if ($row->izin_sakit != NULL) {
+                    $total = $row->izin_sakit . ' ' . 'Hari';
+                } else {
+                    $total = ' ';
+                }
+                return $total;
+            })
             ->toJson();
     }
 
