@@ -374,6 +374,7 @@ class AdminController extends Controller
 				return $for_html;
 			})
             ->addColumn('status', function ($row) {
+                $batal_izin = route('admin.izin-resmi.batal_izin', $row->id_izinkerja);
                 if ($row->approval == 1) {
 	                $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
                 } else {
