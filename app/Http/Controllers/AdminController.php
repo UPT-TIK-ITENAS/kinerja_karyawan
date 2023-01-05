@@ -349,7 +349,7 @@ class AdminController extends Controller
 
     public function dataizin()
     {
-        $user = User::SelectRaw('users.*,unit.*,jabatan.nopeg as peg_jab, jabatan.nama as name_jab')->join('unit', 'users.unit', '=', 'unit.id')->join('jabatan', 'users.atasan', '=', 'jabatan.id')->where('fungsi', 'admin')->get();
+        $user = User::SelectRaw('users.*,unit.*,jabatan.nopeg as peg_jab, jabatan.nama as name_jab')->join('unit', 'users.unit', '=', 'unit.id')->join('jabatan', 'users.atasan', '=', 'jabatan.id')->whereNotNull('status')->get();
         // dd($user[20]);
         $jenisizin = JenisIzin::all();
 
@@ -473,8 +473,9 @@ class AdminController extends Controller
             ->join('unit', 'users.unit', '=', 'unit.id')
             ->join('jabatan as jb1', 'users.atasan', '=', 'jb1.id')
             ->join('jabatan as jb2', 'users.atasan_lang', '=', 'jb2.id')
-            ->where('fungsi', 'admin')->get();
+            ->whereNotNull('status')->get();
 
+            // dd($user);
         $jeniscuti = JenisCuti::all();
 
         $data = [
