@@ -143,9 +143,9 @@ class AdminController extends Controller
                 return $total->format('H:i:s');
             })
             ->addColumn('status', function ($row) {
-                if ($row->izin != NULL) {
-                    if ($row->izin->approval == '1') {
-                        $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
+                if ($row->izin->count() > 0) {
+                    if ($row->approval == 1) {
+                        $apprv = '<span class="badge badge-success">Disetujui</span>';
                     } else {
                         $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
                     }
