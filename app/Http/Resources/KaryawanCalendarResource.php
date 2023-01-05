@@ -33,10 +33,10 @@ class KaryawanCalendarResource extends JsonResource
 		elseif($this->type == "cuti"){
 			return [
 				'id' => $this->id_cuti,
-				'start' => $this->tgl_awal_cuti."T00:00:00",
-				'end' => $this->tgl_akhir_cuti."T23:59:59",
+				'start' => $this->tgl_awal_cuti."T00:00:00.0+0100",
+				'end' => $this->tgl_akhir_cuti."T23:59:00.0+0100",
 				'title' => 'Cuti',
-				'allDay' => false,
+				'allDay' => true,
 				'color' => '#f44336',
 				'type' => 'cuti',
 			];
@@ -44,10 +44,10 @@ class KaryawanCalendarResource extends JsonResource
 		elseif($this->type == "izin"){
 			return [
 				'id' => $this->id_izinkerja,
-				'start' => $this->tgl_awal_izin."T00:00:00",
-				'end' => $this->tgl_akhir_izin."T23:59:59",
+				'start' => $this->tgl_awal_izin."T00:00:00.0+0100",
+				'end' => $this->tgl_akhir_izin."T23:59:00.0+0100",
 				'title' => 'Izin',
-				'allDay' => false,
+				'allDay' => true,
 				'color' => '#f44336',
 				'type' => 'izin',
 			];
