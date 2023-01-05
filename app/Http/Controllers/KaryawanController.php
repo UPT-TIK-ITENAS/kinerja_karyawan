@@ -46,10 +46,10 @@ class KaryawanController extends Controller
         $data = collect(
             DB::select("CALL HitungTotalHariKerja('" . auth()->user()->nopeg . "', '$periode->batas_awal', '$periode->batas_akhir')")
         );
-		$data = $data->map(function ($item) {
-			$item->total_hari_mangkir = $item->total_hari_mangkir - ($item->cuti ?? 0) - ($item->izin_kerja ?? 0);
-			return $item;
-		});
+        $data = $data->map(function ($item) {
+            $item->total_hari_mangkir = $item->total_hari_mangkir - ($item->cuti ?? 0) - ($item->izin_kerja ?? 0);
+            return $item;
+        });
         return view('karyawan.k_index', compact('data', 'periode'));
     }
     public function index_datapresensi()
@@ -63,16 +63,16 @@ class KaryawanController extends Controller
         if ($request->bulan) {
             $month =  explode('-', $request->bulan);
             $data = Attendance::with(['izin'])
-                                              ->where('nip', auth()->user()->nopeg)
-                                              ->whereNotIn('hari', array('6', '0'))
-                                              ->whereMonth('tanggal', $month[0])
-                                              ->whereYear('tanggal', $month[1])
-                                              ->orderBy('tanggal', 'desc');
+                ->where('nip', auth()->user()->nopeg)
+                ->whereNotIn('hari', array('6', '0'))
+                ->whereMonth('tanggal', $month[0])
+                ->whereYear('tanggal', $month[1])
+                ->orderBy('tanggal', 'desc');
         } else {
             $data = Attendance::with(['izin'])
-                              ->where('nip', auth()->user()->nopeg)
-                              ->whereNotIn('hari', array('6', '0'))
-                              ->orderBy('tanggal', 'desc');
+                ->where('nip', auth()->user()->nopeg)
+                ->whereNotIn('hari', array('6', '0'))
+                ->orderBy('tanggal', 'desc');
         }
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -109,22 +109,37 @@ class KaryawanController extends Controller
                     return $note;
                 })
                 ->addColumn('action', function ($row) {
-                    $hasIzin = $row->izin?->count();
-                    $print =  route('karyawan.print.izin', $row->id);
-                    $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
-
-                    if ($hasIzin == null && $workingdays <= 2) {
-                        $for_html = '
+                    $btn_show = '
                     <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
-                    } elseif ($hasIzin != null) {
-                        $for_html = '
-                        <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>
-                        <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
-                    } else {
-                        $for_html = '';
+
+                    return $btn_show;
+                })
+                ->addColumn('print', function ($row) {
+                    $jenis_izin = $row->izin;
+                    $count = $jenis_izin?->count();
+                    $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
+                    $html = '';
+                    foreach ($jenis_izin as $key => $value) {
+                        if ($jenis_izin[$key]->jenis == 1) {
+                            $print =  route('karyawan.print.izin', $jenis_izin[$key]->id_izin);
+                            $btn_izin = '<a class="btn btn-success btn-xs izin" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a>';
+                            $html .=  $btn_izin;
+                        }
+
+                        if ($jenis_izin[$key]->jenis == 2) {
+                            $print_dispen =  route('karyawan.print.izin', $jenis_izin[$key]->id_izin);
+                            $btn_dispen = '<a class="btn btn-success btn-xs dispen" href="' . $print_dispen . '"><i class="icofont icofont-download-alt"></i></a>';
+                            $html .=  $btn_dispen;
+                        }
+
+                        if ($jenis_izin[$key]->jenis == 3) {
+                            $print_sidik_jari =  route('karyawan.print.izin', $jenis_izin[$key]->id_izin);
+                            $btn_sidik_jari = '<a class="btn btn-success btn-xs sidik jari" href="' . $print_sidik_jari . '"><i class="icofont icofont-download-alt"></i></a>';
+                            $html .=  $btn_sidik_jari;
+                        }
                     }
 
-                    return $for_html;
+                    return $html;
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->izin != null) {
@@ -138,7 +153,7 @@ class KaryawanController extends Controller
                         return $apprv = '';
                     }
                 })
-                ->rawColumns(['duration', 'kurang_jam', 'latemasuk', 'latesiang', 'action', 'status'])
+                ->rawColumns(['duration', 'kurang_jam', 'latemasuk', 'latesiang', 'action', 'print', 'status'])
                 ->make(true);
         }
     }
@@ -234,7 +249,14 @@ class KaryawanController extends Controller
                 }
                 return $total;
             })
-
+            ->editColumn('izin_sakit', function ($row) {
+                if ($row->total_izin != NULL) {
+                    $total = $row->total_izin . ' ' . 'Hari';
+                } else {
+                    $total = ' ';
+                }
+                return $total;
+            })
             ->addIndexColumn()
             ->toJson();
     }
@@ -476,41 +498,41 @@ class KaryawanController extends Controller
     public function showDataCalendarByUser($id)
     {
         $id = auth()->user()->nopeg;
-        $cuti = Cuti::where('nopeg',$id)->get();
-		foreach ($cuti as $key => $value) {
-			$cuti[$key]['type'] = 'cuti';
-		}
-		$izin = IzinKerja::where('nopeg',$id)->get();
-		foreach ($izin as $key => $value) {
-			$izin[$key]['type'] = 'izin';
-		}
+        $cuti = Cuti::where('nopeg', $id)->get();
+        foreach ($cuti as $key => $value) {
+            $cuti[$key]['type'] = 'cuti';
+        }
+        $izin = IzinKerja::where('nopeg', $id)->get();
+        foreach ($izin as $key => $value) {
+            $izin[$key]['type'] = 'izin';
+        }
         $data = Attendance::with(['user'])->where('nip', $id)->get();
-		foreach ($data as $key => $value) {
-			$data[$key]['type'] = 'attendance';
-		}
+        foreach ($data as $key => $value) {
+            $data[$key]['type'] = 'attendance';
+        }
         $libur = LiburNasional::get();
-		foreach ($libur as $key => $value) {
-			$libur[$key]['type'] = 'libur';
-		}
-		$combine = $data->merge($cuti);
-		$combine = $combine->merge($izin);
+        foreach ($libur as $key => $value) {
+            $libur[$key]['type'] = 'libur';
+        }
+        $combine = $data->merge($cuti);
+        $combine = $combine->merge($izin);
         $combine = $combine->merge($libur);
         return response()->json(KaryawanCalendarResource::collection($combine));
     }
 
     public function showDataCalendar(Request $request)
     {
-		$id = $request->id;
-		$type = $request->type;
-		if($type == 'attendance'){
+        $id = $request->id;
+        $type = $request->type;
+        if ($type == 'attendance') {
             $data = Attendance::with(['user'])->findOrFail($id);
-		} elseif($type == 'cuti'){
-			$data = Cuti::with(['user'])->findOrFail($id);
-		} elseif($type == 'izin'){
-			$data = IzinKerja::with(['user'])->findOrFail($id);
-		} else{
-			$data = Attendance::with(['user'])->findOrFail($id);
-		}
+        } elseif ($type == 'cuti') {
+            $data = Cuti::with(['user'])->findOrFail($id);
+        } elseif ($type == 'izin') {
+            $data = IzinKerja::with(['user'])->findOrFail($id);
+        } else {
+            $data = Attendance::with(['user'])->findOrFail($id);
+        }
         return response()->json($data);
     }
 }

@@ -55,6 +55,7 @@
                                     <th>Kurang Jam</th>
                                     <th>Note</th>
                                     <th>Aksi</th>
+                                    <th>File</th>
                                     <th>Status</th>
                                 </thead>
                                 <tbody>
@@ -286,6 +287,10 @@
                     {
                         data: 'action',
                         name: 'action'
+                    },
+                    {
+                        data: 'print',
+                        name: 'print'
                     },
                     {
                         data: 'status',

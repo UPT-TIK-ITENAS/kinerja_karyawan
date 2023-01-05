@@ -114,12 +114,13 @@
                                 <thead>
                                     <th>No.</th>
                                     <th>Bulan</th>
-                                    <th>Total Hari Hadir Kerja</th>
                                     <th>Total Hari Kerja</th>
+                                    <th>Total Hari Hadir Kerja</th>
                                     <th>Total Hari Mangkir</th>
                                     <th>Cuti</th>
-                                    <th>Izin</th>
-                                    <th>Izin Kerja</th>
+                                    <th>Izin Non Resmi</th>
+                                    <th>Izin Resmi</th>
+                                    <th>Izin Sakit</th>
                                     <th>Kurang Jam</th>
                                 </thead>
                                 <tbody>
@@ -258,12 +259,12 @@
                         name: 'nama_bulan'
                     },
                     {
-                        data: 'total_masuk_karyawan',
-                        name: 'total_masuk_karyawan'
-                    },
-                    {
                         data: 'total_hari_kerja_per_bulan',
                         name: 'total_hari_kerja_per_bulan'
+                    },
+                    {
+                        data: 'total_masuk_karyawan',
+                        name: 'total_masuk_karyawan'
                     },
                     {
                         data: 'total_hari_mangkir',
@@ -274,12 +275,16 @@
                         name: 'cuti'
                     },
                     {
+                        data: 'total_izin',
+                        name: 'total_izin'
+                    },
+                    {
                         data: 'izin_kerja',
                         name: 'izin_kerja'
                     },
                     {
-                        data: 'total_izin',
-                        name: 'total_izin'
+                        data: 'izin_sakit',
+                        name: 'izin_sakit'
                     },
                     {
                         data: 'kurang_jam',

@@ -18,6 +18,6 @@ class Attendance extends Model
 
     public function izin()
     {
-        return $this->hasOne(Izin::class, 'id_attendance', 'id');
+        return $this->hasMany(Izin::class, 'id_attendance', 'id');
     }
 }

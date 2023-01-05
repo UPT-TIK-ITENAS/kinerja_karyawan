@@ -126,8 +126,9 @@
                                 <th>Total Hari Hadir Kerja</th>
                                 <th>Total Hari Mangkir</th>
                                 <th>Cuti</th>
-                                <th>Izin</th>
-                                <th>Izin Kerja</th>
+                                <th>Izin Non Resmi</th>
+                                <th>Izin Resmi</th>
+                                <th>Izin Sakit</th>
                                 <th>Kurang Jam</th>
                             </thead>
                             <tbody>
@@ -148,12 +149,8 @@
             pageLength: 10,
             responsive: true,
             processing: true,
-            autoWidth: false,
+            autoWidth: true,
             serverSide: true,
-            columnDefs: [{
-                targets: 1,
-                width: "200px !important",
-            }, ],
             ajax: {
                 url: "{{ route('karyawan.listdatarekapitulasi') }}",
                 data: function(d) {
@@ -188,12 +185,16 @@
                     name: 'cuti'
                 },
                 {
+                    data: 'total_izin',
+                    name: 'total_izin'
+                },
+                {
                     data: 'izin_kerja',
                     name: 'izin_kerja'
                 },
                 {
-                    data: 'total_izin',
-                    name: 'total_izin'
+                    data: 'izin_sakit',
+                    name: 'izin_sakit'
                 },
                 {
                     data: 'kurang_jam',
