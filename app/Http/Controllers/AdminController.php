@@ -37,12 +37,12 @@ class AdminController extends Controller
     //DASHBOARD
     public function index()
     {
-        $user_info = User::groupBy('unit')->select('unit','singkatan_unit',DB::raw('count(*) as total'))->join('unit','users.unit','=','unit.id')->whereNotNull('fungsi')->get();
-        $pengajuan_cuti = Cuti::where('approval','0')->count();
-        $cuti = Cuti::where('approval','2')->count();
-        $pengajuan_izin = IzinKerja::where('approval','0')->count();
-        $izin = IzinKerja::where('approval','1')->count();
-        
+        $user_info = User::groupBy('unit')->select('unit', 'singkatan_unit', DB::raw('count(*) as total'))->join('unit', 'users.unit', '=', 'unit.id')->whereNotNull('fungsi')->get();
+        $pengajuan_cuti = Cuti::where('approval', '0')->count();
+        $cuti = Cuti::where('approval', '2')->count();
+        $pengajuan_izin = IzinKerja::where('approval', '0')->count();
+        $izin = IzinKerja::where('approval', '1')->count();
+
         $data = [
             'user_info' => $user_info,
             'pengajuan_cuti' => $pengajuan_cuti,
@@ -50,7 +50,7 @@ class AdminController extends Controller
             'pengajuan_izin' => $pengajuan_izin,
             'izin' => $izin
         ];
-        return view('admin.admin_v',compact('data'));
+        return view('admin.admin_v', compact('data'));
     }
 
     //END DASHBOARD
@@ -363,7 +363,7 @@ class AdminController extends Controller
 
     public function listizin(Request $request)
     {
-	    $data = IzinKerja::with(['units'])->get();
+        $data = IzinKerja::with(['units'])->get();
         return DataTables::of($data)
             ->addIndexColumn()
             ->addColumn('print', function ($row) {
@@ -371,20 +371,19 @@ class AdminController extends Controller
                 $batal_izin = route('admin.izin-resmi.batal_izin', $row->id_izinkerja);
                 $for_html = '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printizin . '"><i class="icofont icofont-download-alt"></i></a>
         <a class="btn btn-danger btn-xs batalizin" href="' . $batal_izin . '">X</a>';
-				return $for_html;
-			})
+                return $for_html;
+            })
             ->addColumn('status', function ($row) {
                 $batal_izin = route('admin.izin-resmi.batal_izin', $row->id_izinkerja);
                 if ($row->approval == 1) {
-	                $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
+                    $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
                 } else {
-	                $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalizin" title="Batal Izin" href="' . $batal_izin . '">X</a>';
+                    $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalizin" title="Batal Izin" href="' . $batal_izin . '">X</a>';
                 }
-				return $for_html;
+                return $for_html;
             })
             ->rawColumns(['print', 'status'])
             ->toJson();
-        
     }
 
     public function storeizin(Request $request)
@@ -444,8 +443,17 @@ class AdminController extends Controller
 
     public function batal_izin($id)
     {
-        $delete = IzinKerja::where('id_izinkerja', $id)->delete();
-        if ($delete) {
+        $data = IzinKerja::where('id_izinkerja', $id)->get();
+        $attendance = Attendance::where('nip', $data->nopeg)->whereBetween('tanggal', [$data->tgl_awal_izin, $data->tgl_akhir_izin])->get();
+        DB::beginTransaction();
+        foreach ($attendance as $key => $value) {
+            $value->update([
+                'is_izin' => 0,
+            ]);
+        }
+        $data->delete();
+        DB::commit();
+        if ($data) {
             return redirect()->back()->with('success', 'Berhasil membatalkan izin');
         } else {
             return redirect()->back()->with('error', 'Gagal membatalkan izin');
@@ -495,22 +503,23 @@ class AdminController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-	                $printcuti =  route('admin.print.cuti', $row->id_cuti);
-	                $batal_cuti = route('admin.cuti.batal_cuti', $row->id_cuti);
+                    $printcuti =  route('admin.print.cuti', $row->id_cuti);
+                    $batal_cuti = route('admin.cuti.batal_cuti', $row->id_cuti);
                     return '<a class="btn btn-success btn-xs" title="Print Surat" href="' . $printcuti . '"><i class="icofont icofont-download-alt"></i></a>
             <a class="btn btn-danger btn-xs batalcuti" href="' . $batal_cuti . '">X</a>';
                 })
                 ->addColumn('status', function ($row) {
-	                if ($row->approval == 1) {
-		                $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
-	                } elseif ($row->approval == 2) {
-		                $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
-	                } elseif ($row->approval == 3) {
-		                $for_html = '<span class="badge badge-danger">Ditolak</span><br><p><b>note</b> : ' . $row->alasan . '</p>';
-	                } else {
-		                $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalcuti" title="Batal Cuti" href="' . $batal_cuti . '">X</a>';
-	                }
-					return $for_html;
+                    $batal_cuti = route('admin.cuti.batal_cuti', $row->id_cuti);
+                    if ($row->approval == 1) {
+                        $for_html = '<span class="badge badge-primary">Disetujui Atasan Langsung</span>';
+                    } elseif ($row->approval == 2) {
+                        $for_html = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
+                    } elseif ($row->approval == 3) {
+                        $for_html = '<span class="badge badge-danger">Ditolak</span><br><p><b>note</b> : ' . $row->alasan . '</p>';
+                    } else {
+                        $for_html = '<span class="badge badge-warning">Menunggu Persetujuan</span> <a class="btn btn-danger btn-xs batalcuti" title="Batal Cuti" href="' . $batal_cuti . '">X</a>';
+                    }
+                    return $for_html;
                 })
                 ->rawColumns(['action', 'status'])
                 ->toJson();
@@ -620,8 +629,17 @@ class AdminController extends Controller
 
     public function batal_cuti($id)
     {
-        $delete = Cuti::where('id_cuti', $id)->delete();
-        if ($delete) {
+        $data = Cuti::where('id_cuti', $id)->first();
+        $attendance = Attendance::where('nip', $data->nopeg)->whereBetween('tanggal', [$data->tgl_awal_cuti, $data->tgl_akhir_cuti])->get();
+        DB::beginTransaction();
+        foreach ($attendance as $key => $value) {
+            $value->update([
+                'is_cuti' => 0,
+            ]);
+        }
+        $data->delete();
+        DB::commit();
+        if ($data) {
             return redirect()->back()->with('success', 'Berhasil membatalkan cuti');
         } else {
             return redirect()->back()->with('error', 'Gagal membatalkan cuti');
