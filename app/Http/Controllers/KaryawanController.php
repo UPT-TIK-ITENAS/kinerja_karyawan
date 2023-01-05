@@ -338,7 +338,7 @@ class KaryawanController extends Controller
         $jeniscuti = JenisCuti::all();
         $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(cuti.total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari
         FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti
-        WHERE DATE_FORMAT(tgl_awal_cuti,'%Y') = '".Carbon::now()->year ."' AND cuti.nopeg='" . auth()->user()->nopeg . "' AND cuti.approval != 3 AND cuti.approval != 0 GROUP BY cuti.jenis_cuti");
+        WHERE DATE_FORMAT(tgl_awal_cuti,'%Y') = '" . Carbon::now()->year . "' AND cuti.nopeg='" . auth()->user()->nopeg . "' AND cuti.approval != 3 AND cuti.approval != 0 GROUP BY cuti.jenis_cuti");
 
         $data = [
             'jeniscuti' => $jeniscuti,
@@ -476,8 +476,17 @@ class KaryawanController extends Controller
 
     public function batal_izin($id)
     {
-        $delete = IzinKerja::where('id_izinkerja', $id)->delete();
-        if ($delete) {
+        $data = IzinKerja::where('id_izinkerja', $id)->get();
+        $attendance = Attendance::where('nip', $data->nopeg)->whereBetween('tanggal', [$data->tgl_awal_izin, $data->tgl_akhir_izin])->get();
+        DB::beginTransaction();
+        foreach ($attendance as $key => $value) {
+            $value->update([
+                'is_izin' => 0,
+            ]);
+        }
+        $data->delete();
+        DB::commit();
+        if ($data) {
             return redirect()->back()->with('success', 'Berhasil membatalkan izin');
         } else {
             return redirect()->back()->with('error', 'Gagal membatalkan izin');
@@ -485,8 +494,17 @@ class KaryawanController extends Controller
     }
     public function batal_cuti($id)
     {
-        $delete = Cuti::where('id_cuti', $id)->delete();
-        if ($delete) {
+        $data = Cuti::where('id_cuti', $id)->first();
+        $attendance = Attendance::where('nip', $data->nopeg)->whereBetween('tanggal', [$data->tgl_awal_cuti, $data->tgl_akhir_cuti])->get();
+        DB::beginTransaction();
+        foreach ($attendance as $key => $value) {
+            $value->update([
+                'is_cuti' => 0,
+            ]);
+        }
+        $data->delete();
+        DB::commit();
+        if ($data) {
             return redirect()->back()->with('success', 'Berhasil membatalkan cuti');
         } else {
             return redirect()->back()->with('danger', 'Gagal membatalkan cuti');
