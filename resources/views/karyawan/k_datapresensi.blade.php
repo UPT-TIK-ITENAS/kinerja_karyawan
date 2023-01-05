@@ -360,6 +360,7 @@
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 themeSystem: 'bootstrap5',
                 initialView: 'dayGridMonth',
+                displayEventTime: false,
                 dayMaxEventRows: true, // for all non-TimeGrid views
                 views: {
                     timeGrid: {

@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
+use DateTime;
+use Carbon\Carbon;
 
 class KaryawanCalendarResource extends JsonResource
 {
@@ -31,10 +33,10 @@ class KaryawanCalendarResource extends JsonResource
 		elseif($this->type == "cuti"){
 			return [
 				'id' => $this->id_cuti,
-				'start' => $this->tgl_awal_cuti,
-				'end' => $this->tgl_akhir_cuti,
+				'start' => $this->tgl_awal_cuti."T00:00:00",
+				'end' => $this->tgl_akhir_cuti."T23:59:59",
 				'title' => 'Cuti',
-				'allDay' => true,
+				'allDay' => false,
 				'color' => '#f44336',
 				'type' => 'cuti',
 			];
@@ -42,10 +44,10 @@ class KaryawanCalendarResource extends JsonResource
 		elseif($this->type == "izin"){
 			return [
 				'id' => $this->id_izinkerja,
-				'start' => $this->tgl_awal_izin,
-				'end' => $this->tgl_akhir_izin,
+				'start' => $this->tgl_awal_izin."T00:00:00",
+				'end' => $this->tgl_akhir_izin."T23:59:59",
 				'title' => 'Izin',
-				'allDay' => true,
+				'allDay' => false,
 				'color' => '#f44336',
 				'type' => 'izin',
 			];
