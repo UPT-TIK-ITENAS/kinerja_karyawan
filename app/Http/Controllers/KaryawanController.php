@@ -111,7 +111,6 @@ class KaryawanController extends Controller
                 ->addColumn('action', function ($row) {
                     $btn_show = '
                     <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
-
                     return $btn_show;
                 })
                 ->addColumn('print', function ($row) {
@@ -138,11 +137,10 @@ class KaryawanController extends Controller
                             $html .=  $btn_sidik_jari;
                         }
                     }
-
                     return $html;
                 })
                 ->addColumn('status', function ($row) {
-                    if ($row->izin != null) {
+                    if ($row->izin->count() > 0) {
                         if ($row->approval == 1) {
                             $apprv = '<span class="badge badge-success">Disetujui</span>';
                         } else {
