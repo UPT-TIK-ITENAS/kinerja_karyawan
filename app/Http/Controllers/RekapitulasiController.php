@@ -57,7 +57,7 @@ class RekapitulasiController extends Controller
         return DataTables::of($data)
             ->addIndexColumn()
             ->editColumn('total_hari_mangkir', function ($row) {
-                return $row->total_hari_mangkir - ($row->cuti ?? 0) - ($row->izin_kerja ?? 0);
+                return $row->total_hari_mangkir - ($row->cuti ?? 0) - ($row->izin_kerja ?? 0) - ($row->izin_sakit ?? 0);
             })
             ->editColumn('kurang_jam', function ($row) {
                 return \Carbon\CarbonInterval::seconds(($row->kurang_jam * 3600) / 60)->cascade()->forHumans();

@@ -443,7 +443,7 @@ class AdminController extends Controller
 
     public function batal_izin($id)
     {
-        $data = IzinKerja::where('id_izinkerja', $id)->get();
+        $data = IzinKerja::where('id_izinkerja', $id)->first();
         $attendance = Attendance::where('nip', $data->nopeg)->whereBetween('tanggal', [$data->tgl_awal_izin, $data->tgl_akhir_izin])->get();
         DB::beginTransaction();
         foreach ($attendance as $key => $value) {

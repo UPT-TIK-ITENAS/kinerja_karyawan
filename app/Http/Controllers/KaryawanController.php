@@ -47,7 +47,7 @@ class KaryawanController extends Controller
             DB::select("CALL HitungTotalHariKerja('" . auth()->user()->nopeg . "', '$periode->batas_awal', '$periode->batas_akhir')")
         );
         $data = $data->map(function ($item) {
-            $item->total_hari_mangkir = $item->total_hari_mangkir - ($item->cuti ?? 0) - ($item->izin_kerja ?? 0);
+            $item->total_hari_mangkir = $item->total_hari_mangkir - ($item->cuti ?? 0) - ($item->izin_kerja ?? 0) - ($item->izin_sakit ?? 0);
             return $item;
         });
         return view('karyawan.k_index', compact('data', 'periode'));
@@ -218,7 +218,7 @@ class KaryawanController extends Controller
 
         return DataTables::of($data)
             ->editColumn('total_hari_mangkir', function ($row) {
-                return $row->total_hari_mangkir - ($row->cuti ?? 0) - ($row->izin_kerja ?? 0);
+                return $row->total_hari_mangkir - ($row->cuti ?? 0) - ($row->izin_kerja ?? 0) - ($row->izin_sakit ?? 0);
             })
             ->editColumn('kurang_jam', function ($row) {
                 return \Carbon\CarbonInterval::seconds(($row->kurang_jam * 3600) / 60)->cascade()->forHumans();
