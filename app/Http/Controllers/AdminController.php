@@ -475,7 +475,7 @@ class AdminController extends Controller
             ->join('jabatan as jb2', 'users.atasan_lang', '=', 'jb2.id')
             ->whereNotNull('status')->get();
 
-            // dd($user);
+        // dd($user);
         $jeniscuti = JenisCuti::all();
 
         $data = [
@@ -492,7 +492,7 @@ class AdminController extends Controller
             cuti::join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
             ->where('cuti.nopeg', $nopeg)
             ->where('cuti.jenis_cuti', $jenis)
-            ->where(DB::raw("(DATE_FORMAT(created_at,'%Y'))"), Carbon::now()->year)
+            ->where(DB::raw("(DATE_FORMAT(tgl_awal_cuti,'%Y'))"), Carbon::now()->year)
             ->GROUPBY('cuti.jenis_cuti')->sum('total_cuti');
         return response()->json($history_cuti);
     }

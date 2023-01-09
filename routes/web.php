@@ -39,13 +39,13 @@ Route::group(['name' => 'auth'], function () {
 });
 
 Route::get('/test', function () {
-//    $jam_masuk = '08:00:00';
-//    $jam_siang = '13:37:00';
-//    $jam_pulang = '17:30:00';
-//    $telat_masuk = lateMasuk($jam_masuk, $jam_siang, 5);
-//    $telat_siang = lateSiang2($jam_siang, $jam_pulang, 5);
-//    dd($jam_masuk, $jam_siang, $jam_pulang, $telat_masuk, $telat_siang);
-	
+    //    $jam_masuk = '08:00:00';
+    //    $jam_siang = '13:37:00';
+    //    $jam_pulang = '17:30:00';
+    //    $telat_masuk = lateMasuk($jam_masuk, $jam_siang, 5);
+    //    $telat_siang = lateSiang2($jam_siang, $jam_pulang, 5);
+    //    dd($jam_masuk, $jam_siang, $jam_pulang, $telat_masuk, $telat_siang);
+
 
     //    $users = DB::table('users')->get();
     //    foreach ($users as $key => $value) {
@@ -54,8 +54,8 @@ Route::get('/test', function () {
     //        $users[$key]->password = Hash::make($password);
     //    }
     //    dd($users);
-	
-//	dispatch(new \App\Jobs\MigrateAttendance('attendance', 'attendance3'));
+
+    //	dispatch(new \App\Jobs\MigrateAttendance('attendance', 'attendance3'));
 
 });
 
@@ -263,7 +263,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/listdatapresensi', [KaryawanController::class, 'listdatapresensi'])->name('listdatapresensi');
         Route::get('/rekapitulasi', [KaryawanController::class, 'rekapitulasi'])->name('rekapitulasi');
         Route::get('/getWorkingDays/{startDate}/{endDate}', [KaryawanController::class, 'getWorkingDays'])->name('getWorkingDays');
-        Route::get('/historycuti/{nopeg}/{jenis}', [AdminController::class, 'historycuti'])->name('historycuti');
+        Route::get('/historycuti/{nopeg}/{jenis}', [KaryawanController::class, 'historycuti'])->name('historycuti');
 
         Route::get('/calendar-by-user/{id}', [\App\Http\Controllers\KaryawanController::class, 'showDataCalendarByUser'])->name('calendar.by-user');
         Route::get('/show-data-calendar', [\App\Http\Controllers\KaryawanController::class, 'showDataCalendar'])->name('showDataById');
