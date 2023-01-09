@@ -815,7 +815,7 @@ class AdminController extends Controller
 
         $attendance = Attendance::where('tanggal', $request->tanggal)->where('nip', $request->nopeg)->first();
         if ($attendance) {
-            return redirect()->back()->with('error', 'Data Gagal Diperbarui! Data sudah terdapat pada attendance.');
+            return redirect()->back()->with('danger', 'Data Gagal Diperbarui! Data sudah terdapat pada attendance.');
         }
 
         $day = date("w", strtotime($request->tanggal));

@@ -130,14 +130,16 @@
                     <li class="dropdown">
                         <a class="nav-link menu-title @if (request()->routeIs('admin_bsdm.izin-resmi.dataizin') ||
                             request()->routeIs('admin_bsdm.cuti.datacuti') ||
-                            request()->routeIs('admin_bsdm.izin-perhari.index')) active @endif"><i
+                            request()->routeIs('admin_bsdm.izin-perhari.index') ||
+                            request()->routeIs('admin_bsdm.ajuan.index')) active @endif"><i
                                 data-feather="edit-3"></i><span>Pengajuan</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
                         <ul class="nav-submenu menu-content"
                             style="display: @if (request()->routeIs('admin_bsdm.izin-resmi.dataizin') ||
                                 request()->routeIs('admin_bsdm.cuti.datacuti') ||
-                                request()->routeIs('admin_bsdm.izin-perhari.index')) block
+                                request()->routeIs('admin_bsdm.izin-perhari.index') ||
+                                request()->routeIs('admin_bsdm.ajuan.index')) block
                     @else
                         none @endif;">
                             <li><a href="{{ route('admin_bsdm.izin-resmi.dataizin') }}" class="">Izin</a>
@@ -145,6 +147,8 @@
                             <li><a href="{{ route('admin_bsdm.cuti.datacuti') }}" class="">Cuti</a>
                             </li>
                             <li><a href="{{ route('admin_bsdm.izin-perhari.index') }}">Izin Per Hari</a></li>
+                            <li><a href="{{ route('admin_bsdm.ajuan.index') }}" class="">Approval Presensi</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -276,14 +280,16 @@
                     <li class="dropdown">
                         <a class="nav-link menu-title @if (request()->routeIs('kepalaunit.approvalIzin') ||
                             request()->routeIs('kepalaunit.approval') ||
-                            request()->routeIs('kepalaunit.approvalIzinTelat')) active @endif"><i
+                            request()->routeIs('kepalaunit.approvalIzinTelat') ||
+                            request()->routeIs('kepalaunit.ajuan')) active @endif"><i
                                 data-feather="edit-3"></i><span>Pengajuan</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
                         <ul class="nav-submenu menu-content"
                             style="display:  @if (request()->routeIs('kepalaunit.approval') ||
                                 request()->routeIs('kepalaunit.approvalIzin') ||
-                                request()->routeIs('kepalaunit.approvalIzinTelat')) block @else none @endif;">
+                                request()->routeIs('kepalaunit.approvalIzinTelat') ||
+                                request()->routeIs('kepalaunit.ajuan')) block @else none @endif;">
                             <li><a href="{{ route('kepalaunit.approval') }}"
                                     class="{{ routeActive('kepalaunit.approval') }}">Approval Cuti</a>
                             </li>
@@ -293,6 +299,8 @@
                             <li><a href="{{ route('kepalaunit.approvalIzinTelat') }}"
                                     class="{{ routeActive('kepalaunit.approvalIzinTelat') }}">Approval Izin
                                     Perhari</a>
+                            </li>
+                            <li><a href="{{ route('kepalaunit.ajuan') }}" class="">Approval Presensi</a>
                             </li>
                         </ul>
                     </li>
