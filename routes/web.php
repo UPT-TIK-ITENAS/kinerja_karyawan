@@ -54,9 +54,7 @@ Route::get('/test', function () {
     //        $users[$key]->password = Hash::make($password);
     //    }
     //    dd($users);
-
-    //	dispatch(new \App\Jobs\MigrateAttendance('attendance', 'attendance3'));
-
+    dispatch(new \App\Jobs\GetAttendanceByDateFromBiometric('2023-01-06', 'attendance_baru'));
 });
 
 Route::prefix('data')->name('data.')->group(function () {
