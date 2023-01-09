@@ -269,6 +269,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/getWorkingDays/{startDate}/{endDate}', [KaryawanController::class, 'getWorkingDays'])->name('getWorkingDays');
         Route::get('/historycuti/{nopeg}/{jenis}', [KaryawanController::class, 'historycuti'])->name('historycuti');
 
+        Route::get('/ajuan', [KaryawanController::class, 'ajuan_mangkir'])->name('ajuan');
+        Route::post('/store_ajuan', [KaryawanController::class, 'store_ajuan'])->name('store_ajuan');
+
+
         Route::get('/calendar-by-user/{id}', [\App\Http\Controllers\KaryawanController::class, 'showDataCalendarByUser'])->name('calendar.by-user');
         Route::get('/show-data-calendar', [\App\Http\Controllers\KaryawanController::class, 'showDataCalendar'])->name('showDataById');
         // Route::get('/calendar', [\App\Http\Controllers\KaryawanController::class, 'allDataCalendar'])->name('calendar.all');

@@ -20,7 +20,7 @@
                     <div class="card-body">
                         <div class="row mb-4">
                             <h6>Total Cuti yang Pernah Diajukan Pada Tahun {{ \Carbon\Carbon::now()->year }} </h6>
-                                <p style="font-size: 80%;">*Akan muncul jika sudah mengajukan cuti</p>
+                            <p style="font-size: 80%;">*Akan muncul jika sudah mengajukan cuti</p>
                         </div>
                         <div class="row">
                             @foreach ($data['history'] as $r)
@@ -32,7 +32,7 @@
                                             {{-- <i class="icon-timer"></i> --}}
                                             <div class="row">
                                                 <div class="col-lg-12 col-sm-12 col-md-12">
-                                                    <p align="center"><b>[{{ $r->total_harinya}}hari]</b></p>
+                                                    <p align="center"><b>[{{ $r->total_harinya }}hari]</b></p>
                                                 </div>
                                             </div>
 
@@ -158,7 +158,7 @@
                             <div class="col-md-4">
                                 <span class="form-label" for="total_cuti">Total Hari</span>
                                 <input class="form-control" id="total_cuti" name="total_cuti" type="number"
-                                    required="">
+                                    required="" readonly>
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                         </div>

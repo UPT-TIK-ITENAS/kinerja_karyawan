@@ -235,6 +235,8 @@
                             <li><a href="{{ route('karyawan.cuti') }}"
                                     class="{{ routeActive('karyawan.cuti') }}">Cuti</a>
                             </li>
+                            <li><a href="{{ route('karyawan.ajuan') }}" class="">Presensi</a>
+                            </li>
                         </ul>
                     </li>
                 @endif

@@ -11,6 +11,7 @@ use App\Models\JadwalSatpam;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
 use App\Models\Kuesioner;
+use App\Models\Mangkir;
 use App\Models\KuesionerKinerja;
 use App\Http\Resources\KaryawanCalendarResource;
 use App\Models\LiburNasional;
@@ -569,5 +570,34 @@ class KaryawanController extends Controller
             $data = Attendance::with(['user'])->findOrFail($id);
         }
         return response()->json($data);
+    }
+
+    public function ajuan_mangkir()
+    {
+        $mangkir = Mangkir::with(['units'])->where('nopeg', auth()->user()->nopeg)->get();
+        // dd($mangkir);
+        $data = [
+            'mangkir' => $mangkir,
+        ];
+        return view('karyawan.k_index_ajuan', compact('data'));
+    }
+
+    public function store_ajuan(Request $request)
+    {
+        $att =  Attendance::where('nip', auth()->user()->nopeg)->where('tanggal', $request->tanggal)->first();
+
+        if ($att != NULL) {
+            return redirect()->back()->with('danger', 'Tanggal yang anda ajukan sudah ada di data presensi!');
+        } else {
+            Mangkir::insert([
+                'nopeg' => auth()->user()->nopeg,
+                'nama' =>  auth()->user()->name,
+                'unit' => auth()->user()->unit,
+                'tanggal' => $request->tanggal,
+                'alasan' => $request->alasan,
+                'status' => '0',
+            ]);
+            return redirect()->back()->with('success', 'Pengajuan Berhasil');
+        }
     }
 }
