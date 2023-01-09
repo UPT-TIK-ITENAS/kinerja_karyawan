@@ -164,8 +164,8 @@
                         name: 'nopeg'
                     },
                     {
-                        data: 'jenis_izin',
-                        name: 'jenis_izin'
+                        data: 'izin',
+                        name: 'izin'
                     },
                     {
                         data: 'tgl_awal_izin',

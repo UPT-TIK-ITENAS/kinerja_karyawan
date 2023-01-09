@@ -318,11 +318,11 @@ class KepalaUnitController extends Controller
     public function index_approvalIzin(Request $request)
     {
         $unit =  auth()->user()->unit;
-        $data = IzinKerja::select('izin_kerja.*')->join('jenis_izin', 'jenis_izin.id_izin', '=', 'izin_kerja.jenis_izin')
+        $data = IzinKerja::select('izin_kerja.*', 'jenis_izin.jenis_izin as izin')->join('jenis_izin', 'jenis_izin.id_izin', '=', 'izin_kerja.jenis_izin')
             ->join('users', 'izin_kerja.nopeg', 'users.nopeg')
             ->join('jabatan', 'users.atasan', '=', 'jabatan.id')
             ->where('users.unit', $unit)->get();
-
+        // dd($data);
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
