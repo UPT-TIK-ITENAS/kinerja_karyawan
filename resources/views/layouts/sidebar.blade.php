@@ -128,18 +128,23 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title @if (request()->routeIs('admin_bsdm.izin-resmi.dataizin') || request()->routeIs('admin_bsdm.cuti.datacuti')) active @endif"><i
+                        <a class="nav-link menu-title @if (request()->routeIs('admin_bsdm.izin-resmi.dataizin') ||
+                            request()->routeIs('admin_bsdm.cuti.datacuti') ||
+                            request()->routeIs('admin_bsdm.izin-perhari.index')) active @endif"><i
                                 data-feather="edit-3"></i><span>Pengajuan</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
                         <ul class="nav-submenu menu-content"
-                            style="display: @if (request()->routeIs('admin_bsdm.izin-resmi.dataizin') || request()->routeIs('admin_bsdm.cuti.datacuti')) block
+                            style="display: @if (request()->routeIs('admin_bsdm.izin-resmi.dataizin') ||
+                                request()->routeIs('admin_bsdm.cuti.datacuti') ||
+                                request()->routeIs('admin_bsdm.izin-perhari.index')) block
                     @else
                         none @endif;">
                             <li><a href="{{ route('admin_bsdm.izin-resmi.dataizin') }}" class="">Izin</a>
                             </li>
                             <li><a href="{{ route('admin_bsdm.cuti.datacuti') }}" class="">Cuti</a>
                             </li>
+                            <li><a href="{{ route('admin_bsdm.izin-perhari.index') }}">Izin Per Hari</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">

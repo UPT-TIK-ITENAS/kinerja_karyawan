@@ -193,6 +193,12 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('printizinkerja/{id}', [AdminController::class, 'printizinkerja'])->name('printizinkerja');
         });
 
+        Route::prefix('izin-perhari')->name('izin-perhari.')->group(function () {
+            Route::get('/', [AdminController::class, 'index_izin_perhari'])->name('index');
+            Route::get('/edit/{id}', [AdminController::class, 'edit_izin_perhari'])->name('edit');
+            Route::post('/update/{id}', [AdminController::class, 'update_izin_perhari'])->name('update');
+        });
+
         Route::prefix('libur-nasional')->name('libur-nasional.')->group(function () {
             Route::get('/', [AdminController::class, 'liburnasional'])->name('libur');
             Route::get('/listlibur', [AdminController::class, 'listlibur'])->name('listlibur');

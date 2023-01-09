@@ -372,7 +372,7 @@ class KepalaUnitController extends Controller
 
     public function index_approvalIzinTelat(Request $request)
     {
-        $data = Izin::where('unit', auth()->user()->unit)->get();
+        $data = Izin::where('unit', auth()->user()->unit)->latest()->get();
         // dd($data);
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -416,7 +416,7 @@ class KepalaUnitController extends Controller
                 ->toJson();
         }
 
-        return view('kepalaunit.ku_index_approval_izin_telat', compact('data'));
+        // return view('kepalaunit.ku_index_approval_izin_telat', compact('data'));
     }
 
     public function editIzinTelat($id)
