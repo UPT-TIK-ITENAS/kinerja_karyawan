@@ -55,6 +55,80 @@ class AdminController extends Controller
 
     //END DASHBOARD
 
+    // Data Izin Per Hari
+    public function index_izin_perhari(Request $request)
+    {
+        $data = Izin::latest()->get();
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    // if ($data->approval == 1) {
+                    $print =  route('kepalaunit.print.izin', $data->id_attendance);
+                    $for_html = '
+                        <a href="#" class="btn btn-warning btn-xs tambahIzin" data-bs-toggle="modal" data-id="' . $data->id_izin . '"><i class="icofont icofont-pencil-alt-2"></i></a>
+                        <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
+
+                    return $for_html;
+                    // }
+                    // return "";
+                })
+                ->addColumn('waktu', function ($data) {
+                    if ($data->tanggal != NULL && $data->jam_awal != NULL && $data->jam_akhir != NULL) {
+                        $waktu = $data->tanggal . ' ' . $data->jam_awal . ' s/d ' . $data->jam_akhir;
+                    } else {
+                        $waktu = $data->tanggal_izin;
+                    }
+
+                    return $waktu;
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->approval == 1) {
+                        $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
+                    } else {
+                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                    }
+                    return $apprv;
+                })
+                ->editColumn('jenis', function ($row) {
+                    if ($row->jenis == 1) {
+                        $stat = 'Izin terlambat/Ada keperluan,dll';
+                    } elseif ($row->jenis == 2) {
+                        $stat = 'Absen sidik jari tidak terbaca mesin';
+                    } else {
+                        $stat = 'Dispensasi';
+                    }
+                    return $stat;
+                })
+                ->rawColumns(['status', 'action', 'waktu', 'jenis'])
+                ->toJson();
+        }
+        return view('admin.izin-perhari');
+    }
+
+    public function edit_izin_perhari($id)
+    {
+        $data = Izin::where('id_izin', $id)->first();
+        $attendance = Attendance::whereDate('tanggal', Carbon::parse($data->tanggal_izin)->format('Y-m-d'))->where('nip', $data->nopeg)->first();
+        return response()->json(['izin' => $data, 'attendance' => $attendance]);
+    }
+
+    public function update_izin_perhari(Request $request, $id)
+    {
+        $data = Izin::where('id_izin', $id)->first();
+        $attendance = Attendance::whereDate('tanggal', Carbon::parse($data->tanggal_izin)->format('Y-m-d'))->where('nip', $data->nopeg)->first();
+        $attendance->update([
+            'jam_masuk' => $request->jam_masuk,
+            'jam_siang' => $request->jam_siang,
+            'jam_pulang' => $request->jam_pulang,
+            'telat_masuk' => lateMasuk($request->jam_masuk, $request->jam_siang, $attendance->hari),
+            'telat_siang' => lateSiang2($request->jam_siang, $request->jam_pulang, $attendance->hari),
+            'durasi' => getDurasi($request->jam_masuk, $request->jam_siang, $request->jam_pulang),
+        ]);
+
+        return redirect()->back()->with('success', 'Data berhasil diubah!');
+    }
+
     //DATA PRESENSI
     public function datapresensi()
     {
