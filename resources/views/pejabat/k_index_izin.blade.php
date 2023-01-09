@@ -115,7 +115,8 @@
                             </div>
                             <div class="col-md-4">
                                 <span class="form-label" for="total_izin">Total Hari</span>
-                                <input class="form-control" id="total_izin" name="total_izin" type="number" required="">
+                                <input class="form-control" id="total_izin" name="total_izin" type="number" required=""
+                                    readonly>
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                         </div>

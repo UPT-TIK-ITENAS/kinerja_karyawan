@@ -81,7 +81,7 @@
                             <div class="col-md-4">
                                 <span class="form-label" for="total_cuti">Total Hari</span>
                                 <input class="form-control" id="total_cuti" name="total_cuti" type="number" required=""
-                                    disabled>
+                                    readonly disabled>
                             </div>
                         </div>
                         <div class="row g-2 mb-3">

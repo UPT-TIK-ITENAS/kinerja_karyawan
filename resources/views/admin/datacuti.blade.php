@@ -124,7 +124,7 @@
                             <div class="col-md-4">
                                 <span class="form-label" for="total_cuti">Total Hari</span>
                                 <input class="form-control" id="total_cuti" name="total_cuti" type="number"
-                                    required="">
+                                    required="" readonly>
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                         </div>
