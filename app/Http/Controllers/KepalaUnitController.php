@@ -416,7 +416,7 @@ class KepalaUnitController extends Controller
                 ->toJson();
         }
 
-        // return view('kepalaunit.ku_index_approval_izin_telat', compact('data'));
+        return view('kepalaunit.ku_index_approval_izin_telat', compact('data'));
     }
 
     public function editIzinTelat($id)
