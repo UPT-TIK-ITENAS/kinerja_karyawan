@@ -122,7 +122,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <p style="font-size: 14px; color: white"></p>
-                        <button class="btn btn-primary" type="submit" id="btnSubmit">Setuju</button>
+                        <button class="btn btn-primary" type="submit" id="btnSubmit">Ubah Attendance</button>
                     </div>
                 </form>
             </div>
