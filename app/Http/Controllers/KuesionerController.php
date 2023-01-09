@@ -38,7 +38,7 @@ class KuesionerController extends Controller
         //$kuesioner = KuesionerKinerja::get();
 
         //$kuesioner = DB::table('kuisioner_periode')->get();
-        $kuesioner = KuesionerKinerja::where('status','1')->get();
+        $kuesioner = KuesionerKinerja::where('status', '1')->get();
         //dd($kuesioner);
         return view('kuesioner.index_kuesioner', compact('kuesioner'));
     }
@@ -53,19 +53,21 @@ class KuesionerController extends Controller
             ->get();
 
         $responden = RespondenKinerja::select('nopeg')->get();
-        $kuesioner = KuesionerKinerja::with(['pertanyaan' => function ($query) { return $query->orderBy('nomor', 'asc'); }, 'pertanyaan.jawaban'])->find($id);
+        $kuesioner = KuesionerKinerja::with(['pertanyaan' => function ($query) {
+            return $query->orderBy('nomor', 'asc');
+        }, 'pertanyaan.jawaban'])->find($id);
 
         $user = User::select('*')
-        ->join('unit', 'unit.id', '=', 'users.unit')
-        ->where('role', '=', 'karyawan')
-        ->where('users.unit', auth()->user()->unit)
-        ->where('users.unit', auth()->user()->unit)
-        ->whereNotExists(function($query)  use ($kuesioner){
-            $query->select(DB::raw('nopeg'))
-                  ->from('responden_kuisioner')
-                  ->whereRaw('users.nopeg = responden_kuisioner.nopeg')
-                  ->where('responden_kuisioner.kuisioner_kinerja_id', $kuesioner->id);
-        })->get();
+            ->join('unit', 'unit.id', '=', 'users.unit')
+            ->where('role', '=', 'karyawan')
+            ->where('users.unit', auth()->user()->unit)
+            ->where('users.unit', auth()->user()->unit)
+            ->whereNotExists(function ($query)  use ($kuesioner) {
+                $query->select(DB::raw('nopeg'))
+                    ->from('responden_kuisioner')
+                    ->whereRaw('users.nopeg = responden_kuisioner.nopeg')
+                    ->where('responden_kuisioner.kuisioner_kinerja_id', $kuesioner->id);
+            })->get();
 
         $data = [
             'User' => $user,
@@ -73,12 +75,12 @@ class KuesionerController extends Controller
             'Jabatan' => $jabatan
         ];
 
-        return view('kuesioner.showKuesioner', compact('kuesioner', 'data','responden'));
+        return view('kuesioner.showKuesioner', compact('kuesioner', 'data', 'responden'));
     }
 
     public function storeKuesioner(Request $request, $id)
     {
-        
+
         // $request->validate([
         //     'responden.*.jawaban_kinerja_id' => 'required',
         //     'responden.*.pertanyaan_kinerja_id' => 'required',
@@ -197,7 +199,7 @@ class KuesionerController extends Controller
     public function admHasilKuesioner()
     {
         $periode = KuesionerKinerja::get();
-        return view('kuesioner.admhasil_penilaian',compact('periode'));
+        return view('kuesioner.admhasil_penilaian', compact('periode'));
     }
 
     public function admlistPenilaian(Request $request)
