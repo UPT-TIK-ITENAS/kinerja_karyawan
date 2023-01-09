@@ -63,15 +63,15 @@ class AdminController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {
-                    // if ($data->approval == 1) {
-                    $print =  route('kepalaunit.print.izin', $data->id_attendance);
-                    $for_html = '
+                    if ($data->approval == 1) {
+                        $print =  route('kepalaunit.print.izin', $data->id_attendance);
+                        $for_html = '
                         <a href="#" class="btn btn-warning btn-xs tambahIzin" data-bs-toggle="modal" data-id="' . $data->id_izin . '"><i class="icofont icofont-pencil-alt-2"></i></a>
                         <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
 
-                    return $for_html;
-                    // }
-                    // return "";
+                        return $for_html;
+                    }
+                    return "";
                 })
                 ->addColumn('waktu', function ($data) {
                     if ($data->tanggal != NULL && $data->jam_awal != NULL && $data->jam_akhir != NULL) {
