@@ -378,7 +378,7 @@ class KepalaUnitController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {
-                    $print =  route('kepalaunit.print.izin', $data->id_attendance);
+                    $print =  route('kepalaunit.print.izin', $data->id_izin);
                     $for_html = '
                     <a href="#" class="btn btn-warning btn-xs tambahIzin" data-bs-toggle="modal" data-id="' . $data->id_izin . '"><i class="icofont icofont-pencil-alt-2"></i></a>
                     <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';

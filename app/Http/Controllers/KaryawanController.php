@@ -140,16 +140,35 @@ class KaryawanController extends Controller
                     return $html;
                 })
                 ->addColumn('status', function ($row) {
-                    if ($row->izin->count() > 0) {
-                        if ($row->approval == 1) {
-                            $apprv = '<span class="badge badge-success">Disetujui</span>';
-                        } else {
-                            $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                    // if ($row->izin->count() > 0) {
+                    //     if ($row->approval == 1) {
+                    //         $apprv = '<span class="badge badge-success">Disetujui</span>';
+                    //     } else {
+                    //         $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                    //     }
+                    //     return $apprv;
+                    // } else {
+                    //     return $apprv = '';
+                    // }
+                    $izin = $row->izin;
+                    $html = '';
+                    foreach ($izin as $key => $value) {
+                        if ($izin[$key]->jenis == 1) {
+                            $status = $izin[$key]->approval == 1 ? '<span class="badge badge-success">Disetujui Atasan Langsung</span>' : '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                            $html .=  $status;
                         }
-                        return $apprv;
-                    } else {
-                        return $apprv = '';
+
+                        if ($izin[$key]->jenis == 2) {
+                            $status = $izin[$key]->approval == 1 ? '<span class="badge badge-success">Disetujui Atasan Langsung</span>' : '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                            $html .=  $status;
+                        }
+
+                        if ($izin[$key]->jenis == 3) {
+                            $status = $izin[$key]->approval == 1 ? '<span class="badge badge-success">Disetujui Atasan Langsung</span>' : '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                            $html .=  $status;
+                        }
                     }
+                    return $html;
                 })
                 ->rawColumns(['duration', 'kurang_jam', 'latemasuk', 'latesiang', 'action', 'print', 'status'])
                 ->make(true);
