@@ -12,6 +12,7 @@ use App\Models\IzinKerja;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
 use App\Models\KuesionerKinerja;
+use App\Models\Mangkir;
 use App\Models\QR;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -490,5 +491,18 @@ class KepalaUnitController extends Controller
             ]);
             return redirect()->back()->with('success', 'Izin Disetujui');
         }
+    }
+
+    public function ajuan_mangkir()
+    {
+        $mangkir = Mangkir::with(['units'])->where('unit', auth()->user()->unit)->get();
+        $data = [
+            'mangkir' => $mangkir,
+        ];
+        return view('kepalaunit.ku_dataajuan', compact('data'));
+    }
+
+    public function detail_mangkir(Request $request)
+    {
     }
 }

@@ -54,7 +54,7 @@ Route::get('/test', function () {
     //        $users[$key]->password = Hash::make($password);
     //    }
     //    dd($users);
-    dispatch(new \App\Jobs\GetAttendanceByDateFromBiometric('2023-01-06', 'attendance_baru'));
+    // dispatch(new \App\Jobs\GetAttendanceByDateFromBiometric('2023-01-06', 'attendance_baru'));
 });
 
 Route::prefix('data')->name('data.')->group(function () {
@@ -341,6 +341,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('izinkerja/{id}', [PrintController::class, 'printizinkerja'])->name('izinkerja');
             Route::get('cuti/{id}', [PrintController::class, 'printcuti'])->name('cuti');
         });
+
+        Route::get('/ajuan', [KepalaUnitController::class, 'ajuan_mangkir'])->name('ajuan');
+        Route::post('/update_ajuan', [KepalaUnitController::class, 'update_ajuan'])->name('update_ajuan');
 
         Route::get('/approval/index', [KepalaUnitController::class, 'index_approval'])->name('approval');
         Route::get('/approval/editCuti/{id}', [KepalaUnitController::class, 'editCuti'])->name('editCuti');

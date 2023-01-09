@@ -82,24 +82,21 @@
                         <div class="row g-2 mb-3">
                             <div class="col-md-12">
                                 <span class="form-label" for="jam_masuk">Jam Masuk</span>
-                                <input class="form-control" id="jam_masuk" name="jam_masuk" type="text" required=""
-                                    readonly>
+                                <input class="form-control" id="jam_masuk" name="jam_masuk" type="text" required="">
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                         </div>
                         <div class="row g-2 mb-3">
                             <div class="col-md-12">
                                 <span class="form-label" for="jam_siang">Jam Siang</span>
-                                <input class="form-control" id="jam_siang" name="jam_siang" type="text" required=""
-                                    readonly>
+                                <input class="form-control" id="jam_siang" name="jam_siang" type="text" required="">
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                         </div>
                         <div class="row g-2 mb-3">
                             <div class="col-md-12">
                                 <span class="form-label" for="jam_pulang">Jam Pulang</span>
-                                <input class="form-control" id="jam_pulang" name="jam_pulang" type="text" required=""
-                                    readonly>
+                                <input class="form-control" id="jam_pulang" name="jam_pulang" type="text" required="">
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
                         </div>
