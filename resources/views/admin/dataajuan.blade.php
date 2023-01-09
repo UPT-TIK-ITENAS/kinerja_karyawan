@@ -57,16 +57,16 @@
                                                 <td>{{ $r->alasan }}</td>
                                                 @if ($r->status == 0)
                                                     <td><span class="badge badge-warning">Menunggu Persetujuan</span></td>
-                                                @else
+                                                @elseif($r->status == 1)
                                                     <td> <span class="badge badge-primary">Disetujui Atasan</span> </td>
+                                                @else
+                                                    <td> <span class="badge badge-primary">Disetujui BSDM</span> </td>
                                                 @endif
                                                 <td>
-                                                    @if ($r->status == 0)
-                                                        <a href="#" class="btn btn-primary btn-xs edit-izin"
-                                                            data-id="{{ $r->id_mangkir }}">
-                                                            <i class="icofont icofont-pencil-alt-2"></i>
-                                                        </a>
-                                                    @endif
+                                                    <a href="#" class="btn btn-primary btn-xs edit-izin"
+                                                        data-id="{{ $r->id_mangkir }}">
+                                                        <i class="icofont icofont-pencil-alt-2"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -92,7 +92,7 @@
                         data-bs-original-title="" title=""></button>
                 </div>
                 <form autocomplete="off" class="needs-validation" novalidate=""
-                    action="{{ route('kepalaunit.update_ajuan') }}" method="POST">
+                    action="{{ route('admin_bsdm.ajuan.update') }}" method="POST">
                     <input type="hidden" name="id_mangkir" id="id_mangkir" value="">
                     @csrf
                     <div class="modal-body">
@@ -152,7 +152,7 @@
             $("#editIzin").modal('show');
             // get data
             $.ajax({
-                url: "{{ url('/kepalaunit/ajuan/') }}/" + id,
+                url: "{{ url('/admin_bsdm/ajuan/') }}/" + id,
                 type: "GET",
                 success: function(data) {
                     $('#nopeg').val(data.nopeg);

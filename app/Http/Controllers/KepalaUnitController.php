@@ -502,7 +502,27 @@ class KepalaUnitController extends Controller
         return view('kepalaunit.ku_dataajuan', compact('data'));
     }
 
-    public function detail_mangkir(Request $request)
+    public function detail_mangkir(Request $request, $id)
     {
+        $mangkir = Mangkir::with(['units'])->where('id_mangkir', $id)->first();
+        return response()->json($mangkir);
+    }
+
+    public function update_ajuan(Request $request)
+    {
+        $request->validate([
+            'id_mangkir' => 'required',
+            'tanggal' => 'required',
+            'alasan' => 'required',
+            'nopeg' => 'required',
+            'nama' =>  'required',
+        ]);
+
+        $mangkir = Mangkir::where('id_mangkir', $request->id_mangkir)->first();
+        $mangkir->update([
+            'status' => 1
+        ]);
+
+        return redirect()->back()->with('success', 'Data Berhasil Diperbarui!');
     }
 }

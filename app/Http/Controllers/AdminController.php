@@ -23,6 +23,7 @@ use App\Models\JenisCuti;
 use App\Models\JenisIzin;
 use App\Models\LiburNasional;
 use App\Models\Jabatan;
+use App\Models\Mangkir;
 use Carbon\Carbon;
 use App\Models\QR;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -777,5 +778,74 @@ class AdminController extends Controller
     {
         LiburNasional::where('id', $id)->delete();
         return redirect()->route('admin.libur-nasional.libur')->with('success', 'Data berhasil dihapus!');
+    }
+
+    // Ajuan
+    public function index_ajuan()
+    {
+        $mangkir = Mangkir::get();
+        $data = [
+            'mangkir' => $mangkir,
+        ];
+        return view('admin.dataajuan', compact('data'));
+    }
+
+    public function detail_mangkir(Request $request, $id)
+    {
+        $mangkir = Mangkir::with(['units'])->where('id_mangkir', $id)->first();
+        return response()->json($mangkir);
+    }
+
+    public function update_ajuan(Request $request)
+    {
+        $request->validate([
+            'id_mangkir' => 'required',
+            'tanggal' => 'required',
+            'alasan' => 'required',
+            'nopeg' => 'required',
+            'nama' =>  'required',
+        ]);
+
+        DB::beginTransaction();
+
+        $mangkir = Mangkir::where('id_mangkir', $request->id_mangkir)->first();
+        $mangkir->update([
+            'status' => 2
+        ]);
+
+        $attendance = Attendance::where('tanggal', $request->tanggal)->where('nip', $request->nopeg)->first();
+        if ($attendance) {
+            return redirect()->back()->with('error', 'Data Gagal Diperbarui! Data sudah terdapat pada attendance.');
+        }
+
+        $day = date("w", strtotime($request->tanggal));
+        $jam_masuk = "$request->tanggal 08:00:00";
+        if ($day == 5) {
+            $jam_siang = "$request->tanggal 13:30:00";
+        } else {
+            $jam_siang = "$request->tanggal 13:00:00";
+        }
+        $jam_pulang = "$request->tanggal 17:00:00";
+
+        Attendance::create([
+            'nip' => $request->nopeg,
+            'hari' => $day,
+            'tanggal' => $request->tanggal,
+            'jam_masuk' => $jam_masuk,
+            'jam_siang' => $jam_siang,
+            'jam_pulang' => $jam_pulang,
+            'status' => 1,
+            'telat_masuk' => lateMasuk($jam_masuk, $jam_siang, $day),
+            'telat_siang' => lateSiang2($jam_siang, $jam_pulang, $day),
+            'durasi' => getDurasi($jam_masuk, $jam_pulang, $day),
+            'modify_by' => 0,
+            'is_cuti' => 0,
+            'is_izin' => 0,
+            'is_dispen' => 0,
+        ]);
+
+        DB::commit();
+
+        return redirect()->back()->with('success', 'Data Berhasil Diperbarui! Data sudah terdapat pada attendance.');
     }
 }

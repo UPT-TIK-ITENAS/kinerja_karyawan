@@ -10,6 +10,7 @@ class Mangkir extends Model
     // use HasFactory;
     protected $table = 'mangkir';
     protected $guarded = [];
+    protected $primaryKey = 'id_mangkir';
 
     public function units()
     {

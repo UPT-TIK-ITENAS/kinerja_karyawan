@@ -190,7 +190,7 @@ class KaryawanController extends Controller
         $qrcode_filenamepeg = 'qr-karyawan' . base64_encode($request->nip . '-' . $request->id . '-' . date('Y-m-d H:i:s') . ')') . '.svg';
         QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nip . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
 
-        if ($request->jenis == 2) {
+        if ($request->jenis == 2 || $request->jenis == 3) {
             Izin::insert([
                 'id_attendance' => $request->id,
                 'nopeg' => $request->nip,
@@ -575,7 +575,6 @@ class KaryawanController extends Controller
     public function ajuan_mangkir()
     {
         $mangkir = Mangkir::with(['units'])->where('nopeg', auth()->user()->nopeg)->get();
-        // dd($mangkir);
         $data = [
             'mangkir' => $mangkir,
         ];
@@ -584,6 +583,10 @@ class KaryawanController extends Controller
 
     public function store_ajuan(Request $request)
     {
+        $request->validate([
+            'tanggal' => 'required',
+            'alasan' => 'required',
+        ]);
         $att =  Attendance::where('nip', auth()->user()->nopeg)->where('tanggal', $request->tanggal)->first();
 
         if ($att != NULL) {

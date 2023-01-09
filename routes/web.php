@@ -54,6 +54,7 @@ Route::get('/test', function () {
     //        $users[$key]->password = Hash::make($password);
     //    }
     //    dd($users);
+    // dispatch(new \App\Jobs\MigrateAttendance('attendance_baru', 'attendance', '2022-08-31'));
     // dispatch(new \App\Jobs\GetAttendanceByDateFromBiometric('2023-01-06', 'attendance_baru'));
 });
 
@@ -196,6 +197,13 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/edit/{id}', [AdminController::class, 'edit_izin_perhari'])->name('edit');
             Route::post('/update/{id}', [AdminController::class, 'update_izin_perhari'])->name('update');
         });
+
+        Route::prefix('ajuan')->name('ajuan.')->group(function () {
+            Route::get('', [AdminController::class, 'index_ajuan'])->name('index');
+            Route::get('/{id}', [AdminController::class, 'detail_mangkir'])->name('detail');
+            Route::post('/update', [AdminController::class, 'update_ajuan'])->name('update');
+        });
+
 
         Route::prefix('libur-nasional')->name('libur-nasional.')->group(function () {
             Route::get('/', [AdminController::class, 'liburnasional'])->name('libur');
@@ -343,6 +351,7 @@ Route::group(['middleware' => 'auth'], function () {
         });
 
         Route::get('/ajuan', [KepalaUnitController::class, 'ajuan_mangkir'])->name('ajuan');
+        Route::get('/ajuan/{id}', [KepalaUnitController::class, 'detail_mangkir'])->name('ajuan_detail');
         Route::post('/update_ajuan', [KepalaUnitController::class, 'update_ajuan'])->name('update_ajuan');
 
         Route::get('/approval/index', [KepalaUnitController::class, 'index_approval'])->name('approval');
