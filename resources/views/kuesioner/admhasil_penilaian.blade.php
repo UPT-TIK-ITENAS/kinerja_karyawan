@@ -44,8 +44,8 @@
                                 <thead>
                                     <th>No.</th>
                                     <th>Nama</th>
+                                    <th>Nopeg</th>
                                     <th>Indeks</th>
-                                    <th>Periode</th>
                                 </thead>
                                 <tbody>
                                 </tbody>
@@ -76,10 +76,10 @@
                 }, ],
 
                 ajax: {
-                url: "{{ route('admin.kuesioner.admlistPenilaian') }}",
-                data: function(d) {
-                    d.filter1 = $('#filter1').val() ? $('#filter1').val() : '<>';
-                }
+                    url: "{{ route('admin.kuesioner.admlistPenilaian') }}",
+                    data: function(d) {
+                        d.filter1 = $('#filter1').val() ? $('#filter1').val() : '<>';
+                    }
                 },
                 columns: [{
                         data: 'DT_RowIndex',
@@ -108,7 +108,7 @@
                 ]
             });
 
-            
+
             $("#filter1").on('change', function() {
                 table.draw();
             });
