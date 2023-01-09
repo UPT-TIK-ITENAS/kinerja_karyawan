@@ -28,7 +28,7 @@ trait PenilaianKinerja
 
         // transform $data->total_hari_mangkir to $data->mangkir
         foreach ($data as $key => $value) {
-            $data[$key]->mangkir = $value->total_hari_mangkir - ($value->cuti ?? 0) - ($value->izin_kerja ?? 0);
+            $data[$key]->mangkir = $value->total_hari_mangkir - ($value->cuti ?? 0) - ($value->izin_kerja ?? 0) - ($value->izin_sakit ?? 0);
         }
 
         // $this->bobot_izin = 13;
@@ -57,7 +57,7 @@ trait PenilaianKinerja
                 $skor['sakit'][$key] = round($this->bobot_sakit * ($this->maks_sakit - $value->izin_sakit) / $this->maks_sakit, 2);
             }
 
-            if ($value->mangkir >= $this->maks_mangkir) {
+            if ($value->mangkir > $this->maks_mangkir) {
                 $skor['mangkir'][$key] = 0;
                 $skor['avg']['mangkir'] = 0;
             } else {
@@ -74,7 +74,7 @@ trait PenilaianKinerja
 
         $skor['avg']['izin'] = (array_sum(array_column($data, 'total_izin')) > $this->maks_izin) ? 0 : round(array_sum($skor['izin']) / count($skor['izin']), 2);
         $skor['avg']['sakit'] = (array_sum(array_column($data, 'izin_sakit')) > $this->maks_sakit) ? 0 : round(array_sum($skor['sakit']) / count($skor['sakit']), 2);
-        $skor['avg']['mangkir'] = (array_sum(array_column($data, 'total_hari_mangkir')) >= $this->maks_mangkir) ? 0 : round(array_sum($skor['mangkir']) / count($skor['mangkir']), 2);
+        $skor['avg']['mangkir'] = (array_sum(array_column($data, 'mangkir')) > $this->maks_mangkir) ? 0 : round(array_sum($skor['mangkir']) / count($skor['mangkir']), 2);
         $skor['avg']['kurang_jam'] = (array_sum(array_column($data, 'kurang_jam')) >= $this->maks_terlambat) ? 0 : round(array_sum($skor['kurang_jam']) / count($skor['kurang_jam']), 2);
 
         $this->skor = $skor;
