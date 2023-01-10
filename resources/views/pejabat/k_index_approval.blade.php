@@ -143,7 +143,7 @@
             $('#approval').val(null);
             $('#btnSubmit').prop('disabled', false);
             console.log("approval", $("#approval"))
-            $.get("{{ url('/kepalaunit/approval/editCuti') }}/" + id, function(data, jeniscuti) {
+            $.get("{{ url('/pejabat/approval/editCuti') }}/" + id, function(data, jeniscuti) {
                 if (data.approval == 2) {
                     document.getElementById("ifYes").style.display = "block";
                     $('#btnSubmit').prop('disabled', true);
