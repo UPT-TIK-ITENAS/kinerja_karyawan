@@ -293,9 +293,9 @@ class KepalaUnitController extends Controller
 
     public function editCuti($id)
     {
-        $data = Cuti::where('id_cuti', '=', $id)
-            ->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')->first();
-        return response()->json($data);
+        $data = Cuti::with(['user', 'jeniscuti'])->where('id_cuti', '=', $id)->first();
+        $jabatan = Jabatan::where('nopeg', auth()->user()->nopeg)->first();
+        return response()->json(['data' => $data, 'jabatan' => $jabatan]);
     }
 
     public function approveCuti(Request $request)

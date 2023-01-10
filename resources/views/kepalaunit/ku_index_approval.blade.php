@@ -146,7 +146,18 @@
         $('body').on('click', '.editAK', function() {
             id = $(this).data('id');
             console.log(id)
-            $.get("{{ url('/pejabat/approval/editCuti') }}/" + id, function(data, jeniscuti) {
+            $.get("{{ url('/kepalaunit/approval/editCuti') }}/" + id, function({
+                data,
+                jabatan
+            }) {
+                if (data.user.atasan_lang == jabatan.id && data.approval == 1) {
+                    $('#btnSubmit').prop('disabled', false);
+                } else if (data.user.atasan == jabatan.id && data.approval == 0) {
+                    $('#btnSubmit').prop('disabled', false);
+                } else {
+                    $('#btnSubmit').prop('disabled', true);
+                }
+
                 if (data.approval == 0) {
                     $('#approval').val(null);
                     $('#nopeg').val(data.nopeg);
@@ -161,10 +172,9 @@
                     $('#alamat').val(data.alamat);
                     $('#no_hp').val(data.no_hp);
                     $('#approval').prop('disabled', false);
-                    $('#btnSubmit').prop('disabled', false);
+
                 }
                 if (data.approval == 2) {
-                    $('#btnSubmit').prop('disabled', true);
                     $('#approval').prop('disabled', true);
                     $('#nopeg').val(data.nopeg);
                     $('#name').val(data.name);
@@ -179,7 +189,6 @@
                     $('#no_hp').val(data.no_hp);
                 }
                 if (data.approval == 1) {
-                    $('#btnSubmit').prop('disabled', true);
                     $('#approval').prop('disabled', true);
                     $('#nopeg').val(data.nopeg);
                     $('#name').val(data.name);
@@ -194,7 +203,6 @@
                     $('#no_hp').val(data.no_hp);
                 }
                 if (data.approval == 3) {
-                    $('#btnSubmit').prop('disabled', true);
                     $('#nopeg').val(data.nopeg);
                     $('#name').val(data.name);
                     $('#alasan_tolak').prop('disabled', true).val(data.alasan_tolak);
