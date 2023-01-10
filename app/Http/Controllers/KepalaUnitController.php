@@ -267,14 +267,11 @@ class KepalaUnitController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {
                     $print =  route('kepalaunit.print.cuti', $data->id_cuti);
-                    if ($data->approval == 1) {
-                        $for_html = '
+                    $for_html = '
                         <a href="#" class="btn btn-warning btn-xs editAK" data-bs-toggle="modal" data-id="' . $data->id_cuti . '"><i class="icofont icofont-pencil-alt-2"></i></a>
                         <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
 
-                        return $for_html;
-                    }
-                    return "";
+                    return $for_html;
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->approval == 1) {
