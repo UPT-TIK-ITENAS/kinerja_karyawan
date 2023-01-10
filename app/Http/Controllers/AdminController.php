@@ -64,7 +64,7 @@ class AdminController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {
-                    if ($data->approval == 1) {
+                    if ($data->approval == 1 && $data->jenis == 2) {
                         $print =  route('kepalaunit.print.izin', $data->id_attendance);
                         $for_html = '
                         <a href="#" class="btn btn-warning btn-xs tambahIzin" data-bs-toggle="modal" data-id="' . $data->id_izin . '"><i class="icofont icofont-pencil-alt-2"></i></a>
@@ -86,6 +86,8 @@ class AdminController extends Controller
                 ->addColumn('status', function ($row) {
                     if ($row->approval == 1) {
                         $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
+                    } elseif ($row->approval == 5) {
+                        $apprv = '<span class="badge badge-success">Disetujui BSDM</span>';
                     } else {
                         $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
                     }
@@ -118,6 +120,10 @@ class AdminController extends Controller
     {
         $data = Izin::where('id_izin', $id)->first();
         $attendance = Attendance::whereDate('tanggal', Carbon::parse($data->tanggal_izin)->format('Y-m-d'))->where('nip', $data->nopeg)->first();
+        DB::beginTransaction();
+        $data->update([
+            'approval' => 5
+        ]);
         $attendance->update([
             'jam_masuk' => $request->jam_masuk,
             'jam_siang' => $request->jam_siang,
@@ -126,6 +132,8 @@ class AdminController extends Controller
             'telat_siang' => lateSiang2($request->jam_siang, $request->jam_pulang, $attendance->hari),
             'durasi' => getDurasi($request->jam_masuk, $request->jam_siang, $request->jam_pulang),
         ]);
+
+        DB::commit();
 
         return redirect()->back()->with('success', 'Data berhasil diubah!');
     }

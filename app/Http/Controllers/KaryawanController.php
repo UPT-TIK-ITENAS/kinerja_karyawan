@@ -155,17 +155,25 @@ class KaryawanController extends Controller
                     $html = '';
                     foreach ($izin as $key => $value) {
                         if ($izin[$key]->jenis == 1) {
-                            $status = $izin[$key]->approval == 1 ? '<span class="badge badge-success">Disetujui Atasan Langsung</span>' : '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                            $status = $izin[$key]->approval == 1 ? '<span class="badge badge-success">Izin : Disetujui Atasan Langsung</span>' : '<span class="badge badge-warning">Izin : Menunggu Persetujuan</span>';
                             $html .=  $status;
                         }
 
                         if ($izin[$key]->jenis == 2) {
-                            $status = $izin[$key]->approval == 1 ? '<span class="badge badge-success">Disetujui Atasan Langsung</span>' : '<span class="badge badge-warning">Menunggu Persetujuan</span>';
-                            $html .=  $status;
+                            if ($izin[$key]->approval == 1) {
+                                $status = '<span class="badge badge-success">Sidik Jari : Disetujui Atasan Langsung</span>';
+                                $html .=  $status;
+                            } else if ($izin[$key]->approval == 5) {
+                                $status =  '<span class="badge badge-success">Sidik Jari : Disetujui BSDM</span>';
+                                $html .=  $status;
+                            } else {
+                                $status = '<span class="badge badge-warning">Sidik Jari : Menunggu Persetujuan</span>';
+                                $html .=  $status;
+                            }
                         }
 
                         if ($izin[$key]->jenis == 3) {
-                            $status = $izin[$key]->approval == 1 ? '<span class="badge badge-success">Disetujui Atasan Langsung</span>' : '<span class="badge badge-warning">Menunggu Persetujuan</span>';
+                            $status = $izin[$key]->approval == 1 ? '<span class="badge badge-success">Dispensasi : Disetujui Atasan Langsung</span>' : '<span class="badge badge-warning">Dispensasi : Menunggu Persetujuan</span>';
                             $html .=  $status;
                         }
                     }
