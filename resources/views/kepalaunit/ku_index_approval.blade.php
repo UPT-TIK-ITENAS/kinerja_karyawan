@@ -76,7 +76,6 @@
                                 <input type="hidden" id="lama_cuti">
                             </div>
                             <input type="hidden" id="id_cuti" name="id_cuti">
-
                         </div>
 
                         <div class="row g-2 mb-3">
@@ -110,14 +109,24 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row g-1 mb-3">
+                            <div class="col-md-6">
+                                <span class="form-label" for="atasan">Atasan</span>
+                                <input class="form-control" id="atasan" name="atasan" type="text" required=""
+                                    disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="form-label" for="atasan_lang">Atasan Langsung</span>
+                                <input class="form-control" id="atasan_lang" name="atasan_lang" type="text"
+                                    required="" disabled>
+                            </div>
+                        </div>
                         <div class="col-md-5">
                             <span class="form-label" for="approval">Persetujuan</span>
-                            <select class="form-control col-sm-12" onchange="yesnoCheck(this);" id="approval"
-                                name="approval" required="">
+                            <select class="form-control col-sm-12" id="approval" name="approval" required="">
                                 <option selected="" disabled="" value="">-- Pilih ---</option>
-                                <option value="1">Disetujui Atasan Langsung</option>
-                                <option value="2" hidden>Disetujui Atasan dari Atasan Langsung</option>
                                 <option value="3">Ditolak</option>
+                                <option value="1">Disetujui Atasan Langsung</option>
                             </select>
                             <input type="hidden" id="lama_cuti">
                             <div class="invalid-feedback">Pilih salah satu !</div>
@@ -145,17 +154,25 @@
     <script>
         $('body').on('click', '.editAK', function() {
             id = $(this).data('id');
-            console.log(id)
             $.get("{{ url('/kepalaunit/approval/editCuti') }}/" + id, function({
                 data,
                 jabatan
             }) {
-                if (data.user.atasan_lang == jabatan.id && data.approval == 1) {
+                $("#atasan").val(data.user.atasan.nama);
+                $("#atasan_lang").val(data.user.atasan_langsung.nama);
+                if (data.user.atasan_langsung.id == jabatan.id && data.approval == 1) {
                     $('#btnSubmit').prop('disabled', false);
-                } else if (data.user.atasan == jabatan.id && data.approval == 0) {
+                    $('#approval').prop('disabled', false);
+                    let pilihan = new Option(`Disetujui Atasan dari Atasan Langsung`, 2, true, true);
+                    $('#approval').append(pilihan)
+                } else if (data.user.atasan.id == jabatan.id && data.approval == 0) {
                     $('#btnSubmit').prop('disabled', false);
+                    $('#approval').prop('disabled', false);
                 } else {
+                    let pilihan = new Option(`Disetujui Atasan dari Atasan Langsung`, 2, true, true);
+                    $('#approval').append(pilihan)
                     $('#btnSubmit').prop('disabled', true);
+                    $('#approval').prop('disabled', true);
                 }
 
                 if (data.approval == 0) {
@@ -171,11 +188,8 @@
                     $('#alasan_tolak').prop('disabled', false).val(data.alasan_tolak);
                     $('#alamat').val(data.alamat);
                     $('#no_hp').val(data.no_hp);
-                    $('#approval').prop('disabled', false);
-
                 }
                 if (data.approval == 2) {
-                    $('#approval').prop('disabled', true);
                     $('#nopeg').val(data.nopeg);
                     $('#name').val(data.name);
                     $('#approval').val(data.approval);
@@ -189,7 +203,6 @@
                     $('#no_hp').val(data.no_hp);
                 }
                 if (data.approval == 1) {
-                    $('#approval').prop('disabled', true);
                     $('#nopeg').val(data.nopeg);
                     $('#name').val(data.name);
                     $('#approval').val(data.approval);
@@ -216,14 +229,15 @@
                     $('#alamat').val(data.alamat);
                     $('#no_hp').val(data.no_hp);
                 }
-                console.log("approval", $("#approval"))
                 $('#ModalTitle').html("Edit Jenis Kegiatan");
                 $('#ProsesCuti').modal('show');
                 $("#token").val($("meta[name=csrf-token]").attr("content"));
-                console.log(data);
-                //console.log(jeniscuti);
             })
         });
+
+        $('#ProsesCuti').on('hidden.bs.modal', function(event) {
+            $('#approval option[value="2"]').remove();
+        })
 
 
         $().ready(function() {
@@ -289,16 +303,16 @@
                 console.log(message);
             };
 
+            $("#approval").on('change', function(e) {
+                e.preventDefault();
+                if (e.target.value == "3") {
+                    document.getElementById("ifYes").style.display = "block";
+                    $('#alasan_tolak').prop('required', true);
+                } else {
+                    document.getElementById("ifYes").style.display = "none";
+                    $('#alasan_tolak').prop('required', false);
+                }
+            })
         });
-
-        function yesnoCheck(that) {
-            if (that.value == "3") {
-                document.getElementById("ifYes").style.display = "block";
-                $('#alasan_tolak').prop('required', true);
-            } else {
-                document.getElementById("ifYes").style.display = "none";
-                $('#alasan_tolak').prop('required', false);
-            }
-        }
     </script>
 @endsection

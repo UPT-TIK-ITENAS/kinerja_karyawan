@@ -293,14 +293,13 @@ class KepalaUnitController extends Controller
 
     public function editCuti($id)
     {
-        $data = Cuti::with(['user', 'jeniscuti'])->where('id_cuti', '=', $id)->first();
+        $data = Cuti::with(['user.atasan', 'user.atasan_langsung', 'jeniscuti'])->where('id_cuti', '=', $id)->first();
         $jabatan = Jabatan::where('nopeg', auth()->user()->nopeg)->first();
         return response()->json(['data' => $data, 'jabatan' => $jabatan]);
     }
 
     public function approveCuti(Request $request)
     {
-
         $qrcode_filenameat = 'qr-atasan' . base64_encode(auth()->user()->nopeg . '-' . auth()->user()->name  .  $request->jenis_cuti . '-' . date('Y-m-d H:i:s') . ')') . '.svg';
         QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . auth()->user()->nopeg . '-' . auth()->user()->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenameat));
 
