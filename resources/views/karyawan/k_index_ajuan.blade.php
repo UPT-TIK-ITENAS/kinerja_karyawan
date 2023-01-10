@@ -23,7 +23,7 @@
                     <div class="card-body">
                         <div class="alert alert-warning dark col-md-6" role="alert">
                             <p style="color:black;"> <b> *) Ajuan ini digunakan hanya untuk yang tidak ada sama sekali di
-                                    kehadiran presensi/tidak ter record mesin sidik jari </b></p>
+                                    kehadiran presensi/tidak ter record mesin sidik jari/dispensasi 1 hari penuh </b></p>
                         </div>
                         <div class="row mb-2">
                             <div class="col">
@@ -78,7 +78,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="myLargeModalLabel">Form Pengajuan Izin</h5>
+                    <h5 class="modal-title" id="myLargeModalLabel">Form Pengajuan Presensi</h5>
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
                         data-bs-original-title="" title=""></button>
                 </div>

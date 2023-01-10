@@ -222,6 +222,7 @@
                         <a class="nav-link menu-title @if (request()->routeIs('karyawan.izin') ||
                             request()->routeIs('karyawan.store_izin') ||
                             request()->routeIs('karyawan.cuti') ||
+                            request()->routeIs('karyawan.ajuan') ||
                             request()->routeIs('karyawan.store_cuti')) active @endif"><i
                                 data-feather="edit-3"></i><span>Pengajuan</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
@@ -230,6 +231,7 @@
                             style="display: @if (request()->routeIs('karyawan.izin') ||
                                 request()->routeIs('karyawan.store_izin') ||
                                 request()->routeIs('karyawan.cuti') ||
+                                request()->routeIs('karyawan.ajuan') ||
                                 request()->routeIs('karyawan.store_cuti')) block
                         @else
                             none @endif;">

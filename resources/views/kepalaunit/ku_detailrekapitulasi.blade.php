@@ -40,7 +40,11 @@
                         </div>
                         <hr>
                     </div>
+
                     <div class="card-body">
+                        <div class="mb-3">
+                            <h5>{{ $user->name . ' - (' . $user->nopeg . ')' }}</h5>
+                        </div>
                         <h6 class="font-primary">Rekapitulasi Kehadiran</h6>
                         <div class="dt-ext table-responsive">
                             <table class="table table-bordered" id="table-rekapitulasi">
@@ -72,6 +76,9 @@
                         <hr>
                     </div>
                     <div class="card-body pt-0">
+                        <div class="mb-3">
+                            <h5>{{ $user->name . ' - (' . $user->nopeg . ')' }}</h5>
+                        </div>
                         <div class="my-3">
                             <h6 class="font-primary">Detail Penilaian</h6>
                             <div class="dt-ext table-responsive">
@@ -90,8 +97,12 @@
                                 </table>
                             </div>
                         </div>
-
+                        <br>
+                        <div class="mb-3">
+                            <h5>{{ $user->name . ' - (' . $user->nopeg . ')' }}</h5>
+                        </div>
                         <div class="my-3">
+
                             <h6 class="font-primary">Total Penilaian</h6>
                             <div class="dt-ext table-responsive">
                                 <table class="table table-bordered" id="table-total-penilaian">
@@ -318,7 +329,7 @@
                 tablePenilaian.draw();
                 tableTotalPenilaian.draw();
             });
-           
+
         });
     </script>
 @endsection

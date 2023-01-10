@@ -148,7 +148,8 @@ class KepalaUnitController extends Controller
     public function detailrekap($nopeg)
     {
         $periode = KuesionerKinerja::where('status', '1')->get();
-        return view('kepalaunit.ku_detailrekapitulasi', compact('periode', 'nopeg'));
+        $user = User::where('nopeg', $nopeg)->first();
+        return view('kepalaunit.ku_detailrekapitulasi', compact('periode', 'nopeg', 'user'));
     }
 
     public function listdatarekapitulasi(Request $request, $nopeg)
