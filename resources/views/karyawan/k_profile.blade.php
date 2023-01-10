@@ -97,7 +97,12 @@
                                     <div class="col-sm-6 col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label">Password</label>
-                                            <input class="form-control" type="password" id="password" name="password">
+                                            <div class="input-group" id="show_hide_password">
+                                                <input class="form-control" type="password" id="password"
+                                                    name="password">
+                                                <a href="" class="btn btn-outline-info"><i class="bi bi-eye-slash"
+                                                        aria-hidden="true"></i></a>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -119,6 +124,20 @@
         document.getElementById('nohp').addEventListener('input', function(e) {
             var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,4})(\d{0,5})/);
             e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
+        });
+        $(document).ready(function() {
+            $("#show_hide_password a").on('click', function(event) {
+                event.preventDefault();
+                if ($('#show_hide_password input').attr("type") == "text") {
+                    $('#show_hide_password input').attr('type', 'password');
+                    $('#show_hide_password i').addClass("bi bi-eye-slash");
+                    $('#show_hide_password i').removeClass("bi bi-eye");
+                } else if ($('#show_hide_password input').attr("type") == "password") {
+                    $('#show_hide_password input').attr('type', 'text');
+                    $('#show_hide_password i').removeClass("bi bi-eye-slash");
+                    $('#show_hide_password i').addClass("bi bi-eye");
+                }
+            });
         });
     </script>
 @endsection
