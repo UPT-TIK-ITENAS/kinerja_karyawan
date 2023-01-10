@@ -254,8 +254,7 @@
                         <a id="karyawan_index"
                             class="nav-link menu-title link-nav {{ routeActive('karyawan.profile.editprofile') }}"
                             href="{{ route('karyawan.profile.editprofile') }}"><i data-feather="users"></i><span>Edit
-                                Data
-                                Diri</span>
+                                Profile</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
                     </li>
