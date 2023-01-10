@@ -9,6 +9,7 @@ use App\Models\Cuti;
 use App\Models\Izin;
 use App\Models\User;
 use App\Models\IzinKerja;
+use App\Models\Jabatan;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
 use App\Models\KuesionerKinerja;
@@ -258,13 +259,9 @@ class KepalaUnitController extends Controller
     }
     public function index_approval(Request $request)
     {
-        $unit =  auth()->user()->unit;
-        $data = Cuti::select('cuti.*', 'jenis_cuti.jenis_cuti as nama_cuti')
-            ->join('jenis_cuti', 'jenis_cuti.id_jeniscuti', '=', 'cuti.jenis_cuti')
-            ->join('users', 'cuti.nopeg', '=', 'users.nopeg')
-            ->where('users.unit', $unit)
-            ->where('users.role', 'karyawan');
-
+        $auth = auth()->user()->nopeg;
+        $jabatan = Jabatan::where('nopeg', '=', $auth)->first();
+        $data = Cuti::with(['user', 'jeniscuti'])->where('nopeg', '1424')->whereRelation('user', 'atasan_lang', '=', $jabatan->id)->orWhereRelation('user', 'atasan', '=', $jabatan->id)->get();
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()

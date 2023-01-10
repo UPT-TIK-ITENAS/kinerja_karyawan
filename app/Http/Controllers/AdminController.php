@@ -133,6 +133,11 @@ class AdminController extends Controller
             'durasi' => getDurasi($request->jam_masuk, $request->jam_siang, $request->jam_pulang),
         ]);
 
+        $updated = Attendance::whereDate('tanggal', Carbon::parse($data->tanggal_izin)->format('Y-m-d'))->where('nip', $data->nopeg)->first();
+        $updated->update([
+            'status' => ($updated->jam_masuk == null || $updated->jam_siang == null || $updated->jam_pulang == null) ? 0 : 1,
+        ]);
+
         DB::commit();
 
         return redirect()->back()->with('success', 'Data berhasil diubah!');

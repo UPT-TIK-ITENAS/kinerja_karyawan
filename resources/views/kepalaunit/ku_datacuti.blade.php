@@ -196,6 +196,7 @@
             pageLength: 10,
             responsive: true,
             processing: true,
+            serverSide: true,
         });
 
 

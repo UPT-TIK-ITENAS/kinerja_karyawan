@@ -226,7 +226,7 @@
                 processing: true,
                 autoWidth: false,
                 serverSide: true,
-                searching: false,
+                searching: true,
                 columnDefs: [{
                     targets: 1,
                     width: "200px !important",
@@ -240,20 +240,16 @@
                         searchable: false,
                     },
                     {
-                        data: 'name',
-                        name: 'name'
+                        data: 'user.name',
+                        name: 'user.name'
                     },
                     {
-                        data: 'nopeg',
-                        name: 'nopeg'
+                        data: 'user.nopeg',
+                        name: 'user.nopeg'
                     },
-                    // {
-                    //     data: 'nama_unit',
-                    //     name: 'nama_unit'
-                    // },
                     {
-                        data: 'nama_cuti',
-                        name: 'nama_cuti'
+                        data: 'jeniscuti.jenis_cuti',
+                        name: 'jeniscuti.jenis_cuti'
                     },
                     {
                         data: 'tgl_awal_cuti',
