@@ -419,7 +419,7 @@ class AdminController extends Controller
                 }
                 // cek libur nasional
                 foreach ($libur_nasional as $key => $value) {
-                    if (date('Y-m-d', $begin) == $value->tanggal) {
+                    if (date('Y-m-d', $begin) == $value->tanggal  && date("N", $begin) < 5) {
                         $weekends++;
                     }
                 }
