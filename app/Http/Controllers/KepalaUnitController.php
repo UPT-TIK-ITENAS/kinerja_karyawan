@@ -261,17 +261,20 @@ class KepalaUnitController extends Controller
     {
         $auth = auth()->user()->nopeg;
         $jabatan = Jabatan::where('nopeg', '=', $auth)->first();
-        $data = Cuti::with(['user', 'jeniscuti'])->where('nopeg', '1424')->whereRelation('user', 'atasan_lang', '=', $jabatan->id)->orWhereRelation('user', 'atasan', '=', $jabatan->id)->get();
+        $data = Cuti::with(['user', 'jeniscuti'])->whereRelation('user', 'atasan_lang', '=', $jabatan->id)->orWhereRelation('user', 'atasan', '=', $jabatan->id)->get();
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {
                     $print =  route('kepalaunit.print.cuti', $data->id_cuti);
-                    $for_html = '
-                    <a href="#" class="btn btn-warning btn-xs editAK" data-bs-toggle="modal" data-id="' . $data->id_cuti . '"><i class="icofont icofont-pencil-alt-2"></i></a>
-                    <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
+                    if ($data->approval == 1) {
+                        $for_html = '
+                        <a href="#" class="btn btn-warning btn-xs editAK" data-bs-toggle="modal" data-id="' . $data->id_cuti . '"><i class="icofont icofont-pencil-alt-2"></i></a>
+                        <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
 
-                    return $for_html;
+                        return $for_html;
+                    }
+                    return "";
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->approval == 1) {
