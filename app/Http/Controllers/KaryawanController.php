@@ -110,8 +110,15 @@ class KaryawanController extends Controller
                     return $note;
                 })
                 ->addColumn('action', function ($row) {
-                    $btn_show = '
-                    <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
+                    $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
+                    // dd($workingdays);
+
+                    if ($workingdays > 2) {
+                        $btn_show = '';
+                    } else {
+                        $btn_show = '
+                        <a href="#" class="btn btn-warning btn-xs editAtt" data-bs-toggle="modal" data-id="' . $row->id . '"><i class="icofont icofont-pencil-alt-2"></i></a>';
+                    }
                     return $btn_show;
                 })
                 ->addColumn('print', function ($row) {
