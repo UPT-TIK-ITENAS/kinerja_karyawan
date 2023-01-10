@@ -356,14 +356,8 @@
                 <td style="width:10%;font-size: 15px;">
                     4. Cuti Ibadah Haji diberikan selama 40 (empat puluh) hari kalender dan tidak memotong cuti tahunan
                     yang bersangkutan dapat menggunakan Cuti Besar.
-                    (Cuti ibah haji hanya berlaku hanya untuk satu kali kesempatan ibadah haji, untuk ibdah haji
+                    (Cuti ibah haji hanya berlaku hanya untuk satu kali kesempatan ibadah haji, untuk ibadah haji
                     berikutnya menggunakan cuti besar)
-                </td>
-            </tr>
-            <tr>
-                <td style="width:10%;font-size: 15px;">
-                    5. Cuti Umroh dapat diberikan dengan mengambil cuti tahunan (menggunakan hak cuti tahunan yang
-                    bersangkutan)
                 </td>
             </tr>
         </table>

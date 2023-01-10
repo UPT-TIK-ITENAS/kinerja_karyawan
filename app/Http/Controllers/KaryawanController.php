@@ -199,12 +199,15 @@ class KaryawanController extends Controller
         QrCode::format('svg')->size(100)->generate('Sudah divalidasi oleh ' . $request->nip . '-' . $request->name . ' Pada tanggal ' .  date('Y-m-d H:i:s'), public_path("qrcode/" . $qrcode_filenamepeg));
 
         if ($request->jenis == 2 || $request->jenis == 3) {
+
+            $tanggalizin = $request->tanggall . ' ' . $request->jam_izin;
+            // dd($tanggalizin);
             Izin::insert([
                 'id_attendance' => $request->id,
                 'nopeg' => $request->nip,
                 'name' => $request->name,
                 'unit' => $request->unit,
-                'tanggal_izin' => date('Y-m-d H:i:s', strtotime($request->tanggal_izin)),
+                'tanggal_izin' => Carbon::parse($tanggalizin)->format('Y-m-d H:i:s'),
                 'alasan' => $request->alasan,
                 'validasi' => 1,
                 'approval' => 0,

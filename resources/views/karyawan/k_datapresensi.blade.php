@@ -139,11 +139,18 @@
                                         class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                 </div>
                             </div>
-                            <div class="col-md-4 jamizin">
+                            {{-- <div class="col-md-4 jamizin">
                                 <span class="form-label" for="tanggal_izin">Tanggal</span>
                                 <input type="text" class="form-control" id="tanggal_izin" name="tanggal_izin"
                                     value="" />
                                 <div class="invalid-feedback">Wajib Diisi !</div>
+                            </div> --}}
+                            <div class="col-md-4 jamizin">
+                                <span class="form-label" for="jam_izin">Jam</span>
+                                <div class="input-group clockpicker" data-autoclose="true">
+                                    <input class="form-control" type="text" id="jam_izin" name="jam_izin"><span
+                                        class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                </div>
                             </div>
 
                         </div>
@@ -186,19 +193,19 @@
                 </div>
                 <div class="modal-body">
                     <form autocomplete="off" class="theme-form">
-                    <div class="modal-body">
-                        <div class="row g-2 mb-3">
-                            <div class="col-md-4">
-                                <span class="form-label" for="nip">Nama</span>
-                                <input class="form-control" id="read_name" name="read_name" type="text" readonly>
+                        <div class="modal-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-4">
+                                    <span class="form-label" for="nip">Nama</span>
+                                    <input class="form-control" id="read_name" name="read_name" type="text" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="form-label" for="name">No Pegawai</span>
+                                    <input class="form-control" id="read_nip" name="read_nip" type="text" readonly>
+                                </div>
+                                <div id="data-type"></div>
                             </div>
-                            <div class="col-md-4">
-                                <span class="form-label" for="name">No Pegawai</span>
-                                <input class="form-control" id="read_nip" name="read_nip" type="text" readonly>
-                            </div>
-                            <div id="data-type"></div>
                         </div>
-                    </div>
                     </form>
                 </div>
             </div>
@@ -385,12 +392,13 @@
                     let id = info.event.id
                     let type = info.event.extendedProps?.type
                     $.ajax({
-                        url: "{{ url('karyawan/show-data-calendar') }}" + '?id=' + id + '&type=' + type,
+                        url: "{{ url('karyawan/show-data-calendar') }}" + '?id=' + id + '&type=' +
+                            type,
                         type: 'GET',
                         dataType: 'JSON',
                         success: function(response) {
                             console.log(response)
-                            if(type === "attendance"){
+                            if (type === "attendance") {
                                 let html = `<div class="mb-3">
                                                 <label class="col-form-label pt-0" for="read_jam_masuk">Jam Masuk</label>
                                                 <input class="form-control" id="read_jam_masuk" name="read_jam_masuk" type="text" value="${response
@@ -411,7 +419,7 @@
                                 $("#read_name").val(response.user.name)
                                 $("#read_nip").val(response.nip)
                                 $('#data-type').html(html);
-                            } else if(type === "cuti"){
+                            } else if (type === "cuti") {
                                 let html = `<div class="mb-3">
                                                 <label class="col-form-label pt-0" for="read_tanggal_awal">Tanggal Awal</label>
                                                 <input class="form-control" id="read_tanggal_awal" name="read_tanggal_awal" type="text"
@@ -427,7 +435,7 @@
                                 $("#read_name").val(response.user.name)
                                 $("#read_nip").val(response.nopeg)
                                 $('#data-type').html(html);
-                            } else{
+                            } else {
                                 let html = `<div class="mb-3">
                                                 <label class="col-form-label pt-0" for="read_tanggal_awal">Tanggal Awal</label>
                                                 <input class="form-control" id="read_tanggal_awal" name="read_tanggal_awal" type="text"
