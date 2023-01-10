@@ -298,6 +298,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('createizinkehadiran/{id}', [KaryawanController::class, 'createizinkehadiran'])->name('createizinkehadiran');
         Route::post('storeizinkehadiran', [KaryawanController::class, 'storeizinkehadiran'])->name('storeizinkehadiran');
         Route::get('printizin/{id}', [KaryawanController::class, 'printizin'])->name('printizin');
+
+        Route::prefix('profile')->name('profile.')->group(function () {
+            Route::get('editprofile', [KaryawanController::class, 'editprofile'])->name('editprofile');
+            Route::post('update_profile', [KaryawanController::class, 'update_profile'])->name('update_profile');
+        });
     });
 
 

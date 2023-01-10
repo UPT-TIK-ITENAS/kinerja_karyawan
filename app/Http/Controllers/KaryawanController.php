@@ -10,7 +10,7 @@ use App\Models\IzinKerja;
 use App\Models\JadwalSatpam;
 use App\Models\JenisCuti;
 use App\Models\JenisIzin;
-use App\Models\Kuesioner;
+use App\Models\User;
 use App\Models\Mangkir;
 use App\Models\KuesionerKinerja;
 use App\Http\Resources\KaryawanCalendarResource;
@@ -610,5 +610,28 @@ class KaryawanController extends Controller
             ]);
             return redirect()->back()->with('success', 'Pengajuan Berhasil');
         }
+    }
+
+    public function editprofile()
+    {
+        $data = User::where('nopeg', auth()->user()->nopeg)->get();
+        return view('karyawan.k_profile', compact('data'));
+    }
+
+    public function update_profile(Request $request)
+    {
+        User::where('nopeg', $request->nopeg)->update([
+            'name' => $request->name,
+            'nopeg' => $request->nopeg,
+            'npp' => $request->npp,
+            'masuk_kerja' => $request->masuk_kerja,
+            'tempat' => $request->tempat,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'email' => $request->email,
+            'nohp' => $request->nohp,
+            'password' => password_hash($request->password, PASSWORD_DEFAULT),
+        ]);
+
+        return redirect()->back()->with('success', 'Data berhasil diubah!');
     }
 }

@@ -243,6 +243,22 @@
                             </li>
                         </ul>
                     </li>
+
+                    <li class="sidebar-main-title">
+                        <div>
+                            <h6>Data Diri</h6>
+                        </div>
+                    </li>
+
+                    <li class="dropdown">
+                        <a id="karyawan_index"
+                            class="nav-link menu-title link-nav {{ routeActive('karyawan.profile.editprofile') }}"
+                            href="{{ route('karyawan.profile.editprofile') }}"><i data-feather="users"></i><span>Edit
+                                Data
+                                Diri</span>
+                            <div class="according-menu"><i class="fa fa-angle-right"></i></div>
+                        </a>
+                    </li>
                 @endif
 
                 @if (auth()->user()->role == 'kepalaunit')
