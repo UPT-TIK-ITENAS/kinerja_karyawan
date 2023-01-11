@@ -114,8 +114,15 @@
                                     <option value="disable">Disable</option>
                                 </select>
                             </div>
-
-
+                            <div class="col-md-4">
+                                <span class="form-label" for="last_connect">Last Connect</span>
+                                <input class="form-control" id="last_connect" name="last_connect" type="text"
+                                    readonly>
+                            </div>
+                            <div class="col-md-12">
+                                <span class="form-label" for="last_response">Last Response</span>
+                                <textarea name="last_response" id="last_response" cols="30" rows="10" class="form-control" readonly></textarea>
+                            </div>
                         </div>
 
                     </div>
@@ -205,6 +212,8 @@
                 $('#ipaddress').val(data.ipaddress);
                 $('#port').val(data.port);
                 $('#status').val(data.status);
+                $('#last_connect').val(data.last_connect);
+                $('#last_response').val(data.last_response);
                 console.log(data);
             })
         });

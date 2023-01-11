@@ -391,10 +391,11 @@ class KepalaUnitController extends Controller
                 ->addColumn('waktu', function ($data) {
                     if ($data->tanggal != NULL && $data->jam_awal != NULL && $data->jam_akhir != NULL) {
                         $waktu = $data->tanggal . ' ' . $data->jam_awal . ' s/d ' . $data->jam_akhir;
+                    } else if ($data->tanggal != NULL && $data->jam_awal == NULL && $data->jam_akhir == NULL && $data->tanggal_izin) {
+                        $waktu = $data->tanggal;
                     } else {
                         $waktu = $data->tanggal_izin;
                     }
-
                     return $waktu;
                 })
                 ->addColumn('status', function ($row) {
