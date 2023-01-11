@@ -176,9 +176,9 @@
                             {{-- <li><a href="{{ route('admin_bsdm.indexKuesioner') }}" class="">Penilaian</a></li> --}}
                             <li><a href="{{ route('admin_bsdm.kuesioner.pertanyaan') }}"
                                     class="">Pertanyaan</a></li>
-                            <li><a href="{{ route('admin_bsdm.kuesioner.pertanyaanPeriode') }}" class="">Daftar
+                            {{-- <li><a href="{{ route('admin_bsdm.kuesioner.pertanyaanPeriode') }}" class="">Daftar
                                     Periode</a>
-                            </li>
+                            </li> --}}
                             {{-- <li><a href="{{ route('admin_bsdm.kuesioner.admHasilKuesioner') }}" class="">Hasil
                                     Kuesioner</a></li> --}}
                         </ul>
