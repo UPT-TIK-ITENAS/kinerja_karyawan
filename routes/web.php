@@ -55,7 +55,8 @@ Route::get('/test', function () {
     //    }
     //    dd($users);
     // dispatch(new \App\Jobs\MigrateAttendance('attendance_baru', 'attendance', '2022-08-31'));
-    // dispatch(new \App\Jobs\GetAttendanceByDateFromBiometric('2023-01-06', 'attendance_baru'));
+    // dispatch(new \App\Jobs\GetAttendanceByDateFromBiometric('2023-01-10', 'attendance_baru'));
+    // dd("Selesai!");
 });
 
 Route::prefix('data')->name('data.')->group(function () {

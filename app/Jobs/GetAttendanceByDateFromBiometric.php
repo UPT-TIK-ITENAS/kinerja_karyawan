@@ -9,12 +9,14 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GetAttendanceByDateFromBiometric implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $tanggal, $table;
+    public $tries = 5;
 
     /**
      * Create a new job instance.
@@ -28,6 +30,16 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
     }
 
     /**
+     * Determine the time at which the job should timeout.
+     *
+     * @return \DateTime
+     */
+    public function retryUntil()
+    {
+        return now()->addMinutes(10);
+    }
+
+    /**
      * Execute the job.
      *
      * @return void
@@ -36,6 +48,8 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
     {
         $this->getAttendance();
         $this->recalculateTelat();
+
+        Log::info('GetAttendanceByDateFromBiometric: ' . $this->tanggal, ['table' => $this->table]);
     }
 
     public function getAttendance()
@@ -76,9 +90,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                 } else {
                     $msg .= "\n RESPONSE DATA: " . count($buffer) . " log data \n";
                 }
-                // return $msg;
-                // looping setiap baris data
-                $for_array = [];
+
                 for ($a = 0; $a < count($buffer); $a++) {
                     $data = $this->Parse_Data($buffer[$a], "<Row>", "</Row>");
 
@@ -102,6 +114,8 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                                             'tanggal' => $date,
                                             'hari' => $day,
                                             'jam_masuk' => $datetime,
+                                            'created_at' => now(),
+                                            'updated_at' => now()
                                         ]);
                                     } else if ($time >= '12:45:00' && $time < '15:00:00') {
                                         DB::table($this->table)->insert([
@@ -109,6 +123,8 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                                             'tanggal' => $date,
                                             'hari' => $day,
                                             'jam_siang' => $datetime,
+                                            'created_at' => now(),
+                                            'updated_at' => now()
                                         ]);
                                     } else if ($time >= '15:00:01' && $time <= '23:59:00') {
                                         DB::table($this->table)->insert([
@@ -116,32 +132,40 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                                             'tanggal' => $date,
                                             'hari' => $day,
                                             'jam_pulang' => $datetime,
+                                            'created_at' => now(),
+                                            'updated_at' => now()
                                         ]);
                                     }
-                                } else {
+                                } else if ($cek_data_att->modify_by != 1) {
                                     if ($time < '12:45:00') {
                                         DB::table($this->table)->where('nip', $employee_id)->where('tanggal', $date)->update([
                                             'jam_masuk' => $datetime,
+                                            'updated_at' => now()
                                         ]);
                                     } else if ($time >= '12:45:00' && $time < '15:00:00') {
                                         DB::table($this->table)->where('nip', $employee_id)->where('tanggal', $date)->update([
                                             'jam_siang' => $datetime,
+                                            'updated_at' => now()
                                         ]);
                                     } else if ($time >= '15:00:01' && $time <= '23:59:00') {
                                         DB::table($this->table)->where('nip', $employee_id)->where('tanggal', $date)->update([
                                             'jam_pulang' => $datetime,
+                                            'updated_at' => now()
                                         ]);
                                     }
+                                } else {
+                                    continue;
                                 }
                             }
                         }
-                        $cek_status = DB::table($this->table)->where(['tanggal' => $date])->get();
+                        $cek_status = DB::table($this->table)->where(['tanggal' => $date])->where('modify_by', '=', 1)->get();
                         foreach ($cek_status as $cs) {
                             // Jika full terisi
                             if (!empty($cs->jam_masuk) && !empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
                                 DB::table($this->table)->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 1,
                                     'durasi' => '08:00:00',
+                                    'updated_at' => now()
                                 ]);
                             }
                             // Jika tidak ada sama sekali
@@ -149,6 +173,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                                 DB::table($this->table)->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '00:00:00',
+                                    'updated_at' => now()
                                 ]);
                             }
                             // Jika hanya ada sore yang terisi
@@ -156,6 +181,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                                 DB::table($this->table)->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '00:00:00',
+                                    'updated_at' => now()
                                 ]);
                             }
                             // Jika hanya ada siang yang terisi
@@ -163,6 +189,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                                 DB::table($this->table)->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '00:00:00',
+                                    'updated_at' => now()
                                 ]);
                             }
                             // Jika hanya ada pagi yang terisi
@@ -170,6 +197,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                                 DB::table($this->table)->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '00:00:00',
+                                    'updated_at' => now()
                                 ]);
                             }
                             // Jika hanya ada siang dan sore terisi
@@ -177,6 +205,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                                 DB::table($this->table)->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '04:00:00',
+                                    'updated_at' => now()
                                 ]);
                             }
                             // Jika hanya ada pagi dan sore terisi
@@ -184,6 +213,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                                 DB::table($this->table)->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '04:00:00',
+                                    'updated_at' => now()
                                 ]);
                             }
                             // Jika hanya ada pagi dan siang terisi
@@ -191,6 +221,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                                 DB::table($this->table)->where(['nip' => $cs->nip, 'tanggal' => $date])->update([
                                     'status' => 0,
                                     'durasi' => '04:00:00',
+                                    'updated_at' => now()
                                 ]);
                             }
                         }
@@ -237,7 +268,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
     public function recalculateTelat()
     {
         $date = $this->tanggal;
-        $cek_status = DB::table($this->table)->where(['tanggal' => $date])->get();
+        $cek_status = DB::table($this->table)->where(['tanggal' => $date])->where('modify_by', '=', 0)->get();
         foreach ($cek_status as $cs) {
             // Jika full terisi
             if (!empty($cs->jam_masuk) && !empty($cs->jam_siang) && !empty($cs->jam_pulang)) {
@@ -246,6 +277,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                     'durasi' => '08:00:00',
                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
                     'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                    'updated_at' => now()
                 ]);
             }
             // Jika tidak ada sama sekali
@@ -255,6 +287,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                     'durasi' => '00:00:00',
                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
                     'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                    'updated_at' => now()
                 ]);
             }
             // Jika hanya ada sore yang terisi
@@ -264,6 +297,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                     'durasi' => '00:00:00',
                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
                     'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                    'updated_at' => now()
                 ]);
             }
             // Jika hanya ada siang yang terisi
@@ -273,6 +307,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                     'durasi' => '00:00:00',
                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
                     'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                    'updated_at' => now()
                 ]);
             }
             // Jika hanya ada pagi yang terisi
@@ -282,6 +317,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                     'durasi' => '00:00:00',
                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
                     'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                    'updated_at' => now()
                 ]);
             }
             // Jika hanya ada siang dan sore terisi
@@ -291,6 +327,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                     'durasi' => '04:00:00',
                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
                     'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                    'updated_at' => now()
                 ]);
             }
             // Jika hanya ada pagi dan sore terisi
@@ -300,6 +337,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                     'durasi' => '04:00:00',
                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
                     'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                    'updated_at' => now()
                 ]);
             }
             // Jika hanya ada pagi dan siang terisi
@@ -309,6 +347,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                     'durasi' => '04:00:00',
                     'telat_masuk' => lateMasuk($cs->jam_masuk, $cs->jam_siang, $cs->hari),
                     'telat_siang' => lateSiang2($cs->jam_siang, $cs->jam_pulang, $cs->hari),
+                    'updated_at' => now()
                 ]);
             }
         }

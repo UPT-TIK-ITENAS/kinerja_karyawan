@@ -376,11 +376,16 @@ class KepalaUnitController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {
+                    if ($data->approval == 5) {
+                        $print =  route('kepalaunit.print.izin', $data->id_izin);
+                        $for_html = '
+                        <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
+                        return $for_html;
+                    }
                     $print =  route('kepalaunit.print.izin', $data->id_izin);
                     $for_html = '
                     <a href="#" class="btn btn-warning btn-xs tambahIzin" data-bs-toggle="modal" data-id="' . $data->id_izin . '"><i class="icofont icofont-pencil-alt-2"></i></a>
                     <a class="btn btn-success btn-xs" href="' . $print . '"><i class="icofont icofont-download-alt"></i></a> ';
-
                     return $for_html;
                 })
                 ->addColumn('waktu', function ($data) {
@@ -395,6 +400,8 @@ class KepalaUnitController extends Controller
                 ->addColumn('status', function ($row) {
                     if ($row->approval == 1) {
                         $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
+                    } elseif ($row->approval == 5) {
+                        $apprv = '<span class="badge badge-success">Disetujui BSDM</span>';
                     } else {
                         $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
                     }

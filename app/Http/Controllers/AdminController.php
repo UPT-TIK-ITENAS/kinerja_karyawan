@@ -59,7 +59,7 @@ class AdminController extends Controller
     // Data Izin Per Hari
     public function index_izin_perhari(Request $request)
     {
-        $data = Izin::latest()->get();
+        $data = Izin::orderByRaw('field(approval, 1, 0, 5), field(jenis, 2, 1, 3)')->get();
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
