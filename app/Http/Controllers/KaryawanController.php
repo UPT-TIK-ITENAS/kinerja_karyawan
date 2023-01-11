@@ -113,7 +113,7 @@ class KaryawanController extends Controller
                     $workingdays = getWorkingDays($row->tanggal, date('Y-m-d'));
                     // dd($workingdays);
 
-                    if ($workingdays > 2) {
+                    if ($workingdays >= 3) {
                         $btn_show = '';
                     } else {
                         $btn_show = '
