@@ -123,8 +123,8 @@
                             <li><a href="{{ route('admin_bsdm.presensi.master') }}" class="">Monitor
                                     Kehadiran</a>
                             </li>
-                            <li><a href="{{ route('admin_bsdm.rekapitulasi.rekap') }}" class="">Rekapitulasi</a>
-                            </li>
+                            {{-- <li><a href="{{ route('admin_bsdm.rekapitulasi.rekap') }}" class="">Rekapitulasi</a>
+                            </li> --}}
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -179,8 +179,8 @@
                             <li><a href="{{ route('admin_bsdm.kuesioner.pertanyaanPeriode') }}" class="">Daftar
                                     Periode</a>
                             </li>
-                            <li><a href="{{ route('admin_bsdm.kuesioner.admHasilKuesioner') }}" class="">Hasil
-                                    Kuesioner</a></li>
+                            {{-- <li><a href="{{ route('admin_bsdm.kuesioner.admHasilKuesioner') }}" class="">Hasil
+                                    Kuesioner</a></li> --}}
                         </ul>
                     </li>
                 @endif
