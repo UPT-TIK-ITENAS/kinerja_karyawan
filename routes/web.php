@@ -396,6 +396,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/kuesioner/hasilKuesioner', [KuesionerController::class, 'index_penilaian'])->name('hasilKuesioner');
         Route::get('/kuesioner/listPenilaian', [KuesionerController::class, 'listPenilaian'])->name('listPenilaian');
 
+        
+        Route::prefix('profile')->name('profile.')->group(function () {
+            Route::get('editprofile', [KepalaUnitController::class, 'editprofile'])->name('editprofile');
+            Route::post('update_profile', [KepalaUnitController::class, 'update_profile'])->name('update_profile');
+        });
+
         // Route::get('/dataizin', [KepalaUnitController::class, 'dataizin'])->name('kepalaunit.dataizin');
         // Route::get('/editizin/{id_izinkerja}', [KepalaUnitController::class, 'editizin'])->name('kepalaunit.editizin');
         // Route::post('/updateizin', [KepalaUnitController::class, 'updateizin'])->name('kepalaunit.updateizin');

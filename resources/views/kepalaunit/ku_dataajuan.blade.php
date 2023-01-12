@@ -23,13 +23,7 @@
                     <div class="card-body">
                         <div class="alert alert-warning dark col-md-6" role="alert">
                             <p style="color:black;"> <b> *) Ajuan ini digunakan hanya untuk yang tidak ada sama sekali di
-                                    kehadiran presensi/tidak ter record mesin sidik jari </b></p>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col">
-                                <a href="#" class="btn btn-primary" data-bs-target="#tambahIzin"
-                                    data-bs-toggle="modal" style="float: right">+ Tambah</a>
-                            </div>
+                                    kehadiran presensi/tidak ter record mesin sidik jari/dispensasi 1 hari penuh </b></p>
                         </div>
                         <div class="row">
                             <div class="dt-ext table-responsive">

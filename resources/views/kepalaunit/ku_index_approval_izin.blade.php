@@ -142,7 +142,7 @@
                 processing: true,
                 autoWidth: false,
                 serverSide: true,
-                searching: false,
+                searching: true,
                 columnDefs: [{
                     targets: 1,
                     width: "200px !important",

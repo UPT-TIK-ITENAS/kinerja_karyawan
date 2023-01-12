@@ -38,7 +38,7 @@
                                 <i data-feather="check-circle"></i>
                             </div>
                             <div class="media-body">
-                                <span class="m-0">Total Pengajuan Cuti Yang Sudah di Approve</span>
+                                <span class="m-0">Total <b>Pengajuan Cuti</b> Yang Sudah di Approve</span>
                                 <h4 class="mb-0 counter">{{ $data['cuti'] }}</h4>
                             </div>
                         </div>
@@ -53,8 +53,8 @@
                                 <i data-feather="info"></i>
                             </div>
                             <div class="media-body">
-                                <span class="m-0">Total Pengajuan Cuti Yang Belum di Approve</span>
-                                <h4 class="mb-0 counter">{{ $data['pengajuan_cuti'] }}</h4>
+                                <span class="m-0"> <p style="color:black;"> Total <b>Pengajuan Cuti</b> Yang Belum di Approve </p></span>
+                                <h4 class="mb-0 counter" style="color:black;">{{ $data['pengajuan_cuti'] }}</h4>
                             </div>
                         </div>
                     </div>
@@ -68,7 +68,7 @@
                                 <i data-feather="check-circle"></i>
                             </div>
                             <div class="media-body">
-                                <span class="m-0">Total Pengajuan Izin Yang Sudah di Approve</span>
+                                <span class="m-0">Total <b> Pengajuan Izin Resmi </b> Yang Sudah di Approve</span>
                                 <h4 class="mb-0 counter">{{ $data['izin'] }}</h4>
                             </div>
                         </div>
@@ -83,8 +83,38 @@
                                 <i data-feather="info"></i>
                             </div>
                             <div class="media-body">
-                                <span class="m-0">Total Pengajuan Izin Yang Belum di Approve</span>
-                                <h4 class="mb-0 counter">{{ $data['pengajuan_izin'] }}</h4>
+                                <span class="m-0"> <p style="color:black;">Total  <b> Pengajuan Izin Resmi </b> Yang Belum di Approve </p></span>
+                                <h4 class="mb-0 counter" style="color:black;">{{ $data['pengajuan_izin'] }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <div class="card o-hidden border-0">
+                    <div class="bg-primary b-r-4 card-body">
+                        <div class="media static-top-widget">
+                            <div class="align-self-center text-center">
+                                <i data-feather="check-circle"></i>
+                            </div>
+                            <div class="media-body">
+                                <span class="m-0">Total  <b>Pengajuan Izin Harian </b> Yang Sudah di Approve</span>
+                                <h4 class="mb-0 counter">{{ $data['harian'] }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <div class="card o-hidden border-0">
+                    <div class="bg-warning b-r-4 card-body">
+                        <div class="media static-top-widget">
+                            <div class="align-self-center text-center">
+                                <i data-feather="info"></i>
+                            </div>
+                            <div class="media-body">
+                                <span class="m-0"> <p style="color:black;"> Total  <b>Pengajuan Izin Harian </b> Yang Belum di Approve </p></span>
+                                <h4 class="mb-0 counter" style="color:black;">{{ $data['pengajuan_harian'] }}</h4>
                             </div>
                         </div>
                     </div>

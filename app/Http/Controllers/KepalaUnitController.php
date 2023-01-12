@@ -39,13 +39,17 @@ class KepalaUnitController extends Controller
         $cuti = Cuti::where('approval', '>', '1')->where('unit', auth()->user()->unit)->count();
         $pengajuan_izin = IzinKerja::where('approval', '0')->where('unit', auth()->user()->unit)->count();
         $izin = IzinKerja::where('approval', '1')->where('unit', auth()->user()->unit)->count();
+        $pengajuan_harian = Izin::where('approval', '0')->where('unit', auth()->user()->unit)->count();
+        $harian = Izin::where('approval', '1')->where('unit', auth()->user()->unit)->count();
         // dd($total_pegawai);
         $data = [
             'total_pegawai' => $total_pegawai,
             'pengajuan_cuti' => $pengajuan_cuti,
             'cuti' => $cuti,
             'pengajuan_izin' => $pengajuan_izin,
-            'izin' => $izin
+            'izin' => $izin,
+            'pengajuan_harian' => $pengajuan_harian,
+            'harian' => $harian
         ];
         return view('kepalaunit.kepalaunit_v', compact('data'));
     }
@@ -116,7 +120,23 @@ class KepalaUnitController extends Controller
                 }
                 return $note;
             })
-            ->rawColumns(['latemasuk', 'kurang_jam', 'days', 'latesiang', 'latesore', 'note'])
+            ->addColumn('is_cuti', function ($row) {
+                if ($row->is_cuti == 1) {
+                    $note = 'Cuti';
+                } else {
+                    $note = '';
+                }
+                return $note;
+            })
+            ->addColumn('is_izin', function ($row) {
+                if ($row->is_izin == 1) {
+                    $note = 'Izin Resmi';
+                } else {
+                    $note = '';
+                }
+                return $note;
+            })
+            ->rawColumns(['latemasuk', 'kurang_jam', 'days', 'latesiang', 'latesore', 'note','is_cuti','is_izin'])
             ->toJson();
     }
 
@@ -262,7 +282,7 @@ class KepalaUnitController extends Controller
     {
         $auth = auth()->user()->nopeg;
         $jabatan = Jabatan::where('nopeg', '=', $auth)->first();
-        $data = Cuti::with(['user', 'jeniscuti'])->whereRelation('user', 'atasan_lang', '=', $jabatan->id)->orWhereRelation('user', 'atasan', '=', $jabatan->id)->get();
+        $data = Cuti::with(['user', 'jeniscuti'])->whereRelation('user', 'atasan_lang', '=', $jabatan->id)->orWhereRelation('user', 'atasan', '=', $jabatan->id)->orderByRaw("FIELD(cuti.approval, 0,1,2)")->get();
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -319,7 +339,8 @@ class KepalaUnitController extends Controller
         $data = IzinKerja::select('izin_kerja.*', 'jenis_izin.jenis_izin as izin')->join('jenis_izin', 'jenis_izin.id_izin', '=', 'izin_kerja.jenis_izin')
             ->join('users', 'izin_kerja.nopeg', 'users.nopeg')
             ->join('jabatan', 'users.atasan', '=', 'jabatan.id')
-            ->where('users.unit', $unit)->get();
+            ->where('users.unit', $unit)
+            ->orderByRaw("FIELD(izin_kerja.approval, 0,1)")->get();
         // dd($data);
         if ($request->ajax()) {
             return DataTables::of($data)
@@ -343,8 +364,6 @@ class KepalaUnitController extends Controller
                 ->rawColumns(['status', 'action'])
                 ->toJson();
         }
-
-        // dd(auth()->user()->name);
         return view('kepalaunit.ku_index_approval_izin', compact('data'));
     }
 
@@ -529,5 +548,28 @@ class KepalaUnitController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Data Berhasil Diperbarui!');
+    }
+
+    public function editprofile()
+    {
+        $data = User::where('nopeg', auth()->user()->nopeg)->get();
+        return view('kepalaunit.ku_profile', compact('data'));
+    }
+
+    public function update_profile(Request $request)
+    {
+        User::where('nopeg', $request->nopeg)->update([
+            'name' => $request->name,
+            'nopeg' => $request->nopeg,
+            'npp' => $request->npp,
+            'masuk_kerja' => $request->masuk_kerja,
+            'tempat' => $request->tempat,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'email' => $request->email,
+            'nohp' => $request->nohp,
+            'password' => password_hash($request->password, PASSWORD_DEFAULT),
+        ]);
+
+        return redirect()->back()->with('success', 'Data berhasil diubah!');
     }
 }
