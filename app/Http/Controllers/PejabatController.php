@@ -33,7 +33,7 @@ class PejabatController extends Controller
 
     public function index()
     {
-        $total_pegawai = User::select(DB::raw('count(*) as total'))->whereNotNull('fungsi')->where('unit', auth()->user()->unit)->count();
+        $user_info = User::groupBy('unit')->select('unit', 'singkatan_unit', DB::raw('count(*) as total'))->join('unit', 'users.unit', '=', 'unit.id')->whereNotNull('fungsi')->get();
         $auth = auth()->user()->nopeg;
         $usrs = Jabatan::select('id')
             ->where('nopeg', '=', $auth)
@@ -41,8 +41,9 @@ class PejabatController extends Controller
 
         $pengajuan_cuti = Cuti::join('users', 'cuti.nopeg', '=', 'users.nopeg')
             ->where('cuti.approval', '1')
-            ->where('users.atasan_lang', $usrs['id'])
-            ->Where('users.atasan', $usrs['id'])->count();
+            ->Orwhere([
+                ['users.atasan_lang', '=', $usrs['id']],
+                ['users.atasan', '=', $usrs['id']]])->count();
 
         $cuti = Cuti::join('users', 'cuti.nopeg', '=', 'users.nopeg')
             ->where('cuti.approval', '2')
@@ -50,7 +51,7 @@ class PejabatController extends Controller
             ->OrWhere('users.atasan', $usrs['id'])->count();
 
         $data = [
-            'total_pegawai' => $total_pegawai,
+            'user_info' => $user_info,
             'pengajuan_cuti' => $pengajuan_cuti,
             'cuti' => $cuti,
         ];
@@ -132,19 +133,7 @@ class PejabatController extends Controller
                 }
                 return $total->format('H:i:s');
             })
-            ->addColumn('status', function ($row) {
-                if ($row->izin != NULL) {
-                    if ($row->izin->approval == '1') {
-                        $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
-                    } else {
-                        $apprv = '<span class="badge badge-warning">Menunggu Persetujuan</span>';
-                    }
-                    return $apprv;
-                } else {
-                    return $apprv = '';
-                }
-            })
-            ->rawColumns(['latemasuk', 'days', 'kurang_jam', 'latesiang', 'latesore', 'action_edit', 'action', 'status', 'note'])
+            ->rawColumns(['latemasuk', 'days', 'kurang_jam', 'latesiang', 'latesore', 'action_edit', 'action', 'note'])
             ->toJson();
     }
 
@@ -191,57 +180,6 @@ class PejabatController extends Controller
         // dd($data);
 
         return view('pejabat.k_index_cuti', compact('data'));
-    }
-
-    public function store_cuti(Request $request)
-    {
-        $is_valid = 0;
-        $this->validate($request, [
-            'jenis_cuti' => 'required',
-            'tgl_awal_cuti' => 'required',
-            'tgl_akhir_cuti' => 'required',
-            'total_cuti' => 'required',
-            'alamat' => 'required',
-            'no_hp' => 'required',
-        ]);
-
-        $a = explode('|', $request->jenis_cuti);
-
-        $history_cuti = DB::select("SELECT jenis_cuti.id_jeniscuti AS id_cuti ,jenis_cuti.jenis_cuti AS jeniscuti,sum(total_cuti) AS total_harinya, jenis_cuti.max_hari as max_hari 
-        FROM jenis_cuti LEFT JOIN cuti ON jenis_cuti.id_jeniscuti = cuti.jenis_cuti WHERE cuti.nopeg='" . auth()->user()->nopeg . "' GROUP BY cuti.jenis_cuti");
-
-        foreach ($history_cuti as $r) {
-            if ($r->id_cuti == $a[0]) {
-                if ($r->total_harinya == $r->max_hari) {
-                    $is_valid = 1;
-                } else if (($r->total_harinya + $request->total_cuti) > $r->max_hari) {
-                    $is_valid = 1;
-                } else {
-                    $is_valid = 0;
-                }
-            } else if ($r->id_cuti != $a[0]) {
-                $is_valid = 0;
-            }
-        }
-
-        if ($is_valid == 1) {
-            return redirect()->back()->with('error', 'Sudah Melebihi Batas Hari Cuti');
-        } else if ($is_valid == 0) {
-            $data = new Cuti();
-            $data->nopeg = auth()->user()->nopeg;
-            $data->unit = auth()->user()->unit;
-            $data->name = auth()->user()->name;
-            $data->jenis_cuti = $request->jenis_cuti;
-            $data->tgl_awal_cuti = $request->tgl_awal_cuti;
-            $data->tgl_akhir_cuti = $request->tgl_akhir_cuti;
-            $data->total_cuti = $request->total_cuti;
-            $data->alamat = $request->alamat;
-            $data->no_hp = '0' . str_replace('-', '', $request->no_hp);
-            $data->validasi = 1;
-            $data->tgl_pengajuan = date('Y-m-d H:i:s');
-            $data->save();
-            return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
-        }
     }
 
     public function index_izin()
@@ -341,7 +279,7 @@ class PejabatController extends Controller
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->approval == 1) {
-                        $apprv = '<span class="badge badge-success">Disetujui Atasan Langsung</span>';
+                        $apprv = '<span class="badge badge-warning">Disetujui Atasan Langsung</span>';
                     } else if ($row->approval == 2) {
                         $apprv = '<span class="badge badge-success">Disetujui Atasan dari Atasan Langsung</span>';
                     } else if ($row->approval == 3) {

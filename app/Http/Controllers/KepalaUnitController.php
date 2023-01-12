@@ -389,7 +389,7 @@ class KepalaUnitController extends Controller
 
     public function index_approvalIzinTelat(Request $request)
     {
-        $data = Izin::where('unit', auth()->user()->unit)->latest()->get();
+        $data = Izin::where('unit', auth()->user()->unit)->orderByRaw("FIELD(approval, 0,1,5)")->get();
         // dd($data);
         if ($request->ajax()) {
             return DataTables::of($data)
