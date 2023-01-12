@@ -325,8 +325,9 @@ class PejabatController extends Controller
             ->where('jb1.nopeg', $auth)
             ->where('users.atasan_lang', $usrs['id'])
             ->orWhere('users.atasan', $usrs['id'])
-            ->where('users.role', 'karyawan');
-
+            ->where('users.role', 'karyawan')
+            ->orderByRaw("FIELD(cuti.approval, 1,0,2)");
+            
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
