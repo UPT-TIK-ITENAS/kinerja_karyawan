@@ -25,7 +25,8 @@ class ListKaryawanController extends Controller
     }
 	
 	public function list(Request $request){
-		$users = User::query()->with(['units', 'atasan', 'atasan_langsung'])->latest();
+		$users = User::query()->with(['units', 'atasan', 'atasan_langsung'])
+		             ->where('unit', '!=', '29')->latest();
 		return DataTables::of($users)
 			->addIndexColumn()
 			->addColumn('action', function ($user) {
