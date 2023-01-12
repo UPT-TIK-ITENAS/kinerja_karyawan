@@ -8,6 +8,10 @@ use App\Jobs\GetAttendanceByDateFromBiometric;
 
 class Kernel extends ConsoleKernel
 {
+    protected $commands = [
+        Commands\GetAttendanceFromBiometric::class
+    ];
+
     /**
      * Define the application's command schedule.
      *
@@ -18,7 +22,8 @@ class Kernel extends ConsoleKernel
     {
         $date = date('Y-m-d');
         // run job and log every hour
-        $schedule->job(new GetAttendanceByDateFromBiometric($date, 'attendance'))->everyThirtyMinutes()->appendOutputTo(storage_path('logs/attendance.log'));
+        // $schedule->job(new GetAttendanceByDateFromBiometric($date, 'attendance'))->everyThirtyMinutes()->appendOutputTo(storage_path('logs/attendance.log'));
+        $schedule->command('attendance:get')->everyThirtyMinutes()->appendOutputTo(storage_path('logs/attendance.log'));
     }
 
     /**

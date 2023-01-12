@@ -59,7 +59,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
         if (empty($listmesinabsensi)) {
             return "Finger Print Machine not register or not enable";
         }
-
+        $users = DB::table('users')->get();
         foreach ($listmesinabsensi as $mesinabsensi) {
             $msg = "Sync data from machine " . $mesinabsensi->name . "(" . $mesinabsensi->ipaddress . ":" . $mesinabsensi->port . ")";
             $Connect = @fsockopen($mesinabsensi->ipaddress, $mesinabsensi->port, $errno, $errstr, 1);
@@ -104,7 +104,6 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                     if ($date == date("Y-m-d", strtotime($this->tanggal))) {
                         // if ($date == date("Y-m-d", strtotime($this->tanggal))) {
                         $cek_data_att = DB::table($this->table)->where('nip', $employee_id)->where('tanggal', date("Y-m-d", strtotime($this->tanggal)))->first();
-                        $users = DB::table('users')->get();
                         foreach ($users as $user) {
                             if ($user->nopeg == $employee_id) {
                                 if (empty($cek_data_att)) {
