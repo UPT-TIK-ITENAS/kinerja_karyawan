@@ -242,7 +242,23 @@ class AdminController extends Controller
                     return $apprv = '';
                 }
             })
-            ->rawColumns(['latemasuk', 'days', 'kurang_jam', 'latesiang', 'latesore', 'action_edit', 'action', 'status', 'note'])
+            ->addColumn('is_cuti', function ($row) {
+                if ($row->is_cuti == 1) {
+                    $note = '<div style="font-family: DejaVu Sans, sans-serif;">✔</div>';
+                } else {
+                    $note = '';
+                }
+                return $note;
+            })
+            ->addColumn('is_izin', function ($row) {
+                if ($row->is_izin == 1) {
+                    $note = '<div style="font-family: DejaVu Sans, sans-serif;">✔</div>';
+                } else {
+                    $note = '';
+                }
+                return $note;
+            })
+            ->rawColumns(['latemasuk', 'days', 'kurang_jam', 'latesiang', 'latesore', 'action_edit', 'action', 'status', 'note', 'is_cuti','is_izin'])
             ->toJson();
     }
 

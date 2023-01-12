@@ -122,7 +122,7 @@ class KepalaUnitController extends Controller
             })
             ->addColumn('is_cuti', function ($row) {
                 if ($row->is_cuti == 1) {
-                    $note = 'Cuti';
+                    $note = '<div style="font-family: DejaVu Sans, sans-serif;">✔</div>';
                 } else {
                     $note = '';
                 }
@@ -130,7 +130,7 @@ class KepalaUnitController extends Controller
             })
             ->addColumn('is_izin', function ($row) {
                 if ($row->is_izin == 1) {
-                    $note = 'Izin Resmi';
+                    $note = '<div style="font-family: DejaVu Sans, sans-serif;">✔</div>';
                 } else {
                     $note = '';
                 }

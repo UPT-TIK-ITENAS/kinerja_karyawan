@@ -98,6 +98,8 @@
                                     <th>Jam Keluar</th>
                                     <th>Kurang Jam</th>
                                     <th>Note</th>
+                                    <th>Is Cuti</th>
+                                    <th>Is Izin</th>
                                     <th>Aksi</th>
                                     @if (auth()->user()->role == 'admin_bsdm' || auth()->user()->role == 'admin')
                                         <th>Aksi BSDM</th>
@@ -413,6 +415,14 @@
                     {
                         data: 'note',
                         name: 'note'
+                    },
+                    {
+                        data: 'is_cuti',
+                        name: 'is_cuti'
+                    },
+                    {
+                        data: 'is_izin',
+                        name: 'is_izin'
                     },
                     {
                         data: 'action',

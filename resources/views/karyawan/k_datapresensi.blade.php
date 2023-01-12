@@ -54,6 +54,8 @@
                                     <th>Jam Keluar</th>
                                     <th>Kurang Jam</th>
                                     <th>Note</th>
+                                    <th>Is Cuti</th>
+                                    <th>Is Izin</th>
                                     <th>Aksi</th>
                                     <th>File</th>
                                     <th>Status</th>
@@ -290,6 +292,14 @@
                     {
                         data: 'note',
                         name: 'note'
+                    },
+                    {
+                        data: 'is_cuti',
+                        name: 'is_cuti'
+                    },
+                    {
+                        data: 'is_izin',
+                        name: 'is_izin'
                     },
                     {
                         data: 'action',

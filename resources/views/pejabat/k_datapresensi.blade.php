@@ -74,6 +74,8 @@
                                     <th>Jam Keluar</th>
                                     <th>Kurang Jam</th>
                                     <th>Note</th>
+                                    <th>Is Cuti</th>
+                                    <th>Is Izin</th>
                                 </thead>
                                 <tbody>
 
@@ -149,6 +151,14 @@
                     {
                         data: 'note',
                         name: 'note'
+                    },
+                    {
+                        data: 'is_cuti',
+                        name: 'is_cuti'
+                    },
+                    {
+                        data: 'is_izin',
+                        name: 'is_izin'
                     },
                 ],
             });
