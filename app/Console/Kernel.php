@@ -23,7 +23,7 @@ class Kernel extends ConsoleKernel
         $date = date('Y-m-d');
         // run job and log every hour
         // $schedule->job(new GetAttendanceByDateFromBiometric($date, 'attendance'))->everyThirtyMinutes()->appendOutputTo(storage_path('logs/attendance.log'));
-        $schedule->command('attendance:get')->everyThirtyMinutes()->appendOutputTo(storage_path('logs/attendance.log'));
+        $schedule->command('attendance:get')->everyFifteenMinutes()->appendOutputTo(storage_path('logs/attendance.log'));
     }
 
     /**
