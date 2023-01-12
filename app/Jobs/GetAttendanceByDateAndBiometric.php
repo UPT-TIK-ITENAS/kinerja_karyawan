@@ -117,6 +117,13 @@ class GetAttendanceByDateAndBiometric implements ShouldQueue
                                         'created_at' => now(),
                                         'updated_at' => now()
                                     ]);
+                                    if ($user->telegram_id) {
+                                        try {
+                                            $user->notify((new \App\Notifications\AttendanceNotification())->delay(now()->addSeconds(5)));
+                                        } catch (\Throwable $th) {
+                                            Log::info($th->getMessage());
+                                        }
+                                    }
                                 } else if ($time >= '10:00:00' && $time < '15:00:00') {
                                     DB::table($this->table)->insert([
                                         'nip' => $employee_id,
@@ -126,6 +133,13 @@ class GetAttendanceByDateAndBiometric implements ShouldQueue
                                         'created_at' => now(),
                                         'updated_at' => now()
                                     ]);
+                                    if ($user->telegram_id) {
+                                        try {
+                                            $user->notify((new \App\Notifications\AttendanceNotification())->delay(now()->addSeconds(5)));
+                                        } catch (\Throwable $th) {
+                                            Log::info($th->getMessage());
+                                        }
+                                    }
                                 } else if ($time >= '15:00:01' && $time <= '23:59:00') {
                                     DB::table($this->table)->insert([
                                         'nip' => $employee_id,
@@ -135,30 +149,56 @@ class GetAttendanceByDateAndBiometric implements ShouldQueue
                                         'created_at' => now(),
                                         'updated_at' => now()
                                     ]);
-                                    if ($user->telegram_id)
-                                        $user->notify((new \App\Notifications\AttendanceNotification())->delay(now()->addSeconds(5)));
+                                    if ($user->telegram_id) {
+                                        try {
+                                            $user->notify((new \App\Notifications\AttendanceNotification())->delay(now()->addSeconds(5)));
+                                        } catch (\Throwable $th) {
+                                            Log::info($th->getMessage());
+                                        }
+                                    }
                                 }
                             } else if ($cek_data_att->modify_by != 1) {
                                 $data = DB::table($this->table)->where('nip', $employee_id)->where('tanggal', $date);
                                 $data2 = $data->first();
 
                                 if ($time < '10:00:00') {
-                                    if ($user->telegram_id && $data2->jam_masuk == null)
-                                        $user->notify((new \App\Notifications\AttendanceNotification())->delay(now()->addSeconds(5)));
+                                    if ($user->telegram_id && $data2->jam_masuk == null) {
+                                        if ($user->telegram_id) {
+                                            try {
+                                                $user->notify((new \App\Notifications\AttendanceNotification())->delay(now()->addSeconds(5)));
+                                            } catch (\Throwable $th) {
+                                                Log::info($th->getMessage());
+                                            }
+                                        }
+                                    }
                                     $data->update([
                                         'jam_masuk' => $datetime,
                                         'updated_at' => now()
                                     ]);
                                 } else if ($time >= '10:00:00' && $time < '15:00:00') {
-                                    if ($user->telegram_id && $data2->jam_siang == null)
-                                        $user->notify((new \App\Notifications\AttendanceNotification())->delay(now()->addSeconds(5)));
+                                    if ($user->telegram_id && $data2->jam_masuk == null) {
+                                        if ($user->telegram_id) {
+                                            try {
+                                                $user->notify((new \App\Notifications\AttendanceNotification())->delay(now()->addSeconds(5)));
+                                            } catch (\Throwable $th) {
+                                                Log::info($th->getMessage());
+                                            }
+                                        }
+                                    }
                                     $data->update([
                                         'jam_siang' => $datetime,
                                         'updated_at' => now()
                                     ]);
                                 } else if ($time >= '15:00:01' && $time <= '23:59:00') {
-                                    if ($user->telegram_id && $data2->jam_pulang == null)
-                                        $user->notify((new \App\Notifications\AttendanceNotification())->delay(now()->addSeconds(5)));
+                                    if ($user->telegram_id && $data2->jam_masuk == null) {
+                                        if ($user->telegram_id) {
+                                            try {
+                                                $user->notify((new \App\Notifications\AttendanceNotification())->delay(now()->addSeconds(5)));
+                                            } catch (\Throwable $th) {
+                                                Log::info($th->getMessage());
+                                            }
+                                        }
+                                    }
                                     $data->update([
                                         'jam_pulang' => $datetime,
                                         'updated_at' => now()
