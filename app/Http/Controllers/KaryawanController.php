@@ -630,17 +630,35 @@ class KaryawanController extends Controller
 
     public function update_profile(Request $request)
     {
-        User::where('nopeg', $request->nopeg)->update([
-            'name' => $request->name,
-            'nopeg' => $request->nopeg,
-            'npp' => $request->npp,
-            'masuk_kerja' => $request->masuk_kerja,
-            'tempat' => $request->tempat,
-            'tanggal_lahir' => $request->tanggal_lahir,
-            'email' => $request->email,
-            'nohp' => $request->nohp,
-            'password' => password_hash($request->password, PASSWORD_DEFAULT),
-        ]);
+        $data = User::where('nopeg', $request->nopeg)->first();
+        if($request->password == NULL){
+            User::where('nopeg', $request->nopeg)->update([
+                'name' => $request->name,
+                'nopeg' => $request->nopeg,
+                'npp' => $request->npp,
+                'masuk_kerja' => $request->masuk_kerja,
+                'tempat' => $request->tempat,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'email' => $request->email,
+                'nohp' => $request->nohp,
+                'telegram_id' => $request->telegram_id,
+                'password' => $data->password,
+            ]);
+        }else{
+            User::where('nopeg', $request->nopeg)->update([
+                'name' => $request->name,
+                'nopeg' => $request->nopeg,
+                'npp' => $request->npp,
+                'masuk_kerja' => $request->masuk_kerja,
+                'tempat' => $request->tempat,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'email' => $request->email,
+                'nohp' => $request->nohp,
+                'telegram_id' => $request->telegram_id,
+                'password' => password_hash($request->password, PASSWORD_DEFAULT),
+            ]);
+            
+        }
 
         return redirect()->back()->with('success', 'Data berhasil diubah!');
     }

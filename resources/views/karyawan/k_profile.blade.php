@@ -77,32 +77,40 @@
                                                 placeholder="Tanggal Lahir">
                                         </div>
                                     </div>
-                                    <div class="col-sm-6 col-md-4">
+                                    <div class="col-sm-6 col-md-3">
                                         <div class="mb-3">
                                             <label class="form-label">Email</label>
                                             <input class="form-control" type="text" name="email" id="email"
-                                                value="{{ auth()->user()->email }}" placeholder="Alamat Email">
+                                                value="{{ auth()->user()->email }}" placeholder="xxxxxx@gmail.com">
                                         </div>
                                     </div>
-                                    <div class="col-sm-6 col-md-4">
+                                    <div class="col-sm-6 col-md-3">
                                         <div class="mb-3">
                                             <label class="form-label">No Handphone</label>
                                             <div class="input-group">
                                                 <span class="input-group-text" id="no_hp_input">+62</span>
-                                                <input class="form-control" id="nohp" name="nohp" type="text"
+                                                <input class="form-control" id="nohp" name="nohp" type="text" placeholder="+62 878-XXXX-XXXX"
                                                     aria-describedby="nohp_input" value="{{ auth()->user()->nohp }}">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6 col-md-4">
+                                    <div class="col-sm-6 col-md-3">
                                         <div class="mb-3">
-                                            <label class="form-label">Password</label>
+                                            <label class="form-label">ID Telegram</label>
+                                            <input class="form-control" type="text" name="telegram_id" id="telegram_id"
+                                                value="{{ auth()->user()->telegram_id }}" placeholder="ID Telegram">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label">Password </label>
                                             <div class="input-group" id="show_hide_password">
                                                 <input class="form-control" type="password" id="password"
                                                     name="password">
                                                 <a href="" class="btn btn-outline-info"><i class="bi bi-eye-slash"
                                                         aria-hidden="true"></i></a>
                                             </div>
+                                            <p style="color:red; font-size:12px;"> <b> *) Kosongkan jika tidak ingin merubah password </b></p>
                                         </div>
                                     </div>
 
