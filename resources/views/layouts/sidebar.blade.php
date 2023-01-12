@@ -161,6 +161,14 @@
 
                     </li>
                     <li class="dropdown">
+                        <a class="nav-link menu-title link-nav @if (request()->routeIs('admin_bsdm.karyawan.index')) active @endif"
+                            href="{{ route('admin_bsdm.karyawan.index') }}"><i data-feather="users"></i><span>Data
+                                Karyawan</span>
+                            <div class="according-menu"><i class="fa fa-angle-right"></i></div>
+                        </a>
+
+                    </li>
+                    <li class="dropdown">
                         <a class="nav-link menu-title @if (request()->routeIs('admin_bsdm.kuesioner.pertanyaanPeriode') ||
                             request()->routeIs('admin_bsdm.kuesioner.admHasilKuesioner') ||
                             request()->routeIs('admin_bsdm.kuesioner.pertanyaan')) active @endif "><i

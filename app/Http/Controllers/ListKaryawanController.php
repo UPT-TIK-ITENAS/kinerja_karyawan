@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 use App\Models\User;
 use App\Models\Unit;
 use App\Models\Jabatan;
@@ -17,12 +18,14 @@ class ListKaryawanController extends Controller
 
     public function index()
     {
+		// $users = User::query()->with(['units', 'atasan', 'atasan_langsung'])
+		// ->where('unit', '!=', '29')->first();
+		// dd($users);
         return view('admin.karyawan');
     }
 	
 	public function list(Request $request){
-		$users = User::query()->with(['units', 'atasan', 'atasan_langsung'])
-		             ->where('unit', '!=', '29')->latest();
+		$users = User::query()->with(['units', 'atasan', 'atasan_langsung'])->latest();
 		return DataTables::of($users)
 			->addIndexColumn()
 			->addColumn('action', function ($user) {
@@ -66,6 +69,7 @@ class ListKaryawanController extends Controller
 			'atasan' => 'required',
 			'atasan_lang' => 'required',
 			'masuk_kerja' => 'required|date',
+			'telegram_id' => 'required',
 		]);
 		$data = $request->all();
 		$password = Carbon::parse($request->tanggal_lahir)->format('dmY');
@@ -96,9 +100,21 @@ class ListKaryawanController extends Controller
 			'atasan' => 'required',
 			'atasan_lang' => 'required',
 			'masuk_kerja' => 'required|date',
+			'telegram_id' => 'required',
+			'password' => 'sometimes|nullable'
 		]);
+
 		$user = User::find($id);
-		$user->update($request->all());
+
+		// dd($request->all(), $request->has('password'));
+		$data = $request->all();
+		if($request->password != null){
+			$data['password'] = Hash::make($request->password);
+			$user->update($data);
+		}else{
+			$data = Arr::except($data, ['password']);
+			$user->update($data);
+		}
 		return response()->json([
 			'success' => true,
 			'message' => 'Data karyawan berhasil diubah!'

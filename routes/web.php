@@ -211,6 +211,13 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/update', [AdminController::class, 'update_ajuan'])->name('update');
         });
 
+        Route::prefix('karyawan')->name('karyawan.')->group(function () {
+            Route::get('/list', [ListKaryawanController::class, 'list'])->name('list');
+            Route::get('/', [ListKaryawanController::class, 'index'])->name('index');
+            Route::post('/', [ListKaryawanController::class, 'store'])->name('store');
+            Route::get('/{id}', [ListKaryawanController::class, 'show'])->name('show');
+            Route::post('/{id}', [ListKaryawanController::class, 'update'])->name('update');
+        });
 
         Route::prefix('libur-nasional')->name('libur-nasional.')->group(function () {
             Route::get('/', [AdminController::class, 'liburnasional'])->name('libur');

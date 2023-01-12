@@ -129,6 +129,10 @@
                                 <span class="form-label" for="masuk_kerja">Masuk Kerja</span>
                                 <input class="form-control" id="masuk_kerja" name="masuk_kerja" type="text" readonly>
                             </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <span class="form-label" for="telegram_id">Id Telegram</span>
+                                <input class="form-control" id="telegram_id" name="telegram_id" type="text" readonly>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -217,6 +221,11 @@
                                 <span class="form-label" for="masuk_kerja">Masuk Kerja</span>
                                 <input class="form-control" name="masuk_kerja" type="text">
                                 <div class="text-danger text-sm fw-bold" id="masuk_kerja-error"></div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <span class="form-label" for="telegram_id">Id Telegram</span>
+                                <input class="form-control" name="telegram_id" type="text">
+                                <div class="text-danger text-sm fw-bold" id="telegram_id-error"></div>
                             </div>
                         </div>
                     </div>
@@ -311,6 +320,23 @@
                                 <input class="form-control" name="masuk_kerja" type="text">
                                 <div class="text-danger text-sm fw-bold" id="masuk_kerja-error"></div>
                             </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <span class="form-label" for="telegram_id">Id Telegram</span>
+                                <input class="form-control" name="telegram_id" type="text">
+                                <div class="text-danger text-sm fw-bold" id="telegram_id-error"></div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Password </label>
+                                        <div class="input-group" id="show_hide_password">
+                                            <input class="form-control" type="password" id="password" name="password">
+                                                <a href="" class="btn btn-outline-info"><i class="bi bi-eye-slash"
+                                                        aria-hidden="true"></i></a>
+                                            <div class="text-danger text-sm fw-bold" id="password-error"></div>
+                                        </div>
+                                        <p style="color:red; font-size:12px;"> <b> *) Kosongkan jika tidak ingin merubah password </b></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -323,6 +349,20 @@
 
     @parent
     <script>
+         $(document).ready(function() {
+            $("#show_hide_password a").on('click', function(event) {
+                event.preventDefault();
+                if ($('#show_hide_password input').attr("type") == "text") {
+                    $('#show_hide_password input').attr('type', 'password');
+                    $('#show_hide_password i').addClass("bi bi-eye-slash");
+                    $('#show_hide_password i').removeClass("bi bi-eye");
+                } else if ($('#show_hide_password input').attr("type") == "password") {
+                    $('#show_hide_password input').attr('type', 'text');
+                    $('#show_hide_password i').removeClass("bi bi-eye-slash");
+                    $('#show_hide_password i').addClass("bi bi-eye");
+                }
+            });
+        });
         $('#btn-create').on('click', function (){
             daterangepicker('#form-create [name="tanggal_lahir"]', drops = "auto", autoUpdate = true, autoApply = true, timePicker = false, parentEl =
                     '#create-karyawan');
@@ -494,7 +534,7 @@
         $('body').on('click', '.show-karyawan', function() {
             const id = $(this).data('id');
             $.get(`${window.baseurl}/admin/karyawan/${id}`, function(data) {
-                console.log(data);
+                // console.log(data);
                 $('#show-karyawan').modal('show');
                 $('#iduser').val(data.id);
                 $('#name').val(data.name);
@@ -516,6 +556,7 @@
                 }
                 $('#unit').val(data.unit);
                 $('#nama_unit').val(data.units?.nama_unit);
+                $('#telegram_id').val(data.telegram_id);
             })
         });
 
@@ -596,6 +637,8 @@
                 $('#form-edit [name="email"]').val(data.email)
                 $('#form-edit [name="nohp"]').val(data.nohp)
                 $('#form-edit [name="masuk_kerja"]').val(data.masuk_kerja)
+                $('#form-edit [name="telegram_id"]').val(data.telegram_id)
+                $('#form-edit [name="password"]').val(data.password);
 
                 let jabatan = data.jabatan != null ? new Option(data.jabatan, data.jabatan, true, true) : null;
                 let unit = new Option(`${data.units.kode_unit} | ${data.units?.nama_unit}`, data.unit, true, true);
