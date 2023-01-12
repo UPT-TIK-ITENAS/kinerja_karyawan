@@ -5,6 +5,8 @@ const daterangepicker = (
     autoUpdate = false,
     autoApply = false,
     timePicker = false,
+    minDate = null,
+    maxDate = null,
     parentEl = null
 ) => {
     let config = {
@@ -18,7 +20,6 @@ const daterangepicker = (
         },
         cancelLabel: "Hapus",
         applyLabel: "Terapkan",
-
         drops: drops,
     };
 
@@ -31,6 +32,14 @@ const daterangepicker = (
 
     if (parentEl) {
         config.parentEl = parentEl;
+    }
+
+    if (minDate) {
+        config.minDate = minDate;
+    }
+
+    if (maxDate) {
+        config.maxDate = maxDate;
     }
 
     $(`${elementSelector}`).daterangepicker(config);

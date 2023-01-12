@@ -158,8 +158,26 @@
             processing: true,
         });
 
-        daterangepicker('#tgl_awal_izin', drops = "auto", autoUpdate = true, autoApply = true, timePicker = false,
-            parentEl = '#tambahIzin');
+        // daterangepicker('#tgl_awal_izin', drops = "auto", autoUpdate = true, autoApply = true, timePicker = false,
+        //     parentEl = '#tambahIzin');
+
+        $("#tgl_awal_izin").daterangepicker({
+            singleDatePicker: true,
+            timePicker: false,
+            showDropdowns: true,
+            autoUpdateInput: true,
+            autoApply: true,
+            locale: {
+                cancelLabel: "Hapus",
+                applyLabel: "Terapkan",
+                format: "YYYY-MM-DD",
+            },
+            drops: "auto",
+            parentEl: "#tambahIzin",
+            minDate: moment().startOf('year').format('YYYY-MM-DD'),
+            maxDate: moment().endOf('year').format('YYYY-MM-DD')
+        });
+
 
         $("#tgl_awal_izin").on('change', function(e) {
             e.preventDefault();

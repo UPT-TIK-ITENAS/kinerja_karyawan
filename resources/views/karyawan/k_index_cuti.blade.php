@@ -218,8 +218,25 @@
             e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
         });
 
-        daterangepicker('#tgl_awal_cuti', drops = "auto", autoUpdate = true, autoApply = true, timePicker = false,
-            parentEl = '#tambahCuti');
+        // daterangepicker('#tgl_awal_cuti', drops = "auto", autoUpdate = true, autoApply = true, timePicker = false,
+        // parentEl = '#tambahCuti');
+        $("#tgl_awal_cuti").daterangepicker({
+            singleDatePicker: true,
+            timePicker: false,
+            showDropdowns: true,
+            autoUpdateInput: true,
+            autoApply: true,
+            locale: {
+                cancelLabel: "Hapus",
+                applyLabel: "Terapkan",
+                format: "YYYY-MM-DD",
+            },
+            drops: "auto",
+            parentEl: "#tambahCuti",
+            minDate: moment().startOf('year').format('YYYY-MM-DD'),
+            maxDate: moment().endOf('year').format('YYYY-MM-DD')
+        });
+
         $("#tgl_awal_cuti").on('change', function(e) {
             e.preventDefault();
             let tgl_awal = $(this).val();

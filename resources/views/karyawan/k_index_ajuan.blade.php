@@ -87,13 +87,13 @@
                     @csrf
                     <div class="modal-body">
                         <div class="row g-2 mb-3">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <span class="form-label" for="nopeg">No Pegawai</span>
                                 <input class="form-control" id="nopeg" name="nopeg" type="text"
                                     value="{{ auth()->user()->nopeg }}" required="" readonly>
                                 <div class="invalid-feedback">Wajib Diisi !</div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <span class="form-label" for="nama">Nama Lengkap</span>
                                 <input class="form-control" id="nama" name="nama" type="text" required=""
                                     value="{{ auth()->user()->name }}" readonly>
@@ -101,7 +101,7 @@
                             </div>
                         </div>
                         <div class="row g-2 mb-3">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <span class="form-label" for="tanggal">Tanggal</span>
                                 <input class="form-control" id="tanggal" name="tanggal" type="text" required="">
                                 <div class="invalid-feedback">Wajib Diisi !</div>
@@ -129,7 +129,24 @@
             processing: true,
         });
 
-        daterangepicker('#tanggal', drops = "auto", autoUpdate = true, autoApply = true, timePicker = false,
-            parentEl = '#tambahIzin');
+        // daterangepicker('#tanggal', drops = "auto", autoUpdate = true, autoApply = true, timePicker = false,
+        //     parentEl = '#tambahIzin');
+
+        $("#tanggal").daterangepicker({
+            singleDatePicker: true,
+            timePicker: false,
+            showDropdowns: true,
+            autoUpdateInput: true,
+            autoApply: true,
+            locale: {
+                cancelLabel: "Hapus",
+                applyLabel: "Terapkan",
+                format: "YYYY-MM-DD",
+            },
+            drops: "auto",
+            parentEl: "#tambahIzin",
+            minDate: moment().startOf('year').format('YYYY-MM-DD'),
+            maxDate: moment().endOf('year').format('YYYY-MM-DD')
+        });
     </script>
 @endsection
