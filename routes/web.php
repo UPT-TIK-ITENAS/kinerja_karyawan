@@ -14,6 +14,7 @@ use App\Http\Controllers\RekapitulasiController;
 use App\Http\Controllers\ListKaryawanController;
 use App\Http\Controllers\KuesionerController;
 use App\Http\Controllers\PejabatController;
+use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -56,6 +57,11 @@ Route::get('/test', function () {
     //    dd($users);
     // dispatch(new \App\Jobs\MigrateAttendance('attendance_baru', 'attendance', '2022-08-31'));
     // dispatch(new \App\Jobs\GetAttendanceByDateFromBiometric('2023-01-10', 'attendance_baru'));
+    // dd("Selesai!");
+
+    // Send telegram notification
+    // $user = User::where('nopeg', '1815')->first();
+    // $user->notify((new \App\Notifications\AttendanceNotification())->delay(now()->addSeconds(5)));
     // dd("Selesai!");
 });
 

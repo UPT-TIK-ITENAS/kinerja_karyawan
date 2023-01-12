@@ -108,7 +108,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                         foreach ($users as $user) {
                             if ($user->nopeg == $employee_id) {
                                 if (empty($cek_data_att)) {
-                                    if ($time < '12:45:00') {
+                                    if ($time < '10:00:00') {
                                         DB::table($this->table)->insert([
                                             'nip' => $employee_id,
                                             'tanggal' => $date,
@@ -117,7 +117,7 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                                             'created_at' => now(),
                                             'updated_at' => now()
                                         ]);
-                                    } else if ($time >= '12:45:00' && $time < '15:00:00') {
+                                    } else if ($time >= '10:00:00' && $time < '15:00:00') {
                                         DB::table($this->table)->insert([
                                             'nip' => $employee_id,
                                             'tanggal' => $date,
@@ -137,12 +137,12 @@ class GetAttendanceByDateFromBiometric implements ShouldQueue
                                         ]);
                                     }
                                 } else if ($cek_data_att->modify_by != 1) {
-                                    if ($time < '12:45:00') {
+                                    if ($time < '10:00:00') {
                                         DB::table($this->table)->where('nip', $employee_id)->where('tanggal', $date)->update([
                                             'jam_masuk' => $datetime,
                                             'updated_at' => now()
                                         ]);
-                                    } else if ($time >= '12:45:00' && $time < '15:00:00') {
+                                    } else if ($time >= '10:00:00' && $time < '15:00:00') {
                                         DB::table($this->table)->where('nip', $employee_id)->where('tanggal', $date)->update([
                                             'jam_siang' => $datetime,
                                             'updated_at' => now()
